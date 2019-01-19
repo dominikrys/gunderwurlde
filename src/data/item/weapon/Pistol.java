@@ -3,51 +3,17 @@ package data.item.weapon;
 import data.item.projectile.ProjectileType;
 
 public class Pistol extends Gun {
-	public static final int DEFAULT_AMMO_AMOUNT = 180;
+	public static final String ITEM_NAME = "Pistol";
+	public static final int ITEM_ID = 0;
+	public static final int DEFAULT_AMMO_AMOUNT = 120;
+	public static final int DEFAULT_CLIP_SIZE = 12;
+	public static final int DEFAULT_RELOAD_TIME = 5;
+	public static final int DEFAULT_AMMO_PER_SHOT = 1;
 	public static final ProjectileType DEFAULT_AMMO_TYPE = ProjectileType.SMALLBULLET;
 	
 
 	public Pistol() {
-		super("Pistol", 0);
-		this.maxAmmo = DEFAULT_AMMO_AMOUNT;
-		this.currentAmmo = maxAmmo;
-		this.projectileType = DEFAULT_AMMO_TYPE;
-	}
-
-	@Override
-	public void replenish() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void replenish(int amount) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void empty() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void empty(int amount) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean shoot() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean reload() {
-		// TODO Auto-generated method stub
-		return false;
+		super(ITEM_NAME, ITEM_ID, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT, DEFAULT_AMMO_TYPE);
 	}
 
 }

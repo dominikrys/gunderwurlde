@@ -16,7 +16,46 @@ public class GameState {
 	public GameState() {
 		// TODO Auto-generated constructor stub
 	}
+
+	public GameMap getCurrentMap() {
+		return currentMap;
+	}
+
+	public void setCurrentMap(GameMap currentMap) {
+		this.currentMap = currentMap;
+		//TODO: reset everything else and move players.
+	}
+
+	public LinkedHashSet<Enemy> getEnemies() {
+		return enemies;
+	}
 	
+	public void setEnemies(LinkedHashSet<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+	public void addEnemy(Enemy enemy) {
+		this.enemies.add(enemy);
+	}
+
+	public LinkedHashSet<Projectile> getProjectiles() {
+		return projectiles;
+	}
+
+	public void setProjectiles(LinkedHashSet<Projectile> projectiles) {
+		this.projectiles = projectiles;
+	}
 	
+	public void addProjectile(Projectile projectile) {
+		this.projectiles.add(projectile);
+	}
+
+	public LinkedHashSet<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(LinkedHashSet<Player> players) {
+		this.players = players;
+	}
 
 }
