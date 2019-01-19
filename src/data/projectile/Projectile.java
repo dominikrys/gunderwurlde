@@ -2,7 +2,6 @@ package data.projectile;
 
 import data.HasPose;
 import data.Pose;
-import data.item.projectile.ProjectileType;
 
 public abstract class Projectile implements HasPose {
 	protected int speed;
@@ -10,7 +9,7 @@ public abstract class Projectile implements HasPose {
 	protected ProjectileType projectileType;
 	protected Pose pose;
 	
-	public Projectile(int speed, int damage, ProjectileType projectileType, Pose pose) {
+	Projectile(int speed, int damage, ProjectileType projectileType, Pose pose) {
 		this.speed = speed;
 		this.damage = damage;
 		this.projectileType = projectileType;

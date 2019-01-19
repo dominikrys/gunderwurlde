@@ -1,4 +1,4 @@
-package data.item.projectile;
+package data.projectile;
 
 public enum ProjectileType {
 	SMALLBULLET

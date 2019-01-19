@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 
 import data.item.ItemType;
 import data.item.Limited;
-import data.item.projectile.ProjectileType;
+import data.projectile.ProjectileType;
 
 abstract class Gun extends Weapon implements Limited {
 	

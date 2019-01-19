@@ -1,6 +1,6 @@
 package data.item.weapon;
 
-import data.item.projectile.ProjectileType;
+import data.projectile.ProjectileType;
 
 public class Pistol extends Gun {
 	public static final String ITEM_NAME = "Pistol";

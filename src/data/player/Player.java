@@ -2,27 +2,29 @@ package data.player;
 
 import java.util.ArrayList;
 
+import data.HasHealth;
 import data.HasPose;
+import data.IsMovable;
 import data.Location;
 import data.Pose;
 import data.item.Item;
 import data.item.weapon.Pistol;
 
-public class Player implements HasPose{
-	public static final int DEFAULT_HEALTH = 3;
+public class Player implements HasPose, HasHealth, IsMovable{
+	public static final int DEFAULT_HEALTH = 6;
 	public static final int DEAFULT_MOVESPEED = 10;
 
 	protected ArrayList<Item> items;
 	protected int health;
 	protected int maxHealth;
-	protected int movespeed;
+	protected int moveSpeed;
 	protected int currentItem;
 	protected Pose pose;
 	
 	public Player(Pose pose) {
 		this.health = DEFAULT_HEALTH;
 		this.maxHealth = health;
-		this.movespeed = DEAFULT_MOVESPEED;
+		this.moveSpeed = DEAFULT_MOVESPEED;
 		this.items = new ArrayList<Item>(){{new Pistol();}};
 		this.currentItem = 0;
 		this.pose = pose;
@@ -62,32 +64,6 @@ public class Player implements HasPose{
 		return false;
 	}
 
-	public int getHealth() {
-		return health;
-	}
-
-	public void setHealth(int health) {
-		if (health < 0) health = 0;
-		this.health = health;
-	}
-
-	public int getMaxHealth() {
-		return maxHealth;
-	}
-
-	public void setMaxHealth(int maxHealth) {
-		if (maxHealth < 0) maxHealth = 0;
-		this.maxHealth = maxHealth;
-	}
-
-	public int getMovespeed() {
-		return movespeed;
-	}
-
-	public void setMovespeed(int movespeed) {
-		this.movespeed = movespeed;
-	}
-
 	public int getCurrentItemIndex() {
 		return currentItem;
 	}
@@ -99,7 +75,51 @@ public class Player implements HasPose{
 			return true;
 		}
 	}
+	
+	@Override
+	public int getMoveSpeed() {
+		return moveSpeed;
+	}
 
+	@Override
+	public void setMoveSpeed(int moveSpeed) {
+		this.moveSpeed = moveSpeed;
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
+	}
+	
+	@Override
+	public void setHealth(int health) {
+		if (health < 0) health = 0;
+		this.health = health;
+	}
+	
+	@Override
+	public boolean damage(int amount) {
+		if (amount >= health) {
+			health = 0;
+			return true;
+		}
+		else {
+			health-=amount;
+			return false;
+		}
+	}
+
+	@Override
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	
+	@Override
+	public void setMaxHealth(int maxHealth) {
+		if (maxHealth < 0) maxHealth = 0;
+		this.maxHealth = maxHealth;
+	}
+	
 	@Override
 	public Pose getPose() {
 		return pose;
