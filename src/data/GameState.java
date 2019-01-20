@@ -58,8 +58,9 @@ public class GameState {
 	}
 	
 	public boolean setTile(Tile tile, int x, int y) {
-		//TODO implement (check if something is on the tile being changed and that tile type is going to be SOLID)
-		return false;
+		//Optional checks here
+		currentMap.setTile(tile, x, y);
+		return true;
 	}
 
 	public LinkedHashSet<Enemy> getEnemies() {

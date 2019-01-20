@@ -26,4 +26,9 @@ public class Tile {
 		return new Location((x*TILE_SIZE)+tileMid, (y*TILE_SIZE)+tileMid);
 	}
 	
+	public static int[] locationToTile(Location location) {
+		int[] i= {((location.getX()-1)/TILE_SIZE),((location.getY()-1)/TILE_SIZE)};
+		return i;
+	}
+	
 }
