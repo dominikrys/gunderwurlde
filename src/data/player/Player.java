@@ -12,7 +12,10 @@ import data.item.weapon.Pistol;
 
 public class Player implements HasPose, HasHealth, IsMovable{
 	public static final int DEFAULT_HEALTH = 6;
-	public static final int DEAFULT_MOVESPEED = 10;
+	public static final int DEFAULT_MOVESPEED = 10;
+	public static final int DEFAULT_TEAM = 0;
+	public static final int DEFAULT_SCORE = 0;
+	
 
 	protected ArrayList<Item> items;
 	protected int health;
@@ -20,18 +23,30 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	protected int moveSpeed;
 	protected int currentItem;
 	protected Pose pose;
+	protected int score;
+	protected int team;
 	
-	public Player(Pose pose) {
+	public Player(Pose pose, int team) {
 		this.health = DEFAULT_HEALTH;
 		this.maxHealth = health;
-		this.moveSpeed = DEAFULT_MOVESPEED;
+		this.moveSpeed = DEFAULT_MOVESPEED;
 		this.items = new ArrayList<Item>(){{new Pistol();}};
 		this.currentItem = 0;
 		this.pose = pose;
+		this.score = DEFAULT_SCORE;
+		this.team = team;
+	}
+	
+	public Player(Location location, int team) {
+		this(new Pose(location), team);
+	}
+	
+	public Player(Pose pose) {
+		this(pose, DEFAULT_TEAM);
 	}
 	
 	public Player(Location location) {
-		this(new Pose(location));
+		this(location, DEFAULT_TEAM);
 	}
 	
 	public ArrayList<Item> getItems() {
@@ -76,6 +91,26 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		}
 	}
 	
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+	
+	public void changeScore(int value) {
+		this.score+=value;
+	}
+
+	public int getTeam() {
+		return team;
+	}
+
+	public void setTeam(int team) {
+		this.team = team;
+	}
+
 	@Override
 	public int getMoveSpeed() {
 		return moveSpeed;
