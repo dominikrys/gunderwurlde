@@ -5,28 +5,26 @@ import java.util.Optional;
 import data.Location;
 
 public abstract class Item {
-	protected final String itemName;
-	protected final int itemID;
+	protected final ItemList itemID;
 	protected final ItemType itemType;
 	protected Optional<Location> location; //for items on the map
 	
-	protected Item(String itemName, int itemID, ItemType itemType) {
-		this.itemName = itemName;
+	protected Item(ItemList itemID, ItemType itemType) {
 		this.itemID = itemID;
 		this.itemType = itemType;
 	}
 	
-	protected Item(String itemName, int itemID, ItemType itemType, Location location) {
-		this(itemName, itemID, itemType);
+	protected Item(ItemList itemID, ItemType itemType, Location location) {
+		this(itemID, itemType);
 		this.location = Optional.of(location);
 	}
 
 	public String getItemName() {
-		return itemName;
+		return itemID.toString();
 	}
 
 	public int getItemID() {
-		return itemID;
+		return itemID.getID();
 	}
 
 	public ItemType getItemType() {

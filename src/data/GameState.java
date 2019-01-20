@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import data.ai.Enemy;
 import data.item.Item;
 import data.map.GameMap;
+import data.map.Tile;
 import data.player.Player;
 import data.projectile.Projectile;
 
@@ -54,6 +55,11 @@ public class GameState {
 			if (!spawnIterator.hasNext()) spawnIterator = playerSpawns.iterator();
 			p.setPose(new Pose(spawnIterator.next()));
 		}
+	}
+	
+	public boolean setTile(Tile tile, int x, int y) {
+		//TODO implement (check if something is on the tile being changed and that tile type is going to be SOLID)
+		return false;
 	}
 
 	public LinkedHashSet<Enemy> getEnemies() {

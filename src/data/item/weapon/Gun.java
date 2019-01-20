@@ -3,14 +3,15 @@ package data.item.weapon;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import data.item.ItemList;
 import data.item.ItemType;
 import data.item.Limited;
 import data.projectile.ProjectileType;
 
 abstract class Gun extends Weapon implements Limited {
 	
-	Gun(String itemName, int itemID, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
-		super(itemName, itemID, ItemType.GUN);
+	Gun(ItemList itemID, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
+		super(itemID, ItemType.GUN);
 		this.maxAmmo = maxAmmo;
 		this.clipSize = clipSize;
 		this.reloadTime = reloadTime;

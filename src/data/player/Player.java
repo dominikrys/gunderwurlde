@@ -53,8 +53,12 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		return items;
 	}
 
-	public void setItems(ArrayList<Item> items) {
-		this.items = items;
+	public boolean setItems(ArrayList<Item> items) {
+		if (items.size() >0) {
+			this.items = items;
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean addItem(Item itemToAdd) {
@@ -64,6 +68,7 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	public boolean removeItem(int itemIndex) {
 		try {
 			items.remove(itemIndex);
+			if (currentItem == itemIndex) previousItem();
 			return true;
 		} catch (IndexOutOfBoundsException e) {
 			return false;
@@ -74,9 +79,20 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		return items.get(currentItem);
 	}
 	
-	public boolean setCurrentItem(String itemName) {
-		//TODO: implement
-		return false;
+	public void setCurrentItem(int slot) {
+		if (slot < 0) slot = 0;
+		else if (slot > items.size()-1) slot = items.size()-1;
+		currentItem = slot;
+	}
+	
+	public void nextItem() {
+		if (currentItem == items.size()-1) currentItem = 0;
+		else currentItem++;
+	}
+	
+	public void previousItem() {
+		if (currentItem ==0) currentItem = items.size()-1;
+		else currentItem--;
 	}
 
 	public int getCurrentItemIndex() {

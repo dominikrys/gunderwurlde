@@ -31,9 +31,8 @@ public abstract class GameMap {
 		return tileMap;
 	}
 	
-	public boolean setTile(Tile tile, Location location) { //Used for dynamically changing tiles
-		//TODO Implement
-		return false;
+	public void setTile(Tile tile, int x, int y) { //Used for dynamically changing tiles
+		tileMap[x][y] = tile;
 	}
 
 	public ArrayList<Location> getPlayerSpawns() {
