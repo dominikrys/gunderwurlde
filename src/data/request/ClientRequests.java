@@ -1,6 +1,8 @@
-package data;
+package data.request;
 
 import java.util.LinkedHashMap;
+
+import data.Pose;
 
 public class ClientRequests {
 	protected LinkedHashMap<Integer,Request> playerRequests;

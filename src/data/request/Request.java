@@ -1,6 +1,8 @@
-package data;
+package data.request;
 
 import java.util.Optional;
+
+import data.Pose;
 
 public class Request {
 	protected Optional<Pose> pose;
