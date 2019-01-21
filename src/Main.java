@@ -1,3 +1,7 @@
+import data.GameState;
+import data.Pose;
+import data.map.Meadow;
+import data.player.Player;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -17,12 +21,19 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.Window;
 
+import java.util.LinkedHashSet;
+
 public class Main extends Application {
     private final int SCREEN_HEIGHT = 720;
     private final int SCREEN_WIDTH = 1280;
 
     @Override
     public void start(Stage stage) {
+        //Example code for testing
+        LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
+        examplePlayers.add(new Player(new Pose(20, 20), 1));
+        GameState exampleState = new GameState(new Meadow(), examplePlayers);
+
         //Example imageMap
         char[][] inputMap = {
                 {'B', 'B', 'B'},
@@ -30,8 +41,8 @@ public class Main extends Application {
                 {'B', 'B', 'B'}
         };
 
-        int mapX = inputMap[0].length;
-        int mapY = inputMap.length;
+        int mapX = exampleState.getCurrentMap().getXDim();
+        int mapY = exampleState.getCurrentMap().getYDim();
 
         int tileSize = 30;
 
