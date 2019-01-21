@@ -1,4 +1,4 @@
-package data.ai;
+package data.enemy;
 
 import data.HasContactDamage;
 import data.Pose;

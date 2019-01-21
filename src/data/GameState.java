@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-import data.ai.Enemy;
+import data.enemy.Enemy;
 import data.item.Item;
 import data.map.GameMap;
 import data.map.Tile;

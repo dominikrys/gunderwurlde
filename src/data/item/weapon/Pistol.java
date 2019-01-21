@@ -5,7 +5,7 @@ import data.projectile.ProjectileType;
 
 public class Pistol extends Gun {
 	public static final ItemList ITEM_ID = ItemList.PISTOL;
-	public static final int DEFAULT_AMMO_AMOUNT = 120;
+	public static final int DEFAULT_AMMO_AMOUNT = Integer.MAX_VALUE;
 	public static final int DEFAULT_CLIP_SIZE = 12;
 	public static final int DEFAULT_RELOAD_TIME = 5;
 	public static final int DEFAULT_AMMO_PER_SHOT = 1;
