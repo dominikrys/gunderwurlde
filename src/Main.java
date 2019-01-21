@@ -47,19 +47,20 @@ public class Main extends Application {
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
 
+                ImageView imageView;
+
                 switch (exampleState.getCurrentMap().getTileMap()[x][y].getType()) {
                     case GRASS:
-                        imageMap[x][y] = createImage(Color.BLUE);
+                        imageView = new ImageView(createImage(Color.BLUE));
                         break;
                     case WOOD:
-                        imageMap[x][y] = createImage(Color.RED);
+                        imageView = new ImageView(createImage(Color.RED));
                         break;
                     default:
-                        imageMap[x][y] = createImage(Color.BLACK);
+                        imageView = new ImageView(createImage(Color.BLACK));
                         break;
                 }
 
-                ImageView imageView = new ImageView(imageMap[x][y]);
                 imageView.setFitWidth(tileSize);
                 imageView.setFitHeight(tileSize);
                 mapGroup.add(imageView, y, x);

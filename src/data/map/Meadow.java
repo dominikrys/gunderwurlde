@@ -37,9 +37,9 @@ public class Meadow extends GameMap {
 
         for (int i = 0; i < DEFAULT_X_DIM; i++) {
             tileMap[i][0] = new Tile(TileTypes.WOOD, TileState.SOLID);
-            for (int i2 = 1; i < DEFAULT_Y_DIM; i2++) {
-                if (i == 0 || i == DEFAULT_X_DIM - 1) tileMap[i][i2] = new Tile(TileTypes.WOOD, TileState.SOLID);
-                else tileMap[i][i2] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
+            for (int j = 1; j < DEFAULT_Y_DIM; j++) {
+                if (i == 0 || i == DEFAULT_X_DIM - 1) tileMap[i][j] = new Tile(TileTypes.WOOD, TileState.SOLID);
+                else tileMap[i][j] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
             }
             tileMap[i][DEFAULT_Y_DIM - 1] = new Tile(TileTypes.WOOD, TileState.SOLID);
         }
