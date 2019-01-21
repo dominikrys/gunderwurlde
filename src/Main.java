@@ -1,12 +1,12 @@
 import data.GameState;
 import data.Pose;
 import data.map.Meadow;
+import data.map.TileTypes;
 import data.player.Player;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -16,10 +16,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.stage.Window;
 
 import java.util.LinkedHashSet;
 
@@ -46,18 +42,16 @@ public class Main extends Application {
 
         int tileSize = 30;
 
-        Image[][] imageMap = new Image[mapX][mapY];
-
         GridPane mapGroup = new GridPane();
 
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
 
-                switch (inputMap[x][y]) {
-                    case 'B':
+                switch (exampleState.getCurrentMap().getTileMap()[x][y].getType()) {
+                    case GRASS:
                         imageMap[x][y] = createImage(Color.BLUE);
                         break;
-                    case 'R':
+                    case WOOD:
                         imageMap[x][y] = createImage(Color.RED);
                         break;
                     default:
