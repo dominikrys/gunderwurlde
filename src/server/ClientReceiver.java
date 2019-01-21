@@ -14,17 +14,18 @@ public class ClientReceiver extends Thread {
 	}
 
 	public void run() {
+		System.out.println("CR");
 		// Print to the user whatever we get from the server:
 		try {
 			while (true) {
 				String s = server.readLine();
 				if (s == null) {
-					Report.error("the message is null");
-				} else if (s.equals(Strings.quitMsg)) {
+					System.out.println("the message is null");
+				} else if (s.equals("quit")) {
 					// if the message is quit message, change the value of breakTheLoop in
 					// ClientSender for it to stop
 					sender.breakTheLoop = true;
-					Report.behaviour("You have quited! Send any command to exit the program.");
+					System.out.println("You have quited! Send any command to exit the program.");
 					break;
 				} else {
 					System.out.println(s);
@@ -32,7 +33,7 @@ public class ClientReceiver extends Thread {
 
 			}
 		} catch (IOException e) {
-			Report.errorAndGiveUp("Server seems to have died " + e.getMessage());
+			System.out.println("Server seems to have died " + e.getMessage());
 		}
 	}
 }

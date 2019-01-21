@@ -19,8 +19,8 @@ class Client {
 
 	public static void main(String[] args) {
 
-	    Server server = new Server();
-	    server.start();
+	    Server serverThread = new Server();
+	    serverThread.start();
 
 		// Check correct usage:
 		if (args.length != 1) {
@@ -36,9 +36,9 @@ class Client {
 			toServer = new PrintStream(server.getOutputStream());
 			fromServer = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		} catch (UnknownHostException e) {
-			System.out.println().errorAndGiveUp("Unknown host: " + hostname);
+			System.out.println("Unknown host: " + hostname);
 		} catch (IOException e) {
-			System.out.println().errorAndGiveUp("The server doesn't seem to be running " + e.getMessage());
+			System.out.println("The server doesn't seem to be running " + e.getMessage());
 		}
 
 		// Create two client threads of a different nature:
@@ -56,12 +56,11 @@ class Client {
 			fromServer.close();
 			server.close();
 		} catch (IOException e) {
-			System.out.println().errorAndGiveUp("Something wrong " + e.getMessage());
+			System.out.println("Something wrong " + e.getMessage());
 		} catch (InterruptedException e) {
-			System.out.println().errorAndGiveUp("Unexpected interruption " + e.getMessage());
+			System.out.println("Unexpected interruption " + e.getMessage());
 		}
 
+		return;
 	}
-	}
-
 }

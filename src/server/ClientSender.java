@@ -12,6 +12,9 @@ public class ClientSender extends Thread {
 	}
 
 	public void run() {
+		System.out.println("CS");
+		System.out.println("From now all it does is that it takes a message and sends it back to the client.\n" +
+				"Write something and it will give you back the same message.");
 		// So that we can use the method readLine:
 		BufferedReader user = new BufferedReader(new InputStreamReader(System.in));
 
@@ -26,22 +29,24 @@ public class ClientSender extends Thread {
 				if (breakTheLoop)
 					break;
 
-				// based on command wait for more information and send it over to ServerReceiver
-				if (command.equals(Strings.send)) {
-					String recipient = user.readLine();
-					String text = user.readLine();
-					toServer.println(command);
-					toServer.println(recipient);
-					toServer.println(text);
-				} else if (command.equals(Strings.quit)) {
-					toServer.println(command);
+				toServer.println(command);
 
-				} else if (command.equals(Strings.logout)) {
-					toServer.println(command);
-					break;
-				} else {
-					System.out.println("Unknown command");
-				}
+				// based on command wait for more information and send it over to ServerReceiver
+//				if (command.equals("send")) {
+//					String recipient = user.readLine();
+//					String text = user.readLine();
+//					toServer.println(command);
+//					toServer.println(recipient);
+//					toServer.println(text);
+//				} else if (command.equals("quit")) {
+//					toServer.println(command);
+//
+//				} else if (command.equals("logout")) {
+//					toServer.println(command);
+//					break;
+//				} else {
+//					System.out.println("Unknown command");
+//				}
 			}
 		} catch (IOException e) {
 			System.out.println("Communication broke in ClientSender" + e.getMessage());

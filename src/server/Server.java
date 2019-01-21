@@ -17,7 +17,8 @@ public class Server extends Thread {
 		try {
 			serverSocket = new ServerSocket(Port.number);
 		} catch (IOException e) {
-			Report.errorAndGiveUp("Couldn't listen on port " + Port.number);
+			//System.out.println("Couldn't listen on port " + Port.number);
+			e.getStackTrace();
 		}
 
 		try {
@@ -31,14 +32,14 @@ public class Server extends Thread {
 				PrintStream toClient = new PrintStream(socket.getOutputStream());
 
 				// We create and start a new thread to write to the client:
-				(new ServerSender(clientTable, realClientName, clientName, toClient)).start();
+				(new ServerSender(toClient)).start();
 
 				// We create and start a new thread to read from the client:
-				(new ServerReceiver(realClientName, clientName, fromClient, clientTable)).start();
+				(new ServerReceiver(toClient, fromClient)).start();
 
 			}
 		} catch (IOException e) {
-			Report.error("IO error " + e.getMessage());
+			System.out.println("IO error " + e.getMessage());
 
 		}
 	}
