@@ -6,7 +6,7 @@ public class ClientSender extends Thread {
 	BufferedReader fromServer;
 	public boolean breakTheLoop = false;
 
-	ClientSender(String nickname, PrintStream toServer, BufferedReader fromServer) {
+	ClientSender(PrintStream toServer, BufferedReader fromServer) {
 		this.toServer = toServer;
 		this.fromServer = fromServer;
 	}
@@ -33,36 +33,6 @@ public class ClientSender extends Thread {
 					toServer.println(command);
 					toServer.println(recipient);
 					toServer.println(text);
-				} else if (command.equals(Strings.createGroup)) {
-					String groupName = user.readLine();
-					String recipientsNames = user.readLine();
-					toServer.println(command);
-					toServer.println(groupName);
-					toServer.println(recipientsNames);
-
-				} else if (command.equals(Strings.group)) {
-					String recipient = user.readLine();
-					String text = user.readLine();
-					toServer.println(command);
-					toServer.println(recipient);
-					toServer.println(text);
-
-				} else if (command.equals(Strings.exitGroup)) {
-					String groupName = user.readLine();
-					toServer.println(command);
-					toServer.println(groupName);
-
-				} else if (command.equals(Strings.addGroupMem)) {
-					String groupName = user.readLine();
-					String member = user.readLine();
-					toServer.println(command);
-					toServer.println(groupName);
-					toServer.println(member);
-
-				} else if (command.equals(Strings.delete) || command.equals(Strings.next)
-						|| command.equals(Strings.previous)) {
-					toServer.println(command);
-
 				} else if (command.equals(Strings.quit)) {
 					toServer.println(command);
 

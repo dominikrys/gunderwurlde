@@ -17,7 +17,7 @@ public class ClientReceiver extends Thread {
 		// Print to the user whatever we get from the server:
 		try {
 			while (true) {
-				String s = server.readLine(); // Matches FFFFF in ServerSender.java
+				String s = server.readLine();
 				if (s == null) {
 					Report.error("the message is null");
 				} else if (s.equals(Strings.quitMsg)) {
@@ -25,9 +25,6 @@ public class ClientReceiver extends Thread {
 					// ClientSender for it to stop
 					sender.breakTheLoop = true;
 					Report.behaviour("You have quited! Send any command to exit the program.");
-					break;
-				} else if (s.equals(Strings.logoutMsg)) {
-					Report.behaviour("You have logged out!");
 					break;
 				} else {
 					System.out.println(s);

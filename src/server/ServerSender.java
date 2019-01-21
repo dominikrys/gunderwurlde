@@ -1,7 +1,5 @@
 import java.io.*;
 
-// Continuously reads from message queue for a particular client,
-// forwarding to the client.
 
 public class ServerSender extends Thread {
 	private PrintStream client;
@@ -9,7 +7,7 @@ public class ServerSender extends Thread {
 	private String clientName;
 	private String myClientsName;
 
-	public ServerSender(ClientTable clientTable, String myCN, String clientName, PrintStream c) {
+	public ServerSender(String myCN, String clientName, PrintStream c) {
 		client = c;
 		myClientsName = myCN;
 		this.clientName = clientName;
@@ -17,21 +15,12 @@ public class ServerSender extends Thread {
 	}
 
 	public void run() {
-		clientTable.getQueue(myClientsName).clear();
 		Message msg = null;
-		if (clientTable.getUserInfo(clientName).getAllMessages().size() > 0)
-			msg = clientTable.getUserInfo(clientName).getCurrentMsg();
-
-		if (msg != null)
-			client.println(msg);
 
 		while (true) {
-			try {
-				msg = clientTable.getQueue(myClientsName).take(); // Matches EEEEE in ServerReceiver
-			} catch (InterruptedException e) {
-			}
 
-			// if the message is the server message quit or logout, pass it over to
+
+			// if the message is the server message quit, pass it over to
 			// ClientReceiver and stop this thread
 			if (msg.getSender().equals(Strings.quit)) {
 				Report.behaviour("Closing " + clientName + " client");

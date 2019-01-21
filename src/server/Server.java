@@ -12,9 +12,6 @@ public class Server extends Thread {
 
 	public  void run() {
 
-		// This table will be shared by the server threads:
-		ClientTable clientTable = new ClientTable();
-
 		ServerSocket serverSocket = null;
 
 		try {
@@ -33,10 +30,11 @@ public class Server extends Thread {
 				BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintStream toClient = new PrintStream(socket.getOutputStream());
 
-				// Start to user initialisation process (registering and loggin in) by starting
-				// UserInit thread
-				ClientInit clientInit = new ClientInit(clientTable, fromClient, toClient);
-				clientInit.start();
+				// We create and start a new thread to write to the client:
+				(new ServerSender(clientTable, realClientName, clientName, toClient)).start();
+
+				// We create and start a new thread to read from the client:
+				(new ServerReceiver(realClientName, clientName, fromClient, clientTable)).start();
 
 			}
 		} catch (IOException e) {
