@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -6,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,41 +23,50 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        //Example map
-        int mapX = 17;
-        int mapY = 17;
+        //Example imageMap
+        char[][] inputMap = {
+                {'B', 'B', 'B'},
+                {'R', 'R', 'R'},
+                {'B', 'B', 'B'}
+        };
 
-        int tileSize = 10;
+        int mapX = inputMap[0].length;
+        int mapY = inputMap.length;
 
-        Image[][] map = new Image[mapX][mapY];
+        int tileSize = 30;
+
+        Image[][] imageMap = new Image[mapX][mapY];
 
         GridPane mapGroup = new GridPane();
 
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
-                int randomNumber = (int) Math.round(Math.random());
 
-                switch (randomNumber) {
-                    case 0:
-                        map[x][y] = createImage(Color.BLACK);
+                switch (inputMap[x][y]) {
+                    case 'B':
+                        imageMap[x][y] = createImage(Color.BLUE);
                         break;
-                    case 1:
-                        map[x][y] = createImage(Color.RED);
+                    case 'R':
+                        imageMap[x][y] = createImage(Color.RED);
                         break;
                     default:
-                        map[x][y] = createImage(Color.GREEN);
+                        imageMap[x][y] = createImage(Color.BLACK);
                         break;
                 }
 
-                ImageView imageView = new ImageView(map[x][y]);
+                ImageView imageView = new ImageView(imageMap[x][y]);
                 imageView.setFitWidth(tileSize);
                 imageView.setFitHeight(tileSize);
-                mapGroup.add(imageView, x, y);
+                mapGroup.add(imageView, y, x);
             }
         }
 
+        HBox mainHBox = new HBox(mapGroup);
+
+        mainHBox.setAlignment(Pos.CENTER);
+
         //Creating a Group object
-        Group root = new Group(mapGroup);
+        Group root = new Group(mainHBox);
 
         //Creating a scene object
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
