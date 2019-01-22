@@ -40,7 +40,7 @@ public class Main extends Application {
         int mapX = exampleState.getCurrentMap().getXDim();
         int mapY = exampleState.getCurrentMap().getYDim();
 
-        int tileSize = 30;
+        int tileSize = 40;
 
         GridPane mapGroup = new GridPane();
 
