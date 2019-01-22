@@ -1,7 +1,6 @@
 import data.GameState;
 import data.Pose;
 import data.map.Meadow;
-import data.map.TileTypes;
 import data.player.Player;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -20,107 +19,89 @@ import javafx.stage.Stage;
 import java.util.LinkedHashSet;
 
 public class Main extends Application {
+    // Constants for screen dimensions
+    // TODO: move these to a more general constants file
     private final int SCREEN_HEIGHT = 720;
     private final int SCREEN_WIDTH = 1280;
 
     @Override
     public void start(Stage stage) {
-        //Example code for testing
+        //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
         examplePlayers.add(new Player(new Pose(20, 20), 1));
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
 
-        //Example imageMap
-        char[][] inputMap = {
-                {'B', 'B', 'B'},
-                {'R', 'R', 'R'},
-                {'B', 'B', 'B'}
-        };
-
+        // Get dimensions of map
         int mapX = exampleState.getCurrentMap().getXDim();
         int mapY = exampleState.getCurrentMap().getYDim();
 
-        int tileSize = 40;
+        // Size the tiles should be displayed at TODO: change this to whatver the screen size is or just change it overlall
+        int displayedTileSize = 40;
 
-        GridPane mapGroup = new GridPane();
+        // GridPane for the map
+        GridPane mapPane = new GridPane();
 
+        // Iterate through the map, rending each tile
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
 
+                // Temporary ImageView object for current tile
                 ImageView imageView;
 
+                // Switch for checking what type the tile is
                 switch (exampleState.getCurrentMap().getTileMap()[x][y].getType()) {
                     case GRASS:
-                        imageView = new ImageView(createImage(Color.BLUE));
+                        // Load tile image according to specified dimensions. Final boolean for avoiding ugly smoothing
+                        imageView = new ImageView(new Image("file:assets/img/grass.png", displayedTileSize,
+                                displayedTileSize, false, false));
                         break;
                     case WOOD:
-                        imageView = new ImageView(createImage(Color.RED));
+                        imageView = new ImageView(new Image("file:assets/img/wood.png", displayedTileSize,
+                                displayedTileSize, false, false));
                         break;
                     default:
-                        imageView = new ImageView(createImage(Color.BLACK));
+                        imageView = new ImageView(createImageFromColor(Color.BLACK));
                         break;
                 }
 
-                imageView.setFitWidth(tileSize);
-                imageView.setFitHeight(tileSize);
-                mapGroup.add(imageView, y, x);
+                // Set dimensions for table - could be necessary in the future
+                //imageView.setFitWidth(displayedTileSize);
+                //imageView.setFitHeight(displayedTileSize);
+
+                // Add tile to map pane
+                mapPane.add(imageView, y, x);
             }
         }
 
-        HBox mainHBox = new HBox(mapGroup);
-
+        // Add map to main HBox to allow centering
+        HBox mainHBox = new HBox(mapPane);
         mainHBox.setAlignment(Pos.CENTER);
 
-        //Creating a Group object
+        // Create the root group
         Group root = new Group(mainHBox);
 
-        //Creating a scene object
+        // Create the main scene
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        //Setting title to the Stage
+        // Setting title to the Stage
         stage.setTitle("Cool game");
 
-        //Adding scene to the stage
+        //A dding scene to the stage
         stage.setScene(scene);
 
-        //Displaying the contents of the stage
+        // Displaying the contents of the stage
         stage.show();
     }
 
-    private Image createImage(Color color) {
+    // Method for creating an image from a specified colour
+    private Image createImageFromColor(Color color) {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
     }
 
+    // Main method
     public static void main(String args[]) {
         launch(args);
-    }
-
-    public static class MapTile extends StackPane {
-
-        public MapTile(int type, double x, double y, double width, double height) {
-
-            // create rectangle
-            Rectangle rectangle = new Rectangle(width, height);
-            switch (type) {
-                case 0:
-                    rectangle.setFill(Color.BLUE);
-                    break;
-                case 1:
-                    rectangle.setFill(Color.RED);
-                    break;
-                default:
-                    rectangle.setFill(Color.GREEN);
-                    break;
-            }
-
-            // set position
-            setTranslateX(x);
-            setTranslateY(y);
-
-            getChildren().addAll(rectangle);
-        }
-
     }
 }
