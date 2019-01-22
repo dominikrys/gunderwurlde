@@ -1,4 +1,4 @@
-package data.request;
+package server.request;
 
 import java.util.LinkedHashMap;
 
