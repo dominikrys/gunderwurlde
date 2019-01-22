@@ -45,7 +45,16 @@ public class ClientRequests {
 		} else return false;
 	}
 	
-	public void playerRequestLeave(int playerID) {
-		playerRequests.remove(playerID);
+	//use once player leave has been processed
+	public boolean playerRequestRemove(int playerID) {
+		if (playerRequests.remove(playerID) != null) return true;
+		else return false;
+	}
+	
+	public boolean playerRequestLeave(int playerID) {
+		if (playerRequests.containsKey(playerID)) {
+			playerRequests.get(playerID).requestLeave();
+			return true;
+		} else return false;
 	}
 }

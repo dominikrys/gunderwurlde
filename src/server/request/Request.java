@@ -9,10 +9,12 @@ public class Request {
 	protected Optional<Integer> selectItem;
 	protected boolean shoot;
 	protected boolean reload;
+	protected boolean leave;
 	
 	public Request() {
 		this.shoot = false;
 		this.reload = false;
+		this.leave = false;
 	}
 	
 	public boolean poseExists() {
@@ -39,20 +41,36 @@ public class Request {
 		this.selectItem = Optional.of(selectWeapon);
 	}
 
-	public boolean requestShoot() {
-		return shoot;
+	public void requestShoot() {
+		this.shoot = true;
 	}
 
 	public void setShoot(boolean shoot) {
 		this.shoot = shoot;
 	}
+	
+	public boolean getShoot() {
+		return shoot;
+	}
 
-	public boolean requestReload() {
-		return reload;
+	public void requestReload() {
+		this.reload = true;
 	}
 
 	public void setReload(boolean reload) {
 		this.reload = reload;
+	}
+	
+	public boolean getReload() {
+		return reload;
+	}
+
+	public void requestLeave() {
+		this.leave = true;
+	}
+	
+	public boolean getLeave() {
+		return leave;
 	}
 		
 }
