@@ -50,7 +50,7 @@ public abstract class Projectile implements HasPose {
 
 	@Override
 	public Location getLocation() {
-		return pose; //will this work?
+		return pose;
 	}
 
 	@Override
