@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import data.HasHealth;
 import data.HasPose;
 import data.IsMovable;
+import data.Location;
 import data.Pose;
 import data.item.Item;
 
@@ -14,21 +15,27 @@ public abstract class Enemy implements HasHealth, HasPose, IsMovable{
 	protected int moveSpeed;
 	protected Pose pose;
 	protected LinkedHashMap<Item,Double> drops;
+	protected EnemyList enemyName;
 	
-	Enemy(int maxHealth, int moveSpeed, Pose pose, LinkedHashMap<Item,Double> drops) {
+	Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, LinkedHashMap<Item,Double> drops) {
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		this.moveSpeed = moveSpeed;
 		this.pose = pose;
 		this.drops = drops;
+		this.enemyName = enemyName;
 	}
 	
-	Enemy(int maxHealth, int moveSpeed, Pose pose) {
-		this(maxHealth, moveSpeed, pose, new LinkedHashMap<Item,Double>());
+	Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName) {
+		this(maxHealth, moveSpeed, pose, enemyName, new LinkedHashMap<Item,Double>());
 	}
 	
 	public LinkedHashMap<Item, Double> getDrops() {
 		return drops;
+	}
+	
+	public EnemyList getEnemyName() {
+		return enemyName;
 	}
 
 	@Override
@@ -83,6 +90,16 @@ public abstract class Enemy implements HasHealth, HasPose, IsMovable{
 	@Override
 	public void setPose(Pose pose) {
 		this.pose = pose;
+	}
+	
+	@Override
+	public Location getLocation() {
+		return pose;
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		this.pose = new Pose(location);
 	}
 	
 }

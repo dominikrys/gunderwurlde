@@ -6,8 +6,8 @@ import data.item.ItemType;
 
 abstract class Weapon extends Item {
 
-	Weapon(ItemList itemID, ItemType itemType) {
-		super(itemID, itemType);
+	Weapon(ItemList itemName, ItemType itemType) {
+		super(itemName, itemType);
 	}
 	
 	
