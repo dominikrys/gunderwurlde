@@ -4,8 +4,6 @@ import data.Pose;
 import data.enemy.Enemy;
 import data.enemy.Zombie;
 import data.item.Item;
-import data.item.ItemList;
-import data.item.ItemType;
 import data.item.weapon.Pistol;
 import data.map.Meadow;
 import data.player.Player;
@@ -18,15 +16,10 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
@@ -135,13 +128,13 @@ public class Main extends Application {
                     currentItem.getLocation().getY(), displayedTileSize, displayedTileSize);
         }
 
-        // Add complete map to HBox in order to center it
-        HBox mainHBox = new HBox(mapCanvas);
+        // Create hbox to centre canvas in and add canvas to it
+        HBox mainHBox = new HBox();
         mainHBox.setAlignment(Pos.CENTER);
+        mainHBox.getChildren().addAll(mapCanvas);
 
-        // Create root group and add hbox to it
-        Group root = new Group();
-
+        // Create root stackpane and add hbox to it
+        StackPane root = new StackPane();
         root.getChildren().add(mainHBox);
 
         // Create the main scene
@@ -174,7 +167,7 @@ public class Main extends Application {
         return true;
     }
 
-    // Method for scaling image by resampling
+    // Method for scaling image by integer value by resampling - useful for later
     private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
