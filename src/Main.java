@@ -92,15 +92,13 @@ public class Main extends Application {
         }
 
         // Render players
-        int playerSize = 32; // Size for players TODO: add to constants?
-
         Image playerImage = new Image("file:assets/img/player.png"); // Load image for player
 
         checkImageLoaded(playerImage, "Player"); // Check if loaded correctly
 
         for (Player currentPlayer : exampleState.getPlayers()) {
-            mapGC.drawImage(playerImage, currentPlayer.getPose().getX(), currentPlayer.getPose().getY(), playerSize,
-                    playerSize);
+            mapGC.drawImage(playerImage, currentPlayer.getPose().getX(), currentPlayer.getPose().getY(),
+                    displayedTileSize, displayedTileSize);
         }
 
         // Render enemies TODO: add options for different sizes of enemies. Add this to enemy class as well!!!
@@ -112,11 +110,11 @@ public class Main extends Application {
 
         for (Enemy currentEnemy : exampleState.getEnemies()) {
             mapGC.drawImage(zombieImage, currentEnemy.getPose().getX(),
-                    currentEnemy.getPose().getY(), playerSize, playerSize);
+                    currentEnemy.getPose().getY(), displayedTileSize, displayedTileSize);
         }
 
         // Render projectiles
-        int projecticleSize = 8;
+        int projectileSize = 8;
 
         Image bulletImage = new Image("file:assets/img/bullet.png");
 
@@ -124,19 +122,17 @@ public class Main extends Application {
 
         for (Projectile currentProjectile : exampleState.getProjectiles()) {
             mapGC.drawImage(bulletImage, currentProjectile.getPose().getX(),
-                    currentProjectile.getPose().getY(), projecticleSize, projecticleSize); //TODO check for dimension
+                    currentProjectile.getPose().getY(), projectileSize, projectileSize); //TODO check for dimension
         }
 
         // Render items
-        int itemSize = 24;
-
         Image pistolImage = new Image("file:assets/img/pistol.png");
 
         checkImageLoaded(pistolImage, "pistol"); // Check if loaded correctly
 
         for (Item currentItem : exampleState.getItems()) {
             mapGC.drawImage(pistolImage, currentItem.getLocation().getX(),
-                    currentItem.getLocation().getY(), itemSize, itemSize);
+                    currentItem.getLocation().getY(), displayedTileSize, displayedTileSize);
         }
 
         // Add complete map to HBox in order to center it
