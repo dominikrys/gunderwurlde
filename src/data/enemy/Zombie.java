@@ -9,7 +9,7 @@ public class Zombie extends Enemy implements HasContactDamage {
 	
 	protected int contactDamage = 1;
 	
-	Zombie(Pose pose) {
+	public Zombie(Pose pose) {
 		super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose);
 	}
 

@@ -1,14 +1,21 @@
 import data.GameState;
 import data.Pose;
+import data.enemy.Zombie;
+import data.item.Item;
+import data.item.ItemList;
+import data.item.ItemType;
+import data.item.weapon.Pistol;
 import data.map.Meadow;
 import data.player.Player;
+import data.projectile.SmallBullet;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -16,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 public class Main extends Application {
@@ -24,67 +32,88 @@ public class Main extends Application {
     private final int SCREEN_HEIGHT = 720;
     private final int SCREEN_WIDTH = 1280;
 
+    // Size the tiles should be displayed at TODO: change this to whatever the screen size is or just change it overall
+    int displayedTileSize = 32;
+
     @Override
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
         examplePlayers.add(new Player(new Pose(20, 20), 1));
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
+        exampleState.addItem(new Pistol());
+        exampleState.addEnemy(new Zombie(new Pose(120, 120)));
+        exampleState.addProjectile(new SmallBullet(new Pose(400, 300)));
 
         // Get dimensions of map
         int mapX = exampleState.getCurrentMap().getXDim();
         int mapY = exampleState.getCurrentMap().getYDim();
 
-        // Size the tiles should be displayed at TODO: change this to whatver the screen size is or just change it overlall
-        int displayedTileSize = 40;
+        // Create canvas for the map
+        Canvas mapCanvas = new Canvas(mapX * displayedTileSize, mapY * displayedTileSize);
+        GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
-        // GridPane for the map
-        GridPane mapPane = new GridPane();
-
-        // Iterate through the map, rending each tile
+        // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
+                // Create empty tile image in case no tile found
+                Image tileImage = createImageFromColor(Color.BLACK);
 
-                // Temporary ImageView object for current tile
-                ImageView imageView;
-
-                // Switch for checking what type the tile is
+                // Load correct graphic in to tileImage
                 switch (exampleState.getCurrentMap().getTileMap()[x][y].getType()) {
                     case GRASS:
-                        // Load tile image according to specified dimensions. Final boolean for avoiding ugly smoothing
-                        imageView = new ImageView(new Image("file:assets/img/grass.png", displayedTileSize,
-                                displayedTileSize, false, false));
+                        tileImage = new Image("file:assets/img/grass.png");
                         break;
                     case WOOD:
-                        imageView = new ImageView(new Image("file:assets/img/wood.png", displayedTileSize,
-                                displayedTileSize, false, false));
+                        tileImage = new Image("file:assets/img/wood.png");
                         break;
                     default:
-                        imageView = new ImageView(createImageFromColor(Color.BLACK));
                         break;
                 }
 
-                // Set dimensions for table - could be necessary in the future
-                //imageView.setFitWidth(displayedTileSize);
-                //imageView.setFitHeight(displayedTileSize);
+                // If tile size is not as specified in program, print erro TODO: maybe abort program completely?
+                if (tileImage.getWidth() != displayedTileSize || tileImage.getHeight() != displayedTileSize) {
+                    System.out.println("Tile loaded with unsupported dimensions when rendering map");
+                }
 
-                // Add tile to map pane
-                mapPane.add(imageView, y, x);
+                // Add tile to canvas
+                mapGC.drawImage(tileImage, x * displayedTileSize, y * displayedTileSize, displayedTileSize, displayedTileSize);
             }
         }
 
-        // Add map to main HBox to allow centering
-        HBox mainHBox = new HBox(mapPane);
+
+        Group root = new Group();
+
+        // Render players
+        int playerSize = 30; // Size for players TODO: remove this?
+
+        for (Player currentPlayer : exampleState.getPlayers()) {
+            ImageView imageView; // Image view for player TODO: maybe have this outside the loop
+
+            // Load sprite and specify scaling
+            mapGC.drawImage(new Image("file:assets/img/player.png"), currentPlayer.getPose().getX(),
+                    currentPlayer.getPose().getY(), displayedTileSize, displayedTileSize);
+        }
+
+        // Render enemies
+
+        // Render projectiles
+
+        // Render items
+
+        // Add complete map to HBox in order to center it
+        HBox mainHBox = new HBox(mapCanvas);
         mainHBox.setAlignment(Pos.CENTER);
 
-        // Create the root group
-        Group root = new Group(mainHBox);
+        root.getChildren().add(mainHBox);
+
+        root.getChildren().add(mapCanvas);
 
         // Create the main scene
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // Setting title to the Stage
-        stage.setTitle("Cool game");
+        stage.setTitle("Game");
 
         //A dding scene to the stage
         stage.setScene(scene);
@@ -98,6 +127,36 @@ public class Main extends Application {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
+    }
+
+    // Method for scaling image by resampling
+    private Image resampleImage(Image inputImage, int scaleFactor) {
+        final int inputImageWidth = (int) inputImage.getWidth();
+        final int inputImageHeight = (int) inputImage.getHeight();
+
+        // Set up output image
+        WritableImage outputImage = new WritableImage(
+                inputImageWidth *  scaleFactor,
+                inputImageHeight * scaleFactor
+        );
+
+        // Set up pixel reader and writer
+        PixelReader reader = inputImage.getPixelReader();
+        PixelWriter writer = outputImage.getPixelWriter();
+
+        // Resample image
+        for (int y = 0; y < inputImageHeight; y++) {
+            for (int x = 0; x < inputImageWidth; x++) {
+                final int argb = reader.getArgb(x, y);
+                for (int dy = 0; dy < scaleFactor; dy++) {
+                    for (int dx = 0; dx < scaleFactor; dx++) {
+                        writer.setArgb(x * scaleFactor + dx, y * scaleFactor + dy, argb);
+                    }
+                }
+            }
+        }
+
+        return outputImage;
     }
 
     // Main method
