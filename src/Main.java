@@ -42,6 +42,7 @@ public class Main extends Application {
         exampleState.addItem(new Pistol(Optional.of(new Location(50, 50))));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
+        ///////////////////////////////////////////////////////////////////////////////////
 
         // Get dimensions of map
         int mapX = exampleState.getCurrentMap().getXDim();
@@ -150,6 +151,15 @@ public class Main extends Application {
         // Displaying the contents of the stage
         stage.show();
     }
+/*
+    void renderEntity(String imageLocation, GraphicsContext gc, Object objectToRender) {
+        Image imageToRender = new Image("file:" + imageLocation);
+
+        checkImageLoaded(imageToRender, imageLocation); // Check if loaded correctly
+
+        drawRotatedImage(gc, imageToRender, objectToRender.getPose().getDirection(), objectToRender.getPose().getX(),
+                objectToRender.getPose().getY());
+    }*/
 
     // Method for setting transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
@@ -159,10 +169,10 @@ public class Main extends Application {
 
     // Method for drawing the rotated image
     private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
-        gc.save(); // saves the current state on stack, including the current transform
+        gc.save(); // Saves the current state on stack, including the current transform for later
         rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
         gc.drawImage(image, tlpx, tlpy);
-        gc.restore(); // back to original state (before rotation)
+        gc.restore(); // Back to original state (before rotation)
     }
 
     // Method for creating an image from a specified colour
@@ -173,9 +183,9 @@ public class Main extends Application {
     }
 
     // Method for checking if an image has loaded in correctly
-    private boolean checkImageLoaded(Image inputImage, String imageType) {
+    private boolean checkImageLoaded(Image inputImage, String imageDirectory) {
         if (inputImage.isError()) {
-            System.out.println(imageType + " image not found!");
+            System.out.println("Image not found in " + imageDirectory);
             return false;
         }
 
