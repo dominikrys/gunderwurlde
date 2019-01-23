@@ -1,6 +1,7 @@
 package data.projectile;
 
 import data.HasPose;
+import data.Location;
 import data.Pose;
 
 public abstract class Projectile implements HasPose {
@@ -45,6 +46,16 @@ public abstract class Projectile implements HasPose {
 	@Override
 	public void setPose(Pose pose) {
 		this.pose = pose;
+	}
+
+	@Override
+	public Location getLocation() {
+		return pose; //will this work?
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		this.pose = new Pose(location);
 	}
 	
 }

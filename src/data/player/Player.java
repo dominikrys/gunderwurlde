@@ -187,5 +187,15 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	public void setPose(Pose pose) {
 		this.pose = pose;
 	}
-	
+
+	@Override
+	public Location getLocation() {
+		return pose; //will this work?
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		this.pose = new Pose(location);
+	}
+
 }

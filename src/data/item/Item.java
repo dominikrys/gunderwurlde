@@ -2,9 +2,10 @@ package data.item;
 
 import java.util.Optional;
 
+import data.HasLocation;
 import data.Location;
 
-public abstract class Item {
+public abstract class Item implements HasLocation{
 	protected final ItemList itemName;
 	protected final ItemType itemType;
 	protected Optional<Location> location; //for items on the map
@@ -27,10 +28,16 @@ public abstract class Item {
 		return itemType;
 	}
 	
+	public void pickedUp() {
+		this.location = Optional.empty(); //Item location isn't tracked when in possession of something else.
+	}
+	
+	@Override
 	public Location getLocation() {
 		return location.get();
 	}
 	
+	@Override
 	public void setLocation(Location location) {
 		this.location = Optional.of(location);
 	}
