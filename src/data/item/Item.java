@@ -5,12 +5,12 @@ import java.util.Optional;
 import data.Location;
 
 public abstract class Item {
-	protected final ItemList itemID;
+	protected final ItemList itemName;
 	protected final ItemType itemType;
 	protected Optional<Location> location; //for items on the map
 	
-	protected Item(ItemList itemID, ItemType itemType) {
-		this.itemID = itemID;
+	protected Item(ItemList itemName, ItemType itemType) {
+		this.itemName = itemName;
 		this.itemType = itemType;
 	}
 	
@@ -19,12 +19,8 @@ public abstract class Item {
 		this.location = Optional.of(location);
 	}
 
-	public String getItemName() {
-		return itemID.toString();
-	}
-
-	public int getItemID() {
-		return itemID.getID();
+	public ItemList getItemName() {
+		return itemName;
 	}
 
 	public ItemType getItemType() {

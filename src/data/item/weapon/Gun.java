@@ -10,8 +10,8 @@ import data.projectile.ProjectileType;
 
 abstract class Gun extends Weapon implements Limited {
 	
-	Gun(ItemList itemID, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
-		super(itemID, ItemType.GUN);
+	Gun(ItemList itemName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
+		super(itemName, ItemType.GUN);
 		this.maxAmmo = maxAmmo;
 		this.clipSize = clipSize;
 		this.reloadTime = reloadTime;
