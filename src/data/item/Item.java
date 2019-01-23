@@ -14,9 +14,9 @@ public abstract class Item {
 		this.itemType = itemType;
 	}
 	
-	protected Item(ItemList itemID, ItemType itemType, Location location) {
+	protected Item(ItemList itemID, ItemType itemType, Optional<Location> location) {
 		this(itemID, itemType);
-		this.location = Optional.of(location);
+		this.location = location;
 	}
 
 	public String getItemName() {

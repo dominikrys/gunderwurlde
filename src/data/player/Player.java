@@ -1,6 +1,7 @@
 package data.player;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import data.HasHealth;
 import data.HasPose;
@@ -30,7 +31,7 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		this.health = DEFAULT_HEALTH;
 		this.maxHealth = health;
 		this.moveSpeed = DEFAULT_MOVESPEED;
-		this.items = new ArrayList<Item>(){{new Pistol();}};
+		this.items = new ArrayList<Item>(){{new Pistol(Optional.empty());}};
 		this.currentItem = 0;
 		this.pose = pose;
 		this.score = DEFAULT_SCORE;

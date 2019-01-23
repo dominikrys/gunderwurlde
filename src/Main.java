@@ -1,5 +1,7 @@
 import data.GameState;
+import data.Location;
 import data.Pose;
+import data.enemy.Enemy;
 import data.enemy.Zombie;
 import data.item.Item;
 import data.item.ItemList;
@@ -7,6 +9,7 @@ import data.item.ItemType;
 import data.item.weapon.Pistol;
 import data.map.Meadow;
 import data.player.Player;
+import data.projectile.Projectile;
 import data.projectile.SmallBullet;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -25,6 +28,7 @@ import javafx.stage.Stage;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 
 public class Main extends Application {
     // Constants for screen dimensions
@@ -39,9 +43,9 @@ public class Main extends Application {
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        examplePlayers.add(new Player(new Pose(20, 20), 1));
+        examplePlayers.add(new Player(new Pose(64, 64), 1));
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
-        exampleState.addItem(new Pistol());
+        exampleState.addItem(new Pistol(Optional.of(new Location(50, 50))));
         exampleState.addEnemy(new Zombie(new Pose(120, 120)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300)));
 
@@ -53,7 +57,7 @@ public class Main extends Application {
         Canvas mapCanvas = new Canvas(mapX * displayedTileSize, mapY * displayedTileSize);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
-        // Iterate through the map, rending each tile on canvas
+        // Iterate through the map, rending each tile on canvas TODO: add to individual methods
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Create empty tile image in case no tile found
@@ -63,51 +67,86 @@ public class Main extends Application {
                 switch (exampleState.getCurrentMap().getTileMap()[x][y].getType()) {
                     case GRASS:
                         tileImage = new Image("file:assets/img/grass.png");
+
+                        // Check if loaded correctly
+                        checkImageLoaded(tileImage, "Grass");
                         break;
                     case WOOD:
                         tileImage = new Image("file:assets/img/wood.png");
+
+                        // Check if loaded correctly
+                        checkImageLoaded(tileImage, "Wood");
                         break;
                     default:
                         break;
                 }
 
-                // If tile size is not as specified in program, print erro TODO: maybe abort program completely?
+                // If tile size is not as specified in program, print error TODO: maybe abort program completely?
                 if (tileImage.getWidth() != displayedTileSize || tileImage.getHeight() != displayedTileSize) {
                     System.out.println("Tile loaded with unsupported dimensions when rendering map");
                 }
 
                 // Add tile to canvas
-                mapGC.drawImage(tileImage, x * displayedTileSize, y * displayedTileSize, displayedTileSize, displayedTileSize);
+                mapGC.drawImage(tileImage, y * displayedTileSize, x * displayedTileSize, displayedTileSize, displayedTileSize);
             }
         }
 
-
-        Group root = new Group();
-
         // Render players
-        int playerSize = 30; // Size for players TODO: remove this?
+        int playerSize = 32; // Size for players TODO: add to constants?
+
+        Image playerImage = new Image("file:assets/img/player.png"); // Load image for player
+
+        checkImageLoaded(playerImage, "Player"); // Check if loaded correctly
 
         for (Player currentPlayer : exampleState.getPlayers()) {
-            ImageView imageView; // Image view for player TODO: maybe have this outside the loop
-
-            // Load sprite and specify scaling
-            mapGC.drawImage(new Image("file:assets/img/player.png"), currentPlayer.getPose().getX(),
-                    currentPlayer.getPose().getY(), displayedTileSize, displayedTileSize);
+            mapGC.drawImage(playerImage, currentPlayer.getPose().getX(), currentPlayer.getPose().getY(), playerSize,
+                    playerSize);
         }
 
-        // Render enemies
+        // Render enemies TODO: add options for different sizes of enemies. Add this to enemy class as well!!!
+        // TODO: add switch for various enemy graphics and sizes
+
+        Image zombieImage = new Image("file:assets/img/zombie.png");
+
+        checkImageLoaded(playerImage, "Zombie"); // Check if loaded correctly
+
+        for (Enemy currentEnemy : exampleState.getEnemies()) {
+            mapGC.drawImage(zombieImage, currentEnemy.getPose().getX(),
+                    currentEnemy.getPose().getY(), playerSize, playerSize);
+        }
 
         // Render projectiles
+        int projecticleSize = 8;
+
+        Image bulletImage = new Image("file:assets/img/bullet.png");
+
+        checkImageLoaded(bulletImage, "Bullet"); // Check if loaded correctly
+
+        for (Projectile currentProjectile : exampleState.getProjectiles()) {
+            mapGC.drawImage(bulletImage, currentProjectile.getPose().getX(),
+                    currentProjectile.getPose().getY(), projecticleSize, projecticleSize); //TODO check for dimension
+        }
 
         // Render items
+        int itemSize = 24;
+
+        Image pistolImage = new Image("file:assets/img/pistol.png");
+
+        checkImageLoaded(pistolImage, "pistol"); // Check if loaded correctly
+
+        for (Item currentItem : exampleState.getItems()) {
+            mapGC.drawImage(pistolImage, currentItem.getLocation().getX(),
+                    currentItem.getLocation().getY(), itemSize, itemSize);
+        }
 
         // Add complete map to HBox in order to center it
         HBox mainHBox = new HBox(mapCanvas);
         mainHBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().add(mainHBox);
+        // Create root group and add hbox to it
+        Group root = new Group();
 
-        root.getChildren().add(mapCanvas);
+        root.getChildren().add(mainHBox);
 
         // Create the main scene
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -129,6 +168,16 @@ public class Main extends Application {
         return image;
     }
 
+    // Method for checking if an image has loaded in correctly
+    private boolean checkImageLoaded(Image inputImage, String imageType) {
+        if (inputImage.isError()) {
+            System.out.println(imageType + " image not found!");
+            return false;
+        }
+
+        return true;
+    }
+
     // Method for scaling image by resampling
     private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
@@ -136,7 +185,7 @@ public class Main extends Application {
 
         // Set up output image
         WritableImage outputImage = new WritableImage(
-                inputImageWidth *  scaleFactor,
+                inputImageWidth * scaleFactor,
                 inputImageHeight * scaleFactor
         );
 
