@@ -16,7 +16,8 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	public static final int DEFAULT_TEAM = 0;
 	public static final int DEFAULT_SCORE = 0;
 	
-
+	private static int nextPlayerID = 0;
+	
 	protected ArrayList<Item> items;
 	protected int health;
 	protected int maxHealth;
@@ -25,6 +26,7 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	protected Pose pose;
 	protected int score;
 	protected int team;
+	protected int playerID;
 	
 	public Player(Pose pose, int team) {
 		this.health = DEFAULT_HEALTH;
@@ -35,6 +37,7 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		this.pose = pose;
 		this.score = DEFAULT_SCORE;
 		this.team = team;
+		this.playerID = nextPlayerID++;
 	}
 	
 	public Player(Location location, int team) {
@@ -49,6 +52,10 @@ public class Player implements HasPose, HasHealth, IsMovable{
 		this(location, DEFAULT_TEAM);
 	}
 	
+	public int getPlayerID() {
+		return playerID;
+	}
+
 	public ArrayList<Item> getItems() {
 		return items;
 	}
