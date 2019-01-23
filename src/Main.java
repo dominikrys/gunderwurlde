@@ -18,6 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
@@ -36,11 +37,11 @@ public class Main extends Application {
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        examplePlayers.add(new Player(new Pose(64, 64), 1));
+        examplePlayers.add(new Player(new Pose(64, 64, 45), 1));
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
         exampleState.addItem(new Pistol(Optional.of(new Location(50, 50))));
-        exampleState.addEnemy(new Zombie(new Pose(120, 120)));
-        exampleState.addProjectile(new SmallBullet(new Pose(400, 300)));
+        exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
+        exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
         // Get dimensions of map
         int mapX = exampleState.getCurrentMap().getXDim();
@@ -90,8 +91,8 @@ public class Main extends Application {
         checkImageLoaded(playerImage, "Player"); // Check if loaded correctly
 
         for (Player currentPlayer : exampleState.getPlayers()) {
-            mapGC.drawImage(playerImage, currentPlayer.getPose().getX(), currentPlayer.getPose().getY(),
-                    displayedTileSize, displayedTileSize);
+            drawRotatedImage(mapGC, playerImage, currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
+                    currentPlayer.getPose().getY());
         }
 
         // Render enemies TODO: add options for different sizes of enemies. Add this to enemy class as well!!!
@@ -102,8 +103,8 @@ public class Main extends Application {
         checkImageLoaded(playerImage, "Zombie"); // Check if loaded correctly
 
         for (Enemy currentEnemy : exampleState.getEnemies()) {
-            mapGC.drawImage(zombieImage, currentEnemy.getPose().getX(),
-                    currentEnemy.getPose().getY(), displayedTileSize, displayedTileSize);
+            drawRotatedImage(mapGC, zombieImage, currentEnemy.getPose().getDirection(), currentEnemy.getPose().getX(),
+                    currentEnemy.getPose().getY());
         }
 
         // Render projectiles
@@ -114,8 +115,8 @@ public class Main extends Application {
         checkImageLoaded(bulletImage, "Bullet"); // Check if loaded correctly
 
         for (Projectile currentProjectile : exampleState.getProjectiles()) {
-            mapGC.drawImage(bulletImage, currentProjectile.getPose().getX(),
-                    currentProjectile.getPose().getY(), projectileSize, projectileSize); //TODO check for dimension
+            drawRotatedImage(mapGC, bulletImage, currentProjectile.getPose().getDirection(),
+                    currentProjectile.getPose().getX(), currentProjectile.getPose().getY());
         }
 
         // Render items
@@ -148,6 +149,20 @@ public class Main extends Application {
 
         // Displaying the contents of the stage
         stage.show();
+    }
+
+    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
+    private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
+        Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+    }
+
+    // Method for drawing the rotated image
+    private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
+        gc.save(); // saves the current state on stack, including the current transform
+        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+        gc.drawImage(image, tlpx, tlpy);
+        gc.restore(); // back to original state (before rotation)
     }
 
     // Method for creating an image from a specified colour
