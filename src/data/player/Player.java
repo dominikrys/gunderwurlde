@@ -190,7 +190,7 @@ public class Player implements HasPose, HasHealth, IsMovable{
 
 	@Override
 	public Location getLocation() {
-		return pose; //will this work?
+		return pose;
 	}
 
 	@Override

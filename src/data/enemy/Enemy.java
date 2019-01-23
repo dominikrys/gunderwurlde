@@ -94,7 +94,7 @@ public abstract class Enemy implements HasHealth, HasPose, IsMovable{
 	
 	@Override
 	public Location getLocation() {
-		return pose; //will this work?
+		return pose;
 	}
 
 	@Override
