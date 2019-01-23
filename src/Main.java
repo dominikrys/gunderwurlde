@@ -10,14 +10,17 @@ import data.player.Player;
 import data.projectile.Projectile;
 import data.projectile.SmallBullet;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
@@ -135,9 +138,30 @@ public class Main extends Application {
         mainHBox.setAlignment(Pos.CENTER);
         mainHBox.getChildren().addAll(mapCanvas);
 
-        // Create root stackpane and add hbox to it
+        // Make GUI
+        VBox GUIBox = new VBox();
+        GUIBox.setPadding(new Insets(5, 5, 5, 5));
+        GUIBox.setSpacing(5);
+
+        // Make a separate GUI for each player in case coop
+        for (Player currentPlayer : exampleState.getPlayers()) {
+            // Label with player name to tell which player this part of the GUI is for
+            Label playerLabel = new Label("Player 1"); // TODO: Change this to player name from player class
+            playerLabel.setFont(new Font("Consolas", 32));
+
+            // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
+            HBox heartBox = new HBox();
+            for (int i = 0; i < currentPlayer.getHealth(); i++) {
+                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/heart.png")));
+            }
+
+            // Add elemnts of GUI for player to GUI
+            GUIBox.getChildren().addAll(playerLabel, heartBox);
+        }
+
+        // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
-        root.getChildren().add(mainHBox);
+        root.getChildren().addAll(mainHBox, GUIBox);
 
         // Create the main scene
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
