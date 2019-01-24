@@ -23,8 +23,8 @@ public abstract class Item {
 		return itemID.toString();
 	}
 
-	public int getItemID() {
-		return itemID.getID();
+	public ItemList getItemID() {
+		return itemID;
 	}
 
 	public ItemType getItemType() {

@@ -4,6 +4,7 @@ import data.Pose;
 import data.enemy.Enemy;
 import data.enemy.Zombie;
 import data.item.Item;
+import data.item.ItemList;
 import data.item.weapon.Pistol;
 import data.map.Meadow;
 import data.player.Player;
@@ -20,12 +21,14 @@ import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Stack;
 
 public class Main extends Application {
     // Constants for screen dimensions
@@ -149,14 +152,61 @@ public class Main extends Application {
             Label playerLabel = new Label("Player 1"); // TODO: Change this to player name from player class
             playerLabel.setFont(new Font("Consolas", 32));
 
+            // Player score
+            Label playerScore = new Label("Score: " + currentPlayer.getScore());
+            playerScore.setFont(new Font("Consolas", 32));
+
             // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
             HBox heartBox = new HBox();
+            // Populate life that hasn't been lost
             for (int i = 0; i < currentPlayer.getHealth(); i++) {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/heart.png")));
             }
+            // Populate lost life
+            for (int i = 0; i < currentPlayer.getMaxHealth() - currentPlayer.getHealth(); i++) {
+                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/lost_heart.png")));
+            }
 
-            // Add elemnts of GUI for player to GUI
-            GUIBox.getChildren().addAll(playerLabel, heartBox);
+            // Initialise stack pane for item and the currently selected item indicator
+            StackPane itemPane = new StackPane();
+
+            // Set up current item indicator
+            Rectangle currentItemIndicator = new Rectangle();
+            currentItemIndicator.setX(currentPlayer.getCurrentItemIndex() * displayedTileSize);
+            currentItemIndicator.setY(0);
+            currentItemIndicator.setWidth(displayedTileSize);
+            currentItemIndicator.setHeight(displayedTileSize);
+            currentItemIndicator.setArcHeight(5);
+            currentItemIndicator.setArcWidth(5);
+            currentItemIndicator.setFill(Color.TRANSPARENT);
+            currentItemIndicator.setStroke(Color.GOLD);
+            currentItemIndicator.setStrokeWidth(5);
+
+            // Iterate through held items list and add to the GUI
+            HBox heldItems = new HBox(); // Make HBox for held items
+
+            for (Item currentItem : currentPlayer.getItems()) {
+                Image itemImage = createImageFromColor(Color.BLACK); // Initialise item
+                switch (currentItem.getItemID()) {
+                    case PISTOL:
+                        itemImage = new Image("file:assets/img/pistol.png");
+                        break;
+                    default:
+                        break;
+                }
+
+                // Add item to list
+                heldItems.getChildren().add(new ImageView(itemImage));
+            }
+
+            // Set indicator to be under the selected item
+            itemPane.getChildren().addAll(currentItemIndicator, heldItems);
+
+            // Ammo
+
+            // Add elements of GUI for player to GUI
+            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, itemPane);
+            GUIBox.setAlignment(Pos.BASELINE_LEFT);
         }
 
         // Create root stackpane and add elements to be rendered to it
