@@ -1,6 +1,7 @@
 import data.GameState;
 import data.enemy.Enemy;
 import data.item.Item;
+import data.item.weapon.Gun;
 import data.player.Player;
 import data.projectile.Projectile;
 import javafx.geometry.Insets;
@@ -28,7 +29,7 @@ public class Renderer {
     }
 
     // Render input gamestate to stage
-    public void render(GameState inputGameState) {
+    public void renderGameState(GameState inputGameState) {
         // Get dimensions of map
         int mapX = inputGameState.getCurrentMap().getXDim();
         int mapY = inputGameState.getCurrentMap().getYDim();
@@ -179,10 +180,27 @@ public class Renderer {
                 currentItemIndex++;
             }
 
-            // Ammo
+            // Ammo hbox
+            HBox ammoBox = new HBox();
+
+            Gun currentGun = (Gun) currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current item TODO: make this abstract and not gun
+
+            // Make label for current ammo
+            Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
+                    new ImageView(new Image("file:assets/img/ammo_clip.png")));
+            currentAmmo.setFont(new Font("Consolas", 32));
+            currentAmmo.setTextFill(Color.BLACK);
+
+            // Make label for ammo in clip
+            Label clipAmmo = new Label("/" + currentGun.getClipSize());
+            clipAmmo.setFont(new Font("Consolas", 18));
+            clipAmmo.setTextFill(Color.DARKSLATEGREY);
+
+            // Add to ammo hbox
+            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
 
             // Add elements of GUI for player to GUI
-            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems);
+            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
         }
 
         // Create root stackpane and add elements to be rendered to it

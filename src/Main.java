@@ -30,7 +30,7 @@ public class Main extends Application {
 
         // Create renderer and call it
         Renderer renderer = new Renderer(stage);
-        renderer.render(exampleState);
+        renderer.renderGameState(exampleState);
     }
 
     // Main method
