@@ -10,11 +10,12 @@ import data.Pose;
 import data.item.Item;
 
 public abstract class Enemy implements HasHealth, HasPose, IsMovable{
+	protected final LinkedHashMap<Item,Double> drops;
+	
 	protected int health;
 	protected int maxHealth;
 	protected int moveSpeed;
 	protected Pose pose;
-	protected LinkedHashMap<Item,Double> drops;
 	protected EnemyList enemyName;
 	
 	Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, LinkedHashMap<Item,Double> drops) {

@@ -18,6 +18,8 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	
 	private static int nextPlayerID = 0;
 	
+	protected final int playerID;
+	
 	protected ArrayList<Item> items;
 	protected int health;
 	protected int maxHealth;
@@ -26,7 +28,6 @@ public class Player implements HasPose, HasHealth, IsMovable{
 	protected Pose pose;
 	protected int score;
 	protected int team;
-	protected int playerID;
 	
 	public Player(Pose pose, int team) {
 		this.health = DEFAULT_HEALTH;
