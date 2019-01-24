@@ -18,6 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -43,7 +45,11 @@ public class Main extends Application {
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        examplePlayers.add(new Player(new Pose(64, 64, 45), 1));
+        Player examplePlayer = new Player(new Pose(64, 64, 45), 1);
+        examplePlayer.addItem(new Pistol(Optional.empty()));
+        examplePlayer.addItem(new Pistol(Optional.empty()));
+        examplePlayer.addItem(new Pistol(Optional.empty()));
+        examplePlayers.add(examplePlayer);
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
         exampleState.addItem(new Pistol(Optional.of(new Location(50, 50))));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
@@ -151,10 +157,12 @@ public class Main extends Application {
             // Label with player name to tell which player this part of the GUI is for
             Label playerLabel = new Label("Player 1"); // TODO: Change this to player name from player class
             playerLabel.setFont(new Font("Consolas", 32));
+            playerLabel.setTextFill(Color.BLACK);
 
             // Player score
             Label playerScore = new Label("Score: " + currentPlayer.getScore());
             playerScore.setFont(new Font("Consolas", 32));
+            playerScore.setTextFill(Color.BLACK);
 
             // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
             HBox heartBox = new HBox();
@@ -167,23 +175,10 @@ public class Main extends Application {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/lost_heart.png")));
             }
 
-            // Initialise stack pane for item and the currently selected item indicator
-            StackPane itemPane = new StackPane();
-
-            // Set up current item indicator
-            Rectangle currentItemIndicator = new Rectangle();
-            currentItemIndicator.setX(currentPlayer.getCurrentItemIndex() * displayedTileSize);
-            currentItemIndicator.setY(0);
-            currentItemIndicator.setWidth(displayedTileSize);
-            currentItemIndicator.setHeight(displayedTileSize);
-            currentItemIndicator.setArcHeight(5);
-            currentItemIndicator.setArcWidth(5);
-            currentItemIndicator.setFill(Color.TRANSPARENT);
-            currentItemIndicator.setStroke(Color.GOLD);
-            currentItemIndicator.setStrokeWidth(5);
-
             // Iterate through held items list and add to the GUI
             HBox heldItems = new HBox(); // Make HBox for held items
+
+            int currentItemIndex = 0; // Keep track of current item since iterator is used
 
             for (Item currentItem : currentPlayer.getItems()) {
                 Image itemImage = createImageFromColor(Color.BLACK); // Initialise item
@@ -195,18 +190,26 @@ public class Main extends Application {
                         break;
                 }
 
-                // Add item to list
-                heldItems.getChildren().add(new ImageView(itemImage));
-            }
+                ImageView imageView = new ImageView(itemImage); // Make imageview from selected graphic
 
-            // Set indicator to be under the selected item
-            itemPane.getChildren().addAll(currentItemIndicator, heldItems);
+                // Check if the item currently being checked is the current selected item, and if it is, show that
+                if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
+                        DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
+                    dropShadow.setSpread(0.75);
+                    imageView.setEffect(dropShadow);
+                }
+
+                // Add item to list
+                heldItems.getChildren().add(imageView);
+
+                // Increment current item index
+                currentItemIndex++;
+            }
 
             // Ammo
 
             // Add elements of GUI for player to GUI
-            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, itemPane);
-            GUIBox.setAlignment(Pos.BASELINE_LEFT);
+            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems);
         }
 
         // Create root stackpane and add elements to be rendered to it
