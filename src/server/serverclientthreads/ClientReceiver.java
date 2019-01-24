@@ -28,6 +28,9 @@ public class ClientReceiver extends Thread {
 				String received = new String(packet.getData(), 0, packet.getLength());
 				System.out.println("Packet is " + received);
 				System.out.println("Packet received from ServerSender");
+				if (received.equals("exitCode")){
+					break;
+				}
 			}
 		} catch (SocketException e){
 			System.out.println("Client receiver ending");

@@ -7,13 +7,6 @@ import java.net.UnknownHostException;
 
 public class Client {
 
-    String username;
-
-
-    public Client(String username) {
-        this.username = username;
-    }
-
     public static void main(String[] args) {
 
         DatagramSocket socket;

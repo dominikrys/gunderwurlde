@@ -39,6 +39,9 @@ public class ClientSender extends Thread {
 				packet = new DatagramPacket(buffer, buffer.length, address, portNumber);
 				socket.send(packet);
 				System.out.println("Packet sent from clientSender");
+				if (userInput.equals("exit")){
+					break;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

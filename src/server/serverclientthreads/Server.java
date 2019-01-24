@@ -18,5 +18,14 @@ public class Server extends Thread {
 
         sender.start();
         receiver.start();
+
+        try {
+            receiver.join();
+            sender.join();
+            System.out.println("Server ended");
+            socket.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

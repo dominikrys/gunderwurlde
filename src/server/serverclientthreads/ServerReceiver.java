@@ -28,6 +28,7 @@ public class ServerReceiver extends Thread {
 		buffer = new byte[255];
 		try {
 			while (running) {
+				System.out.println("test");
 				// packet to receive incoming messages
 				packet = new DatagramPacket(buffer, buffer.length);
 				// blocking method
@@ -36,18 +37,22 @@ public class ServerReceiver extends Thread {
 
 				System.out.println("Packet received by ClientSender");
 				System.out.println("Packet contents is " + receivedString);
-				sender.confirm(packet);
 
 				if(receivedString.equals("exit")){
+					System.out.println("test1");
 					sender.exit(packet);
 					running = false;
 					continue;
 				}
 
+
+				sender.confirm(packet);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		sender.interrupt();
+		System.out.println("test2");
 	}
 }

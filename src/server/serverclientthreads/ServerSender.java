@@ -43,6 +43,7 @@ public class ServerSender extends Thread {
 
 	public void exit(DatagramPacket received){
 		try {
+			running = false;
 			String exitCommand = ("exitCode");
 			buffer = exitCommand.getBytes();
 			address = received.getAddress();
