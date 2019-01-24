@@ -33,14 +33,6 @@ import java.util.Optional;
 import java.util.Stack;
 
 public class Main extends Application {
-    // Constants for screen dimensions
-    // TODO: move these to a more general constants file
-    private final int SCREEN_HEIGHT = 720;
-    private final int SCREEN_WIDTH = 1280;
-
-    // Size the tiles should be displayed at TODO: change this to whatever the screen size is or just change it overall
-    int displayedTileSize = 32;
-
     @Override
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
@@ -61,7 +53,7 @@ public class Main extends Application {
         int mapY = exampleState.getCurrentMap().getYDim();
 
         // Create canvas for the map
-        Canvas mapCanvas = new Canvas(mapX * displayedTileSize, mapY * displayedTileSize);
+        Canvas mapCanvas = new Canvas(mapX * Constants.TILE_SIZE, mapY * Constants.TILE_SIZE);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
         // Iterate through the map, rending each tile on canvas TODO: add to individual methods
@@ -89,12 +81,12 @@ public class Main extends Application {
                 }
 
                 // If tile size is not as specified in program, print error TODO: maybe abort program completely?
-                if (tileImage.getWidth() != displayedTileSize || tileImage.getHeight() != displayedTileSize) {
+                if (tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
                     System.out.println("Tile loaded with unsupported dimensions when rendering map");
                 }
 
                 // Add tile to canvas
-                mapGC.drawImage(tileImage, y * displayedTileSize, x * displayedTileSize, displayedTileSize, displayedTileSize);
+                mapGC.drawImage(tileImage, y * Constants.TILE_SIZE, x * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
             }
         }
 
@@ -139,7 +131,7 @@ public class Main extends Application {
 
         for (Item currentItem : exampleState.getItems()) {
             mapGC.drawImage(pistolImage, currentItem.getLocation().getX(),
-                    currentItem.getLocation().getY(), displayedTileSize, displayedTileSize);
+                    currentItem.getLocation().getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
         }
 
         // Create hbox to centre canvas in and add canvas to it
@@ -217,7 +209,7 @@ public class Main extends Application {
         root.getChildren().addAll(mainHBox, GUIBox);
 
         // Create the main scene
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+        Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         // Setting title to the Stage
         stage.setTitle("Game");
