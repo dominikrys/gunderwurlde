@@ -1,5 +1,5 @@
 package data.entity.item;
 
-public interface IsDroppable {
+public interface IsDroppable extends IsItem {
 
 }

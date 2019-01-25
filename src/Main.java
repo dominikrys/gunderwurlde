@@ -3,7 +3,7 @@ import data.Location;
 import data.Pose;
 import data.entity.enemy.Zombie;
 import data.entity.item.ItemDrop;
-import data.entity.item.ItemList;
+import data.entity.item.weapon.GunList;
 import data.entity.item.weapon.Pistol;
 import data.entity.player.Teams;
 import data.map.Meadow;
@@ -25,7 +25,7 @@ public class Main extends Application {
         examplePlayer.addItem(new Pistol());
         examplePlayers.add(examplePlayer);
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
-        exampleState.addItem(new ItemDrop(ItemList.PISTOL, new Location(50, 250)));
+        exampleState.addItem(new ItemDrop(GunList.PISTOL, new Location(50, 250)));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 

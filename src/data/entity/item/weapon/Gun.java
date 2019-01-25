@@ -1,7 +1,5 @@
 package data.entity.item.weapon;
 
-import data.entity.item.ItemList;
-import data.entity.item.ItemType;
 import data.entity.item.Limited;
 import data.entity.projectile.ProjectileList;
 
@@ -19,14 +17,28 @@ public abstract class Gun extends Weapon implements Limited {
     protected boolean reloading;
     protected int ammoPerShot;
     protected ProjectileList projectileType;
+    protected AmmoList ammoType;
 
-    Gun(ItemList itemName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType) {
-        super(itemName, ItemType.GUN);
+    Gun(GunList gunName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType, AmmoList ammoType) {
+        super(gunName);
         this.maxAmmo = maxAmmo;
         this.clipSize = clipSize;
         this.reloadTime = reloadTime;
         this.ammoPerShot = ammoPerShot;
         this.projectileType = projectileType;
+        this.ammoType = ammoType;
+    } 
+    
+    public int getAmmoInClip() {
+        return ammoInClip;
+    }
+
+    public AmmoList getAmmoType() {
+        return ammoType;
+    }
+
+    public void setAmmoType(AmmoList ammoType) {
+        this.ammoType = ammoType;
     }
 
     public int getMaxAmmo() {

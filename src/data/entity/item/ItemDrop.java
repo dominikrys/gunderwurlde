@@ -22,8 +22,8 @@ public class ItemDrop extends Entity {
         this(itemName, location, 1);
     }
 
-    public IsDroppable getItemName() {
-        return itemName;
+    public ItemList getItemName() {
+        return itemName.toItemList();
     }
 
     public int getQuantity() {

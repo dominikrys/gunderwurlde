@@ -1,20 +1,18 @@
 package data.entity.item;
 
 public abstract class Item {
-    protected final ItemList itemName;
-    protected final ItemType itemType;
+    protected final IsItem itemName;
 
-    protected Item(ItemList itemName, ItemType itemType) {
+    protected Item(IsItem itemName) {
         this.itemName = itemName;
-        this.itemType = itemType;
     }
 
     public ItemList getItemName() {
-        return itemName;
+        return itemName.toItemList();
     }
 
     public ItemType getItemType() {
-        return itemType;
+        return itemName.getItemType();
     }
 
 }
