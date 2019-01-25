@@ -1,14 +1,14 @@
 package server.game_engine.data;
 
 public abstract class Change {
-	protected ChangeType type;
+    protected ChangeType type;
 
-	Change() {
-		this.type = ChangeType.NONE;
-	}
+    Change() {
+	this.type = ChangeType.NONE;
+    }
 
-	public ChangeType getType() {
-		return type;
-	}
-	
+    public ChangeType getType() {
+	return type;
+    }
+
 }

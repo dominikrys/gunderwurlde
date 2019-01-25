@@ -1,28 +1,20 @@
 package data.entity.item;
 
-import java.util.Optional;
-
-import data.Location;
-
 public abstract class Item {
-	protected final ItemList itemID;
-	protected final ItemType itemType;
+    protected final ItemList itemName;
+    protected final ItemType itemType;
 
-	protected Item(ItemList itemID, ItemType itemType) {
-		this.itemID = itemID;
-		this.itemType = itemType;
-	}
+    protected Item(ItemList itemName, ItemType itemType) {
+	this.itemName = itemName;
+	this.itemType = itemType;
+    }
 
-	public String getItemName() {
-		return itemID.toString();
-	}
+    public ItemList getItemName() {
+	return itemName;
+    }
 
-	public ItemList getItemID() {
-		return itemID;
-	}
-
-	public ItemType getItemType() {
-		return itemType;
-	}
+    public ItemType getItemType() {
+	return itemType;
+    }
 
 }

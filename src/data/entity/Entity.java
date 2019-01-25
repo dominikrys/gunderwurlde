@@ -7,18 +7,26 @@ public abstract class Entity {
     protected Pose pose;
 
     protected Entity(Pose pose) {
-        this.pose = pose;
+	this.pose = pose;
     }
 
     protected Entity(Location location) {
-        this.pose = new Pose(location);
+	this.pose = new Pose(location);
     }
 
     public Pose getPose() {
-        return pose;
+	return pose;
     }
 
     public void setPose(Pose pose) {
-        this.pose = pose;
+	this.pose = pose;
+    }
+    
+    public Location getLocation() {
+	return pose;
+    }
+
+    public void setLocation(Location location) {
+	this.pose = new Pose(location,this.pose.getDirection());
     }
 }
