@@ -25,7 +25,7 @@ public class Main extends Application {
         examplePlayer.addItem(new Pistol());
         examplePlayers.add(examplePlayer);
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
-        exampleState.addItem(new ItemDrop(GunList.PISTOL, new Location(50, 250)));
+        exampleState.addItem(new ItemDrop(new Pistol(), new Location(50, 250)));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 

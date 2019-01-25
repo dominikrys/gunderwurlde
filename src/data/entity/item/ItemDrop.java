@@ -8,22 +8,26 @@ import data.map.Tile;
 public class ItemDrop extends Entity {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
 
-    private final IsDroppable itemName;
+    private final Item item;
 
     protected int quantity;
 
-    public ItemDrop(IsDroppable itemName, Location location, int quantity) {
+    public ItemDrop(Item item, Location location, int quantity) {
         super(new Pose(location), DROP_SIZE);
-        this.itemName = itemName;
+        this.item = item;
         this.quantity = quantity;
     }
 
-    public ItemDrop(IsDroppable itemName, Location location) {
-        this(itemName, location, 1);
+    public ItemDrop(Item item, Location location) {
+        this(item, location, 1);
     }
 
     public ItemList getItemName() {
-        return itemName.toItemList();
+        return item.getItemName();
+    }
+    
+    public ItemType getItemType() {
+        return item.getItemType();
     }
 
     public int getQuantity() {
@@ -36,6 +40,10 @@ public class ItemDrop extends Entity {
         } else {
             this.quantity = quantity;
         }
+    }
+
+    public Item getItem() {
+        return item;
     }
 
 }
