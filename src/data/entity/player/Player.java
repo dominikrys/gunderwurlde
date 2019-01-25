@@ -2,7 +2,6 @@ package data.entity.player;
 
 import data.HasHealth;
 import data.IsMovable;
-import data.Location;
 import data.Pose;
 import data.entity.Entity;
 import data.entity.item.Item;
@@ -10,7 +9,6 @@ import data.entity.item.weapon.Pistol;
 import data.map.Tile;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class Player extends Entity implements HasHealth, IsMovable {
     public static final int DEFAULT_HEALTH = 6;
@@ -37,6 +35,7 @@ public class Player extends Entity implements HasHealth, IsMovable {
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
         this.items = new ArrayList<Item>() {
+            private static final long serialVersionUID = 1L;
             {
                 new Pistol();
             }

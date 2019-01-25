@@ -5,8 +5,6 @@ import data.Pose;
 import data.entity.Entity;
 import data.map.Tile;
 
-import java.util.Locale;
-
 public class ItemDrop extends Entity {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
 

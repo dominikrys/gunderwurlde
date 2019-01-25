@@ -13,7 +13,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
-import java.util.Optional;
 
 public class Main extends Application {
     @Override
