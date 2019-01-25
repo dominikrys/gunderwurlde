@@ -8,8 +8,8 @@ public abstract class Projectile extends Entity {
     protected int damage;
     protected ProjectileType projectileType;
 
-    Projectile(int speed, int damage, ProjectileType projectileType, Pose pose) {
-        super(pose);
+    Projectile(int speed, int damage, ProjectileType projectileType, Pose pose, int size) {
+        super(pose, size);
         this.speed = speed;
         this.damage = damage;
         this.projectileType = projectileType;

@@ -17,8 +17,8 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
     protected int moveSpeed;
     protected EnemyList enemyName;
 
-    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, LinkedHashMap<Item, Double> drops) {
-        super(pose);
+    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size, LinkedHashMap<Item, Double> drops) {
+        super(pose, size);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.moveSpeed = moveSpeed;
@@ -26,8 +26,8 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
         this.enemyName = enemyName;
     }
 
-    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName) {
-        this(maxHealth, moveSpeed, pose, enemyName, new LinkedHashMap<Item, Double>());
+    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size) {
+        this(maxHealth, moveSpeed, pose, enemyName, size, new LinkedHashMap<Item, Double>());
     }
 
     public LinkedHashMap<Item, Double> getDrops() {

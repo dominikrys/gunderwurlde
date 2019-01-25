@@ -7,6 +7,7 @@ import data.Pose;
 import data.entity.Entity;
 import data.entity.item.Item;
 import data.entity.item.weapon.Pistol;
+import data.map.Tile;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -15,10 +16,13 @@ public class Player extends Entity implements HasHealth, IsMovable {
     public static final int DEFAULT_HEALTH = 6;
     public static final int DEFAULT_MOVESPEED = 10;
     public static final int DEFAULT_SCORE = 0;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
     private static int nextPlayerID = 0;
 
     protected final int playerID;
+    protected final Teams team;
+    protected final String name;
 
     protected ArrayList<Item> items;
     protected int health;
@@ -26,11 +30,9 @@ public class Player extends Entity implements HasHealth, IsMovable {
     protected int moveSpeed;
     protected int currentItem;
     protected int score;
-    protected Teams team;
-    protected String name;
 
     public Player(Pose pose, Teams team, String name) {
-        super(pose);
+        super(pose, DEFAULT_SIZE);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
@@ -126,10 +128,6 @@ public class Player extends Entity implements HasHealth, IsMovable {
 
     public Teams getTeam() {
         return team;
-    }
-
-    public void setTeam(Teams team) {
-        this.team = team;
     }
 
     public String getName() {
