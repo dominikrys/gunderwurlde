@@ -1,9 +1,11 @@
+import data.Constants;
 import data.GameState;
-import data.enemy.Enemy;
-import data.item.Item;
-import data.item.weapon.Gun;
-import data.player.Player;
-import data.projectile.Projectile;
+import data.entity.enemy.Enemy;
+import data.entity.item.Item;
+import data.entity.item.ItemDrop;
+import data.entity.item.weapon.Gun;
+import data.entity.player.Player;
+import data.entity.projectile.Projectile;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -111,9 +113,9 @@ public class Renderer {
 
         checkImageLoaded(pistolImage, "pistol"); // Check if loaded correctly
 
-        for (Item currentItem : inputGameState.getItems()) {
-            mapGC.drawImage(pistolImage, currentItem.getLocation().getX(),
-                    currentItem.getLocation().getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
+        for (ItemDrop currentItem : inputGameState.getItems()) {
+            mapGC.drawImage(pistolImage, currentItem.getPose().getX(),
+                    currentItem.getPose().getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
         }
 
         // Create hbox to centre canvas in and add canvas to it

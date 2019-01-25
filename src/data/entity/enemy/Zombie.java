@@ -1,4 +1,4 @@
-package data.enemy;
+package data.entity.enemy;
 
 import data.HasContactDamage;
 import data.Pose;

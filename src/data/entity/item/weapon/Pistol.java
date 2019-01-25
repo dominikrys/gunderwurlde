@@ -1,10 +1,7 @@
-package data.item.weapon;
+package data.entity.item.weapon;
 
-import data.Location;
-import data.item.ItemList;
-import data.projectile.ProjectileType;
-
-import java.util.Optional;
+import data.entity.item.ItemList;
+import data.entity.projectile.ProjectileType;
 
 public class Pistol extends Gun {
     public static final ItemList ITEM_ID = ItemList.PISTOL;
@@ -15,8 +12,8 @@ public class Pistol extends Gun {
     public static final ProjectileType DEFAULT_AMMO_TYPE = ProjectileType.SMALLBULLET;
 
 
-    public Pistol(Optional<Location> location) {
-        super(ITEM_ID, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT, DEFAULT_AMMO_TYPE, location);
+    public Pistol() {
+        super(ITEM_ID, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT, DEFAULT_AMMO_TYPE);
     }
 
 }

@@ -1,14 +1,12 @@
-package data.item.weapon;
+package data.entity.item.weapon;
 
-import data.Location;
-import data.item.ItemList;
-import data.item.ItemType;
-import data.item.Limited;
-import data.projectile.ProjectileType;
+import data.entity.item.ItemList;
+import data.entity.item.ItemType;
+import data.entity.item.Limited;
+import data.entity.projectile.ProjectileType;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 public abstract class Gun extends Weapon implements Limited {
 
@@ -21,8 +19,9 @@ public abstract class Gun extends Weapon implements Limited {
     protected boolean reloading;
     protected int ammoPerShot;
     protected ProjectileType projectileType;
-    Gun(ItemList itemID, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType, Optional<Location> location) {
-        super(itemID, ItemType.GUN, location);
+
+    Gun(ItemList itemID, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
+        super(itemID, ItemType.GUN);
         this.maxAmmo = maxAmmo;
         this.clipSize = clipSize;
         this.reloadTime = reloadTime;

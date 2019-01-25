@@ -1,9 +1,10 @@
 package data.map;
 
+import data.Constants;
 import data.Location;
 
 public class Tile {
-    public static final int TILE_SIZE = 16;
+    public static final int TILE_SIZE = Constants.TILE_SIZE;
 
     // Type of tile
     protected TileTypes tileType;

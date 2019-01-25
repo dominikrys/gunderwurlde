@@ -1,11 +1,13 @@
 import data.GameState;
 import data.Location;
 import data.Pose;
-import data.enemy.Zombie;
-import data.item.weapon.Pistol;
+import data.entity.enemy.Zombie;
+import data.entity.item.ItemDrop;
+import data.entity.item.ItemList;
+import data.entity.item.weapon.Pistol;
 import data.map.Meadow;
-import data.player.Player;
-import data.projectile.SmallBullet;
+import data.entity.player.Player;
+import data.entity.projectile.SmallBullet;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -17,13 +19,13 @@ public class Main extends Application {
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        Player examplePlayer = new Player(new Pose(64, 64, 45), 1);
-        examplePlayer.addItem(new Pistol(Optional.empty()));
-        examplePlayer.addItem(new Pistol(Optional.empty()));
-        examplePlayer.addItem(new Pistol(Optional.empty()));
+        Player examplePlayer = new Player(new Pose(64, 64, 45));
+        examplePlayer.addItem(new Pistol());
+        examplePlayer.addItem(new Pistol());
+        examplePlayer.addItem(new Pistol());
         examplePlayers.add(examplePlayer);
         GameState exampleState = new GameState(new Meadow(), examplePlayers);
-        exampleState.addItem(new Pistol(Optional.of(new Location(50, 50))));
+        exampleState.addItem(new ItemDrop(ItemList.PISTOL, new Location(50, 250)));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
         ///////////////////////////////////////////////////////////////////////////////////

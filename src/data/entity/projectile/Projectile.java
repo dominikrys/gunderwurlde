@@ -1,4 +1,4 @@
-package data.projectile;
+package data.entity.projectile;
 
 import data.HasPose;
 import data.Pose;

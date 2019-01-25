@@ -1,4 +1,4 @@
-package data.item;
+package data.entity.item;
 
 public interface Limited {
 	public abstract void replenish();
