@@ -5,6 +5,8 @@ import data.Pose;
 import data.map.Tile;
 
 public abstract class Entity {
+    public static final int MAX_SIZE = (3 * Tile.TILE_SIZE);
+    
     protected Pose pose;
     protected int size;
 
@@ -39,8 +41,8 @@ public abstract class Entity {
     public void changeSize(int amount) {
         if (amount <= -this.size) {
             this.size = 1;
-        } else if ((amount + this.size) > (3 * Tile.TILE_SIZE)) {
-            this.size = (3 * Tile.TILE_SIZE);
+        } else if ((amount + this.size) > MAX_SIZE) {
+            this.size = MAX_SIZE;
         } else {
             this.size += amount;
         }
@@ -49,8 +51,8 @@ public abstract class Entity {
     public void setSize(int size) {
         if (size <= 0) {
             this.size = 1;
-        } else if (size > (3 * Tile.TILE_SIZE)) {
-            this.size = (3 * Tile.TILE_SIZE);
+        } else if (size > MAX_SIZE) {
+            this.size = MAX_SIZE;
         } else {
             this.size = size;
         }
