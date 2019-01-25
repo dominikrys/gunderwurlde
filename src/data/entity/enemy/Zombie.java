@@ -10,21 +10,21 @@ public class Zombie extends Enemy implements HasContactDamage {
     protected int contactDamage = 1;
 
     public Zombie(Pose pose) {
-	super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose, EnemyList.ZOMBIE);
+        super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose, EnemyList.ZOMBIE);
     }
 
     Zombie(int maxHealth, int moveSpeed, Pose pose) {
-	super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE);
+        super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE);
     }
 
     @Override
     public int getContactDamage() {
-	return contactDamage;
+        return contactDamage;
     }
 
     @Override
     public void setContactDamage(int contactDamage) {
-	this.contactDamage = contactDamage;
+        this.contactDamage = contactDamage;
     }
 
 }

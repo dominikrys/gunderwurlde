@@ -10,17 +10,17 @@ public class ItemDrop extends Entity {
     private final ItemList itemName;
 
     public ItemDrop(ItemList itemName, Pose pose) {
-	super(pose);
-	this.itemName = itemName;
+        super(pose);
+        this.itemName = itemName;
     }
 
     public ItemDrop(ItemList itemName, Location location) {
-	super(location);
-	this.itemName = itemName;
+        super(location);
+        this.itemName = itemName;
     }
 
     public ItemList getItemName() {
         return itemName;
     }
-    
+
 }

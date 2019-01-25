@@ -20,81 +20,81 @@ public class GameState {
     protected LinkedHashSet<ItemDrop> items;
 
     public GameState(GameMap currentMap, LinkedHashSet<Player> players) {
-	this.players = players;
-	setCurrentMap(currentMap);
-	this.enemies = new LinkedHashSet<Enemy>();
-	this.projectiles = new LinkedHashSet<Projectile>();
-	this.items = new LinkedHashSet<ItemDrop>();
+        this.players = players;
+        setCurrentMap(currentMap);
+        this.enemies = new LinkedHashSet<Enemy>();
+        this.projectiles = new LinkedHashSet<Projectile>();
+        this.items = new LinkedHashSet<ItemDrop>();
     }
 
     public GameMap getCurrentMap() {
-	return currentMap;
+        return currentMap;
     }
 
     public void setCurrentMap(GameMap currentMap) {
-	this.currentMap = currentMap;
-	this.enemies = new LinkedHashSet<Enemy>();
-	this.projectiles = new LinkedHashSet<Projectile>();
-	this.items = new LinkedHashSet<ItemDrop>();
+        this.currentMap = currentMap;
+        this.enemies = new LinkedHashSet<Enemy>();
+        this.projectiles = new LinkedHashSet<Projectile>();
+        this.items = new LinkedHashSet<ItemDrop>();
 
-	ArrayList<Location> playerSpawns = currentMap.getPlayerSpawns();
-	Iterator<Location> spawnIterator = playerSpawns.iterator();
+        ArrayList<Location> playerSpawns = currentMap.getPlayerSpawns();
+        Iterator<Location> spawnIterator = playerSpawns.iterator();
 
-	for (Player p : players) {
-	    if (!spawnIterator.hasNext())
-		spawnIterator = playerSpawns.iterator();
-	    p.setPose(new Pose(spawnIterator.next()));
-	}
+        for (Player p : players) {
+            if (!spawnIterator.hasNext())
+                spawnIterator = playerSpawns.iterator();
+            p.setPose(new Pose(spawnIterator.next()));
+        }
     }
 
     public LinkedHashSet<ItemDrop> getItems() {
-	return items;
+        return items;
     }
 
     public void setItems(LinkedHashSet<ItemDrop> items) {
-	this.items = items;
+        this.items = items;
     }
 
     public void addItem(ItemDrop item) {
-	this.items.add(item);
+        this.items.add(item);
     }
 
     public boolean setTile(Tile tile, int x, int y) {
-	// Optional checks here
-	currentMap.setTile(tile, x, y);
-	return true;
+        // Optional checks here
+        currentMap.setTile(tile, x, y);
+        return true;
     }
 
     public LinkedHashSet<Enemy> getEnemies() {
-	return enemies;
+        return enemies;
     }
 
     public void setEnemies(LinkedHashSet<Enemy> enemies) {
-	this.enemies = enemies;
+        this.enemies = enemies;
     }
 
     public void addEnemy(Enemy enemy) {
-	this.enemies.add(enemy);
+        this.enemies.add(enemy);
     }
 
     public LinkedHashSet<Projectile> getProjectiles() {
-	return projectiles;
+        return projectiles;
     }
 
     public void setProjectiles(LinkedHashSet<Projectile> projectiles) {
-	this.projectiles = projectiles;
+        this.projectiles = projectiles;
     }
 
     public void addProjectile(Projectile projectile) {
-	this.projectiles.add(projectile);
+        this.projectiles.add(projectile);
     }
 
     public LinkedHashSet<Player> getPlayers() {
-	return players;
+        return players;
     }
 
     public void setPlayers(LinkedHashSet<Player> players) {
-	this.players = players;
+        this.players = players;
     }
 
 }

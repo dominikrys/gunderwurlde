@@ -5,16 +5,16 @@ public abstract class Item {
     protected final ItemType itemType;
 
     protected Item(ItemList itemName, ItemType itemType) {
-	this.itemName = itemName;
-	this.itemType = itemType;
+        this.itemName = itemName;
+        this.itemType = itemType;
     }
 
     public ItemList getItemName() {
-	return itemName;
+        return itemName;
     }
 
     public ItemType getItemType() {
-	return itemType;
+        return itemType;
     }
 
 }

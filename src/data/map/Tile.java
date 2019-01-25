@@ -13,26 +13,26 @@ public class Tile {
     protected TileState tileState;
 
     Tile(TileTypes tileType, TileState tileState) {
-	this.tileType = tileType;
-	this.tileState = tileState;
+        this.tileType = tileType;
+        this.tileState = tileState;
     }
 
     public TileTypes getType() {
-	return tileType;
+        return tileType;
     }
 
     public TileState getState() {
-	return tileState;
+        return tileState;
     }
 
     public static Location tileToLocation(int x, int y) {
-	int tileMid = TILE_SIZE / 2;
-	return new Location((x * TILE_SIZE) + tileMid, (y * TILE_SIZE) + tileMid);
+        int tileMid = TILE_SIZE / 2;
+        return new Location((x * TILE_SIZE) + tileMid, (y * TILE_SIZE) + tileMid);
     }
 
     public static int[] locationToTile(Location location) {
-	int[] i = { ((location.getX() - 1) / TILE_SIZE), ((location.getY() - 1) / TILE_SIZE) };
-	return i;
+        int[] i = { ((location.getX() - 1) / TILE_SIZE), ((location.getY() - 1) / TILE_SIZE) };
+        return i;
     }
 
 }

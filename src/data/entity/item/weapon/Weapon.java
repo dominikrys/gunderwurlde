@@ -7,7 +7,7 @@ import data.entity.item.ItemType;
 abstract class Weapon extends Item {
 
     Weapon(ItemList itemName, ItemType itemType) {
-	super(itemName, itemType);
+        super(itemName, itemType);
     }
 
 }

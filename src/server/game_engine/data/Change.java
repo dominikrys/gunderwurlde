@@ -4,11 +4,11 @@ public abstract class Change {
     protected ChangeType type;
 
     Change() {
-	this.type = ChangeType.NONE;
+        this.type = ChangeType.NONE;
     }
 
     public ChangeType getType() {
-	return type;
+        return type;
     }
 
 }

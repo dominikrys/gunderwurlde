@@ -12,8 +12,8 @@ public class Pistol extends Gun {
     public static final ProjectileType DEFAULT_AMMO_TYPE = ProjectileType.SMALLBULLET;
 
     public Pistol() {
-	super(ITEM_NAME, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
-		DEFAULT_AMMO_TYPE);
+        super(ITEM_NAME, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
+                DEFAULT_AMMO_TYPE);
     }
 
 }
