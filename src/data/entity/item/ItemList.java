@@ -1,5 +1,5 @@
 package data.entity.item;
 
-public enum ItemList {
+public enum ItemList implements IsDroppable {
     PISTOL;
 }

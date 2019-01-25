@@ -12,7 +12,7 @@ public class SmallBullet extends Projectile {
     }
 
     public SmallBullet(int speed, int damage, Pose pose, int size) {
-        super(speed, damage, ProjectileType.SMALLBULLET, pose, size);
+        super(speed, damage, ProjectileList.SMALLBULLET, pose, size);
     }
 
 }

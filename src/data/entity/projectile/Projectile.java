@@ -6,9 +6,9 @@ import data.entity.Entity;
 public abstract class Projectile extends Entity {
     protected int speed;
     protected int damage;
-    protected ProjectileType projectileType;
+    protected ProjectileList projectileType;
 
-    Projectile(int speed, int damage, ProjectileType projectileType, Pose pose, int size) {
+    Projectile(int speed, int damage, ProjectileList projectileType, Pose pose, int size) {
         super(pose, size);
         this.speed = speed;
         this.damage = damage;
@@ -31,11 +31,11 @@ public abstract class Projectile extends Entity {
         this.damage = damage;
     }
 
-    public ProjectileType getProjectileType() {
+    public ProjectileList getProjectileType() {
         return projectileType;
     }
 
-    public void setProjectileType(ProjectileType projectileType) {
+    public void setProjectileType(ProjectileList projectileType) {
         this.projectileType = projectileType;
     }
 

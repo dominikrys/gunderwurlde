@@ -3,7 +3,7 @@ package data.entity.item.weapon;
 import data.entity.item.ItemList;
 import data.entity.item.ItemType;
 import data.entity.item.Limited;
-import data.entity.projectile.ProjectileType;
+import data.entity.projectile.ProjectileList;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -18,9 +18,9 @@ public abstract class Gun extends Weapon implements Limited {
     protected LocalTime reloadStartTime;
     protected boolean reloading;
     protected int ammoPerShot;
-    protected ProjectileType projectileType;
+    protected ProjectileList projectileType;
 
-    Gun(ItemList itemName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileType projectileType) {
+    Gun(ItemList itemName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType) {
         super(itemName, ItemType.GUN);
         this.maxAmmo = maxAmmo;
         this.clipSize = clipSize;
@@ -41,11 +41,11 @@ public abstract class Gun extends Weapon implements Limited {
         return clipSize;
     }
 
-    public ProjectileType getProjectileType() {
+    public ProjectileList getProjectileType() {
         return projectileType;
     }
 
-    public void setProjectileType(ProjectileType projectileType) {
+    public void setProjectileType(ProjectileList projectileType) {
         this.projectileType = projectileType;
     }
 

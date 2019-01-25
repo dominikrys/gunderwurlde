@@ -1,7 +1,7 @@
 package data.entity.item.weapon;
 
 import data.entity.item.ItemList;
-import data.entity.projectile.ProjectileType;
+import data.entity.projectile.ProjectileList;
 
 public class Pistol extends Gun {
     public static final ItemList ITEM_NAME = ItemList.PISTOL;
@@ -9,7 +9,7 @@ public class Pistol extends Gun {
     public static final int DEFAULT_CLIP_SIZE = 12;
     public static final int DEFAULT_RELOAD_TIME = 5;
     public static final int DEFAULT_AMMO_PER_SHOT = 1;
-    public static final ProjectileType DEFAULT_AMMO_TYPE = ProjectileType.SMALLBULLET;
+    public static final ProjectileList DEFAULT_AMMO_TYPE = ProjectileList.SMALLBULLET;
 
     public Pistol() {
         super(ITEM_NAME, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,

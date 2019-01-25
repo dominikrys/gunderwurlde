@@ -10,19 +10,34 @@ import java.util.Locale;
 public class ItemDrop extends Entity {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
 
-    private final ItemList itemName;
+    private final IsDroppable itemName;
 
-    public ItemDrop(ItemList itemName, Pose pose) {
-        super(pose, DROP_SIZE);
+    protected int quantity;
+
+    public ItemDrop(IsDroppable itemName, Location location, int quantity) {
+        super(new Pose(location), DROP_SIZE);
         this.itemName = itemName;
+        this.quantity = quantity;
     }
 
-    public ItemDrop(ItemList itemName, Location location) {
-        this(itemName, new Pose(location));
+    public ItemDrop(IsDroppable itemName, Location location) {
+        this(itemName, location, 1);
     }
 
-    public ItemList getItemName() {
+    public IsDroppable getItemName() {
         return itemName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            this.quantity = 0;
+        } else {
+            this.quantity = quantity;
+        }
     }
 
 }
