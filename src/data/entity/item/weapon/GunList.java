@@ -16,6 +16,5 @@ public enum GunList implements IsDroppable, IsWeapon {
     public ItemList toItemList() {
         return ItemList.valueOf(this.toString());
     }
-    
-    
+
 }

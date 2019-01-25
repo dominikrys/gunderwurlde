@@ -25,7 +25,7 @@ public class ItemDrop extends Entity {
     public ItemList getItemName() {
         return item.getItemName();
     }
-    
+
     public ItemType getItemType() {
         return item.getItemType();
     }

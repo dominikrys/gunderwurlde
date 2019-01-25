@@ -11,7 +11,7 @@ public enum AmmoList implements IsDroppable {
     public ItemType getItemType() {
         return ItemType.AMMO;
     }
-    
+
     @Override
     public ItemList toItemList() {
         return ItemList.valueOf(this.toString());
