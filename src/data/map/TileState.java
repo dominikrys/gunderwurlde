@@ -1,5 +1,5 @@
 package data.map;
 
-public enum TileType {
+public enum TileState {
 	SOLID, PASSABLE
 }

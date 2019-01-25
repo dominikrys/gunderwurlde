@@ -1,4 +1,4 @@
-package data.enemy;
+package data.entity.enemy;
 
 import data.HasContactDamage;
 import data.Pose;
@@ -8,9 +8,9 @@ public class Zombie extends Enemy implements HasContactDamage {
 	public static final int DEFAULT_MOVESPEED = 6;
 	
 	protected int contactDamage = 1;
-	
-	Zombie(Pose pose) {
-		this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose);
+
+	public Zombie(Pose pose) {
+		super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose, EnemyList.ZOMBIE);
 	}
 
 	Zombie(int maxHealth, int moveSpeed, Pose pose) {
