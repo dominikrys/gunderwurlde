@@ -131,7 +131,7 @@ public class Renderer {
         // Make a separate GUI for each player in case coop
         for (Player currentPlayer : inputGameState.getPlayers()) {
             // Label with player name to tell which player this part of the GUI is for
-            Label playerLabel = new Label("Player 1"); // TODO: Change this to player name from player class
+            Label playerLabel = new Label(currentPlayer.getName());
             playerLabel.setFont(new Font("Consolas", 32));
             playerLabel.setTextFill(Color.BLACK);
 

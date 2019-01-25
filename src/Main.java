@@ -5,6 +5,7 @@ import data.entity.enemy.Zombie;
 import data.entity.item.ItemDrop;
 import data.entity.item.ItemList;
 import data.entity.item.weapon.Pistol;
+import data.entity.player.Teams;
 import data.map.Meadow;
 import data.entity.player.Player;
 import data.entity.projectile.SmallBullet;
@@ -19,7 +20,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         //Example code for testing - TODO: remove this later
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        Player examplePlayer = new Player(new Pose(64, 64, 45));
+        Player examplePlayer = new Player(new Pose(64, 64, 45), Teams.RED, "Player 1");
         examplePlayer.addItem(new Pistol());
         examplePlayer.addItem(new Pistol());
         examplePlayer.addItem(new Pistol());

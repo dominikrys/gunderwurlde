@@ -23,8 +23,9 @@ public class Player extends Entity implements HasHealth, IsMovable {
     protected int currentItem;
     protected int score;
     protected Teams team;
+    protected String name;
 
-    public Player(Pose pose, Teams team) {
+    public Player(Pose pose, Teams team, String name) {
         super(pose);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
@@ -35,14 +36,7 @@ public class Player extends Entity implements HasHealth, IsMovable {
         this.currentItem = 0;
         this.score = DEFAULT_SCORE;
         this.team = team;
-    }
-
-    public Player(Location location, Teams team) {
-        this(new Pose(location), team);
-    }
-
-    public Player(Pose pose) {
-        this(pose, Teams.RED);
+        this.name = name;
     }
 
     public ArrayList<Item> getItems() {
@@ -121,6 +115,10 @@ public class Player extends Entity implements HasHealth, IsMovable {
 
     public void setTeam(Teams team) {
         this.team = team;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
