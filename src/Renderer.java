@@ -1,5 +1,7 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import data.Constants;
 import data.GameState;
+import data.entity.Entity;
 import data.entity.enemy.Enemy;
 import data.entity.item.Item;
 import data.entity.item.ItemDrop;
@@ -75,47 +77,23 @@ public class Renderer {
         }
 
         // Render players
-        Image playerImage = new Image("file:assets/img/player.png"); // Load image for player
-
-        checkImageLoaded(playerImage, "Player"); // Check if loaded correctly
-
         for (Player currentPlayer : inputGameState.getPlayers()) {
-            drawRotatedImage(mapGC, playerImage, currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
-                    currentPlayer.getPose().getY());
+            renderEntity(currentPlayer, mapGC, "file:assets/img/player.png");
         }
 
-        // Render enemies TODO: add options for different sizes of enemies. Add this to enemy class as well!!!
-        // TODO: add switch for various enemy graphics and sizes
-
-        Image zombieImage = new Image("file:assets/img/zombie.png");
-
-        checkImageLoaded(playerImage, "Zombie"); // Check if loaded correctly
-
+        // Render enemies
         for (Enemy currentEnemy : inputGameState.getEnemies()) {
-            drawRotatedImage(mapGC, zombieImage, currentEnemy.getPose().getDirection(), currentEnemy.getPose().getX(),
-                    currentEnemy.getPose().getY());
+            renderEntity(currentEnemy, mapGC, "file:assets/img/zombie.png");
         }
 
         // Render projectiles
-        int projectileSize = 8;
-
-        Image bulletImage = new Image("file:assets/img/bullet.png");
-
-        checkImageLoaded(bulletImage, "Bullet"); // Check if loaded correctly
-
         for (Projectile currentProjectile : inputGameState.getProjectiles()) {
-            drawRotatedImage(mapGC, bulletImage, currentProjectile.getPose().getDirection(),
-                    currentProjectile.getPose().getX(), currentProjectile.getPose().getY());
+            renderEntity(currentProjectile, mapGC, "file:assets/img/bullet.png");
         }
 
         // Render items
-        Image pistolImage = new Image("file:assets/img/pistol.png");
-
-        checkImageLoaded(pistolImage, "pistol"); // Check if loaded correctly
-
         for (ItemDrop currentItem : inputGameState.getItems()) {
-            mapGC.drawImage(pistolImage, currentItem.getPose().getX(),
-                    currentItem.getPose().getY(), Constants.TILE_SIZE, Constants.TILE_SIZE);
+            renderEntity(currentItem, mapGC, "file:assets/img/pistol.png");
         }
 
         // Create hbox to centre canvas in and add canvas to it
@@ -220,6 +198,19 @@ public class Renderer {
 
         // Displaying the contents of the stage
         stage.show();
+    }
+
+    // Method for rendering entity onto map
+    void renderEntity(Entity entity, GraphicsContext gc, String imagePath) {
+        // Get image to render from path
+        Image imageToRender = new Image(imagePath);
+
+        // Check if image loaded properly
+        checkImageLoaded(imageToRender, imagePath);
+
+        // Render entity to specified location on graphicscontext
+        drawRotatedImage(gc, imageToRender, entity.getPose().getDirection(), entity.getPose().getX(),
+                entity.getPose().getY());
     }
 
     // Method for setting transform for the GraphicsContext to rotate around a pivot point.

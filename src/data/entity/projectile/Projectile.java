@@ -1,19 +1,18 @@
 package data.entity.projectile;
 
-import data.HasPose;
 import data.Pose;
+import data.entity.Entity;
 
-public abstract class Projectile implements HasPose {
+public abstract class Projectile extends Entity {
 	protected int speed;
 	protected int damage;
 	protected ProjectileType projectileType;
-	protected Pose pose;
 	
 	Projectile(int speed, int damage, ProjectileType projectileType, Pose pose) {
+		super(pose);
 		this.speed = speed;
 		this.damage = damage;
 		this.projectileType = projectileType;
-		this.pose = pose;
 	}
 	
 	public int getSpeed() {
@@ -35,16 +34,6 @@ public abstract class Projectile implements HasPose {
 
 	public void setProjectileType(ProjectileType projectileType) {
 		this.projectileType = projectileType;
-	}
-	
-	@Override
-	public Pose getPose() {
-		return pose;
-	}
-
-	@Override
-	public void setPose(Pose pose) {
-		this.pose = pose;
 	}
 	
 }
