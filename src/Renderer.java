@@ -33,16 +33,65 @@ public class Renderer {
 
     // Render input gamestate to stage
     public void renderGameState(GameState inputGameState) {
-        // Get dimensions of map
+        // Create canvas according to dimensions of the map
+        Canvas mapCanvas = new Canvas(inputGameState.getCurrentMap().getXDim() * Constants.TILE_SIZE,
+                inputGameState.getCurrentMap().getYDim() * Constants.TILE_SIZE);
+        GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
+
+        // Render map
+        renderMap(inputGameState, mapGC);
+
+        // Render players
+        for (Player currentPlayer : inputGameState.getPlayers()) {
+            renderEntity(currentPlayer, mapGC, "file:assets/img/player.png");
+        }
+
+        // Render enemies
+        for (Enemy currentEnemy : inputGameState.getEnemies()) {
+            renderEntity(currentEnemy, mapGC, "file:assets/img/zombie.png");
+        }
+
+        // Render projectiles
+        for (Projectile currentProjectile : inputGameState.getProjectiles()) {
+            renderEntity(currentProjectile, mapGC, "file:assets/img/bullet.png");
+        }
+
+        // Render items
+        for (ItemDrop currentItem : inputGameState.getItems()) {
+            renderEntity(currentItem, mapGC, "file:assets/img/pistol.png");
+        }
+
+        // Create hbox to centre map canvas in and add map canvas to it
+        HBox mainHBox = new HBox();
+        mainHBox.setAlignment(Pos.CENTER);
+        mainHBox.getChildren().addAll(mapCanvas);
+
+        // Create HUD TODO: do this with a gridpane instead for different corners?
+        VBox HUDBox = createHUD(inputGameState);
+
+        // Create root stackpane and add elements to be rendered to it
+        StackPane root = new StackPane();
+        root.getChildren().addAll(mainHBox, HUDBox);
+
+        // Create the main scene
+        Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+        // Setting title to the Stage
+        stage.setTitle("Game");
+
+        // Adding scene to the stage
+        stage.setScene(scene);
+
+        // Displaying the contents of the stage
+        stage.show();
+    }
+
+    private void renderMap(GameState inputGameState, GraphicsContext mapGC) {
+        // Get map X and Y dimensions
         int mapX = inputGameState.getCurrentMap().getXDim();
         int mapY = inputGameState.getCurrentMap().getYDim();
 
-        // Create canvas for the map
-        Canvas mapCanvas = new Canvas(mapX * Constants.TILE_SIZE, mapY * Constants.TILE_SIZE);
-        GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
-
-        // Iterate through the map, rending each tile on canvas TODO: add to individual
-        // methods
+        // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Create empty tile image in case no tile found
@@ -77,40 +126,17 @@ public class Renderer {
                         Constants.TILE_SIZE);
             }
         }
+    }
+    
+    private VBox createHUD(GameState inputGameState) {
+        // Make HUD
+        VBox HUDBox = new VBox();
+        HUDBox.setPadding(new Insets(5, 5, 5, 5));
+        HUDBox.setSpacing(5);
 
-        // Render players
+        // Make a separate HUD for each player in case coop
         for (Player currentPlayer : inputGameState.getPlayers()) {
-            renderEntity(currentPlayer, mapGC, "file:assets/img/player.png");
-        }
-
-        // Render enemies
-        for (Enemy currentEnemy : inputGameState.getEnemies()) {
-            renderEntity(currentEnemy, mapGC, "file:assets/img/zombie.png");
-        }
-
-        // Render projectiles
-        for (Projectile currentProjectile : inputGameState.getProjectiles()) {
-            renderEntity(currentProjectile, mapGC, "file:assets/img/bullet.png");
-        }
-
-        // Render items
-        for (ItemDrop currentItem : inputGameState.getItems()) {
-            renderEntity(currentItem, mapGC, "file:assets/img/pistol.png");
-        }
-
-        // Create hbox to centre canvas in and add canvas to it
-        HBox mainHBox = new HBox();
-        mainHBox.setAlignment(Pos.CENTER);
-        mainHBox.getChildren().addAll(mapCanvas);
-
-        // Make GUI
-        VBox GUIBox = new VBox();
-        GUIBox.setPadding(new Insets(5, 5, 5, 5));
-        GUIBox.setSpacing(5);
-
-        // Make a separate GUI for each player in case coop
-        for (Player currentPlayer : inputGameState.getPlayers()) {
-            // Label with player name to tell which player this part of the GUI is for
+            // Label with player name to tell which player this part of the HUD is for
             Label playerLabel = new Label(currentPlayer.getName());
             playerLabel.setFont(new Font("Consolas", 32));
             playerLabel.setTextFill(Color.BLACK);
@@ -132,7 +158,7 @@ public class Renderer {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/lost_heart.png")));
             }
 
-            // Iterate through held items list and add to the GUI
+            // Iterate through held items list and add to the HUD
             HBox heldItems = new HBox(); // Make HBox for held items
 
             int currentItemIndex = 0; // Keep track of current item since iterator is used
@@ -197,25 +223,11 @@ public class Renderer {
                 ammoBox.getChildren().addAll(currentAmmo);
             }
 
-            // Add elements of GUI for player to GUI
-            GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
+            // Add elements of HUD for player to HUD
+            HUDBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
         }
 
-        // Create root stackpane and add elements to be rendered to it
-        StackPane root = new StackPane();
-        root.getChildren().addAll(mainHBox, GUIBox);
-
-        // Create the main scene
-        Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-        // Setting title to the Stage
-        stage.setTitle("Game");
-
-        // Adding scene to the stage
-        stage.setScene(scene);
-
-        // Displaying the contents of the stage
-        stage.show();
+        return HUDBox;
     }
 
     // Method for rendering entity onto map
