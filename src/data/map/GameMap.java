@@ -3,6 +3,7 @@ package data.map;
 import java.util.ArrayList;
 
 import data.Location;
+import data.map.tile.Tile;
 
 public abstract class GameMap {
     protected final int DEFAULT_X_DIM;

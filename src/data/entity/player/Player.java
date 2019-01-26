@@ -6,7 +6,7 @@ import data.Pose;
 import data.entity.Entity;
 import data.entity.item.Item;
 import data.entity.item.weapon.Pistol;
-import data.map.Tile;
+import data.map.tile.Tile;
 
 import java.util.ArrayList;
 

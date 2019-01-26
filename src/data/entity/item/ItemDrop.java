@@ -3,7 +3,7 @@ package data.entity.item;
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
-import data.map.Tile;
+import data.map.tile.Tile;
 
 public class ItemDrop extends Entity {
     public static final int DROP_SIZE = Tile.TILE_SIZE;

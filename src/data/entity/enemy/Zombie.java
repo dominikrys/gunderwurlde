@@ -2,7 +2,7 @@ package data.entity.enemy;
 
 import data.HasContactDamage;
 import data.Pose;
-import data.map.Tile;
+import data.map.tile.Tile;
 
 public class Zombie extends Enemy implements HasContactDamage {
     public static final int DEFAULT_HEALTH = 2;

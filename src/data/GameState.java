@@ -5,7 +5,7 @@ import data.entity.item.ItemDrop;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import data.map.GameMap;
-import data.map.Tile;
+import data.map.tile.Tile;
 
 import java.util.ArrayList;
 import java.util.Iterator;

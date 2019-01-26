@@ -2,7 +2,7 @@ package data.entity;
 
 import data.Location;
 import data.Pose;
-import data.map.Tile;
+import data.map.tile.Tile;
 
 public abstract class Entity {
     public static final int MAX_SIZE = (3 * Tile.TILE_SIZE);

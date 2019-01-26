@@ -3,6 +3,9 @@ package data.map;
 import java.util.ArrayList;
 
 import data.Location;
+import data.map.tile.Tile;
+import data.map.tile.TileState;
+import data.map.tile.TileTypes;
 
 public class Meadow extends GameMap {
     public static final int DEFAULT_X_DIM = 17;

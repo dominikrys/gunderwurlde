@@ -1,4 +1,4 @@
-package data.map;
+package data.map.tile;
 
 import data.Constants;
 import data.Location;
@@ -12,7 +12,7 @@ public class Tile {
     // State of file - solid or not
     protected TileState tileState;
 
-    Tile(TileTypes tileType, TileState tileState) {
+    public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
         this.tileState = tileState;
     }
