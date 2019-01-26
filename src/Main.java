@@ -7,6 +7,9 @@ import data.entity.item.ItemList;
 import data.entity.item.weapon.Pistol;
 import data.entity.player.Teams;
 import data.map.Meadow;
+import inputhandler.KeyboardHandler;
+import inputhandler.MouseHandler;
+import inputhandler.UserInteraction;
 import data.entity.player.Player;
 import data.entity.projectile.SmallBullet;
 import javafx.application.Application;
@@ -32,6 +35,8 @@ public class Main extends Application {
 
         // Create renderer and call it
         Renderer renderer = new Renderer(stage);
+        //KeyboardHandler kbHandler = new KeyboardHandler(stage.getScene(), exampleState);
+        //Userinteraction userInteraction = new Userinteraction(stage.getScene(), exampleState);
         renderer.renderGameState(exampleState);
     }
 
