@@ -15,17 +15,18 @@ public class Server extends Thread {
         System.out.println("Server started");
         ServerSender sender = new ServerSender(socket);
         ServerReceiver receiver = new ServerReceiver(socket, sender);
-
-        sender.start();
-        receiver.start();
-
-        try {
+        try{
+            sender.start();
+            receiver.start();
+            System.out.println("Sender and receiver started");
+            // receiver joins with the sender so only receiver join needed here
             receiver.join();
-            sender.join();
+            System.out.println("Receiver joined");
             System.out.println("Server ended");
             socket.close();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Server ended successfully");
     }
 }

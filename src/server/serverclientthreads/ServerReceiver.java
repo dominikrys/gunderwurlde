@@ -39,20 +39,22 @@ public class ServerReceiver extends Thread {
 				System.out.println("Packet contents is " + receivedString);
 
 				if(receivedString.equals("exit")){
-					System.out.println("test1");
+					System.out.println("Initiating exit routine");
 					sender.exit(packet);
+					sender.join();
+					System.out.println("Finished waiting for server sender");
 					running = false;
 					continue;
 				}
-
-
-				sender.confirm(packet);
+				else {
+					sender.confirm(packet);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
-		sender.interrupt();
-		System.out.println("test2");
+		System.out.println("Server Receiver ending");
 	}
 }

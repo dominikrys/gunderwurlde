@@ -23,13 +23,9 @@ public class Client {
             sender.start();
             receiver.start();
             sender.join();
-            socket.close();
             receiver.join();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            socket.close();
+        }catch (UnknownHostException | InterruptedException | SocketException e) {
             e.printStackTrace();
         }
         System.out.println("Client ended successfully");
