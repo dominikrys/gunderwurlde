@@ -197,7 +197,6 @@ public class Renderer {
                 ammoBox.getChildren().addAll(currentAmmo);
             }
 
-
             // Add elements of GUI for player to GUI
             GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
         }
@@ -212,7 +211,7 @@ public class Renderer {
         // Setting title to the Stage
         stage.setTitle("Game");
 
-        // A dding scene to the stage
+        // Adding scene to the stage
         stage.setScene(scene);
 
         // Displaying the contents of the stage
@@ -220,7 +219,7 @@ public class Renderer {
     }
 
     // Method for rendering entity onto map
-    void renderEntity(Entity entity, GraphicsContext gc, String imagePath) {
+    private void renderEntity(Entity entity, GraphicsContext gc, String imagePath) {
         // Get image to render from path
         Image imageToRender = new Image(imagePath);
 
@@ -264,14 +263,14 @@ public class Renderer {
         return true;
     }
 
-    // Method for scaling image by integer value by resampling - useful for large
-    // enemies/powerups
+    // Method for scaling image by integer value by resampling - useful for large enemies/powerups
     public Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 
         // Set up output image
-        WritableImage outputImage = new WritableImage(inputImageWidth * scaleFactor, inputImageHeight * scaleFactor);
+        WritableImage outputImage = new WritableImage(inputImageWidth * scaleFactor,
+                inputImageHeight * scaleFactor);
 
         // Set up pixel reader and writer
         PixelReader reader = inputImage.getPixelReader();
@@ -290,14 +289,4 @@ public class Renderer {
         }
         return outputImage;
     }
-
-    /*
-     * void renderEntity(String imageLocation, GraphicsContext gc, Object
-     * objectToRender) { Image imageToRender = new Image("file:" + imageLocation);
-     *
-     * checkImageLoaded(imageToRender, imageLocation); // Check if loaded correctly
-     *
-     * drawRotatedImage(gc, imageToRender, objectToRender.getPose().getDirection(),
-     * objectToRender.getPose().getX(), objectToRender.getPose().getY()); }
-     */
 }
