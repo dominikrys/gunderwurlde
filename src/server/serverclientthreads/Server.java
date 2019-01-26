@@ -1,22 +1,27 @@
 package serverclientthreads;
 
-import serverclientdirect.Port;
-
 import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class Server extends Thread {
+    DatagramSocket socket;
+    int port = 4445;
 
+    public Server() {
+        try {
+            this.socket = new DatagramSocket(port);
+        }
+        catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public static void main(String[] args) throws SocketException {
+    public void run(){
         // Create the socket that will be used to transfer data
-        DatagramSocket socket;
-        int port = 4445;
+
         // Specify the port as this is the primary machine listening on that port
         try {
-            socket = new DatagramSocket(port);
-            System.out.println("Server started");
 
             // Create the threads that will run as sender and receiver
             ServerSender sender = new ServerSender(socket);
@@ -35,9 +40,6 @@ public class Server extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
             System.out.println("Server ended due an interrupt");
-        }
-        catch(BindException e){
-            System.out.println("Port already in use please choose a different port");
         }
     }
 }

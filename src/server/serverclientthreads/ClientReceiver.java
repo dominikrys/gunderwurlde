@@ -27,10 +27,10 @@ public class ClientReceiver extends Thread {
 				packet = new DatagramPacket(buffer, buffer.length);
 				// blocking method waiting to receive a message from the server
 				socket.receive(packet);
-				System.out.println("Message received: ");
+
 				// Creates a string and prints it to the user
 				String received = new String(packet.getData(), 0, packet.getLength());
-				System.out.println(received);
+				System.out.println("Message received: " + received);
 				// If message is exit the terminate
 				if (received.equals("exit")){
 					running = false;

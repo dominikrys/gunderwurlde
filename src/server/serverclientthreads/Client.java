@@ -20,6 +20,8 @@ public class Client {
         int port = 4445;
 
         try{
+            Server server = new Server();
+            server.start();
             // No port is specified as the server already bound to specified port
             socket = new DatagramSocket();
             // This threads address so the server knows who sent the message

@@ -36,13 +36,12 @@ public class ServerSender extends Thread {
 			address = received.getAddress();
 			int port = received.getPort();
 			// Creates the string from the received packet
-			String confirm = ("confirmed: " + new String(received.getData(), 0, received.getLength()));
+			String confirm = (new String(received.getData(), 0, received.getLength()));
 			buffer = confirm.getBytes();
 			// Creates a new packet to be sent to the address specified
 			packet = new DatagramPacket(buffer, buffer.length, address, port);
 			// Sends the packet
 			socket.send(packet);
-			System.out.println("Message confirmed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

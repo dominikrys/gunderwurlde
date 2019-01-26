@@ -32,10 +32,8 @@ public class ServerReceiver extends Thread {
 				packet = new DatagramPacket(buffer, buffer.length);
 				// blocking method that waits until a packet is received
 				socket.receive(packet);
-				System.out.println("Message received");
 				// creates a string from the received packet
 				String receivedString = new String(packet.getData(), 0, packet.getLength());
-				System.out.println("Message is " + receivedString);
 
 				// If string == exitCode then begin the exit sequence
 				if(receivedString.equals("exit")){

@@ -37,12 +37,12 @@ public class ClientSender extends Thread {
 				buffer = userInput.getBytes();
 				packet = new DatagramPacket(buffer, buffer.length, address, port);
 				socket.send(packet);
-				System.out.println("Message sent");
 
 				// If the messages is exit then the Thread should terminate
 				if (userInput.equals("exit")){
 					running = false;
 				}
+				Thread.yield();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
