@@ -1,4 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import data.Constants;
 import data.GameState;
 import data.entity.Entity;
@@ -51,20 +50,20 @@ public class Renderer {
 
                 // Load correct graphic in to tileImage
                 switch (inputGameState.getCurrentMap().getTileMap()[x][y].getType()) {
-                case GRASS:
-                    tileImage = new Image("file:assets/img/grass.png");
+                    case GRASS:
+                        tileImage = new Image("file:assets/img/grass.png");
 
-                    // Check if loaded correctly
-                    checkImageLoaded(tileImage, "Grass");
-                    break;
-                case WOOD:
-                    tileImage = new Image("file:assets/img/wood.png");
+                        // Check if loaded correctly
+                        checkImageLoaded(tileImage, "Grass");
+                        break;
+                    case WOOD:
+                        tileImage = new Image("file:assets/img/wood.png");
 
-                    // Check if loaded correctly
-                    checkImageLoaded(tileImage, "Wood");
-                    break;
-                default:
-                    break;
+                        // Check if loaded correctly
+                        checkImageLoaded(tileImage, "Wood");
+                        break;
+                    default:
+                        break;
                 }
 
                 // If tile size is not as specified in program, print error TODO: maybe abort
@@ -141,11 +140,11 @@ public class Renderer {
             for (Item currentItem : currentPlayer.getItems()) {
                 Image itemImage = createImageFromColor(Color.BLACK); // Initialise item
                 switch (currentItem.getItemName()) {
-                case PISTOL:
-                    itemImage = new Image("file:assets/img/pistol.png");
-                    break;
-                default:
-                    break;
+                    case PISTOL:
+                        itemImage = new Image("file:assets/img/pistol.png");
+                        break;
+                    default:
+                        break;
                 }
 
                 ImageView imageView = new ImageView(itemImage); // Make imageview from selected graphic
@@ -168,24 +167,36 @@ public class Renderer {
             // Ammo hbox
             HBox ammoBox = new HBox();
 
-            Gun currentGun = (Gun) currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current
-                                                                                                      // item TODO: make
-                                                                                                      // this abstract
-                                                                                                      // and not gun
+            // TODO: extend this for classes that also use ammo?
+            Item currentItem = currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current item
 
-            // Make label for current ammo
-            Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
-                    new ImageView(new Image("file:assets/img/ammo_clip.png")));
-            currentAmmo.setFont(new Font("Consolas", 32));
-            currentAmmo.setTextFill(Color.BLACK);
+            // Add ammo amount to hud if it's a gun
+            if (currentItem instanceof Gun) {
+                Gun currentGun = (Gun) currentItem; // Make Gun object from the input item
 
-            // Make label for ammo in clip
-            Label clipAmmo = new Label("/" + currentGun.getClipSize());
-            clipAmmo.setFont(new Font("Consolas", 18));
-            clipAmmo.setTextFill(Color.DARKSLATEGREY);
+                // Make label for current ammo
+                Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
+                        new ImageView(new Image("file:assets/img/ammo_clip.png")));
+                currentAmmo.setFont(new Font("Consolas", 32));
+                currentAmmo.setTextFill(Color.BLACK);
 
-            // Add to ammo hbox
-            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
+                // Make label for ammo in clip
+                Label clipAmmo = new Label("/" + currentGun.getClipSize());
+                clipAmmo.setFont(new Font("Consolas", 18));
+                clipAmmo.setTextFill(Color.DARKSLATEGREY);
+
+                // Add to ammo hbox
+                ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
+            } else {
+                // Make label for infinite use if it's not a weapon
+                Label currentAmmo = new Label("∞");
+                currentAmmo.setFont(new Font("Consolas", 32));
+                currentAmmo.setTextFill(Color.BLACK);
+
+                // Add to ammo hbox
+                ammoBox.getChildren().addAll(currentAmmo);
+            }
+
 
             // Add elements of GUI for player to GUI
             GUIBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
@@ -283,9 +294,9 @@ public class Renderer {
     /*
      * void renderEntity(String imageLocation, GraphicsContext gc, Object
      * objectToRender) { Image imageToRender = new Image("file:" + imageLocation);
-     * 
+     *
      * checkImageLoaded(imageToRender, imageLocation); // Check if loaded correctly
-     * 
+     *
      * drawRotatedImage(gc, imageToRender, objectToRender.getPose().getDirection(),
      * objectToRender.getPose().getX(), objectToRender.getPose().getY()); }
      */
