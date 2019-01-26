@@ -2,29 +2,31 @@ package data.entity.enemy;
 
 import data.HasContactDamage;
 import data.Pose;
+import data.map.Tile;
 
 public class Zombie extends Enemy implements HasContactDamage {
-	public static final int DEFAULT_HEALTH = 2;
-	public static final int DEFAULT_MOVESPEED = 6;
-	
-	protected int contactDamage = 1;
+    public static final int DEFAULT_HEALTH = 2;
+    public static final int DEFAULT_MOVESPEED = 6;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
-	public Zombie(Pose pose) {
-		super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose, EnemyList.ZOMBIE);
-	}
+    protected int contactDamage = 1;
 
-	Zombie(int maxHealth, int moveSpeed, Pose pose) {
-		super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE);
-	}
+    public Zombie(Pose pose) {
+        this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, pose, DEFAULT_SIZE);
+    }
 
-	@Override
-	public int getContactDamage() {
-		return contactDamage;
-	}
+    Zombie(int maxHealth, int moveSpeed, Pose pose, int size) {
+        super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE, size);
+    }
 
-	@Override
-	public void setContactDamage(int contactDamage) {
-		this.contactDamage = contactDamage;
-	}
-	
+    @Override
+    public int getContactDamage() {
+        return contactDamage;
+    }
+
+    @Override
+    public void setContactDamage(int contactDamage) {
+        this.contactDamage = contactDamage;
+    }
+
 }

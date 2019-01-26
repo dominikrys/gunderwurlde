@@ -3,19 +3,47 @@ package data.entity.item;
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
-
-import java.util.Locale;
+import data.map.Tile;
 
 public class ItemDrop extends Entity {
-    private final ItemList itemID;
+    public static final int DROP_SIZE = Tile.TILE_SIZE;
 
-    public ItemDrop(ItemList itemID, Pose pose) {
-        super(pose);
-        this.itemID = itemID;
+    private final Item item;
+
+    protected int quantity;
+
+    public ItemDrop(Item item, Location location, int quantity) {
+        super(new Pose(location), DROP_SIZE);
+        this.item = item;
+        this.quantity = quantity;
     }
 
-    public ItemDrop(ItemList itemID, Location location) {
-        super(location);
-        this.itemID = itemID;
+    public ItemDrop(Item item, Location location) {
+        this(item, location, 1);
     }
+
+    public ItemList getItemName() {
+        return item.getItemName();
+    }
+
+    public ItemType getItemType() {
+        return item.getItemType();
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            this.quantity = 0;
+        } else {
+            this.quantity = quantity;
+        }
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
 }

@@ -4,32 +4,33 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class GameStateChanges {
-	protected final LinkedHashSet<ProjectileChange> projectileChanges;
-	protected final LinkedHashSet<EnemyChange> enemyChanges;
-	protected final LinkedHashMap<Integer,PlayerChange> playerChanges;
-	protected final TileChange[][] tileChanges;
-	
-	public GameStateChanges(LinkedHashSet<ProjectileChange> projectileChanges, LinkedHashSet<EnemyChange> enemyChanges, LinkedHashMap<Integer, PlayerChange> playerChanges, TileChange[][] tileChanges) {
-		this.projectileChanges = projectileChanges;
-		this.enemyChanges = enemyChanges;
-		this.playerChanges = playerChanges;
-		this.tileChanges = tileChanges;
-	}
+    protected final LinkedHashSet<ProjectileChange> projectileChanges;
+    protected final LinkedHashSet<EnemyChange> enemyChanges;
+    protected final LinkedHashMap<Integer, PlayerChange> playerChanges;
+    protected final TileChange[][] tileChanges;
 
-	public LinkedHashSet<ProjectileChange> getProjectileChanges() {
-		return projectileChanges;
-	}
+    public GameStateChanges(LinkedHashSet<ProjectileChange> projectileChanges, LinkedHashSet<EnemyChange> enemyChanges,
+            LinkedHashMap<Integer, PlayerChange> playerChanges, TileChange[][] tileChanges) {
+        this.projectileChanges = projectileChanges;
+        this.enemyChanges = enemyChanges;
+        this.playerChanges = playerChanges;
+        this.tileChanges = tileChanges;
+    }
 
-	public LinkedHashSet<EnemyChange> getEnemyChanges() {
-		return enemyChanges;
-	}
+    public LinkedHashSet<ProjectileChange> getProjectileChanges() {
+        return projectileChanges;
+    }
 
-	public LinkedHashMap<Integer, PlayerChange> getPlayerChanges() {
-		return playerChanges;
-	}
+    public LinkedHashSet<EnemyChange> getEnemyChanges() {
+        return enemyChanges;
+    }
 
-	public TileChange[][] getTileChanges() {
-		return tileChanges;
-	}
-	
+    public LinkedHashMap<Integer, PlayerChange> getPlayerChanges() {
+        return playerChanges;
+    }
+
+    public TileChange[][] getTileChanges() {
+        return tileChanges;
+    }
+
 }

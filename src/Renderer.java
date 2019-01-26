@@ -42,7 +42,8 @@ public class Renderer {
         Canvas mapCanvas = new Canvas(mapX * Constants.TILE_SIZE, mapY * Constants.TILE_SIZE);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
-        // Iterate through the map, rending each tile on canvas TODO: add to individual methods
+        // Iterate through the map, rending each tile on canvas TODO: add to individual
+        // methods
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Create empty tile image in case no tile found
@@ -50,29 +51,31 @@ public class Renderer {
 
                 // Load correct graphic in to tileImage
                 switch (inputGameState.getCurrentMap().getTileMap()[x][y].getType()) {
-                    case GRASS:
-                        tileImage = new Image("file:assets/img/grass.png");
+                case GRASS:
+                    tileImage = new Image("file:assets/img/grass.png");
 
-                        // Check if loaded correctly
-                        checkImageLoaded(tileImage, "Grass");
-                        break;
-                    case WOOD:
-                        tileImage = new Image("file:assets/img/wood.png");
+                    // Check if loaded correctly
+                    checkImageLoaded(tileImage, "Grass");
+                    break;
+                case WOOD:
+                    tileImage = new Image("file:assets/img/wood.png");
 
-                        // Check if loaded correctly
-                        checkImageLoaded(tileImage, "Wood");
-                        break;
-                    default:
-                        break;
+                    // Check if loaded correctly
+                    checkImageLoaded(tileImage, "Wood");
+                    break;
+                default:
+                    break;
                 }
 
-                // If tile size is not as specified in program, print error TODO: maybe abort program completely?
+                // If tile size is not as specified in program, print error TODO: maybe abort
+                // program completely?
                 if (tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
                     System.out.println("Tile loaded with unsupported dimensions when rendering map");
                 }
 
                 // Add tile to canvas
-                mapGC.drawImage(tileImage, y * Constants.TILE_SIZE, x * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE);
+                mapGC.drawImage(tileImage, y * Constants.TILE_SIZE, x * Constants.TILE_SIZE, Constants.TILE_SIZE,
+                        Constants.TILE_SIZE);
             }
         }
 
@@ -118,7 +121,8 @@ public class Renderer {
             playerScore.setFont(new Font("Consolas", 32));
             playerScore.setTextFill(Color.BLACK);
 
-            // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
+            // HBox to horizontally keep heart graphics. Populate HBox with amount of life
+            // necessary
             HBox heartBox = new HBox();
             // Populate life that hasn't been lost
             for (int i = 0; i < currentPlayer.getHealth(); i++) {
@@ -136,17 +140,18 @@ public class Renderer {
 
             for (Item currentItem : currentPlayer.getItems()) {
                 Image itemImage = createImageFromColor(Color.BLACK); // Initialise item
-                switch (currentItem.getItemID()) {
-                    case PISTOL:
-                        itemImage = new Image("file:assets/img/pistol.png");
-                        break;
-                    default:
-                        break;
+                switch (currentItem.getItemName()) {
+                case PISTOL:
+                    itemImage = new Image("file:assets/img/pistol.png");
+                    break;
+                default:
+                    break;
                 }
 
                 ImageView imageView = new ImageView(itemImage); // Make imageview from selected graphic
 
-                // Check if the item currently being checked is the current selected item, and if it is, show that
+                // Check if the item currently being checked is the current selected item, and
+                // if it is, show that
                 if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
                     DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
                     dropShadow.setSpread(0.75);
@@ -163,7 +168,10 @@ public class Renderer {
             // Ammo hbox
             HBox ammoBox = new HBox();
 
-            Gun currentGun = (Gun) currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current item TODO: make this abstract and not gun
+            Gun currentGun = (Gun) currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current
+                                                                                                      // item TODO: make
+                                                                                                      // this abstract
+                                                                                                      // and not gun
 
             // Make label for current ammo
             Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
@@ -193,7 +201,7 @@ public class Renderer {
         // Setting title to the Stage
         stage.setTitle("Game");
 
-        //A dding scene to the stage
+        // A dding scene to the stage
         stage.setScene(scene);
 
         // Displaying the contents of the stage
@@ -213,7 +221,8 @@ public class Renderer {
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
+    // Method for setting transform for the GraphicsContext to rotate around a pivot
+    // point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
@@ -244,16 +253,14 @@ public class Renderer {
         return true;
     }
 
-    // Method for scaling image by integer value by resampling - useful for large enemies/powerups
+    // Method for scaling image by integer value by resampling - useful for large
+    // enemies/powerups
     public Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 
         // Set up output image
-        WritableImage outputImage = new WritableImage(
-                inputImageWidth * scaleFactor,
-                inputImageHeight * scaleFactor
-        );
+        WritableImage outputImage = new WritableImage(inputImageWidth * scaleFactor, inputImageHeight * scaleFactor);
 
         // Set up pixel reader and writer
         PixelReader reader = inputImage.getPixelReader();
@@ -274,13 +281,12 @@ public class Renderer {
     }
 
     /*
-    void renderEntity(String imageLocation, GraphicsContext gc, Object objectToRender) {
-        Image imageToRender = new Image("file:" + imageLocation);
-
-        checkImageLoaded(imageToRender, imageLocation); // Check if loaded correctly
-
-        drawRotatedImage(gc, imageToRender, objectToRender.getPose().getDirection(), objectToRender.getPose().getX(),
-                objectToRender.getPose().getY());
-    }
-    */
+     * void renderEntity(String imageLocation, GraphicsContext gc, Object
+     * objectToRender) { Image imageToRender = new Image("file:" + imageLocation);
+     * 
+     * checkImageLoaded(imageToRender, imageLocation); // Check if loaded correctly
+     * 
+     * drawRotatedImage(gc, imageToRender, objectToRender.getPose().getDirection(),
+     * objectToRender.getPose().getX(), objectToRender.getPose().getY()); }
+     */
 }

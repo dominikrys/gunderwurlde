@@ -10,14 +10,15 @@ import data.entity.enemy.EnemyList;
 import java.util.LinkedHashMap;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable {
+    protected final LinkedHashMap<Item, Double> drops;
+
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
-    protected LinkedHashMap<Item, Double> drops;
     protected EnemyList enemyName;
 
-    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, LinkedHashMap<Item, Double> drops) {
-        super(pose);
+    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size, LinkedHashMap<Item, Double> drops) {
+        super(pose, size);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.moveSpeed = moveSpeed;
@@ -25,8 +26,8 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
         this.enemyName = enemyName;
     }
 
-    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName) {
-        this(maxHealth, moveSpeed, pose, enemyName, new LinkedHashMap<Item,Double>());
+    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size) {
+        this(maxHealth, moveSpeed, pose, enemyName, size, new LinkedHashMap<Item, Double>());
     }
 
     public LinkedHashMap<Item, Double> getDrops() {
@@ -54,7 +55,8 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
 
     @Override
     public void setHealth(int health) {
-        if (health < 0) health = 0;
+        if (health < 0)
+            health = 0;
         this.health = health;
     }
 
@@ -76,7 +78,8 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
 
     @Override
     public void setMaxHealth(int maxHealth) {
-        if (maxHealth < 0) maxHealth = 0;
+        if (maxHealth < 0)
+            maxHealth = 0;
         this.maxHealth = maxHealth;
     }
 

@@ -1,7 +1,6 @@
 package data;
 
 import data.entity.enemy.Enemy;
-import data.entity.item.Item;
 import data.entity.item.ItemDrop;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
@@ -41,7 +40,8 @@ public class GameState {
         Iterator<Location> spawnIterator = playerSpawns.iterator();
 
         for (Player p : players) {
-            if (!spawnIterator.hasNext()) spawnIterator = playerSpawns.iterator();
+            if (!spawnIterator.hasNext())
+                spawnIterator = playerSpawns.iterator();
             p.setPose(new Pose(spawnIterator.next()));
         }
     }
@@ -59,7 +59,7 @@ public class GameState {
     }
 
     public boolean setTile(Tile tile, int x, int y) {
-        //Optional checks here
+        // Optional checks here
         currentMap.setTile(tile, x, y);
         return true;
     }
