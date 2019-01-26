@@ -2,6 +2,7 @@ package serverclientthreads;
 
 import serverclientdirect.Port;
 
+import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
@@ -9,24 +10,34 @@ public class Server extends Thread {
 
 
     public static void main(String[] args) throws SocketException {
+        // Create the socket that will be used to transfer data
         DatagramSocket socket;
-        socket = new DatagramSocket(4445);
+        int port = 4445;
+        // Specify the port as this is the primary machine listening on that port
+        try {
+            socket = new DatagramSocket(port);
+            System.out.println("Server started");
 
-        System.out.println("Server started");
-        ServerSender sender = new ServerSender(socket);
-        ServerReceiver receiver = new ServerReceiver(socket, sender);
-        try{
+            // Create the threads that will run as sender and receiver
+            ServerSender sender = new ServerSender(socket);
+            ServerReceiver receiver = new ServerReceiver(socket, sender);
+
+            // Start the sender and receiver
             sender.start();
             receiver.start();
-            System.out.println("Sender and receiver started");
-            // receiver joins with the sender so only receiver join needed here
+
+            // Server will join with receiver when termination is requested
+            // Only joins with receiver as receiver waits for sender to join
             receiver.join();
-            System.out.println("Receiver joined");
-            System.out.println("Server ended");
+            // Socket is closed as server should end
             socket.close();
+            System.out.println("Server ended successfully");
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.out.println("Server ended due an interrupt");
         }
-        System.out.println("Server ended successfully");
+        catch(BindException e){
+            System.out.println("Port already in use please choose a different port");
+        }
     }
 }

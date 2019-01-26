@@ -12,7 +12,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class ServerReceiver extends Thread {
 	DatagramSocket socket;
-	private ServerSender sender;
+	ServerSender sender;
 	Boolean running;
 	DatagramPacket packet;
 	byte[] buffer;
@@ -21,31 +21,32 @@ public class ServerReceiver extends Thread {
 	public ServerReceiver(DatagramSocket socket, ServerSender sender) {
         this.socket = socket;
 		this.sender = sender;
+		running = true;
+		buffer = new byte[255];
 	}
 
 	public void run() {
-		running = true;
-		buffer = new byte[255];
 		try {
 			while (running) {
-				System.out.println("test");
 				// packet to receive incoming messages
 				packet = new DatagramPacket(buffer, buffer.length);
-				// blocking method
+				// blocking method that waits until a packet is received
 				socket.receive(packet);
+				System.out.println("Message received");
+				// creates a string from the received packet
 				String receivedString = new String(packet.getData(), 0, packet.getLength());
+				System.out.println("Message is " + receivedString);
 
-				System.out.println("Packet received by ClientSender");
-				System.out.println("Packet contents is " + receivedString);
-
+				// If string == exitCode then begin the exit sequence
 				if(receivedString.equals("exit")){
-					System.out.println("Initiating exit routine");
+					// Tells the sender to exit
 					sender.exit(packet);
+					// Waits for the sender to finish its processes before ending itself
 					sender.join();
-					System.out.println("Finished waiting for server sender");
+					// Running = false so the Thread ends gracefully
 					running = false;
-					continue;
 				}
+				// If not the exit code simply send the confirmation message to the client
 				else {
 					sender.confirm(packet);
 				}
@@ -55,6 +56,5 @@ public class ServerReceiver extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Server Receiver ending");
 	}
 }

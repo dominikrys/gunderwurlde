@@ -10,42 +10,42 @@ public class ClientSender extends Thread {
 
 	private InetAddress address;
 	private DatagramSocket socket;
-	DatagramPacket packet;
-	private int portNumber;
+	private int port;
 	Boolean running;
 	Scanner scan;
 	byte[] buffer;
+	DatagramPacket packet;
 
-	ClientSender( InetAddress address, DatagramSocket socket, int portNumber) {
-
+	ClientSender(InetAddress address, DatagramSocket socket, int port) {
 		this.address = address;
 		this.socket = socket;
-		this.portNumber = portNumber;
-		this.address = address;
-		this.portNumber = portNumber;
-		this.socket = socket;
+		this.port = port;
+		running = true;
 	}
 
 	public void run() {
-		// for now system.in
+		// For now the messages are created from System.in
+		// Will eventually be created by through the objects
 		scan = new Scanner(System.in);
-		running = true;
 		try {
 			while (running) {
+				// Asks for user input
 				System.out.print(">> ");
 				String userInput = scan.nextLine();
-				System.out.println("Input: " + userInput);
+
+				// Creates and sends the packet to the server
 				buffer = userInput.getBytes();
-				packet = new DatagramPacket(buffer, buffer.length, address, portNumber);
+				packet = new DatagramPacket(buffer, buffer.length, address, port);
 				socket.send(packet);
-				System.out.println("Packet sent from clientSender");
+				System.out.println("Message sent");
+
+				// If the messages is exit then the Thread should terminate
 				if (userInput.equals("exit")){
-					break;
+					running = false;
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Client Sender ending");
 	}
 }

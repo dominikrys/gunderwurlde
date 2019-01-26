@@ -16,20 +16,24 @@ public class ClientReceiver extends Thread {
 
 	ClientReceiver(DatagramSocket socket) {
 		this.socket = socket;
+		running = true;
 	}
 
 	public void run() {
-		running = true;
 		buffer = new byte[255];
 		try{
 			while(running) {
+				// creates a packet and waits to receive a message from the server
 				packet = new DatagramPacket(buffer, buffer.length);
+				// blocking method waiting to receive a message from the server
 				socket.receive(packet);
+				System.out.println("Message received: ");
+				// Creates a string and prints it to the user
 				String received = new String(packet.getData(), 0, packet.getLength());
-				System.out.println("Packet is " + received);
-				System.out.println("Packet received from ServerSender");
+				System.out.println(received);
+				// If message is exit the terminate
 				if (received.equals("exit")){
-					break;
+					running = false;
 				}
 			}
 		} catch (SocketException e){
@@ -37,6 +41,5 @@ public class ClientReceiver extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Client Receiver ended successfully");
 	}
 }
