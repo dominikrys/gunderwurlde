@@ -7,7 +7,7 @@ import data.map.tile.Tile;
 public class Zombie extends Enemy implements HasContactDamage {
     public static final int DEFAULT_HEALTH = 2;
     public static final int DEFAULT_MOVESPEED = 6;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
+    public static final int DEFAULT_SIZE = 1;
 
     protected int contactDamage = 1;
 

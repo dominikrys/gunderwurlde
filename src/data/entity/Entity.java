@@ -17,10 +17,15 @@ public abstract class Entity implements HasGraphic {
     protected Entity(Pose pose, int size) {
         this.pose = pose;
         this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
+        this.size = size;
     }
 
     protected Entity(Location location, int size) {
         this(new Pose(location), size);
+    }
+
+    protected Entity(Pose pose) {
+        this(pose, 1);
     }
 
     public Pose getPose() {

@@ -213,6 +213,11 @@ public class Renderer {
         // Check if image loaded properly
         checkImageLoaded(imageToRender, imagePath);
 
+        // If entity's size isn't zero, enlarge the graphic
+        if (entity.getSize() != 1) {
+            imageToRender = resampleImage(imageToRender, entity.getSize());
+        }
+
         // Render entity to specified location on graphicscontext
         drawRotatedImage(gc, imageToRender, entity.getPose().getDirection(), entity.getPose().getX(),
                 entity.getPose().getY());

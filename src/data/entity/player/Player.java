@@ -14,7 +14,7 @@ public class Player extends Entity implements HasHealth, IsMovable {
     public static final int DEFAULT_HEALTH = 6;
     public static final int DEFAULT_MOVESPEED = 10;
     public static final int DEFAULT_SCORE = 0;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
+    public static final int DEFAULT_SIZE = 1;
 
     private static int nextPlayerID = 0;
 
