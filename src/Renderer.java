@@ -43,22 +43,22 @@ public class Renderer {
 
         // Render players
         for (Player currentPlayer : inputGameState.getPlayers()) {
-            renderEntity(currentPlayer, mapGC, "file:assets/img/player.png");
+            renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
         for (Enemy currentEnemy : inputGameState.getEnemies()) {
-            renderEntity(currentEnemy, mapGC, "file:assets/img/zombie.png");
+            renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
         for (Projectile currentProjectile : inputGameState.getProjectiles()) {
-            renderEntity(currentProjectile, mapGC, "file:assets/img/bullet.png");
+            renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
         for (ItemDrop currentItem : inputGameState.getItems()) {
-            renderEntity(currentItem, mapGC, "file:assets/img/pistol.png");
+            renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
 
         // Create hbox to centre map canvas in and add map canvas to it
@@ -94,29 +94,13 @@ public class Renderer {
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
-                // Create empty tile image in case no tile found
-                Image tileImage = createImageFromColor(Color.BLACK);
+                // Get tile graphic
+                Image tileImage = new Image(inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
 
-                // Load correct graphic in to tileImage
-                switch (inputGameState.getCurrentMap().getTileMap()[x][y].getType()) {
-                    case GRASS:
-                        tileImage = new Image("file:assets/img/grass.png");
+                // Check if tile graphic loaded properly TODO: this has to be used somehow probably
+                checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getType().name());
 
-                        // Check if loaded correctly
-                        checkImageLoaded(tileImage, "Grass");
-                        break;
-                    case WOOD:
-                        tileImage = new Image("file:assets/img/wood.png");
-
-                        // Check if loaded correctly
-                        checkImageLoaded(tileImage, "Wood");
-                        break;
-                    default:
-                        break;
-                }
-
-                // If tile size is not as specified in program, print error TODO: maybe abort
-                // program completely?
+                // If tile size is not as specified in program, print error TODO: maybe abort program completely?
                 if (tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
                     System.out.println("Tile loaded with unsupported dimensions when rendering map");
                 }
@@ -149,13 +133,13 @@ public class Renderer {
             // HBox to horizontally keep heart graphics. Populate HBox with amount of life
             // necessary
             HBox heartBox = new HBox();
-            // Populate life that hasn't been lost
+            // Populate life that hasn't been lost TODO: add check if image loaded properly to all bits below?
             for (int i = 0; i < currentPlayer.getHealth(); i++) {
-                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/heart.png")));
+                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
             }
             // Populate lost life
             for (int i = 0; i < currentPlayer.getMaxHealth() - currentPlayer.getHealth(); i++) {
-                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/lost_heart.png")));
+                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
             }
 
             // Iterate through held items list and add to the HUD
@@ -164,19 +148,10 @@ public class Renderer {
             int currentItemIndex = 0; // Keep track of current item since iterator is used
 
             for (Item currentItem : currentPlayer.getItems()) {
-                Image itemImage = createImageFromColor(Color.BLACK); // Initialise item
-                switch (currentItem.getItemName()) {
-                    case PISTOL:
-                        itemImage = new Image("file:assets/img/pistol.png");
-                        break;
-                    default:
-                        break;
-                }
+                // Make image view out of graphic
+                ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
 
-                ImageView imageView = new ImageView(itemImage); // Make imageview from selected graphic
-
-                // Check if the item currently being checked is the current selected item, and
-                // if it is, show that
+                // Check if the item currently being checked is the current selected item, and if it is, show that
                 if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
                     DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
                     dropShadow.setSpread(0.75);
@@ -202,7 +177,7 @@ public class Renderer {
 
                 // Make label for current ammo
                 Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
-                        new ImageView(new Image("file:assets/img/ammo_clip.png")));
+                        new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
                 currentAmmo.setFont(new Font("Consolas", 32));
                 currentAmmo.setTextFill(Color.BLACK);
 

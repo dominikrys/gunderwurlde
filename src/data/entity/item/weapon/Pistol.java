@@ -14,6 +14,7 @@ public class Pistol extends Gun {
     public Pistol() {
         super(NAME, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
                 DEFAULT_PROJECTILE_TYPE, DEFAULT_AMMO_TYPE);
+        this.pathToGraphic = "file:assets/img/items/pistol.png";
     }
 
 }

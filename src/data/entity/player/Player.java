@@ -45,6 +45,7 @@ public class Player extends Entity implements HasHealth, IsMovable {
         this.team = team;
         this.name = name;
         this.playerID = nextPlayerID++;
+        this.pathToGraphic = "file:assets/img/mobs/player.png";
     }
 
     public ArrayList<Item> getItems() {

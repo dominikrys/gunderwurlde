@@ -46,4 +46,8 @@ public class ItemDrop extends Entity {
         return item;
     }
 
+    public String getPathToGraphic() {
+        return item.getPathToGraphic();
+    }
+
 }
