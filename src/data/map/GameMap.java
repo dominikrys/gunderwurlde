@@ -13,8 +13,8 @@ public abstract class GameMap {
     protected ArrayList<Location> enemySpawns;
 
     GameMap(int xDim, int yDim, Tile[][] tileMap, ArrayList<Location> playerSpawns, ArrayList<Location> enemySpawns) {
-        this.DEFAULT_Y_DIM = yDim;
         this.DEFAULT_X_DIM = xDim;
+        this.DEFAULT_Y_DIM = yDim;
         this.tileMap = tileMap;
         this.playerSpawns = playerSpawns;
         this.enemySpawns = enemySpawns;

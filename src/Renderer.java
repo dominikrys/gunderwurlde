@@ -63,7 +63,8 @@ public class Renderer {
 
         // Create hbox to centre map canvas in and add map canvas to it
         HBox mainHBox = new HBox();
-        mainHBox.setAlignment(Pos.CENTER);
+        mainHBox.setAlignment(Pos.CENTER_RIGHT);
+        mainHBox.setPadding(new Insets(0, 20, 0, 0));
         mainHBox.getChildren().addAll(mapCanvas);
 
         // Create HUD TODO: do this with a gridpane instead for different corners?
@@ -106,12 +107,12 @@ public class Renderer {
                 }
 
                 // Add tile to canvas
-                mapGC.drawImage(tileImage, y * Constants.TILE_SIZE, x * Constants.TILE_SIZE, Constants.TILE_SIZE,
+                mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
                         Constants.TILE_SIZE);
             }
         }
     }
-    
+
     private VBox createHUD(GameState inputGameState) {
         // Make HUD
         VBox HUDBox = new VBox();
@@ -130,15 +131,24 @@ public class Renderer {
             playerScore.setFont(new Font("Consolas", 32));
             playerScore.setTextFill(Color.BLACK);
 
-            // HBox to horizontally keep heart graphics. Populate HBox with amount of life
-            // necessary
+            // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
             HBox heartBox = new HBox();
-            // Populate life that hasn't been lost TODO: add check if image loaded properly to all bits below?
-            for (int i = 0; i < currentPlayer.getHealth(); i++) {
+
+            // Calculate amount of hearts to generate from health
+            int halfHearts = currentPlayer.getHealth() % 2;
+            int wholeHearts = currentPlayer.getHealth() / 2;
+            int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
+
+            // Populate heart box in GUI
+            for (int i = 0; i < wholeHearts; i++) {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
             }
+            // Populate half heart
+            for (int i = 0; i < halfHearts; i++) {
+                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
+            }
             // Populate lost life
-            for (int i = 0; i < currentPlayer.getMaxHealth() - currentPlayer.getHealth(); i++) {
+            for (int i = 0; i < missingHearts; i++) {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
             }
 

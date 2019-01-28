@@ -8,34 +8,13 @@ import data.map.tile.TileTypes;
 import java.util.ArrayList;
 
 public class Meadow extends GameMap {
-    public static final int DEFAULT_X_DIM = 21;
+    public static final int DEFAULT_X_DIM = 29;
     public static final int DEFAULT_Y_DIM = 21;
 
     public Meadow() {
         super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns());
     }
 
-    /*
-     * Map Meadow (21x21):
-     *
-     * WWWWWWWWWWWWWWWWW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * GGGGGGGGGGGGGGGGG
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WGGGGGGGGGGGGGGGW
-     * WWWWWWWWWWWWWWWWW
-     */
     private static Tile[][] generateTileMap() {
         Tile[][] tileMap = new Tile[DEFAULT_X_DIM][DEFAULT_Y_DIM];
 
