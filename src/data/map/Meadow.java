@@ -28,8 +28,8 @@ public class Meadow extends GameMap {
             }
             tileMap[x][DEFAULT_Y_DIM - 1] = new Tile(TileTypes.WOOD, TileState.SOLID);
         }
-        tileMap[(DEFAULT_X_DIM - 1) / 2][0] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
-        tileMap[(DEFAULT_X_DIM - 1) / 2][DEFAULT_Y_DIM - 1] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
+        tileMap[0][(DEFAULT_Y_DIM - 1) / 2] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
+        tileMap[DEFAULT_X_DIM - 1][(DEFAULT_Y_DIM - 1) / 2] = new Tile(TileTypes.GRASS, TileState.PASSABLE);
         return tileMap;
     }
 

@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Renderer {
     private Stage stage;
@@ -64,7 +65,7 @@ public class Renderer {
         // Create hbox to centre map canvas in and add map canvas to it
         HBox mainHBox = new HBox();
         mainHBox.setAlignment(Pos.CENTER_RIGHT);
-        mainHBox.setPadding(new Insets(0, 20, 0, 0));
+        mainHBox.setPadding(new Insets(0, 14, 0, 0));
         mainHBox.getChildren().addAll(mapCanvas);
 
         // Create HUD TODO: do this with a gridpane instead for different corners?
