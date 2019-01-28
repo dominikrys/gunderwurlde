@@ -1,7 +1,6 @@
 package server.request;
 
 import java.util.LinkedHashMap;
-
 import data.Pose;
 
 public class ClientRequests {

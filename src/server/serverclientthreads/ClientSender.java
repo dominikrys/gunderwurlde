@@ -1,4 +1,4 @@
-package serverclientthreads;
+package server.serverclientthreads;
 
 import java.io.*;
 import java.net.DatagramPacket;

@@ -1,4 +1,4 @@
-package serverclientthreads;
+package server.serverclientthreads;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
