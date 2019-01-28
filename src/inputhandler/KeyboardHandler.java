@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import data.GameState;
-import data.Location;
 import data.Pose;
+import data.entity.item.Item;
+import data.entity.item.ItemList;
 import data.entity.player.Player;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 public class KeyboardHandler {
 	
 	private Image pImage;
-	//private ImageView pImageV;
-	private GraphicsContext gc;
 	private Scene scene;
 	private GameState gameState;
 	private Player player;
@@ -28,18 +25,19 @@ public class KeyboardHandler {
 	private boolean aPressed = false;
 	private boolean sPressed = false;
 	private boolean dPressed = false;
+	private boolean rPressed = false;
 	
-	public KeyboardHandler(String imagePath, GraphicsContext gc, Scene scene, GameState gameState) {
-		//super(scene, gameState);
+	public KeyboardHandler(String imagePath, Scene scene, GameState gameState) {
 		this.pImage = new Image(imagePath);
-		this.gc = gc;
-		//this.pImageV = new ImageView(pImage);
 		this.scene = scene;
 		this.gameState = gameState;
 		Iterator<Player> playerIterator = gameState.getPlayers().iterator();
 		for (Player p : gameState.getPlayers()) {
             if(p.getName() == "Player 1") {
             	this.player = p;
+            	//System.out.println("X: " + p.getPose().getX());
+            	//System.out.println("Y: " + p.getPose().getY());
+            	//System.out.println("D: " + p.getPose().getDirection());
             	break;
             }
         }
@@ -63,6 +61,9 @@ public class KeyboardHandler {
 							break;
 						case "D" :
 							dPressed = true;
+							break;
+						case "R" :
+							rPressed = true;
 							break;
 					}
 				}
@@ -88,6 +89,9 @@ public class KeyboardHandler {
 					case "D" :
 						dPressed = false;
 						break;
+					case "R" :
+						rPressed = false;
+						break;
 				}
 			}
 		});
@@ -96,72 +100,35 @@ public class KeyboardHandler {
 			@Override
 			public void handle(long now) {
 				Pose pose = player.getPose();
-				//if(mouseDegree != playerDegree) {
-				//}
 				if(wPressed) {
 					pose.setY(pose.getY() - player.getMoveSpeed());
-					//pCoordinate.setY(pCoordinate.getY() - player.getMoveSpeed());
-					gc.drawImage(pImage, pose.getX(), pose.getY() - 1);
-					//pImageV.setY(center(pose, pImage).getY());
 					player.setPose(pose);
-					System.out.println("here");
 				}
 				if(aPressed) {
 					pose.setX(pose.getX() - player.getMoveSpeed());
-					//pCoordinate.setX(pCoordinate.getX() - player.getMoveSpeed());
-					//pImageV.setX(center(pose, pImage).getX());
 					player.setPose(pose);
 				}
 				if(sPressed) {
 					pose.setY(pose.getY() - player.getMoveSpeed());
-					//pCoordinate.setY(pCoordinate.getY() + player.getMoveSpeed());
-					//pImageV.setY(center(pose, pImage).getY());
 					player.setPose(pose);
 				}
 				if(dPressed) {
 					pose.setX(pose.getX() - player.getMoveSpeed());
-					//pCoordinate.setX(pCoordinate.getX() + player.getMoveSpeed());
-					//pImageV.setX(center(pose, pImage).getX());
 					player.setPose(pose);
 				}
+				if(rPressed) {
+					ItemList iList = player.getCurrentItem().getItemID();
+					Item currentItem = player.getCurrentItem();
+					
+				}
+				
+				// TODO: send changes(player location, reload) to server
 			}
 		};
 		
 		t.start();
 		
 	}
-	
-	/*
-	public void handle() {
-		Pose pose = player.getPose();
-		
-		if(wPressed) {
-			pose.setY(pose.getY() - player.getMoveSpeed());
-			//pCoordinate.setY(pCoordinate.getY() - player.getMoveSpeed());
-			gc.drawImage(pImage, pose.getX(), pose.getY() - 1);
-			//pImageV.setY(center(pose, pImage).getY());
-			player.setPose(pose);
-		}
-		if(aPressed) {
-			pose.setX(pose.getX() - player.getMoveSpeed());
-			//pCoordinate.setX(pCoordinate.getX() - player.getMoveSpeed());
-			//pImageV.setX(center(pose, pImage).getX());
-			player.setPose(pose);
-		}
-		if(sPressed) {
-			pose.setY(pose.getY() - player.getMoveSpeed());
-			//pCoordinate.setY(pCoordinate.getY() + player.getMoveSpeed());
-			//pImageV.setY(center(pose, pImage).getY());
-			player.setPose(pose);
-		}
-		if(dPressed) {
-			pose.setX(pose.getX() - player.getMoveSpeed());
-			//pCoordinate.setX(pCoordinate.getX() + player.getMoveSpeed());
-			//pImageV.setX(center(pose, pImage).getX());
-			player.setPose(pose);
-		}
-	}
-	*/
 	
 	public static Pose center(Pose target, Image image) {
 		double width = image.getWidth();

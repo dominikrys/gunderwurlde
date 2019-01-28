@@ -9,7 +9,7 @@ import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import inputhandler.KeyboardHandler;
-import inputhandler.UserInteraction;
+import inputhandler.MouseHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -80,6 +80,7 @@ public class Renderer {
 
         // Render players
         for (Player currentPlayer : inputGameState.getPlayers()) {
+        	//System.out.println("Name: " + currentPlayer.getName());
             renderEntity(currentPlayer, mapGC, "file:assets/img/player.png");
         }
 
@@ -193,7 +194,8 @@ public class Renderer {
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         
         //UserInteraction userInteraction = new UserInteraction(scene, inputGameState);
-        KeyboardHandler kbHandler = new KeyboardHandler("file:assets/img/player.png" , mapGC, scene, inputGameState);
+        KeyboardHandler kbHandler = new KeyboardHandler("file:assets/img/player.png", scene, inputGameState);
+        MouseHandler mHandler = new MouseHandler("file:assets/img/player.png", scene, mapCanvas, inputGameState);
 
         // Setting title to the Stage
         stage.setTitle("Game");
@@ -227,6 +229,11 @@ public class Renderer {
     // Method for drawing the rotated image
     private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
         gc.save(); // Saves the current state on stack, including the current transform for later
+        
+        System.out.println("X: " + tlpx);
+    	System.out.println("Y: " + tlpy);
+    	System.out.println("D: " + angle);
+        
         rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
         gc.drawImage(image, tlpx, tlpy);
         gc.restore(); // Back to original state (before rotation)

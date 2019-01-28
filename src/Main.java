@@ -35,8 +35,6 @@ public class Main extends Application {
 
         // Create renderer and call it
         Renderer renderer = new Renderer(stage);
-        //KeyboardHandler kbHandler = new KeyboardHandler(stage.getScene(), exampleState);
-        //Userinteraction userInteraction = new Userinteraction(stage.getScene(), exampleState);
         renderer.renderGameState(exampleState);
     }
 
