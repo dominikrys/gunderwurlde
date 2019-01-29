@@ -1,10 +1,15 @@
 package data.entity.item;
 
-public abstract class Item {
+import data.Constants;
+import data.HasGraphic;
+
+public abstract class Item implements HasGraphic {
     protected final IsItem itemName;
+    protected String pathToGraphic;
 
     protected Item(IsItem itemName) {
         this.itemName = itemName;
+        this.pathToGraphic = this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
     }
 
     public ItemList getItemName() {
@@ -13,6 +18,10 @@ public abstract class Item {
 
     public ItemType getItemType() {
         return itemName.getItemType();
+    }
+
+    public String getPathToGraphic() {
+        return pathToGraphic;
     }
 
 }

@@ -6,7 +6,7 @@ import data.entity.Entity;
 import data.map.tile.Tile;
 
 public class ItemDrop extends Entity {
-    public static final int DROP_SIZE = Tile.TILE_SIZE;
+    public static final int DROP_SIZE = 1;
 
     private final Item item;
 
@@ -44,6 +44,10 @@ public class ItemDrop extends Entity {
 
     public Item getItem() {
         return item;
+    }
+
+    public String getPathToGraphic() {
+        return item.getPathToGraphic();
     }
 
 }

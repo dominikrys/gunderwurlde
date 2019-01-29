@@ -1,9 +1,11 @@
 package data.map.tile;
 
 import data.Constants;
+import data.HasGraphic;
 import data.Location;
+import javafx.scene.image.Image;
 
-public class Tile {
+public class Tile implements HasGraphic {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
 
     // Type of tile
@@ -12,9 +14,13 @@ public class Tile {
     // State of file - solid or not
     protected TileState tileState;
 
+    // Path to the graphic of the tile
+    protected String pathToGraphic;
+
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
         this.tileState = tileState;
+        pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
     }
 
     public TileTypes getType() {
@@ -23,6 +29,17 @@ public class Tile {
 
     public TileState getState() {
         return tileState;
+    }
+
+    public String getPathToGraphic() {
+        switch (tileType) {
+            case GRASS:
+                return "file:assets/img/tiles/grass.png";
+            case WOOD:
+                return "file:assets/img/tiles/wood.png";
+            default:
+                return pathToGraphic;
+        }
     }
 
     public static Location tileToLocation(int x, int y) {

@@ -30,6 +30,7 @@ public class Main extends Application {
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
         // Create renderer and call it
+        stage.setResizable(false); // Disable resizing of the window
         Renderer renderer = new Renderer(stage);
         renderer.renderGameState(exampleState);
     }
