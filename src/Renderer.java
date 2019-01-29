@@ -23,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Renderer {
     private Stage stage;
@@ -110,12 +109,10 @@ public class Renderer {
                 // Get tile graphic
                 Image tileImage = new Image(inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
 
-                // Check if tile graphic loaded properly TODO: this has to be used somehow probably
-                checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
-
-                // If tile size is not as specified in program, print error TODO: maybe abort program completely?
-                if (tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
-                    System.out.println("Tile loaded with unsupported dimensions when rendering map");
+                // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
+                if (!(checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic()))
+                        || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
+                    tileImage = defaultGraphic;
                 }
 
                 // Add tile to canvas
@@ -129,7 +126,7 @@ public class Renderer {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth((new Image("file:assets/img/other/heart.png")).getWidth() * 6);
+        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
         HUDBox.setSpacing(5);
 
         // Make a separate HUD for each player in case coop
@@ -153,7 +150,7 @@ public class Renderer {
             int wholeHearts = currentPlayer.getHealth() / 2;
             int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
 
-            // Populate heart box in GUI
+            // Populate heart box in GUI TODO: load default heart texture?
             for (int i = 0; i < wholeHearts; i++) {
                 heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
             }
@@ -234,8 +231,10 @@ public class Renderer {
         // Get image to render from path
         Image imageToRender = new Image(imagePath);
 
-        // Check if image loaded properly
-        checkImageLoaded(imageToRender, imagePath);
+        // If image not loaded properly, print error and load default graphic
+        if (!checkImageLoaded(imageToRender, imagePath)) {
+           imageToRender = defaultGraphic;
+        }
 
         // If entity's size isn't zero, enlarge the graphic
         if (entity.getSize() != 1) {
