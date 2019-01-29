@@ -12,20 +12,20 @@
             <Font name="Consolas Bold" size="74.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" text="Play">
+      <Button fx:id="playButton" mnemonicParsing="false" onAction="#playButtonPress" text="Play">
          <font>
             <Font name="Consolas" size="34.0" />
          </font></Button>
-      <Button mnemonicParsing="false" text="Settings">
+      <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#settingsButtonPress" text="Settings">
          <font>
-            <Font size="22.0" />
+            <Font name="Consolas" size="22.0" />
          </font></Button>
-      <Button mnemonicParsing="false" text="Help">
+      <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonPress" text="Help">
          <font>
             <Font name="Consolas" size="22.0" />
          </font>
       </Button>
-      <Button mnemonicParsing="false" text="Quit">
+      <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitButtonPress" text="Quit">
          <font>
             <Font name="Consolas" size="22.0" />
          </font></Button>

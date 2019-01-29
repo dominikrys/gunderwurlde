@@ -24,12 +24,12 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider style="-fx-padding: 5px;" value="70.0">
+            <Slider fx:id="soundVolumeSlider" onDragDetected="#soundVolumeSliderDragged" style="-fx-padding: 5px;" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Slider>
-            <Button defaultButton="true" mnemonicParsing="false" style="-fx-padding: 5px;">
+            <Button fx:id="soundOnButton" defaultButton="true" mnemonicParsing="false" onAction="#soundOnButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
@@ -38,7 +38,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" style="-fx-padding: 5px;">
+            <Button fx:id="soundOffButton" mnemonicParsing="false" onAction="#soundOffButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -56,12 +56,12 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider style="-fx-padding: 5px;" value="70.0">
+            <Slider fx:id="musicVolumeSlider" onDragDetected="#musicVolumeSliderDragged" style="-fx-padding: 5px;" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Slider>
-            <Button defaultButton="true" mnemonicParsing="false" style="-fx-padding: 5px;">
+            <Button fx:id="musicOnButton" defaultButton="true" mnemonicParsing="false" onAction="#musicOnButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
@@ -70,7 +70,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" style="-fx-padding: 5px;">
+            <Button fx:id="musicOffButton" mnemonicParsing="false" onAction="#musicOffButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -81,26 +81,26 @@
             </Button>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
             <Label text="Display Mode">
                <font>
-                  <Font size="22.0" />
+                  <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Button defaultButton="true" mnemonicParsing="false" text="Windowed">
+            <Button fx:id="displayWindowedButton" defaultButton="true" mnemonicParsing="false" onAction="#displayWindowedButtonPress" text="Windowed">
                <font>
-                  <Font size="22.0" />
+                  <Font name="Consolas" size="22.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="Full Screen">
+            <Button fx:id="displayFullscreenButton" mnemonicParsing="false" onAction="#displayFullscreenButtonPress" text="Full Screen">
                <font>
-                  <Font size="22.0" />
+                  <Font name="Consolas" size="22.0" />
                </font>
             </Button>
          </children>
       </HBox>
-      <Button mnemonicParsing="false" text="Back">
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />
          </font>

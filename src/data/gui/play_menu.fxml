@@ -20,7 +20,7 @@
             <Font name="Consolas" size="24.0" />
          </font>
       </Label>
-      <TextField alignment="CENTER" promptText="Enter here..." style="-fx-max-width: 400;">
+      <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;">
          <font>
             <Font name="Consolas" size="26.0" />
          </font>
@@ -30,19 +30,19 @@
       </TextField>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
          <children>
-            <Button disable="true" mnemonicParsing="false" text="Single Player">
+            <Button fx:id="singlePlayerButton" disable="true" mnemonicParsing="false" onAction="#singlePlayerButtonPress" text="Single Player">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
             </Button>
-            <Button disable="true" mnemonicParsing="false" text="Multiplayer">
+            <Button fx:id="multiPlayerButton" disable="true" mnemonicParsing="false" onAction="#multiPlayerButtonPress" text="Multiplayer">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
             </Button>
          </children>
       </HBox>
-      <Button mnemonicParsing="false" text="Back">
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />
          </font>
