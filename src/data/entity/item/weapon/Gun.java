@@ -16,12 +16,13 @@ public abstract class Gun extends Weapon implements Limited {
     protected LocalTime reloadStartTime;
     protected boolean reloading;
     protected int ammoPerShot;
+    protected int spread;
     protected ProjectileList projectileType;
     protected AmmoList ammoType;
     protected GunList gunName;
 
     Gun(GunList gunName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType,
-            AmmoList ammoType) {
+            AmmoList ammoType, int spread) {
         super(gunName);
         this.gunName = gunName;
         this.maxAmmo = maxAmmo;
@@ -30,8 +31,22 @@ public abstract class Gun extends Weapon implements Limited {
         this.ammoPerShot = ammoPerShot;
         this.projectileType = projectileType;
         this.ammoType = ammoType;
-    }
+    }  
     
+    public int getSpread() {
+        return spread;
+    }
+
+    public void setSpread(int spread) {
+        if (spread < 0) spread = -spread;
+        if (spread > 360) spread = 360;
+        this.spread = spread;
+    }
+
+    public int getProjectilesPerShot() {
+        return ammoPerShot;
+    }
+
     public GunList getGunName() {
         return gunName;
     }

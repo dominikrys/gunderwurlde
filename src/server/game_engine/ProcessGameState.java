@@ -2,6 +2,7 @@ package server.game_engine;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 import data.GameState;
@@ -112,12 +113,25 @@ public class ProcessGameState extends Thread {
 
                 if (request.getShoot()) {
                     if (currentItem.getItemType() == ItemType.GUN) {
-                        if (((Gun) currentItem).shoot()) {
-                            // TODO change to consider guntype somehow, maybe have a shootType enum? e.g.
-                            // triple shot e.t.c
-                            switch (((Gun) currentItem).getProjectileType()) {
+                        Gun currentGun = (Gun) currentItem;
+                        if (currentGun.shoot()) {
+                            int numOfBullets = currentGun.getProjectilesPerShot();
+                            int spread = currentGun.getSpread();
+                            int bulletSpacing = 0;
+                            if (numOfBullets > 1) bulletSpacing = (2*spread)/(numOfBullets-1);
+                            
+                            LinkedList<Pose> bulletPoses = new LinkedList<>();
+                            Pose gunPose = currentPlayer.getPose(); // TODO change pose to include gunlength/position
+                            
+                            int nextDirection = gunPose.getDirection() - spread;
+                            for (int i=0;i<numOfBullets;i++) {
+                                bulletPoses.add(new Pose(gunPose, nextDirection));
+                                nextDirection+=bulletSpacing;
+                            }                          
+                            
+                            switch (currentGun.getProjectileType()) {
                             case SMALLBULLET:
-                                newProjectiles.add(new SmallBullet(currentPlayer.getPose())); // TODO change pose to include gunlength/position
+                                for (Pose p:bulletPoses) newProjectiles.add(new SmallBullet(p));
                                 break;
                             default:
                                 System.out.println("Projectile type not known for: " + currentItem.getItemName().toString());
@@ -165,11 +179,12 @@ public class ProcessGameState extends Thread {
             // process projectiles
             LinkedHashSet<ProjectileChange> projectileChanges = new LinkedHashSet<>();
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
+            LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();
 
             for (Projectile p : projectiles) {
                 // TODO projectile processing here
-            }
-
+            }          
+            
             // process tilechanges
             int xDim = currentMap.getXDim();
             int yDim = currentMap.getYDim();
@@ -200,7 +215,12 @@ public class ProcessGameState extends Thread {
             // TODO any other major changes here
             
             gameState.setPlayers(newplayers);
+            
+            //maintain order.
+            otherNewProjectiles.addAll(newProjectiles);
+            newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
+            
             gameState.setEnemies(newEnemies);
             gameState.setItems(newItems);
             // TODO loop through tile changes and set tile on gameState
