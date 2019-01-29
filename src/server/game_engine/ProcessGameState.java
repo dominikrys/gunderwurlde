@@ -5,10 +5,16 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import data.GameState;
+import data.Location;
+import data.Pose;
 import data.entity.enemy.Enemy;
+import data.entity.item.Item;
 import data.entity.item.ItemDrop;
+import data.entity.item.ItemType;
+import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
+import data.entity.projectile.SmallBullet;
 import data.map.GameMap;
 import data.map.tile.Tile;
 import server.Server;
@@ -68,17 +74,92 @@ public class ProcessGameState extends Thread {
             if (clientRequests != null)
                 continue; // waits until clients start doing something.
 
-            // extract necessary data
+            // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
+            
+            LinkedHashSet<Player> newplayers = new LinkedHashSet<>();
+            LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
+            LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
+            LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
+            // TODO include tile changes here
 
-            // process player requests
+            // process player requests                       
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
             LinkedHashMap<Integer, PlayerChange> playerChanges = new LinkedHashMap<>();
             LinkedHashSet<Player> players = gameState.getPlayers();
 
+
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
-                // TODO player processing here
+                int playerID = playerRequest.getKey();
+                Player currentPlayer = players.stream().filter(p -> p.getID() == playerID).findFirst().get();
+                Request request = playerRequest.getValue();
+
+                if (request.getLeave()) {
+                    players.removeIf(p -> p.getID() == playerID);
+                    server.removePlayer(playerID);
+                    continue;
+                }
+
+                Item currentItem = currentPlayer.getCurrentItem();
+                if (currentItem.getItemType() == ItemType.GUN) {
+                    if (((Gun) currentItem).isReloading()) {
+                        if (((Gun) currentItem).reload()) {
+                            // TODO reload complete, gun updates itself but it might be good to send confirmation as well?
+                        }
+                    }
+                }
+
+                if (request.getShoot()) {
+                    if (currentItem.getItemType() == ItemType.GUN) {
+                        if (((Gun) currentItem).shoot()) {
+                            // TODO change to consider guntype somehow, maybe have a shootType enum? e.g.
+                            // triple shot e.t.c
+                            switch (((Gun) currentItem).getProjectileType()) {
+                            case SMALLBULLET:
+                                newProjectiles.add(new SmallBullet(currentPlayer.getPose())); // TODO change pose to include gunlength/position
+                                break;
+                            default:
+                                System.out.println("Projectile type not known for: " + currentItem.getItemName().toString());
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (request.getReload()) {
+                    if (currentItem.getItemType() == ItemType.GUN) {
+                        ((Gun) currentItem).attemptReload();
+                    }
+                }
+
+                if (request.facingExists() || request.movementExists()) {
+                    Pose playerPose = currentPlayer.getPose();
+                    int facingDirection = playerPose.getDirection();
+                    Location newLocation = playerPose;
+
+                    if (request.facingExists()) {
+                        facingDirection = request.getFacing();
+                    }
+
+                    if (request.movementExists()) {
+                        int distanceMoved = (int) Math.ceil((currentTimeDifference / 1000.0) * currentPlayer.getMoveSpeed());
+                        // TODO check if player movement is valid & include knockback of player/enemies depending on size.
+                        newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
+                    }
+
+                    playerPose = new Pose(newLocation, facingDirection);
+                    currentPlayer.setPose(playerPose);
+                }
+
+                currentPlayer.setCurrentItem(currentItem); // sets item changes before switching
+
+                if (request.selectItemExists()) {
+                    currentPlayer.setCurrentItemIndex(request.getSelectItem());
+                }
+
+                newplayers.add(currentPlayer);
+
             }
 
             // process projectiles
@@ -117,13 +198,16 @@ public class ProcessGameState extends Thread {
             }
 
             // TODO any other major changes here
-
+            
+            gameState.setPlayers(newplayers);
+            gameState.setProjectiles(newProjectiles);
+            gameState.setEnemies(newEnemies);
+            gameState.setItems(newItems);
+            // TODO loop through tile changes and set tile on gameState
+            
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
             server.updateGameState(gameState, gameStateChanges);
         }
     }
 
-    private GameState process() {
-        return null;
-    }
 }

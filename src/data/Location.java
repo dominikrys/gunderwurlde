@@ -36,4 +36,12 @@ public class Location {
         return y;
     }
 
+    public static Location calculateNewLocation(Location l, int direction, int distance) {
+        double directionInRadians = (direction/180.0) * Math.PI;
+        int x_dist = (int) Math.ceil(distance * Math.cos(directionInRadians));
+        int y_dist = (int) Math.ceil(distance * Math.sin(directionInRadians));
+        int x = l.getX() + x_dist;
+        int y = l.getY() + y_dist;
+        return new Location(x, y);
+    }
 }

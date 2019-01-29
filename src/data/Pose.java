@@ -25,10 +25,14 @@ public class Pose extends Location {
     }
 
     public void setDirection(int direction) {
+        this.direction = normaliseDirection(direction);
+    }
+    
+    public static int normaliseDirection(int direction) {
         if (direction > 360)
             direction = direction % 360;
         else if (direction < 0)
             direction = 360 + (direction % -360);
-        this.direction = direction;
+        return direction;
     }
 }

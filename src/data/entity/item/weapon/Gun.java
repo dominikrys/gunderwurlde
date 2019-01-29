@@ -18,16 +18,22 @@ public abstract class Gun extends Weapon implements Limited {
     protected int ammoPerShot;
     protected ProjectileList projectileType;
     protected AmmoList ammoType;
+    protected GunList gunName;
 
     Gun(GunList gunName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType,
             AmmoList ammoType) {
         super(gunName);
+        this.gunName = gunName;
         this.maxAmmo = maxAmmo;
         this.clipSize = clipSize;
         this.reloadTime = reloadTime;
         this.ammoPerShot = ammoPerShot;
         this.projectileType = projectileType;
         this.ammoType = ammoType;
+    }
+    
+    public GunList getGunName() {
+        return gunName;
     }
 
     public int getAmmoInClip() {

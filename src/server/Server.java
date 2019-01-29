@@ -10,4 +10,9 @@ public class Server {
         
     }
 
+    public void removePlayer(int playerID) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

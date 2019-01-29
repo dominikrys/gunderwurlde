@@ -5,7 +5,8 @@ import java.util.Optional;
 import data.Pose;
 
 public class Request {
-    protected Optional<Pose> pose;
+    protected Optional<Integer> movementDir;
+    protected Optional<Integer> facing;
     protected Optional<Integer> selectItem;
     protected boolean shoot;
     protected boolean reload;
@@ -17,16 +18,28 @@ public class Request {
         this.leave = false;
     }
 
-    public boolean poseExists() {
-        return pose.isPresent();
+    public boolean movementExists() {
+        return movementDir.isPresent();
     }
 
-    public Pose getPose() {
-        return pose.get(); // can throw exception if used incorrectly
+    public int getMovementDirection() {
+        return movementDir.get(); // can throw exception if used incorrectly
     }
 
-    public void setPose(Pose pose) {
-        this.pose = Optional.of(pose);
+    public void setMovementDirection(int direction) {
+        this.movementDir = Optional.of(Pose.normaliseDirection(direction));
+    }
+    
+    public boolean facingExists() {
+        return facing.isPresent();
+    }
+    
+    public int getFacing() {
+        return facing.get(); // can throw exception if used incorrectly
+    }
+
+    public void setFacing(int direction) {
+        this.facing = Optional.of(Pose.normaliseDirection(direction));
     }
 
     public boolean selectItemExists() {

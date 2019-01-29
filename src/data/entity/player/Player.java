@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Player extends Entity implements HasHealth, IsMovable {
     public static final int DEFAULT_HEALTH = 6;
-    public static final int DEFAULT_MOVESPEED = 10;
+    public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
@@ -45,6 +45,10 @@ public class Player extends Entity implements HasHealth, IsMovable {
         this.team = team;
         this.name = name;
         this.playerID = nextPlayerID++;
+    }  
+
+    public int getID() {
+        return playerID;
     }
 
     public ArrayList<Item> getItems() {
@@ -78,12 +82,8 @@ public class Player extends Entity implements HasHealth, IsMovable {
         return items.get(currentItem);
     }
 
-    public void setCurrentItem(int slot) {
-        if (slot < 0)
-            slot = 0;
-        else if (slot > items.size() - 1)
-            slot = items.size() - 1;
-        currentItem = slot;
+    public void setCurrentItem(Item item) {
+        this.items.set(currentItem, item);
     }
 
     public void nextItem() {
@@ -104,13 +104,12 @@ public class Player extends Entity implements HasHealth, IsMovable {
         return currentItem;
     }
 
-    public boolean setCurrentItemIndex(int currentItem) {
-        if (currentItem > items.size() - 1)
-            return false;
-        else {
-            this.currentItem = currentItem;
-            return true;
-        }
+    public void setCurrentItemIndex(int slot) {
+        if (slot < 0)
+            slot = 0;
+        else if (slot > items.size() - 1)
+            slot = items.size() - 1;
+        currentItem = slot;
     }
 
     public int getScore() {
