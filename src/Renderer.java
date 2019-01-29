@@ -15,6 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -26,10 +27,18 @@ import javafx.stage.StageStyle;
 
 public class Renderer {
     private Stage stage;
+    private Image defaultGraphic;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
+        // Set stage
         this.stage = inputStage;
+
+        // Load the default graphic
+        defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
+        if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
+            System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
+        }
     }
 
     // Render input gamestate to stage
@@ -65,14 +74,16 @@ public class Renderer {
         // Create hbox to centre map canvas in and add map canvas to it
         HBox mainHBox = new HBox();
         mainHBox.setAlignment(Pos.CENTER_RIGHT);
-        mainHBox.setPadding(new Insets(0, 14, 0, 0));
+        mainHBox.setPadding(new Insets(0, 15, 0, 0));
         mainHBox.getChildren().addAll(mapCanvas);
 
-        // Create HUD TODO: do this with a gridpane instead for different corners?
+        // Create HUD
         VBox HUDBox = createHUD(inputGameState);
+        HUDBox.setAlignment(Pos.TOP_LEFT);
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
+        root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(mainHBox, HUDBox);
 
         // Create the main scene
@@ -100,7 +111,7 @@ public class Renderer {
                 Image tileImage = new Image(inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
 
                 // Check if tile graphic loaded properly TODO: this has to be used somehow probably
-                checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getType().name());
+                checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
 
                 // If tile size is not as specified in program, print error TODO: maybe abort program completely?
                 if (tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
@@ -118,6 +129,7 @@ public class Renderer {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
+        HUDBox.setMaxWidth((new Image("file:assets/img/other/heart.png")).getWidth() * 6);
         HUDBox.setSpacing(5);
 
         // Make a separate HUD for each player in case coop
@@ -133,7 +145,8 @@ public class Renderer {
             playerScore.setTextFill(Color.BLACK);
 
             // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
-            HBox heartBox = new HBox();
+            FlowPane heartBox = new FlowPane();
+            //heartBox.setPrefWrapLength((new Image("file:assets/img/other/heart.png")).getWidth() * 5);
 
             // Calculate amount of hearts to generate from health
             int halfHearts = currentPlayer.getHealth() % 2;
@@ -154,7 +167,7 @@ public class Renderer {
             }
 
             // Iterate through held items list and add to the HUD
-            HBox heldItems = new HBox(); // Make HBox for held items
+            FlowPane heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
 
             int currentItemIndex = 0; // Keep track of current item since iterator is used
 
@@ -259,7 +272,7 @@ public class Renderer {
     // Method for checking if an image has loaded in correctly
     private boolean checkImageLoaded(Image inputImage, String imageDirectory) {
         if (inputImage.isError()) {
-            System.out.println("Image not found in " + imageDirectory);
+            System.out.println("Image not loaded properly from: " + imageDirectory);
             return false;
         }
 
