@@ -4,13 +4,14 @@ import data.HasHealth;
 import data.IsMovable;
 import data.Pose;
 import data.entity.Entity;
+import data.entity.HasID;
 import data.entity.item.Item;
 import data.entity.item.weapon.Pistol;
 import data.map.tile.Tile;
 
 import java.util.ArrayList;
 
-public class Player extends Entity implements HasHealth, IsMovable {
+public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 6;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
@@ -47,6 +48,7 @@ public class Player extends Entity implements HasHealth, IsMovable {
         this.playerID = nextPlayerID++;
     }  
 
+    @Override
     public int getID() {
         return playerID;
     }

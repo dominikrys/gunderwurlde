@@ -1,5 +1,6 @@
 package server.game_engine;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -18,7 +19,9 @@ import data.entity.projectile.Projectile;
 import data.entity.projectile.SmallBullet;
 import data.map.GameMap;
 import data.map.tile.Tile;
+import data.map.tile.TileState;
 import server.Server;
+import server.game_engine.data.ChangeType;
 import server.game_engine.data.EnemyChange;
 import server.game_engine.data.GameStateChanges;
 import server.game_engine.data.ItemDropChange;
@@ -79,25 +82,30 @@ public class ProcessGameState extends Thread {
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
             
-            LinkedHashSet<Player> newplayers = new LinkedHashSet<>();
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
-            LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
+            
+            LinkedHashSet<ItemDropChange> itemDropChanges = new LinkedHashSet<>();
+            LinkedHashMap<Integer,ItemDrop> items = new LinkedHashMap<>();
+            gameState.getItems().stream().forEach((i)->items.put(i.getID(),i));
+            
             // TODO include tile changes here
 
             // process player requests                       
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
             LinkedHashMap<Integer, PlayerChange> playerChanges = new LinkedHashMap<>();
-            LinkedHashSet<Player> players = gameState.getPlayers();
+            //LinkedHashSet<Player> players = gameState.getPlayers();
+            LinkedHashMap<Integer,Player> players = new LinkedHashMap<>();
+            gameState.getPlayers().stream().forEach((p)->players.put(p.getID(), p));
 
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
-                Player currentPlayer = players.stream().filter(p -> p.getID() == playerID).findFirst().get();
+                Player currentPlayer = players.get(playerID);
                 Request request = playerRequest.getValue();
 
                 if (request.getLeave()) {
-                    players.removeIf(p -> p.getID() == playerID);
+                    players.remove(playerID);
                     server.removePlayer(playerID);
                     continue;
                 }
@@ -157,9 +165,22 @@ public class ProcessGameState extends Thread {
                     }
 
                     if (request.movementExists()) {
-                        int distanceMoved = (int) Math.ceil((currentTimeDifference / 1000.0) * currentPlayer.getMoveSpeed());
-                        // TODO check if player movement is valid & include knockback of player/enemies depending on size.
+                        int distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());                       
                         newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
+                        
+                        int[] tileCords = Tile.locationToTile(newLocation);
+                        Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                        
+                        if (tileOn.getState() == TileState.SOLID) newLocation = playerPose;
+                        else {
+                            // TODO include knock-back of player/enemies depending on some factor e.g. size.
+                            
+                            HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
+                            for (Integer itemDropID:itemsOnTile) {
+                                ItemDrop currentItemDrop = items.get(itemDropID);
+                                // TODO add items to player inventory and as much ammo as possible to compatible weapons.
+                            }
+                        }
                     }
 
                     playerPose = new Pose(newLocation, facingDirection);
@@ -172,8 +193,23 @@ public class ProcessGameState extends Thread {
                     currentPlayer.setCurrentItemIndex(request.getSelectItem());
                 }
 
-                newplayers.add(currentPlayer);
+                players.put(playerID, currentPlayer);
 
+            }
+            
+            // process item drops
+
+            for (ItemDrop i : items.values()) {
+                // TODO check which items are to decay
+            }
+            
+            // process enemies
+            LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
+            LinkedHashMap<Integer,Enemy> enemies = new LinkedHashMap<>();
+            gameState.getEnemies().stream().forEach((e)->enemies.put(e.getID(),e));
+
+            for (Enemy e : enemies.values()) {
+                // TODO enemy processing here
             }
 
             // process projectiles
@@ -182,52 +218,92 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();
 
             for (Projectile p : projectiles) {
-                // TODO projectile processing here
-            }          
+                boolean removed = false;
+                Projectile currentProjectile = p;
+                int distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
+                Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(), distanceMoved);
+                int[] tileCords = Tile.locationToTile(newLocation);
+                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                
+                if (tileOn.getState() == TileState.SOLID) {
+                    removed = true;
+                    //TODO add data to tile object to store the bullet collision
+                } else if (currentProjectile.maxRangeReached(distanceMoved)) {
+                    removed = true;
+                } else {
+                    HashSet<Integer> enemiesOnTile = tileOn.getEnemiesOnTile();
+                    for (Integer enemyID:enemiesOnTile) {
+                        Enemy enemyBeingChecked = enemies.get(enemyID);
+                        Location enemyLocation = enemyBeingChecked.getLocation();
+                        
+                        int enemyX = enemyLocation.getX();
+                        int enemyY = enemyLocation.getY();
+                        int boundrySize = enemyBeingChecked.getSize()/2;
+                        int newX = newLocation.getX();
+                        int newY = newLocation.getY();
+                        
+                        if ((enemyX - boundrySize) <= newX && (enemyX + boundrySize) >= newX && (enemyY - boundrySize) <= newY && (enemyY + boundrySize) >= newY) {
+                            removed = true;
+                            if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
+                                //TODO add enemychange
+                                enemies.remove(enemyID);
+                                tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
+                            } else {
+                                //TODO add enemychange
+                                enemies.put(enemyID, enemyBeingChecked);
+                            }
+                        }
+                    }
+                    
+                    if (removed) projectileChanges.add(new ProjectileChange(ChangeType.REMOVED));
+                    else {
+                        projectileChanges.add(new ProjectileChange(ChangeType.BASIC_CHANGE));
+                        otherNewProjectiles.add(currentProjectile);
+                    }
+                }
+            }   
             
             // process tilechanges
+            
             int xDim = currentMap.getXDim();
             int yDim = currentMap.getYDim();
             TileChange[][] tileChanges = new TileChange[xDim][yDim];
-
+            /*
             for (int x = 0; x < xDim; x++) {
                 for (int y = 0; y < yDim; y++) {
-                    // TODO tile processing here
+                    TODO tile processing here
                 }
             }
-
-            // process enemies
-            LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
-            LinkedHashSet<Enemy> enemies = gameState.getEnemies();
-
-            for (Enemy e : enemies) {
-                // TODO enemy processing here
-            }
-
-            // process item drops
-            LinkedHashSet<ItemDropChange> itemDropChanges = new LinkedHashSet<>();
-            LinkedHashSet<ItemDrop> items = gameState.getItems();
-
-            for (ItemDrop i : items) {
-                // TODO item processing here
-            }
-
-            // TODO any other major changes here
+            */      
+          
+            LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
+            // TODO spawn new enemies
             
-            gameState.setPlayers(newplayers);
+            // TODO check for next round
+            
+            gameState.setPlayers(new LinkedHashSet<>(players.values()));
             
             //maintain order.
             otherNewProjectiles.addAll(newProjectiles);
+            for (int i=0;i<newProjectiles.size();i++) projectileChanges.add(new ProjectileChange(ChangeType.NEW));
             newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
             
-            gameState.setEnemies(newEnemies);
+            LinkedHashSet<Enemy> enemiesToBeAdded = new LinkedHashSet<>(enemies.values());
+            enemiesToBeAdded.addAll(newEnemies);
+            gameState.setEnemies(enemiesToBeAdded);
+            
             gameState.setItems(newItems);
             // TODO loop through tile changes and set tile on gameState
             
+            // TODO change to use hashmaps with ids for changes
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
             server.updateGameState(gameState, gameStateChanges);
         }
+    }
+    
+    private int getDistanceMoved(long timeDiff, int speed) {
+        return (int) Math.ceil((timeDiff / 1000.0) * speed); //time in millis
     }
 
 }

@@ -3,9 +3,6 @@ package data.entity.item.weapon;
 import data.entity.item.Limited;
 import data.entity.projectile.ProjectileList;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-
 public abstract class Gun extends Weapon implements Limited {
 
     protected int maxAmmo;
@@ -13,16 +10,18 @@ public abstract class Gun extends Weapon implements Limited {
     protected int clipSize;
     protected int ammoInClip;
     protected int reloadTime; // in seconds
-    protected LocalTime reloadStartTime;
+    protected long reloadStartTime;
     protected boolean reloading;
     protected int ammoPerShot;
     protected int spread;
     protected ProjectileList projectileType;
     protected AmmoList ammoType;
     protected GunList gunName;
+    protected int shootCoolDown; //effectively fire rate
+    protected long lastShootTime;
 
     Gun(GunList gunName, int maxAmmo, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType,
-            AmmoList ammoType, int spread) {
+            AmmoList ammoType, int spread, int coolDown) {
         super(gunName);
         this.gunName = gunName;
         this.maxAmmo = maxAmmo;
@@ -31,7 +30,10 @@ public abstract class Gun extends Weapon implements Limited {
         this.ammoPerShot = ammoPerShot;
         this.projectileType = projectileType;
         this.ammoType = ammoType;
-    }  
+        this.shootCoolDown = coolDown;
+    }
+    
+    
     
     public int getSpread() {
         return spread;
@@ -118,9 +120,8 @@ public abstract class Gun extends Weapon implements Limited {
             ammoInClip = currentAmmo;
     }
 
-    public boolean shoot() { // This method doesn't create the projectile ProcessGameState is responsible for
-                             // this.
-        if (ammoInClip > ammoPerShot) {
+    public boolean shoot() { // This method doesn't create the projectile ProcessGameState is responsible for this.       
+        if (ammoInClip > ammoPerShot && (System.currentTimeMillis() - lastShootTime) >= shootCoolDown) {
             if (reloading)
                 reloading = false;
             ammoInClip -= ammoPerShot;
@@ -133,7 +134,7 @@ public abstract class Gun extends Weapon implements Limited {
     public boolean attemptReload() {
         if (!reloading) {
             if (ammoInClip < clipSize && currentAmmo > 0) {
-                reloadStartTime = LocalTime.now();
+                reloadStartTime = System.currentTimeMillis();
                 reloading = true;
                 return true;
             }
@@ -142,7 +143,7 @@ public abstract class Gun extends Weapon implements Limited {
     }
 
     public boolean reload() {
-        if (reloading && (reloadStartTime.until(LocalTime.now(), ChronoUnit.SECONDS)) >= reloadTime) {
+        if (reloading && (System.currentTimeMillis() - reloadStartTime) >= reloadTime) {
             if (currentAmmo >= clipSize)
                 ammoInClip = clipSize;
             else

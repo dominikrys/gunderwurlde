@@ -3,12 +3,16 @@ package data.entity.item;
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
+import data.entity.HasID;
 import data.map.tile.Tile;
 
-public class ItemDrop extends Entity {
+public class ItemDrop extends Entity implements HasID {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
+    
+    private static int nextID = 0;
 
-    private final Item item;
+    private final Item item;   
+    private final int id;
 
     protected int quantity;
 
@@ -16,6 +20,7 @@ public class ItemDrop extends Entity {
         super(new Pose(location), DROP_SIZE);
         this.item = item;
         this.quantity = quantity;
+        this.id = nextID++;
     }
 
     public ItemDrop(Item item, Location location) {
@@ -44,6 +49,11 @@ public class ItemDrop extends Entity {
 
     public Item getItem() {
         return item;
+    }
+    
+    @Override
+    public int getID() {
+        return id;
     }
 
 }

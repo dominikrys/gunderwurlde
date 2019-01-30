@@ -42,6 +42,8 @@ public class Location {
         int y_dist = (int) Math.ceil(distance * Math.sin(directionInRadians));
         int x = l.getX() + x_dist;
         int y = l.getY() + y_dist;
+        if (x < 0) x = 0;
+        if (y< 0) y = 0;
         return new Location(x, y);
     }
 }

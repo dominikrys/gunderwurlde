@@ -4,12 +4,17 @@ import data.HasHealth;
 import data.IsMovable;
 import data.Pose;
 import data.entity.Entity;
+import data.entity.HasID;
 import data.entity.item.Item;
 import data.entity.enemy.EnemyList;
 
 import java.util.LinkedHashMap;
 
-public abstract class Enemy extends Entity implements HasHealth, IsMovable {
+public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
+    private static int nextID = 0;
+    
+    private int id;
+    
     protected final LinkedHashMap<Item, Double> drops;
 
     protected int health;
@@ -24,6 +29,7 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
         this.moveSpeed = moveSpeed;
         this.drops = drops;
         this.enemyName = enemyName;
+        this.id = nextID++;
     }
 
     Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size) {
@@ -81,6 +87,11 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
         if (maxHealth < 0)
             maxHealth = 0;
         this.maxHealth = maxHealth;
+    }
+    
+    @Override
+    public int getID() {
+        return id;
     }
 
 }
