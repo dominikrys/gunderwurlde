@@ -16,8 +16,12 @@ import java.util.LinkedHashSet;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) {
-        // Example code for testing - TODO: remove this later
+    public void start(Stage primaryStage) {
+        // Create renderer and pass primary stage to it
+        primaryStage.setResizable(false); // Disable resizing of the window
+        Renderer renderer = new Renderer(primaryStage);
+
+        // Example game state to render
         LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
         Player examplePlayer = new Player(new Pose(64, 64, 45), Teams.RED, "Player 1");
         examplePlayer.addItem(new Pistol());
@@ -29,9 +33,7 @@ public class Main extends Application {
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
-        // Create renderer and call it
-        stage.setResizable(false); // Disable resizing of the window
-        Renderer renderer = new Renderer(stage);
+        // Render example game state
         renderer.renderGameState(exampleState);
     }
 
