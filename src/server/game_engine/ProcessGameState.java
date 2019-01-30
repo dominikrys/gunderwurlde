@@ -85,6 +85,9 @@ public class ProcessGameState extends Thread {
             if (clientRequests != null)
                 continue; // waits until clients start doing something.
 
+            // TODO can be multi-threaded with immutable gamestate for each process stage
+            // and detailed gamestatechanges used instead which is merged at the end
+
             // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
@@ -397,7 +400,7 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             // TODO spawn new enemies
 
-            // TODO check for next round
+            // TODO check for next round (no more enemies)
 
             gameState.setPlayers(new LinkedHashSet<>(players.values()));
 
@@ -419,7 +422,8 @@ public class ProcessGameState extends Thread {
             gameState.setItems(itemsToBeAdded);
             gameState.setTileMap(tileMap);
 
-            // TODO overhaul gamestatechanges to only include info the client needs and to take ids with hashmaps.
+            // TODO overhaul gamestatechanges to take ids with hashmaps and update it to
+            // include recently added data.
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
             server.updateGameState(gameState, gameStateChanges);
         }
