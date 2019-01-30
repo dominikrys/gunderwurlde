@@ -35,7 +35,6 @@ public class Server{
 				while(addresses.hasMoreElements()) {
 					InetAddress addr = addresses.nextElement();
 					socket.setInterface(addr);
-
 				}
 			}
 
@@ -52,9 +51,6 @@ public class Server{
 			else{
 				System.out.println("Server Received: " + receivedString);
 			}
-
-			socket.send(packet);
-
 		}
 			socket.close();
 		} catch (IOException e) {

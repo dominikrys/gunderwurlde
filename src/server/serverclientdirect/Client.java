@@ -25,8 +25,6 @@ class Client {
 			//Establish the connection to the server
 			socket = new MulticastSocket();
 			groupAddress = InetAddress.getByName("239.0.0.1");
-			address = InetAddress.getLocalHost();
-			socket.setInterface(address);
 
 			System.out.println("serverclientdirect.Client Running");
 			while(running){
