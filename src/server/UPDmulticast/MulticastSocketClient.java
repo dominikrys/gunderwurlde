@@ -38,6 +38,7 @@ public class MulticastSocketClient {
             //Joint the Multicast group.
             clientSocket.setInterface(addr);
             clientSocket.joinGroup(address);
+            System.out.println(clientSocket.isConnected());
      
             while (true) {
                 // Receive the information and print it.
