@@ -1,22 +1,49 @@
 package server.UPDmulticast;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
-public class MulticastClient extends Thread {
-    private DatagramSocket socket;
-    private InetAddress group;
-    private byte[] buf;
+public class MulticastClient {
 
-    public void run(String multicastMessage) throws IOException {
-        socket = new DatagramSocket();
-        group = InetAddress.getByName("230.0.0.0");
-        buf = multicastMessage.getBytes();
+    public static void main(String args[]) {
+        try {
+            DatagramSocket socket;
+            InetAddress group;
+            byte[] buf;
+            Scanner scan = new Scanner(System.in);
+            socket = new DatagramSocket();
+            group = InetAddress.getByName("230.0.0.0");
 
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
-        socket.send(packet);
-        socket.close();
+            MulticastServer server = new MulticastServer();
+            server.start();
+
+            while (true) {
+                System.out.print(">> ");
+                String userInput = scan.nextLine();
+
+                buf = userInput.getBytes();
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
+                socket.send(packet);
+
+                if (userInput.equals("exit")) {
+                    break;
+                }
+                TimeUnit.SECONDS.sleep(3);
+            }
+
+            server.join();
+            socket.close();
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

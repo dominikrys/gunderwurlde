@@ -5,11 +5,12 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class MulticastServer {
+public class MulticastServer extends Thread{
 
-    public static void main(String args[]) {
-        MulticastSocket socket = null;
-        byte[] buf = new byte[256];
+    protected MulticastSocket socket = null;
+    protected byte[] buf = new byte[256];
+
+    public void run() {
 
         try {
             socket = new MulticastSocket(4446);
@@ -20,8 +21,9 @@ public class MulticastServer {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
                 String received = new String(packet.getData(), 0, packet.getLength());
+                System.out.println(received + " - received");
 
-                if ("end".equals(received)) {
+                if ("exit".equals(received)) {
                     break;
                 }
             }
