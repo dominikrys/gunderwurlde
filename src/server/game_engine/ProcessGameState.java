@@ -5,20 +5,18 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import data.GameState;
 import data.Location;
 import data.Pose;
+import data.entity.enemy.Drop;
 import data.entity.enemy.Enemy;
 import data.entity.enemy.EnemyList;
 import data.entity.item.Item;
 import data.entity.item.ItemDrop;
 import data.entity.item.ItemType;
-import data.entity.item.weapon.Gun;
+import data.entity.item.weapon.gun.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import data.entity.projectile.SmallBullet;
@@ -350,7 +348,15 @@ public class ProcessGameState extends Thread {
                                 // TODO add enemychange
                                 enemies.remove(enemyID);
                                 tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
-                                // TODO drop items
+                                
+                                LinkedHashSet<Drop> drops = enemyBeingChecked.getDrops();
+                                for (Drop d: drops) {
+                                    int dropAmount = d.getDrop();
+                                    if (dropAmount != 0) {
+                                        Item itemToDrop = d.getItem();
+                                        //TODO drop items
+                                    }
+                                }
                             } else {
                                 // TODO add enemychange
                                 enemies.put(enemyID, enemyBeingChecked);

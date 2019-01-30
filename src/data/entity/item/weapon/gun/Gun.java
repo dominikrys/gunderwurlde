@@ -1,6 +1,7 @@
-package data.entity.item.weapon;
+package data.entity.item.weapon.gun;
 
 import data.entity.item.Limited;
+import data.entity.item.weapon.Weapon;
 import data.entity.projectile.ProjectileList;
 
 public abstract class Gun extends Weapon implements Limited {

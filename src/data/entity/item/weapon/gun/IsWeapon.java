@@ -1,4 +1,4 @@
-package data.entity.item.weapon;
+package data.entity.item.weapon.gun;
 
 import data.entity.item.IsItem;
 

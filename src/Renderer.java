@@ -5,7 +5,7 @@ import data.entity.Entity;
 import data.entity.enemy.Enemy;
 import data.entity.item.Item;
 import data.entity.item.ItemDrop;
-import data.entity.item.weapon.Gun;
+import data.entity.item.weapon.gun.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import javafx.geometry.Insets;
