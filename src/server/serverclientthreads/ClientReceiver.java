@@ -3,6 +3,7 @@ package server.serverclientthreads;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 // Gets messages from other clients via the server (by the
@@ -14,7 +15,7 @@ public class ClientReceiver extends Thread {
 	DatagramPacket packet;
 	byte[] buffer;
 
-	ClientReceiver(DatagramSocket socket) {
+	ClientReceiver(InetAddress receiveraddress, DatagramSocket socket) {
 		this.socket = socket;
 		running = true;
 	}

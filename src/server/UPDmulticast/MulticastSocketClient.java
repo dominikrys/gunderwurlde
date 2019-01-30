@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 public class MulticastSocketClient {
     
-    final static String INET_ADDR = "224.0.0.3";
+    final static String INET_ADDR = "224.0.0.34";
     final static int PORT = 8888;
 
     public static void main(String[] args) throws UnknownHostException {

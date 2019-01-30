@@ -16,7 +16,6 @@ public class Client {
 
     public static void main(String[] args) {
         DatagramSocket socket;
-        InetAddress address;
         int port = 4445;
 
         try{
@@ -25,11 +24,12 @@ public class Client {
             // No port is specified as the server already bound to specified port
             socket = new DatagramSocket();
             // This threads address so the server knows who sent the message
-            address = InetAddress.getByName("localhost");
+            InetAddress senderaddress = InetAddress.getByName("230.0.0.1");
+            InetAddress receiveraddress = InetAddress.getByName("230.0.1.1");
 
             // Start the sender and receiver threads for the client
-            ClientSender sender = new ClientSender(address, socket, port);
-            ClientReceiver receiver = new ClientReceiver(socket);
+            ClientSender sender = new ClientSender(senderaddress, socket, port);
+            ClientReceiver receiver = new ClientReceiver(receiveraddress, socket);
             sender.start();
             receiver.start();
 

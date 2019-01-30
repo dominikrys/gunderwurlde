@@ -1,4 +1,4 @@
-package serverclientdirect;
+package server.serverclientdirect;
 // Usage:
 //        java serverclientdirect.Client user-nickname server-hostname
 //
@@ -22,24 +22,20 @@ class Client {
 		try{
 			//Establish the connection to the server
 			socket = new DatagramSocket();
-			address = InetAddress.getByName("localhost");
+			address = InetAddress.getByName("230.0.0.0");
 
 			System.out.println("serverclientdirect.Client Running");
 			while(running){
 				System.out.println("Give input");
 				String userInput = sc.nextLine();
 				buffer = userInput.getBytes();
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, Port.number);
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
 				socket.send(packet);
 				if(userInput.equals("end")){
 					System.out.println("Ending client");
 					running = false;
 					continue;
 				}
-				packet = new DatagramPacket(buffer, buffer.length);
-				socket.receive(packet);
-				String received = new String(packet.getData(), 0, packet.getLength());
-				System.out.println(received);
 			}
 			socket.close();
 		}

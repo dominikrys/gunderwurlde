@@ -1,4 +1,4 @@
-package serverclientdirect;
+package server.serverclientdirect;
 // Usage:
 //        java serverclientdirect.Server
 //
@@ -14,19 +14,16 @@ public class Server{
 	public static void main(String[] args) {
 		Boolean running;
 		try {
-			DatagramSocket socket = new DatagramSocket(Port.number);
+			MulticastSocket socket = new MulticastSocket(4444);
 			byte[] buffer = new byte[256];
+			InetAddress group = InetAddress.getByName("230.0.0.0");
+			socket.joinGroup(group);
 
-		running = true;
+			running = true;
 			System.out.println("serverclientdirect.Server running");
 		while(running) {
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 			socket.receive(packet);
-
-
-			InetAddress address = packet.getAddress();
-			int port = packet.getPort();
-			packet = new DatagramPacket(buffer, buffer.length, address, port);
 			String receivedString = new String(packet.getData(), 0, packet.getLength());
 
 			if (receivedString.equals("end")) {
@@ -35,12 +32,13 @@ public class Server{
 				continue;
 			}
 			else{
-				System.out.println(receivedString);
+				System.out.println("Server Received: " + receivedString);
 			}
 
 			socket.send(packet);
 
 		}
+			socket.leaveGroup(group);
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
