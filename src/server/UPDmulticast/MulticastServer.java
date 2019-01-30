@@ -14,7 +14,7 @@ public class MulticastServer extends Thread{
 
         try {
             socket = new MulticastSocket(4446);
-            InetAddress group = InetAddress.getByName("230.0.0.0");
+            InetAddress group = InetAddress.getByName("224.0.0.120");
             socket.joinGroup(group);
 
             while (true) {
