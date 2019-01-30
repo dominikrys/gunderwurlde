@@ -96,7 +96,9 @@ public class ProcessGameState extends Thread {
             LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
             gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i));
 
-            // TODO include tile changes here
+            int xDim = currentMap.getXDim();
+            int yDim = currentMap.getYDim();
+            TileChange[][] tileChanges = new TileChange[xDim][yDim];
 
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
@@ -189,29 +191,29 @@ public class ProcessGameState extends Thread {
                             for (Integer itemDropID : itemsOnTile) {
                                 ItemDrop currentItemDrop = items.get(itemDropID);
                                 int dropQuantity = currentItemDrop.getQuantity();
-                                switch(currentItemDrop.getItemType()) {
-                                case AMMO:                                 
+                                switch (currentItemDrop.getItemType()) {
+                                case AMMO:
                                     LinkedHashSet<Gun> compatibleGuns = new LinkedHashSet<>();
-                                    playerItems.stream()
-                                        .forEach((g)-> {
-                                            if (g instanceof Gun && ((Gun)g).getAmmoType().toItemList() == currentItemDrop.getItemName()) compatibleGuns.add((Gun)g);
-                                        });
-                                    
+                                    playerItems.stream().forEach((g) -> {
+                                        if (g instanceof Gun && ((Gun) g).getAmmoType().toItemList() == currentItemDrop.getItemName())
+                                            compatibleGuns.add((Gun) g);
+                                    });
+
                                     int availableAmmo = dropQuantity;
-                                    for (Gun g: compatibleGuns) {
+                                    for (Gun g : compatibleGuns) {
                                         int currentAmmo = g.getCurrentAmmo();
                                         int maxAmmo = g.getMaxAmmo();
-                                        int maxAmmoToTake = maxAmmo-currentAmmo;
+                                        int maxAmmoToTake = maxAmmo - currentAmmo;
                                         if (availableAmmo > maxAmmoToTake) {
                                             g.setCurrentAmmo(maxAmmo);
-                                            availableAmmo-=maxAmmoToTake;
+                                            availableAmmo -= maxAmmoToTake;
                                         } else {
-                                            g.setCurrentAmmo(currentAmmo+availableAmmo);
+                                            g.setCurrentAmmo(currentAmmo + availableAmmo);
                                             availableAmmo = 0;
-                                            break; //no more available ammo
+                                            break; // no more available ammo
                                         }
                                     }
-                                    
+
                                     if (availableAmmo != 0) {
                                         currentItemDrop.setQuantity(availableAmmo);
                                         items.put(itemDropID, currentItemDrop);
@@ -221,19 +223,19 @@ public class ProcessGameState extends Thread {
                                     }
                                     break;
                                 case GUN:
-                                    if (playerItems.stream().anyMatch((i)->i.getItemName()==currentItemDrop.getItemName())) {
-                                        //player already has that item TODO take some ammo from it
+                                    if (playerItems.stream().anyMatch((i) -> i.getItemName() == currentItemDrop.getItemName())) {
+                                        // player already has that item TODO take some ammo from it
                                     } else {
-                                        playerItems.add(currentItemDrop.getItem());                                       
-                                        dropQuantity-=1;
-                                        if (dropQuantity !=0) {
+                                        playerItems.add(currentItemDrop.getItem());
+                                        dropQuantity -= 1;
+                                        if (dropQuantity != 0) {
                                             currentItemDrop.setQuantity(dropQuantity);
                                             items.put(itemDropID, currentItemDrop);
                                         } else {
                                             items.remove(itemDropID);
                                         }
                                     }
-                                    break;                                
+                                    break;
                                 }
                             }
                         }
@@ -257,7 +259,8 @@ public class ProcessGameState extends Thread {
             // process item drops
 
             for (ItemDrop i : items.values()) {
-                if ((lastProcessTime-i.getDropTime()) > ItemDrop.DECAY_LENGTH) items.remove(i.getID());
+                if ((lastProcessTime - i.getDropTime()) > ItemDrop.DECAY_LENGTH)
+                    items.remove(i.getID());
                 // TODO itemdrop change here
             }
 
@@ -265,10 +268,10 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
             LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
             gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
-            
+
             HashSet<Pose> playerPoses = new HashSet<>();
-            players.values().stream().forEach((p)->playerPoses.add(p.getPose()));
-            
+            players.values().stream().forEach((p) -> playerPoses.add(p.getPose()));
+
             for (Enemy e : enemies.values()) {
                 Enemy currentEnemy = e;
                 EnemyAI ai;
@@ -277,26 +280,26 @@ public class ProcessGameState extends Thread {
                 Location newLocation = enemyPose;
                 int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
-                
-                switch(enemyName) {
+
+                switch (enemyName) {
                 case ZOMBIE:
-                    ai = new ZombieAI(enemyPose,currentEnemy.getSize(),playerPoses,tileMap,maxDistanceMoved);
+                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
                     break;
                 default:
                     System.out.println("Enemy " + enemyName.toString() + " not known!");
-                    ai = new ZombieAI(enemyPose,currentEnemy.getSize(),playerPoses,tileMap,maxDistanceMoved);
-                    break;                    
+                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
+                    break;
                 }
-                
+
                 AIAction enemyAction = ai.getAction();
-                switch(enemyAction) {
+                switch (enemyAction) {
                 case ATTACK:
                     Attack enemyAttack = ai.getAttack();
                     direction = ai.getDirection();
                     // TODO attack processing here once ai is completed.
                     break;
                 case MOVE:
-                    direction = ai.getDirection();                    
+                    direction = ai.getDirection();
                     newLocation = ai.getNewLocation();
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
@@ -304,22 +307,22 @@ public class ProcessGameState extends Thread {
                     break;
                 default:
                     System.out.println("Action " + enemyAction.toString() + " not known!");
-                    break;               
+                    break;
                 }
-                
-                currentEnemy.setPose(new Pose(newLocation,direction));                
+
+                currentEnemy.setPose(new Pose(newLocation, direction));
                 int enemyID = currentEnemy.getID();
                 enemies.put(enemyID, currentEnemy);
-                
+
                 int[] oldTileCords = Tile.locationToTile(enemyPose);
                 int[] newTileCords = Tile.locationToTile(newLocation);
-                
+
                 if (oldTileCords[0] != newTileCords[0] || oldTileCords[1] != newTileCords[1]) {
                     tileMap[oldTileCords[0]][oldTileCords[1]].removeEnemy(enemyID);
                     tileMap[newTileCords[0]][newTileCords[1]].addEnemy(enemyID);
                 }
 
-                // TODO enemy change here            
+                // TODO enemy change here
             }
 
             // process projectiles
@@ -338,7 +341,8 @@ public class ProcessGameState extends Thread {
 
                 if (tileOn.getState() == TileState.SOLID) {
                     removed = true;
-                    // TODO add data to tile object to store the bullet collision (used for audio and visual effects).
+                    // TODO add data to tile object to store the bullet collision (used for audio
+                    // and visual effects).
                 } else if (currentProjectile.maxRangeReached(distanceMoved)) {
                     removed = true;
                 } else {
@@ -360,9 +364,9 @@ public class ProcessGameState extends Thread {
                                 // TODO add enemychange
                                 enemies.remove(enemyID);
                                 tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
-                                
+
                                 LinkedHashSet<Drop> drops = enemyBeingChecked.getDrops();
-                                for (Drop d: drops) {
+                                for (Drop d : drops) {
                                     int dropAmount = d.getDrop();
                                     if (dropAmount != 0) {
                                         Item itemToDrop = d.getItem();
@@ -388,18 +392,8 @@ public class ProcessGameState extends Thread {
                 }
             }
 
-            // process tilechanges
+            // TODO process tiles?
 
-            int xDim = currentMap.getXDim();
-            int yDim = currentMap.getYDim();
-            TileChange[][] tileChanges = new TileChange[xDim][yDim];
-            /*
-            for (int x = 0; x < xDim; x++) {
-                for (int y = 0; y < yDim; y++) {
-                    // TODO tile processing here
-                }
-            }
-            */
             LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             // TODO spawn new enemies
 
@@ -416,15 +410,16 @@ public class ProcessGameState extends Thread {
 
             LinkedHashSet<Enemy> enemiesToBeAdded = new LinkedHashSet<>(enemies.values());
             enemiesToBeAdded.addAll(newEnemies);
+            // TODO changes loop of news
             gameState.setEnemies(enemiesToBeAdded);
 
-            // TODO make sure old items are added to newItems or appended.
             LinkedHashSet<ItemDrop> itemsToBeAdded = new LinkedHashSet<>(items.values());
             itemsToBeAdded.addAll(newItems);
+            // TODO changes loop of news
             gameState.setItems(itemsToBeAdded);
             gameState.setTileMap(tileMap);
 
-            // TODO change to use hashmaps with ids for changes
+            // TODO overhaul gamestatechanges to only include info the client needs and to take ids with hashmaps.
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
             server.updateGameState(gameState, gameStateChanges);
         }
