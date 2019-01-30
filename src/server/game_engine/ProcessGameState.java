@@ -10,6 +10,7 @@ import data.GameState;
 import data.Location;
 import data.Pose;
 import data.entity.enemy.Enemy;
+import data.entity.enemy.EnemyList;
 import data.entity.item.Item;
 import data.entity.item.ItemDrop;
 import data.entity.item.ItemType;
@@ -21,6 +22,10 @@ import data.map.GameMap;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import server.Server;
+import server.game_engine.ai.AIAction;
+import server.game_engine.ai.Attack;
+import server.game_engine.ai.EnemyAI;
+import server.game_engine.ai.ZombieAI;
 import server.game_engine.data.ChangeType;
 import server.game_engine.data.EnemyChange;
 import server.game_engine.data.GameStateChanges;
@@ -94,7 +99,6 @@ public class ProcessGameState extends Thread {
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
             LinkedHashMap<Integer, PlayerChange> playerChanges = new LinkedHashMap<>();
-            // LinkedHashSet<Player> players = gameState.getPlayers();
             LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
             gameState.getPlayers().stream().forEach((p) -> players.put(p.getID(), p));
 
@@ -211,9 +215,49 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
             LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
             gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
-
+            
+            HashSet<Pose> playerPoses = new HashSet<>();
+            players.values().stream().forEach((p)->playerPoses.add(p.getPose()));
+            
             for (Enemy e : enemies.values()) {
-                // TODO enemy processing here
+                Enemy currentEnemy = e;
+                EnemyAI ai;
+                EnemyList enemyName = currentEnemy.getEnemyName();
+                Pose enemyPose = currentEnemy.getPose();
+                Location newLocation = enemyPose;
+                int direction = enemyPose.getDirection();
+                int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                
+                switch(enemyName) {
+                case ZOMBIE:
+                    ai = new ZombieAI(enemyPose,currentEnemy.getSize(),playerPoses,tileMap,maxDistanceMoved);
+                    break;
+                default:
+                    System.out.println("Enemy " + enemyName.toString() + " not known!");
+                    ai = new ZombieAI(enemyPose,currentEnemy.getSize(),playerPoses,tileMap,maxDistanceMoved);
+                    break;                    
+                }
+                
+                AIAction enemyAction = ai.getAction();
+                switch(enemyAction) {
+                case ATTACK:
+                    Attack enemyAttack = ai.getAttack();
+                    direction = ai.getDirection();
+                    // TODO attack processing here once ai is completed.
+                    break;
+                case MOVE:
+                    direction = ai.getDirection();                    
+                    newLocation = ai.getNewLocation();
+                    break;
+                case WAIT:
+                    break;
+                default:
+                    System.out.println("Action " + enemyAction.toString() + " not known!");
+                    break;               
+                }
+                
+                currentEnemy.setPose(new Pose(newLocation,direction));
+                enemies.put(currentEnemy.getID(), currentEnemy);
             }
 
             // process projectiles
