@@ -41,7 +41,7 @@ import server.request.ClientRequests;
 import server.request.Request;
 
 public class ProcessGameState extends Thread {
-    private static final int minTimeDifference = 17; // number of milliseconds between each process (approx 60th of a second).
+    private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
 
     private final Server server;
 
@@ -71,7 +71,7 @@ public class ProcessGameState extends Thread {
 
         while (!serverClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
-            long timeDiff = minTimeDifference - currentTimeDifference;
+            long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
             if (timeDiff > 0) {
                 try {
                     this.wait(timeDiff);
@@ -81,7 +81,7 @@ public class ProcessGameState extends Thread {
                 }
                 if (serverClosing)
                     break;
-                currentTimeDifference = minTimeDifference;
+                currentTimeDifference = MIN_TIME_DIFFERENCE;
             }
             lastProcessTime = System.currentTimeMillis();
             if (clientRequests != null)
@@ -258,7 +258,8 @@ public class ProcessGameState extends Thread {
             // process item drops
 
             for (ItemDrop i : items.values()) {
-                // TODO check which items are to decay
+                if ((lastProcessTime-i.getDropTime()) > ItemDrop.DECAY_LENGTH) items.remove(i.getID());
+                // TODO itemdrop change here
             }
 
             // process enemies
@@ -349,6 +350,7 @@ public class ProcessGameState extends Thread {
                                 // TODO add enemychange
                                 enemies.remove(enemyID);
                                 tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
+                                // TODO drop items
                             } else {
                                 // TODO add enemychange
                                 enemies.put(enemyID, enemyBeingChecked);
@@ -407,7 +409,7 @@ public class ProcessGameState extends Thread {
         }
     }
 
-    private int getDistanceMoved(long timeDiff, int speed) {
+    private static int getDistanceMoved(long timeDiff, int speed) {
         return (int) Math.ceil((timeDiff / 1000.0) * speed); // time in millis
     }
 

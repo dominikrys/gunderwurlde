@@ -8,6 +8,7 @@ import data.map.tile.Tile;
 
 public class ItemDrop extends Entity implements HasID {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
+    public static final long DECAY_LENGTH = 10000; //10 seconds
     
     private static int nextID = 0;
 
@@ -15,16 +16,22 @@ public class ItemDrop extends Entity implements HasID {
     private final int id;
 
     protected int quantity;
+    protected long dropTime;
 
     public ItemDrop(Item item, Location location, int quantity) {
         super(new Pose(location), DROP_SIZE);
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;
+        this.dropTime = System.currentTimeMillis();
     }
 
     public ItemDrop(Item item, Location location) {
         this(item, location, 1);
+    }
+    
+    public long getDropTime() {
+        return dropTime;
     }
 
     public ItemList getItemName() {
