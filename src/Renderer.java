@@ -1,5 +1,6 @@
 import data.Constants;
 import data.GameState;
+import data.SystemState;
 import data.entity.Entity;
 import data.entity.enemy.Enemy;
 import data.entity.item.Item;
@@ -7,8 +8,11 @@ import data.entity.item.ItemDrop;
 import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
+import data.gui.MenuController;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,24 +28,34 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Renderer {
     private Stage stage;
     private Image defaultGraphic;
+    private SystemState systemState;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
 
+        systemState = SystemState.MENU;
+
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
         if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
             System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
         }
+
+        // Setting title to the Stage
+        stage.setTitle("Gunderwurlde");
     }
 
     // Render input gamestate to stage
     public void renderGameState(GameState inputGameState) {
+        systemState = SystemState.GAME;
+
         // Create canvas according to dimensions of the map
         Canvas mapCanvas = new Canvas(inputGameState.getCurrentMap().getXDim() * Constants.TILE_SIZE,
                 inputGameState.getCurrentMap().getYDim() * Constants.TILE_SIZE);
@@ -87,9 +101,6 @@ public class Renderer {
 
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-        // Setting title to the Stage
-        stage.setTitle("Game");
 
         // Adding scene to the stage
         stage.setScene(scene);
@@ -303,5 +314,36 @@ public class Renderer {
             }
         }
         return outputImage;
+    }
+
+    public SystemState getSystemState() {
+        return systemState;
+    }
+
+    public void renderMainMenu() {
+        //MenuController menuController = new MenuController();
+
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/data/gui/main_menu.fxml"));
+            Parent root = loader.load();
+
+            // Create the main scene
+            Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+            // Adding scene to the stage
+            stage.setScene(scene);
+
+
+            // Displaying the contents of the stage
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        //scene.getRoot().requestFocus();
     }
 }

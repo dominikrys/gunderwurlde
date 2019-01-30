@@ -1,6 +1,7 @@
 import data.GameState;
 import data.Location;
 import data.Pose;
+import data.SystemState;
 import data.entity.enemy.Zombie;
 import data.entity.item.ItemDrop;
 import data.entity.item.weapon.GunList;
@@ -13,6 +14,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
+
+import static data.SystemState.MENU;
 
 public class Main extends Application {
     @Override
@@ -33,8 +36,25 @@ public class Main extends Application {
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
-        // Render example game state
-        renderer.renderGameState(exampleState);
+        boolean running = true;
+        SystemState systemState = MENU;
+
+        //while(running) {
+            switch(systemState) {
+                case MENU:
+                    renderer.renderMainMenu();
+                    break;
+                case GAME:
+                    // Render game state
+                    renderer.renderGameState(exampleState);
+                    systemState = renderer.getSystemState();
+                    break;
+                case QUIT:
+                    running = false;
+                    primaryStage.close();
+                    break;
+            }
+        //}
     }
 
     // Main method
