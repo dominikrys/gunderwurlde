@@ -88,6 +88,11 @@ public abstract class Gun extends Weapon implements Limited {
     public int getCurrentAmmo() {
         return currentAmmo;
     }
+    
+    public void setCurrentAmmo(int ammo) {
+        if (ammo < 0) ammo = 0;
+        this.currentAmmo = ammo;
+    }
 
     public boolean isReloading() {
         return reloading;

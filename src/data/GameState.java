@@ -58,12 +58,6 @@ public class GameState {
         this.items.add(item);
     }
 
-    public boolean setTile(Tile tile, int x, int y) {
-        // Optional checks here
-        currentMap.setTile(tile, x, y);
-        return true;
-    }
-
     public LinkedHashSet<Enemy> getEnemies() {
         return enemies;
     }
@@ -94,6 +88,10 @@ public class GameState {
 
     public void setPlayers(LinkedHashSet<Player> players) {
         this.players = players;
+    }
+
+    public void setTileMap(Tile[][] tileMap) {
+        this.currentMap.setTileMap(tileMap);
     }
 
 }

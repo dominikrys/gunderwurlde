@@ -32,10 +32,6 @@ public abstract class GameMap {
         return tileMap;
     }
 
-    public void setTile(Tile tile, int x, int y) { // Used for dynamically changing tiles
-        tileMap[x][y] = tile;
-    }
-
     public ArrayList<Location> getPlayerSpawns() {
         return playerSpawns;
     }
@@ -50,6 +46,10 @@ public abstract class GameMap {
 
     public void setEnemySpawns(ArrayList<Location> enemySpawns) {
         this.enemySpawns = enemySpawns;
+    }
+
+    public void setTileMap(Tile[][] tileMap) {
+        this.tileMap = tileMap;
     }
 
 }

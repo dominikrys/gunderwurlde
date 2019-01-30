@@ -1,10 +1,14 @@
 package server.game_engine;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import data.GameState;
 import data.Location;
@@ -183,14 +187,60 @@ public class ProcessGameState extends Thread {
                             // TODO include knock-back of player/enemies depending on some factor e.g. size.
 
                             HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
+                            ArrayList<Item> playerItems = currentPlayer.getItems();
                             for (Integer itemDropID : itemsOnTile) {
                                 ItemDrop currentItemDrop = items.get(itemDropID);
-                                // TODO add items to player inventory and as much ammo as possible to compatible
-                                // weapons.
+                                int dropQuantity = currentItemDrop.getQuantity();
+                                switch(currentItemDrop.getItemType()) {
+                                case AMMO:                                 
+                                    LinkedHashSet<Gun> compatibleGuns = new LinkedHashSet<>();
+                                    playerItems.stream()
+                                        .forEach((g)-> {
+                                            if (g instanceof Gun && ((Gun)g).getAmmoType().toItemList() == currentItemDrop.getItemName()) compatibleGuns.add((Gun)g);
+                                        });
+                                    
+                                    int availableAmmo = dropQuantity;
+                                    for (Gun g: compatibleGuns) {
+                                        int currentAmmo = g.getCurrentAmmo();
+                                        int maxAmmo = g.getMaxAmmo();
+                                        int maxAmmoToTake = maxAmmo-currentAmmo;
+                                        if (availableAmmo > maxAmmoToTake) {
+                                            g.setCurrentAmmo(maxAmmo);
+                                            availableAmmo-=maxAmmoToTake;
+                                        } else {
+                                            g.setCurrentAmmo(currentAmmo+availableAmmo);
+                                            availableAmmo = 0;
+                                            break; //no more available ammo
+                                        }
+                                    }
+                                    
+                                    if (availableAmmo != 0) {
+                                        currentItemDrop.setQuantity(availableAmmo);
+                                        items.put(itemDropID, currentItemDrop);
+                                    } else {
+                                        items.remove(itemDropID);
+                                    }
+                                    break;
+                                case GUN:
+                                    if (playerItems.stream().anyMatch((i)->i.getItemName()==currentItemDrop.getItemName())) {
+                                        //player already has that item TODO take some ammo from it
+                                    } else {
+                                        playerItems.add(currentItemDrop.getItem());                                       
+                                        dropQuantity-=1;
+                                        if (dropQuantity !=0) {
+                                            currentItemDrop.setQuantity(dropQuantity);
+                                            items.put(itemDropID, currentItemDrop);
+                                        } else {
+                                            items.remove(itemDropID);
+                                        }
+                                    }
+                                    break;                                
+                                }
                             }
                         }
                     }
 
+                    // TODO player changed data
                     playerPose = new Pose(newLocation, facingDirection);
                     currentPlayer.setPose(playerPose);
                 }
@@ -248,6 +298,7 @@ public class ProcessGameState extends Thread {
                 case MOVE:
                     direction = ai.getDirection();                    
                     newLocation = ai.getNewLocation();
+                    // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
                 case WAIT:
                     break;
@@ -276,7 +327,7 @@ public class ProcessGameState extends Thread {
 
                 if (tileOn.getState() == TileState.SOLID) {
                     removed = true;
-                    // TODO add data to tile object to store the bullet collision
+                    // TODO add data to tile object to store the bullet collision (used for audio and visual effects).
                 } else if (currentProjectile.maxRangeReached(distanceMoved)) {
                     removed = true;
                 } else {
@@ -344,8 +395,11 @@ public class ProcessGameState extends Thread {
             enemiesToBeAdded.addAll(newEnemies);
             gameState.setEnemies(enemiesToBeAdded);
 
-            gameState.setItems(newItems);
-            // TODO loop through tile changes and set tile on gameState
+            // TODO make sure old items are added to newItems or appended.
+            LinkedHashSet<ItemDrop> itemsToBeAdded = new LinkedHashSet<>(items.values());
+            itemsToBeAdded.addAll(newItems);
+            gameState.setItems(itemsToBeAdded);
+            gameState.setTileMap(tileMap);
 
             // TODO change to use hashmaps with ids for changes
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
