@@ -1,20 +1,32 @@
 package server.UPDmulticast;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Enumeration;
 
 public class MulticastSocketClient {
     
     final static String INET_ADDR = "224.0.0.3";
     final static int PORT = 8888;
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, SocketException {
         // Get the address that we are going to connect to.
         InetAddress address = InetAddress.getByName(INET_ADDR);
-        
+        InetAddress addr = null;
+
+        Enumeration<NetworkInterface> faces = NetworkInterface.getNetworkInterfaces();
+        while(faces.hasMoreElements()) {
+            NetworkInterface iface = faces.nextElement();
+            if(iface.isLoopback() | !iface.isUp()) continue;
+
+            Enumeration<InetAddress> addresses = iface.getInetAddresses();
+
+            while(addresses.hasMoreElements()) {
+                addr = addresses.nextElement();
+                if(INET_ADDR.equals(addr.toString()))
+                    break;
+            }
+        }
         // Create a buffer of bytes, which will be used to store
         // the incoming bytes containing the information from the server.
         // Since the message is small here, 256 bytes should be enough.
@@ -24,6 +36,7 @@ public class MulticastSocketClient {
         // to join it as well.
         try (MulticastSocket clientSocket = new MulticastSocket(PORT)){
             //Joint the Multicast group.
+            clientSocket.setInterface(addr);
             clientSocket.joinGroup(address);
      
             while (true) {

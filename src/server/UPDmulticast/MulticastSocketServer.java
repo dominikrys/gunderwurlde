@@ -29,7 +29,7 @@ public class MulticastSocketServer {
         }
      
         // Open a new DatagramSocket, which will be used to send the data.
-        try (MulticastSocket serverSocket = new MulticastSocket()) {
+        try (MulticastSocket serverSocket = new MulticastSocket(PORT)) {
             serverSocket.setInterface(addr);
             for (int i = 0; i < 5; i++) {
                 String msg = "Sent message no " + i;
