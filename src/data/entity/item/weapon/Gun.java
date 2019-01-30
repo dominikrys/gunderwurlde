@@ -9,7 +9,7 @@ public abstract class Gun extends Weapon implements Limited {
     protected int currentAmmo; // includes ammoInClip
     protected int clipSize;
     protected int ammoInClip;
-    protected int reloadTime; // in seconds
+    protected int reloadTime;
     protected long reloadStartTime;
     protected boolean reloading;
     protected int ammoPerShot;

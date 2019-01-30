@@ -81,23 +81,22 @@ public class ProcessGameState extends Thread {
             // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
-            
+
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
             LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
-            
+
             LinkedHashSet<ItemDropChange> itemDropChanges = new LinkedHashSet<>();
-            LinkedHashMap<Integer,ItemDrop> items = new LinkedHashMap<>();
-            gameState.getItems().stream().forEach((i)->items.put(i.getID(),i));
-            
+            LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
+            gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i));
+
             // TODO include tile changes here
 
-            // process player requests                       
+            // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
             LinkedHashMap<Integer, PlayerChange> playerChanges = new LinkedHashMap<>();
-            //LinkedHashSet<Player> players = gameState.getPlayers();
-            LinkedHashMap<Integer,Player> players = new LinkedHashMap<>();
-            gameState.getPlayers().stream().forEach((p)->players.put(p.getID(), p));
-
+            // LinkedHashSet<Player> players = gameState.getPlayers();
+            LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
+            gameState.getPlayers().stream().forEach((p) -> players.put(p.getID(), p));
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
@@ -114,7 +113,8 @@ public class ProcessGameState extends Thread {
                 if (currentItem.getItemType() == ItemType.GUN) {
                     if (((Gun) currentItem).isReloading()) {
                         if (((Gun) currentItem).reload()) {
-                            // TODO reload complete, gun updates itself but it might be good to send confirmation as well?
+                            // TODO reload complete, gun updates itself but it might be good to send
+                            // confirmation as well?
                         }
                     }
                 }
@@ -126,20 +126,22 @@ public class ProcessGameState extends Thread {
                             int numOfBullets = currentGun.getProjectilesPerShot();
                             int spread = currentGun.getSpread();
                             int bulletSpacing = 0;
-                            if (numOfBullets > 1) bulletSpacing = (2*spread)/(numOfBullets-1);
-                            
+                            if (numOfBullets > 1)
+                                bulletSpacing = (2 * spread) / (numOfBullets - 1);
+
                             LinkedList<Pose> bulletPoses = new LinkedList<>();
                             Pose gunPose = currentPlayer.getPose(); // TODO change pose to include gunlength/position
-                            
+
                             int nextDirection = gunPose.getDirection() - spread;
-                            for (int i=0;i<numOfBullets;i++) {
+                            for (int i = 0; i < numOfBullets; i++) {
                                 bulletPoses.add(new Pose(gunPose, nextDirection));
-                                nextDirection+=bulletSpacing;
-                            }                          
-                            
+                                nextDirection += bulletSpacing;
+                            }
+
                             switch (currentGun.getProjectileType()) {
                             case SMALLBULLET:
-                                for (Pose p:bulletPoses) newProjectiles.add(new SmallBullet(p));
+                                for (Pose p : bulletPoses)
+                                    newProjectiles.add(new SmallBullet(p));
                                 break;
                             default:
                                 System.out.println("Projectile type not known for: " + currentItem.getItemName().toString());
@@ -165,20 +167,22 @@ public class ProcessGameState extends Thread {
                     }
 
                     if (request.movementExists()) {
-                        int distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());                       
+                        int distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());
                         newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
-                        
+
                         int[] tileCords = Tile.locationToTile(newLocation);
                         Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                        
-                        if (tileOn.getState() == TileState.SOLID) newLocation = playerPose;
+
+                        if (tileOn.getState() == TileState.SOLID)
+                            newLocation = playerPose;
                         else {
                             // TODO include knock-back of player/enemies depending on some factor e.g. size.
-                            
+
                             HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
-                            for (Integer itemDropID:itemsOnTile) {
+                            for (Integer itemDropID : itemsOnTile) {
                                 ItemDrop currentItemDrop = items.get(itemDropID);
-                                // TODO add items to player inventory and as much ammo as possible to compatible weapons.
+                                // TODO add items to player inventory and as much ammo as possible to compatible
+                                // weapons.
                             }
                         }
                     }
@@ -196,17 +200,17 @@ public class ProcessGameState extends Thread {
                 players.put(playerID, currentPlayer);
 
             }
-            
+
             // process item drops
 
             for (ItemDrop i : items.values()) {
                 // TODO check which items are to decay
             }
-            
+
             // process enemies
             LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
-            LinkedHashMap<Integer,Enemy> enemies = new LinkedHashMap<>();
-            gameState.getEnemies().stream().forEach((e)->enemies.put(e.getID(),e));
+            LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
+            gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
 
             for (Enemy e : enemies.values()) {
                 // TODO enemy processing here
@@ -221,89 +225,92 @@ public class ProcessGameState extends Thread {
                 boolean removed = false;
                 Projectile currentProjectile = p;
                 int distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
-                Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(), distanceMoved);
+                Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
+                        distanceMoved);
                 int[] tileCords = Tile.locationToTile(newLocation);
                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                
+
                 if (tileOn.getState() == TileState.SOLID) {
                     removed = true;
-                    //TODO add data to tile object to store the bullet collision
+                    // TODO add data to tile object to store the bullet collision
                 } else if (currentProjectile.maxRangeReached(distanceMoved)) {
                     removed = true;
                 } else {
                     HashSet<Integer> enemiesOnTile = tileOn.getEnemiesOnTile();
-                    for (Integer enemyID:enemiesOnTile) {
+                    for (Integer enemyID : enemiesOnTile) {
                         Enemy enemyBeingChecked = enemies.get(enemyID);
                         Location enemyLocation = enemyBeingChecked.getLocation();
-                        
+
                         int enemyX = enemyLocation.getX();
                         int enemyY = enemyLocation.getY();
-                        int boundrySize = enemyBeingChecked.getSize()/2;
+                        int boundrySize = enemyBeingChecked.getSize() / 2;
                         int newX = newLocation.getX();
                         int newY = newLocation.getY();
-                        
-                        if ((enemyX - boundrySize) <= newX && (enemyX + boundrySize) >= newX && (enemyY - boundrySize) <= newY && (enemyY + boundrySize) >= newY) {
+
+                        if ((enemyX - boundrySize) <= newX && (enemyX + boundrySize) >= newX && (enemyY - boundrySize) <= newY
+                                && (enemyY + boundrySize) >= newY) {
                             removed = true;
                             if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
-                                //TODO add enemychange
+                                // TODO add enemychange
                                 enemies.remove(enemyID);
                                 tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
                             } else {
-                                //TODO add enemychange
+                                // TODO add enemychange
                                 enemies.put(enemyID, enemyBeingChecked);
                             }
                         }
                     }
-                    
-                    if (removed) projectileChanges.add(new ProjectileChange(ChangeType.REMOVED));
+
+                    if (removed)
+                        projectileChanges.add(new ProjectileChange(ChangeType.REMOVED));
                     else {
                         projectileChanges.add(new ProjectileChange(ChangeType.BASIC_CHANGE));
                         otherNewProjectiles.add(currentProjectile);
                     }
                 }
-            }   
-            
+            }
+
             // process tilechanges
-            
+
             int xDim = currentMap.getXDim();
             int yDim = currentMap.getYDim();
             TileChange[][] tileChanges = new TileChange[xDim][yDim];
             /*
             for (int x = 0; x < xDim; x++) {
                 for (int y = 0; y < yDim; y++) {
-                    TODO tile processing here
+                    // TODO tile processing here
                 }
             }
-            */      
-          
+            */
             LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             // TODO spawn new enemies
-            
+
             // TODO check for next round
-            
+
             gameState.setPlayers(new LinkedHashSet<>(players.values()));
-            
-            //maintain order.
+
+            // maintain order.
             otherNewProjectiles.addAll(newProjectiles);
-            for (int i=0;i<newProjectiles.size();i++) projectileChanges.add(new ProjectileChange(ChangeType.NEW));
+            for (int i = 0; i < newProjectiles.size(); i++)
+                projectileChanges.add(new ProjectileChange(ChangeType.NEW));
             newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
-            
+
             LinkedHashSet<Enemy> enemiesToBeAdded = new LinkedHashSet<>(enemies.values());
             enemiesToBeAdded.addAll(newEnemies);
             gameState.setEnemies(enemiesToBeAdded);
-            
+
             gameState.setItems(newItems);
             // TODO loop through tile changes and set tile on gameState
-            
+
             // TODO change to use hashmaps with ids for changes
             GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
             server.updateGameState(gameState, gameStateChanges);
         }
     }
-    
+
     private int getDistanceMoved(long timeDiff, int speed) {
-        return (int) Math.ceil((timeDiff / 1000.0) * speed); //time in millis
+        return (int) Math.ceil((timeDiff / 1000.0) * speed); // time in millis
     }
 
 }
