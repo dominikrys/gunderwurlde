@@ -217,6 +217,7 @@ public class ProcessGameState extends Thread {
                                         items.put(itemDropID, currentItemDrop);
                                     } else {
                                         items.remove(itemDropID);
+                                        tileMap[tileCords[0]][tileCords[1]].removeItemDrop(itemDropID);
                                     }
                                     break;
                                 case GUN:
@@ -272,7 +273,7 @@ public class ProcessGameState extends Thread {
                 Enemy currentEnemy = e;
                 EnemyAI ai;
                 EnemyList enemyName = currentEnemy.getEnemyName();
-                Pose enemyPose = currentEnemy.getPose();
+                Pose enemyPose = currentEnemy.getPose(); // don't change
                 Location newLocation = enemyPose;
                 int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
@@ -306,8 +307,19 @@ public class ProcessGameState extends Thread {
                     break;               
                 }
                 
-                currentEnemy.setPose(new Pose(newLocation,direction));
-                enemies.put(currentEnemy.getID(), currentEnemy);
+                currentEnemy.setPose(new Pose(newLocation,direction));                
+                int enemyID = currentEnemy.getID();
+                enemies.put(enemyID, currentEnemy);
+                
+                int[] oldTileCords = Tile.locationToTile(enemyPose);
+                int[] newTileCords = Tile.locationToTile(newLocation);
+                
+                if (oldTileCords[0] != newTileCords[0] || oldTileCords[1] != newTileCords[1]) {
+                    tileMap[oldTileCords[0]][oldTileCords[1]].removeEnemy(enemyID);
+                    tileMap[newTileCords[0]][newTileCords[1]].addEnemy(enemyID);
+                }
+
+                // TODO enemy change here            
             }
 
             // process projectiles
@@ -354,7 +366,10 @@ public class ProcessGameState extends Thread {
                                     int dropAmount = d.getDrop();
                                     if (dropAmount != 0) {
                                         Item itemToDrop = d.getItem();
-                                        //TODO drop items
+                                        // TODO have itemdrops of the same type stack
+                                        ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
+                                        newItems.add(newDrop);
+                                        tileMap[tileCords[0]][tileCords[1]].addItemDrop(newDrop.getID());
                                     }
                                 }
                             } else {
