@@ -1,4 +1,4 @@
-package serverclientdirect;
+package server.serverclientdirect;
 // Usage:
 //        java serverclientdirect.Server
 //
@@ -14,7 +14,7 @@ public class Server{
 	public static void main(String[] args) {
 		Boolean running;
 		try {
-			DatagramSocket socket = new DatagramSocket(Port.number);
+			DatagramSocket socket = new DatagramSocket(4444);
 			byte[] buffer = new byte[256];
 
 		running = true;

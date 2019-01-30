@@ -7,40 +7,28 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.MembershipKey;
 
 public class MulticastReceiver {
-    private static final String MULTICAST_INTERFACE = "eth0";
-    private static final int MULTICAST_PORT = 4321;
-    private static final String MULTICAST_IP = "230.0.0.0";
+        public static void main(String[] args) throws Exception {
+            int mcPort = 12345;
+            String mcIPStr = "230.1.1.1";
+            MulticastSocket mcSocket = null;
+            InetAddress mcIPAddress = null;
+            mcIPAddress = InetAddress.getByName(mcIPStr);
+            mcSocket = new MulticastSocket(mcPort);
+            System.out.println("Multicast Receiver running at:"
+                    + mcSocket.getLocalSocketAddress());
+            mcSocket.joinGroup(mcIPAddress);
 
-    private String receiveMessage(String ip, String iface, int port) throws IOException {
+            DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 
-        DatagramChannel datagramChannel = DatagramChannel.open(StandardProtocolFamily.INET);
-        NetworkInterface networkInterface = NetworkInterface.getByName(iface);
-        datagramChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-        datagramChannel.bind(new InetSocketAddress(port));
-        datagramChannel.setOption(StandardSocketOptions.IP_MULTICAST_IF, networkInterface);
-        InetAddress inetAddress = InetAddress.getByName(ip);
+            System.out.println("Waiting for a  multicast message...");
+            mcSocket.receive(packet);
+            String msg = new String(packet.getData(), packet.getOffset(),
+                    packet.getLength());
+            System.out.println("[Multicast  Receiver] Received:" + msg);
 
-        MembershipKey membershipKey = datagramChannel.join(inetAddress, networkInterface);
-
-        System.out.println("Waiting for the message...");
-
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        datagramChannel.receive(byteBuffer);
-        byteBuffer.flip();
-
-        byte[] bytes = new byte[byteBuffer.limit()];
-
-        byteBuffer.get(bytes, 0, byteBuffer.limit());
-        membershipKey.drop();
-        return new String(bytes);
+            mcSocket.leaveGroup(mcIPAddress);
+            mcSocket.close();
+        }
     }
-
-    public static void main(String[] args) throws IOException {
-        MulticastReceiver mr = new MulticastReceiver();
-        System.out.println("Message received : "
-                + mr.receiveMessage(MULTICAST_IP,
-                MULTICAST_INTERFACE, MULTICAST_PORT));
-    }
-}
 
 

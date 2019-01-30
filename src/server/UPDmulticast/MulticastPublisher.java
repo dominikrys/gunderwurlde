@@ -1,32 +1,25 @@
 package server.UPDmulticast;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.StandardSocketOptions;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
+/*  ww  w .j av  a 2 s .c  o  m*/
 public class MulticastPublisher {
-    private static final String MULTICAST_INTERFACE = "eth0";
-    private static final int MULTICAST_PORT = 4321;
-    private static final String MULTICAST_IP = "230.0.0.0";
-    public void sendMessage(String ip, String iface, int port, String message) throws IOException {
+    public static void main(String[] args) throws Exception {
+        int mcPort = 12345;
+        String mcIPStr = "230.1.1.1";
+        DatagramSocket udpSocket = new DatagramSocket();
 
-        DatagramChannel datagramChannel=DatagramChannel.open();
-        datagramChannel.bind(null);
-        NetworkInterface networkInterface=NetworkInterface.getByName(iface);
+        InetAddress mcIPAddress = InetAddress.getByName(mcIPStr);
+        byte[] msg = "Hello".getBytes();
+        DatagramPacket packet = new DatagramPacket(msg, msg.length);
+        packet.setAddress(mcIPAddress);
+        packet.setPort(mcPort);
+        udpSocket.send(packet);
 
-        datagramChannel.setOption(StandardSocketOptions.IP_MULTICAST_IF,networkInterface);
-
-        ByteBuffer byteBuffer=ByteBuffer.wrap(message.getBytes());
-
-        InetSocketAddress inetSocketAddress= new InetSocketAddress(ip, port);
-        datagramChannel.send(byteBuffer, inetSocketAddress);
-    }
-    public static void main(String[] args) throws IOException {
-        MulticastPublisher mp = new MulticastPublisher();
-        mp.sendMessage(MULTICAST_IP,MULTICAST_INTERFACE,
-                MULTICAST_PORT,"Hi there!");
+        System.out.println("Sent a  multicast message.");
+        System.out.println("Exiting application");
+        udpSocket.close();
     }
 }

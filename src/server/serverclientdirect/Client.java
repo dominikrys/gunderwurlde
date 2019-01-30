@@ -29,7 +29,7 @@ class Client {
 				System.out.println("Give input");
 				String userInput = sc.nextLine();
 				buffer = userInput.getBytes();
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, Port.number);
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
 				socket.send(packet);
 				if(userInput.equals("end")){
 					System.out.println("Ending client");
