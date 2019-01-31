@@ -12,15 +12,21 @@ public abstract class GameMap {
     protected LinkedHashSet<Location> playerSpawns;
     protected LinkedHashSet<Location> enemySpawns;
     protected LinkedHashSet<Round> rounds;
+    protected MapList mapName;
 
-    GameMap(int xDim, int yDim, Tile[][] tileMap, LinkedHashSet<Location> playerSpawns, LinkedHashSet<Location> enemySpawns, LinkedHashSet<Round> rounds) {
+    GameMap(int xDim, int yDim, Tile[][] tileMap, LinkedHashSet<Location> playerSpawns, LinkedHashSet<Location> enemySpawns, LinkedHashSet<Round> rounds, MapList mapName) {
         this.DEFAULT_Y_DIM = yDim;
         this.DEFAULT_X_DIM = xDim;
         this.tileMap = tileMap;
         this.playerSpawns = playerSpawns;
         this.enemySpawns = enemySpawns;
         this.rounds = rounds;
-    }  
+        this.mapName = mapName;
+    }
+    
+    public MapList getMapName( ) {
+        return mapName;
+    }
 
     public LinkedHashSet<Round> getRounds() {
         return rounds;

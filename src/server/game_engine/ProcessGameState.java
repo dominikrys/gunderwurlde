@@ -19,9 +19,12 @@ import data.entity.item.ItemDrop;
 import data.entity.item.ItemType;
 import data.entity.item.weapon.gun.Gun;
 import data.entity.player.Player;
+import data.entity.player.Teams;
 import data.entity.projectile.Projectile;
 import data.entity.projectile.SmallBullet;
 import data.map.GameMap;
+import data.map.MapList;
+import data.map.Meadow;
 import data.map.Round;
 import data.map.Wave;
 import data.map.tile.Tile;
@@ -31,13 +34,6 @@ import server.game_engine.ai.AIAction;
 import server.game_engine.ai.Attack;
 import server.game_engine.ai.EnemyAI;
 import server.game_engine.ai.ZombieAI;
-import server.game_engine.data.ChangeType;
-import server.game_engine.data.EnemyChange;
-import server.game_engine.data.GameStateChanges;
-import server.game_engine.data.ItemDropChange;
-import server.game_engine.data.PlayerChange;
-import server.game_engine.data.ProjectileChange;
-import server.game_engine.data.TileChange;
 import server.request.ClientRequests;
 import server.request.Request;
 
@@ -50,9 +46,15 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean serverClosing;
 
-    public ProcessGameState(Server server, GameState gameState) { //TODO have the engine create the inital gameState
+    public ProcessGameState(Server server, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
         this.server = server;
-        this.gameState = gameState;
+        LinkedHashSet<Player> players = new LinkedHashSet<>();
+        players.add(new Player(new Pose(), Teams.RED, hoastName));
+        switch (mapName) {
+        case MEADOW:
+            this.gameState = new GameState(new Meadow(), players);
+            break;
+        }
         this.serverClosing = false;
     }
 
@@ -63,6 +65,10 @@ public class ProcessGameState extends Thread {
     public void serverClosing() {
         this.serverClosing = true;
         this.notify();
+    }
+
+    public void addPlayer(String playerName, Teams team) {
+        gameState.addPlayer(new Player(new Pose(), team, playerName));
     }
 
     @Override
@@ -104,17 +110,11 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
             LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
 
-            LinkedHashSet<ItemDropChange> itemDropChanges = new LinkedHashSet<>();
             LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
             gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i)); // TODO change gamestate to use hashmaps to improve performance
 
-            int xDim = currentMap.getXDim();
-            int yDim = currentMap.getYDim();
-            TileChange[][] tileChanges = new TileChange[xDim][yDim];
-
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
-            LinkedHashMap<Integer, PlayerChange> playerChanges = new LinkedHashMap<>();
             LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
             gameState.getPlayers().stream().forEach((p) -> players.put(p.getID(), p));
 
@@ -277,7 +277,6 @@ public class ProcessGameState extends Thread {
             }
 
             // process enemies
-            LinkedHashSet<EnemyChange> enemyChanges = new LinkedHashSet<>();
             LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
             gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
 
@@ -338,7 +337,6 @@ public class ProcessGameState extends Thread {
             }
 
             // process projectiles
-            LinkedHashSet<ProjectileChange> projectileChanges = new LinkedHashSet<>();
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
             LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();
 
@@ -396,10 +394,10 @@ public class ProcessGameState extends Thread {
                         }
                     }
 
-                    if (removed)
-                        projectileChanges.add(new ProjectileChange(ChangeType.REMOVED));
-                    else {
-                        projectileChanges.add(new ProjectileChange(ChangeType.BASIC_CHANGE));
+                    if (removed) {
+                        // TODO removed projectile change
+                    } else {
+                        // TODO basic projectile change
                         otherNewProjectiles.add(currentProjectile);
                     }
                 }
@@ -442,8 +440,7 @@ public class ProcessGameState extends Thread {
 
             // maintain order.
             otherNewProjectiles.addAll(newProjectiles);
-            for (int i = 0; i < newProjectiles.size(); i++)
-                projectileChanges.add(new ProjectileChange(ChangeType.NEW));
+            // TODO changes loop of news
             newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
 
@@ -458,10 +455,9 @@ public class ProcessGameState extends Thread {
             gameState.setItems(itemsToBeAdded);
             gameState.setTileMap(tileMap);
 
-            // TODO overhaul gamestatechanges to take ids with hashmaps and update it to
-            // include recently added data.
-            GameStateChanges gameStateChanges = new GameStateChanges(projectileChanges, enemyChanges, playerChanges, tileChanges, itemDropChanges);
-            server.updateGameState(gameState, gameStateChanges);
+            // TODO overhaul gamestatechanges if used for multithreading
+
+            server.updateGameState(gameState); // TODO convert gamestate into viewstate for clients
         }
     }
 

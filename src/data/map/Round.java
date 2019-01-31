@@ -12,7 +12,7 @@ public class Round {
         this.isBoss = isBoss;
         this.startTime = System.currentTimeMillis();
     }
-    
+
     public boolean hasWavesLeft() {
         return !waves.isEmpty();
     }

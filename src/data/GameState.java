@@ -16,13 +16,12 @@ public class GameState {
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashSet<Player> players;
     protected LinkedHashSet<ItemDrop> items;
+    protected Iterator<Location> spawnIterator;
 
     public GameState(GameMap currentMap, LinkedHashSet<Player> players) {
         this.players = players;
+        this.spawnIterator = currentMap.getPlayerSpawns().iterator();
         setCurrentMap(currentMap);
-        this.enemies = new LinkedHashSet<Enemy>();
-        this.projectiles = new LinkedHashSet<Projectile>();
-        this.items = new LinkedHashSet<ItemDrop>();
     }
 
     public GameMap getCurrentMap() {
@@ -34,14 +33,9 @@ public class GameState {
         this.enemies = new LinkedHashSet<Enemy>();
         this.projectiles = new LinkedHashSet<Projectile>();
         this.items = new LinkedHashSet<ItemDrop>();
-
-        LinkedHashSet<Location> playerSpawns = currentMap.getPlayerSpawns();
-        Iterator<Location> spawnIterator = playerSpawns.iterator();
-
+       
         for (Player p : players) {
-            if (!spawnIterator.hasNext())
-                spawnIterator = playerSpawns.iterator();
-            p.setPose(new Pose(spawnIterator.next()));
+            addPlayer(p);
         }
     }
 
@@ -91,6 +85,12 @@ public class GameState {
 
     public void setTileMap(Tile[][] tileMap) {
         this.currentMap.setTileMap(tileMap);
+    }
+
+    public void addPlayer(Player player) {
+        if (!spawnIterator.hasNext())
+            spawnIterator = currentMap.getPlayerSpawns().iterator();
+        player.setPose(new Pose(spawnIterator.next()));
     }
 
 }

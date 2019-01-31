@@ -16,7 +16,7 @@ public class Meadow extends GameMap {
     public static final int DEFAULT_Y_DIM = 17;
 
     public Meadow() {
-        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns(), generateRounds());
+        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
     }
 
     /*
