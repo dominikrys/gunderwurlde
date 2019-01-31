@@ -42,7 +42,8 @@ public class Main extends Application {
         //while(running) {
             switch(systemState) {
                 case MENU:
-                    renderer.renderMainMenu();
+                    //renderer.renderMainMenu();
+                    renderer.renderMainMenuComplete();
                     break;
                 case GAME:
                     // Render game state

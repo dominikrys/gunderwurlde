@@ -8,7 +8,7 @@ import data.entity.item.ItemDrop;
 import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
-import data.gui.MenuController;
+import data.gui.MenuControlWithMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -345,5 +345,17 @@ public class Renderer {
 
 
         //scene.getRoot().requestFocus();
+    }
+
+    public void renderMainMenuComplete() {
+        MenuControlWithMenu menuControl = new MenuControlWithMenu();
+
+        // Create the main scene
+        Scene scene = new Scene(menuControl, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+        // Adding scene to the stage
+        stage.setScene(scene);
+
+        stage.show();
     }
 }
