@@ -50,7 +50,7 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean serverClosing;
 
-    public ProcessGameState(Server server, GameState gameState) {
+    public ProcessGameState(Server server, GameState gameState) { //TODO have the engine create the inital gameState
         this.server = server;
         this.gameState = gameState;
         this.serverClosing = false;
@@ -69,9 +69,9 @@ public class ProcessGameState extends Thread {
     public void run() {
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
-              
+
         // TODO reset all of this if map is changed or find a better way to do this
-        Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator(); 
+        Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator();
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
         Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
@@ -106,7 +106,7 @@ public class ProcessGameState extends Thread {
 
             LinkedHashSet<ItemDropChange> itemDropChanges = new LinkedHashSet<>();
             LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
-            gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i));
+            gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i)); // TODO change gamestate to use hashmaps to improve performance
 
             int xDim = currentMap.getXDim();
             int yDim = currentMap.getYDim();
@@ -409,17 +409,18 @@ public class ProcessGameState extends Thread {
 
             LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
-            
+
             if (!currentWaves.isEmpty()) {
-                for (Wave wave: currentWaves) {
+                for (Wave wave : currentWaves) {
                     if (!wave.isDone()) {
                         Wave currentWave = wave;
                         if (currentWave.readyToSpawn()) {
                             Enemy templateEnemyToSpawn = currentWave.getEnemyToSpawn();
                             int amountToSpawn = currentWave.getSpawn();
-                            
-                            for (int i=0; i<amountToSpawn; i++) {
-                                if (!enemySpawnIterator.hasNext()) enemySpawnIterator = currentMap.getEnemySpawns().iterator();
+
+                            for (int i = 0; i < amountToSpawn; i++) {
+                                if (!enemySpawnIterator.hasNext())
+                                    enemySpawnIterator = currentMap.getEnemySpawns().iterator();
                                 Enemy enemyToSpawn = templateEnemyToSpawn;
                                 enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
                                 newEnemies.add(enemyToSpawn);
@@ -427,17 +428,15 @@ public class ProcessGameState extends Thread {
                         }
                         newWaves.add(currentWave);
                     }
-                }                
-            } else if (enemies.isEmpty()) {                
+                }
+            } else if (enemies.isEmpty()) {
                 if (roundIterator.hasNext()) {
                     currentRound = roundIterator.next();
                 } else {
                     // TODO no more rounds left send win message
                 }
-            }  
+            }
             currentWaves = newWaves;
-
-            // TODO check for next round (no more enemies)
 
             gameState.setPlayers(new LinkedHashSet<>(players.values()));
 

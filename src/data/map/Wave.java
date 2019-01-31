@@ -23,31 +23,35 @@ public class Wave implements Comparable<Wave> {
     public long getStartTime() {
         return startTime;
     }
-    
+
     public boolean isDone() {
-        if (amountLeftToSpawn == 0) return true;
-        else return false;
+        if (amountLeftToSpawn == 0)
+            return true;
+        else
+            return false;
     }
 
     public boolean readyToSpawn() {
-        if ((System.currentTimeMillis() - lastSpawnTime) >= spawnInterval) return true;
-        else return false;
+        if ((System.currentTimeMillis() - lastSpawnTime) >= spawnInterval)
+            return true;
+        else
+            return false;
     }
 
     public Enemy getEnemyToSpawn() {
         return enemyToSpawn;
     }
-    
+
     public int getSpawn() {
         lastSpawnTime = System.currentTimeMillis();
         if (amountPerSpawn > amountLeftToSpawn) {
-            amountLeftToSpawn-=amountPerSpawn;
+            amountLeftToSpawn -= amountPerSpawn;
             return amountPerSpawn;
         } else {
             int leftovers = amountLeftToSpawn;
             amountLeftToSpawn = 0;
             return leftovers;
-        }        
+        }
     }
 
     @Override
