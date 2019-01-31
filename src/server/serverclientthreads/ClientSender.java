@@ -14,11 +14,12 @@ public class ClientSender extends Thread {
     byte[] buffer;
     Scanner scan;
 
-    ClientSender(InetAddress address, MulticastSocket socket, int port) {
+    ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
         running = true;
+        senderSocket.setInterface(findInetAddress());
         this.start();
     }
 
@@ -35,32 +36,41 @@ public class ClientSender extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
 
                 // Each time we send a packet we need to ensure the interfaces match up
-                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-                //while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = null;
-                if (interfaces.hasMoreElements()) {
-                    iface = interfaces.nextElement();
+
+
+                senderSocket.send(packet);
+
+
+                // If the messages is exit then the Thread should terminate
+                if (userInput.equals("exit")) {
+                    running = false;
                 }
+                Thread.yield();
+            }
+        } catch (IOException e1) {
 
-                if (!iface.isLoopback() || iface.isUp()) {
-                    Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                    if (addresses.hasMoreElements()) {
-                        InetAddress addr = addresses.nextElement();
-                        senderSocket.setInterface(addr);
-                        senderSocket.send(packet);
-                    }
+        }
+    }
 
-                    // If the messages is exit then the Thread should terminate
-                    if (userInput.equals("exit")) {
-                        running = false;
-                    }
-                    Thread.yield();
+    private InetAddress findInetAddress() {
+        InetAddress addr = null;
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            //while (interfaces.hasMoreElements()) {
+            NetworkInterface iface = null;
+            if (interfaces.hasMoreElements()) {
+                iface = interfaces.nextElement();
+            }
+
+            if (!iface.isLoopback() || iface.isUp()) {
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                if (addresses.hasMoreElements()) {
+                    addr = addresses.nextElement();
                 }
             }
         } catch (SocketException e) {
 
-        } catch (IOException e) {
-
         }
+        return addr;
     }
 }

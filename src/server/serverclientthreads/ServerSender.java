@@ -15,12 +15,14 @@ public class ServerSender extends Thread {
     byte[] buffer;
     Scanner scan;
 
-    public ServerSender(InetAddress address, MulticastSocket socket, int port) {
+    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
         running = true;
+        senderSocket.setInterface(findInetAddress());
         this.start();
+
     }
 
     public void run() {
@@ -42,6 +44,19 @@ public class ServerSender extends Thread {
             buffer = confirm.getBytes();
             // Creates a new packet to be sent to the address specified
             packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+            senderSocket.send(packet);
+
+
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private InetAddress findInetAddress() {
+        InetAddress addr = null;
+        try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             //while (interfaces.hasMoreElements()) {
             NetworkInterface iface = null;
@@ -52,22 +67,14 @@ public class ServerSender extends Thread {
             if (!iface.isLoopback() || iface.isUp()) {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 if (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    senderSocket.setInterface(addr);
-                    senderSocket.send(packet);
+                    addr = addresses.nextElement();
                 }
-
-
-                //		break;
             }
-            //	break;
-        } catch (SocketException e1) {
-
-        } catch (IOException e1) {
+        } catch (SocketException e) {
 
         }
+        return addr;
     }
-
 
     // method used only for testing exit works
     // will be replaced in future clean up
