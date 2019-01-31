@@ -14,6 +14,6 @@ public class HelpMenuController extends AbstractMenuController{
 
     @FXML
     void backButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.MAIN_MENU;
     }
 }

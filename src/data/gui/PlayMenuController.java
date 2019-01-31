@@ -29,12 +29,19 @@ public class PlayMenuController extends AbstractMenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.PLAY;
     }
 
     @FXML
     void handleNameInput(ActionEvent event) {
-
+        // Only allow going into single or multi player if a name has been entered
+        if (nameField.getCharacters().length() > 0) {
+            singlePlayerButton.setDisable(false);
+            multiPlayerButton.setDisable(false);
+        } else {
+            singlePlayerButton.setDisable(true);
+            multiPlayerButton.setDisable(true);
+        }
     }
 
     @FXML

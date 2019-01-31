@@ -45,7 +45,7 @@ public class SettingsMenuController extends AbstractMenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.MAIN_MENU;
     }
 
     @FXML

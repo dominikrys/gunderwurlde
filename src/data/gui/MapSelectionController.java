@@ -29,7 +29,7 @@ public class MapSelectionController extends AbstractMenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.MAIN_MENU;
     }
 
     @FXML

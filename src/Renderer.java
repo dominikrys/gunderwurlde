@@ -351,6 +351,9 @@ public class Renderer {
                 case HELP:
                     currentMenuController = new HelpMenuController();
                     break;
+                case QUIT:
+                    systemState = SystemState.QUIT;
+                    break;
             }
 
             // Create the main scene

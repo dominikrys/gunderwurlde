@@ -39,7 +39,7 @@ public class MainMenuController extends AbstractMenuController {
 
     @FXML
     void quitButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.QUIT;
     }
 
 }
