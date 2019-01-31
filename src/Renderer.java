@@ -8,7 +8,7 @@ import data.entity.item.ItemDrop;
 import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
-import data.gui.MainMenuController;
+import data.gui.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -30,13 +30,15 @@ public class Renderer {
     private Stage stage;
     private Image defaultGraphic;
     private SystemState systemState;
+    private Menus currentMenu;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
 
-        systemState = SystemState.MAIN_MENU;
+        systemState = SystemState.MENU;
+        currentMenu = Menus.MAIN_MENU;
 
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
@@ -316,11 +318,26 @@ public class Renderer {
         return systemState;
     }
 
-    public void renderMenu(SystemState inputSystemState) {
-        MainMenuController mainMenuController = new MainMenuController();
+    public void renderMenu() {
+        AbstractMenuController currentMenuController = null;
+
+        switch (currentMenu) {
+            case MAIN_MENU:
+                currentMenuController = new MainMenuController();
+                break;
+            case SETTINGS:
+                currentMenuController = new SettingsMenuController();
+                break;
+            case PLAY:
+                currentMenuController = new PlayMenuController();
+                break;
+            case MAP:
+                currentMenuController = new MapSelectionController();
+                break;
+        }
 
         // Create the main scene
-        Scene scene = new Scene(mainMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         // Adding scene to the stage
         stage.setScene(scene);

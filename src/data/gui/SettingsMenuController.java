@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class SettingsMenuController extends VBox {
+public class SettingsMenuController extends AbstractMenuController {
 
     @FXML
     private Slider soundVolumeSlider;
@@ -40,16 +40,7 @@ public class SettingsMenuController extends VBox {
     private Button backButton;
 
     public SettingsMenuController(){
-        // Load FXML file, set controller and root
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/settings_menu.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        super("/data/gui/settings_menu.fxml");
     }
 
     @FXML

@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class PauseMenuController extends VBox {
+public class PauseMenuController extends AbstractMenuController {
 
     @FXML
     private Button backButton;
@@ -16,17 +16,8 @@ public class PauseMenuController extends VBox {
     @FXML
     private Button menuButton;
 
-    public PauseMenuController(){
-        // Load FXML file, set controller and root
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/pause_menu.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    public PauseMenuController(String menuPath){
+        super("/data/gui/pause_menu.fxml");
     }
 
     @FXML

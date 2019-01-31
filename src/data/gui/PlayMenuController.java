@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class PlayMenuController extends VBox {
+public class PlayMenuController extends AbstractMenuController {
 
     @FXML
     private TextField nameField;
@@ -24,16 +24,7 @@ public class PlayMenuController extends VBox {
     private Button backButton;
 
     public PlayMenuController(){
-        // Load FXML file, set controller and root
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/play_menu.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        super("/data/gui/play_menu.fxml");
     }
 
     @FXML

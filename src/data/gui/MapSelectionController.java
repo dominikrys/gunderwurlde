@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class MapSelectionController extends VBox {
+public class MapSelectionController extends AbstractMenuController {
 
     @FXML
     private Button map1Button;
@@ -23,16 +23,7 @@ public class MapSelectionController extends VBox {
     private Button backButton;
 
     public MapSelectionController(){
-        // Load FXML file, set controller and root
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/map_selection.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        super("/data/gui/map_selection.fxml");
     }
 
     @FXML
