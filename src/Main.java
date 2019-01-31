@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
 
+import static data.SystemState.MAIN_MENU;
 import static data.SystemState.MENU;
 
 public class Main extends Application {
@@ -37,14 +38,10 @@ public class Main extends Application {
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
         boolean running = true;
-        SystemState systemState = MENU;
+        SystemState systemState = MAIN_MENU;
 
-        //while(running) {
+        while(running) {
             switch(systemState) {
-                case MENU:
-                    //renderer.renderMainMenu();
-                    renderer.renderMainMenu();
-                    break;
                 case GAME:
                     // Render game state
                     renderer.renderGameState(exampleState);
@@ -54,8 +51,11 @@ public class Main extends Application {
                     running = false;
                     primaryStage.close();
                     break;
+                default:
+                    renderer.renderMenu(systemState);
+                    systemState = renderer.getSystemState();
             }
-        //}
+        }
     }
 
     // Main method

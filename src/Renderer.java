@@ -36,7 +36,7 @@ public class Renderer {
         // Set stage
         this.stage = inputStage;
 
-        systemState = SystemState.MENU;
+        systemState = SystemState.MAIN_MENU;
 
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
@@ -316,7 +316,7 @@ public class Renderer {
         return systemState;
     }
 
-    public void renderMainMenu() {
+    public void renderMenu(SystemState inputSystemState) {
         MainMenuController mainMenuController = new MainMenuController();
 
         // Create the main scene
@@ -325,7 +325,7 @@ public class Renderer {
         // Adding scene to the stage
         stage.setScene(scene);
 
-        // Request focus and show
+        // Request focus and show stage
         scene.getRoot().requestFocus();
         stage.show();
     }
