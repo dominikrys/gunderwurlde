@@ -43,7 +43,7 @@ public class Main extends Application {
             switch(systemState) {
                 case MENU:
                     //renderer.renderMainMenu();
-                    renderer.renderMainMenuComplete();
+                    renderer.renderMainMenu();
                     break;
                 case GAME:
                     // Render game state

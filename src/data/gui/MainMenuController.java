@@ -2,9 +2,13 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
-public class MainMenuController {
+import java.io.IOException;
+
+public class MainMenuController extends VBox {
 
     @FXML
     private Button playButton;
@@ -17,6 +21,19 @@ public class MainMenuController {
 
     @FXML
     private Button quitButton;
+
+    public MainMenuController(){
+        // Load FXML file, set controller and root
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/main_menu.fxml"));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
     @FXML
     void helpButtonPress(ActionEvent event) {

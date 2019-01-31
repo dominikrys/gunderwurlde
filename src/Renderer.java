@@ -8,11 +8,9 @@ import data.entity.item.ItemDrop;
 import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
-import data.gui.MenuControlWithMenu;
-import javafx.fxml.FXMLLoader;
+import data.gui.MainMenuController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,8 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Renderer {
     private Stage stage;
@@ -321,41 +317,16 @@ public class Renderer {
     }
 
     public void renderMainMenu() {
-        //MenuController menuController = new MenuController();
-
-
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/data/gui/main_menu.fxml"));
-            Parent root = loader.load();
-
-            // Create the main scene
-            Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-            // Adding scene to the stage
-            stage.setScene(scene);
-
-
-            // Displaying the contents of the stage
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-        //scene.getRoot().requestFocus();
-    }
-
-    public void renderMainMenuComplete() {
-        MenuControlWithMenu menuControl = new MenuControlWithMenu();
+        MainMenuController mainMenuController = new MainMenuController();
 
         // Create the main scene
-        Scene scene = new Scene(menuControl, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        Scene scene = new Scene(mainMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         // Adding scene to the stage
         stage.setScene(scene);
 
+        // Request focus and show
+        scene.getRoot().requestFocus();
         stage.show();
     }
 }

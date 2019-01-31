@@ -2,11 +2,15 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 
-public class SettingsController {
+import java.io.IOException;
+
+public class SettingsMenuController extends VBox {
 
     @FXML
     private Slider soundVolumeSlider;
@@ -34,6 +38,19 @@ public class SettingsController {
 
     @FXML
     private Button backButton;
+
+    public SettingsMenuController(){
+        // Load FXML file, set controller and root
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/data/gui/settings_menu.fxml"));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
     @FXML
     void backButtonPress(ActionEvent event) {
