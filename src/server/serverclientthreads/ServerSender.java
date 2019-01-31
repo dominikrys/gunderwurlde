@@ -53,7 +53,9 @@ public class ServerSender extends Thread {
 					InetAddress addr = addresses.nextElement();
 					senderSocket.setInterface(addr);
 					senderSocket.send(packet);
+					break;
 				}
+				break;
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();

@@ -39,7 +39,9 @@ public class ClientReceiver extends Thread {
 				while(addresses.hasMoreElements()) {
 					InetAddress addr = addresses.nextElement();
 					listenSocket.setInterface(addr);
+					break;
 				}
+				break;
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();

@@ -51,8 +51,9 @@ public class ClientSender extends Thread {
 						InetAddress addr = addresses.nextElement();
 						senderSocket.setInterface(addr);
 						senderSocket.send(packet);
+						break;
 					}
-
+					break;
 				}
 
 				// If the messages is exit then the Thread should terminate
