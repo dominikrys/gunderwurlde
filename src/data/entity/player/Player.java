@@ -12,10 +12,10 @@ import data.map.tile.Tile;
 import java.util.ArrayList;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
-    public static final int DEFAULT_HEALTH = 6;
+    public static final int DEFAULT_HEALTH = 20;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
+    public static final int DEFAULT_SIZE = 1;
 
     private static int nextPlayerID = 0;
 
@@ -37,6 +37,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.moveSpeed = DEFAULT_MOVESPEED;
         this.items = new ArrayList<Item>() {
             private static final long serialVersionUID = 1L;
+
             {
                 new Pistol();
             }
@@ -46,6 +47,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.team = team;
         this.name = name;
         this.playerID = nextPlayerID++;
+        this.pathToGraphic = "file:assets/img/mobs/player.png";
     }  
 
     @Override

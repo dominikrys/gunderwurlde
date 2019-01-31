@@ -3,7 +3,6 @@ import data.Location;
 import data.Pose;
 import data.entity.enemy.Zombie;
 import data.entity.item.ItemDrop;
-import data.entity.item.weapon.gun.GunList;
 import data.entity.item.weapon.gun.Pistol;
 import data.entity.player.Teams;
 import data.map.Meadow;
@@ -30,6 +29,7 @@ public class Main extends Application {
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
         // Create renderer and call it
+        stage.setResizable(false); // Disable resizing of the window
         Renderer renderer = new Renderer(stage);
         renderer.renderGameState(exampleState);
     }

@@ -63,4 +63,8 @@ public class ItemDrop extends Entity implements HasID {
         return id;
     }
 
+    public String getPathToGraphic() {
+        return item.getPathToGraphic();
+    }
+
 }

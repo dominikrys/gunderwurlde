@@ -1,7 +1,6 @@
 package server;
 
 import data.GameState;
-import server.game_engine.data.GameStateChanges;
 
 public class Server {
 

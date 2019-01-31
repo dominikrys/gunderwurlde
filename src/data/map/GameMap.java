@@ -15,8 +15,8 @@ public abstract class GameMap {
     protected MapList mapName;
 
     GameMap(int xDim, int yDim, Tile[][] tileMap, LinkedHashSet<Location> playerSpawns, LinkedHashSet<Location> enemySpawns, LinkedHashSet<Round> rounds, MapList mapName) {
-        this.DEFAULT_Y_DIM = yDim;
         this.DEFAULT_X_DIM = xDim;
+        this.DEFAULT_Y_DIM = yDim;
         this.tileMap = tileMap;
         this.playerSpawns = playerSpawns;
         this.enemySpawns = enemySpawns;

@@ -15,6 +15,7 @@ public class SmallBullet extends Projectile {
 
     public SmallBullet(int speed, int damage, Pose pose, int size, int range) {
         super(speed, damage, ProjectileList.SMALLBULLET, pose, size, range);
+        this.pathToGraphic = "file:assets/img/projectiles/bullet.png";
     }
 
 }
