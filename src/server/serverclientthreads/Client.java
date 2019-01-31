@@ -27,8 +27,8 @@ public class Client {
             senderAddress = InetAddress.getByName("230.0.0.1");
 
             System.out.println("Client calls server");
-            Server server = new Server();
-            server.start();
+//            Server server = new Server();
+//            server.start();
 
             // Start the sender and receiver threads for the client
             ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
