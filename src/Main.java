@@ -39,11 +39,12 @@ public class Main extends Application {
         boolean running = true;
         SystemState systemState = MENU;
 
-        while(running) {
+        //while(running) { // TODO: add this to loop somehow
             switch(systemState) {
                 case MENU:
                     renderer.renderMenu();
                     systemState = renderer.getSystemState();
+                    break;
                 case GAME:
                     // Render game state
                     renderer.renderGameState(exampleState);
@@ -54,7 +55,7 @@ public class Main extends Application {
                     primaryStage.close();
                     break;
             }
-        }
+        //}
     }
 
     // Main method

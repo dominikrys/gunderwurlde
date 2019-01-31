@@ -31,6 +31,7 @@ public class Renderer {
     private Image defaultGraphic;
     private SystemState systemState;
     private Menus currentMenu;
+    private boolean menuChanged;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
@@ -39,6 +40,8 @@ public class Renderer {
 
         systemState = SystemState.MENU;
         currentMenu = Menus.MAIN_MENU;
+
+        menuChanged = true;
 
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
@@ -242,7 +245,7 @@ public class Renderer {
 
         // If image not loaded properly, print error and load default graphic
         if (!checkImageLoaded(imageToRender, imagePath)) {
-           imageToRender = defaultGraphic;
+            imageToRender = defaultGraphic;
         }
 
         // If entity's size isn't zero, enlarge the graphic
@@ -319,31 +322,35 @@ public class Renderer {
     }
 
     public void renderMenu() {
-        AbstractMenuController currentMenuController = null;
+        if (menuChanged) { // TODO: see if this is necessary or not
+            AbstractMenuController currentMenuController = null;
 
-        switch (currentMenu) {
-            case MAIN_MENU:
-                currentMenuController = new MainMenuController();
-                break;
-            case SETTINGS:
-                currentMenuController = new SettingsMenuController();
-                break;
-            case PLAY:
-                currentMenuController = new PlayMenuController();
-                break;
-            case MAP:
-                currentMenuController = new MapSelectionController();
-                break;
+            switch (currentMenu) {
+                case MAIN_MENU:
+                    currentMenuController = new MainMenuController();
+                    break;
+                case SETTINGS:
+                    currentMenuController = new SettingsMenuController();
+                    break;
+                case PLAY:
+                    currentMenuController = new PlayMenuController();
+                    break;
+                case MAP:
+                    currentMenuController = new MapSelectionController();
+                    break;
+            }
+
+            // Create the main scene
+            Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+            // Adding scene to the stage
+            stage.setScene(scene);
+
+            // Request focus and show stage
+            scene.getRoot().requestFocus();
+            stage.show();
+
+            menuChanged = false;
         }
-
-        // Create the main scene
-        Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-        // Adding scene to the stage
-        stage.setScene(scene);
-
-        // Request focus and show stage
-        scene.getRoot().requestFocus();
-        stage.show();
     }
 }
