@@ -2,6 +2,10 @@ package data;
 
 public class Pose extends Location {
     protected int direction;
+    
+    public Pose() { //workaround for template enemies
+        this(0, 0, 0);
+    }
 
     public Pose(Location location) {
         this(location, 0);

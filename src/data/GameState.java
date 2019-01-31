@@ -7,7 +7,6 @@ import data.entity.projectile.Projectile;
 import data.map.GameMap;
 import data.map.tile.Tile;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -36,7 +35,7 @@ public class GameState {
         this.projectiles = new LinkedHashSet<Projectile>();
         this.items = new LinkedHashSet<ItemDrop>();
 
-        ArrayList<Location> playerSpawns = currentMap.getPlayerSpawns();
+        LinkedHashSet<Location> playerSpawns = currentMap.getPlayerSpawns();
         Iterator<Location> spawnIterator = playerSpawns.iterator();
 
         for (Player p : players) {
