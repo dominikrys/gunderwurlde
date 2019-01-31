@@ -348,6 +348,9 @@ public class Renderer {
                 case MAP_SELECTION:
                     currentMenuController = new MapSelectionController();
                     break;
+                case HELP:
+                    currentMenuController = new HelpMenuController();
+                    break;
             }
 
             // Create the main scene

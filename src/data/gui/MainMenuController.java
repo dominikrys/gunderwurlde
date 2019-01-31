@@ -29,12 +29,12 @@ public class MainMenuController extends AbstractMenuController {
 
     @FXML
     void settingsButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.SETTINGS;
     }
 
     @FXML
     void helpButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.HELP;
     }
 
     @FXML
