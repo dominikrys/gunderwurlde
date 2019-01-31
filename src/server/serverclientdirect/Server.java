@@ -17,7 +17,6 @@ public class Server{
 		String groupName = "239.0.0.1";
 		try {
 			MulticastSocket socket = new MulticastSocket(4445);
-			socket.setReuseAddress(true);
 			byte[] buffer = new byte[256];
 			InetAddress group = InetAddress.getByName(groupName);
 			socket.joinGroup(group);

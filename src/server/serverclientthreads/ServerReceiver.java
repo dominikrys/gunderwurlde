@@ -1,40 +1,65 @@
 package server.serverclientthreads;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.concurrent.BlockingQueue;
-import java.util.regex.PatternSyntaxException;
+import java.net.*;
+import java.util.Enumeration;
 
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
 public class ServerReceiver extends Thread {
-	DatagramSocket socket;
+	MulticastSocket listenSocket;
+	InetAddress listenAddress;
 	ServerSender sender;
 	Boolean running;
 	DatagramPacket packet;
 	byte[] buffer;
 
 
-	public ServerReceiver(DatagramSocket socket, ServerSender sender) {
-        this.socket = socket;
+	public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender) {
+		this.listenSocket = listenSocket;
+		this.listenAddress = address;
 		this.sender = sender;
-		running = true;
 		buffer = new byte[255];
+		running = true;
+		this.start();
+	}
+
+	public void setInterfaces(MulticastSocket listenSocket){
+		Enumeration<NetworkInterface> interfaces = null;
+		// attempt to set the sockets interface to all the addresses of the machine
+		try {
+			// for all interfaces that are not loopback or up get the addresses associated with thos
+			// interfaces and set the sockets interface to that address
+			interfaces = NetworkInterface.getNetworkInterfaces();
+			while (interfaces.hasMoreElements()) {
+				NetworkInterface iface = interfaces.nextElement();
+				if (iface.isLoopback() || !iface.isUp())
+					continue;
+
+				Enumeration<InetAddress> addresses = iface.getInetAddresses();
+				while(addresses.hasMoreElements()) {
+					InetAddress addr = addresses.nextElement();
+					listenSocket.setInterface(addr);
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void run() {
 		try {
+			listenSocket.joinGroup(listenAddress);
+			setInterfaces(listenSocket);
 			while (running) {
 				// packet to receive incoming messages
 				packet = new DatagramPacket(buffer, buffer.length);
 				// blocking method that waits until a packet is received
-				socket.receive(packet);
+				listenSocket.receive(packet);
 				// creates a string from the received packet
 				String receivedString = new String(packet.getData(), 0, packet.getLength());
-
+				System.out.println("Server received: " + receivedString);
 				// If string == exitCode then begin the exit sequence
 				if(receivedString.equals("exit")){
 					// Tells the sender to exit

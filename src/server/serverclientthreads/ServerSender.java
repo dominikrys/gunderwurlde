@@ -1,22 +1,26 @@
 package server.serverclientthreads;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.Scanner;
 
 
 public class ServerSender extends Thread {
-	DatagramSocket socket;
-	int port;
+	MulticastSocket senderSocket;
+	InetAddress senderAddress;
 	Boolean running;
-	InetAddress address;
-	byte[] buffer;
 	DatagramPacket packet;
+	int port;
+	byte[] buffer;
+	Scanner scan;
 
-	public ServerSender(DatagramSocket socket){
-		this.socket = socket;
-		this.running = true;
+	public ServerSender(InetAddress address, MulticastSocket socket, int port){
+		this.senderAddress = address;
+		this.senderSocket = socket;
+		this.port = port;
+		running = true;
+		this.start();
 	}
 
 	public void run() {
@@ -33,21 +37,32 @@ public class ServerSender extends Thread {
 	public void confirm(DatagramPacket received) {
 		try {
 			// The address of the message to be sent to
-			address = received.getAddress();
-			int port = received.getPort();
 			// Creates the string from the received packet
 			String confirm = (new String(received.getData(), 0, received.getLength()));
 			buffer = confirm.getBytes();
 			// Creates a new packet to be sent to the address specified
-			packet = new DatagramPacket(buffer, buffer.length, address, port);
-			// Sends the packet
-			socket.send(packet);
+			packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+			while (interfaces.hasMoreElements()) {
+				NetworkInterface iface = interfaces.nextElement();
+				if (iface.isLoopback() || !iface.isUp())
+					continue;
+
+				Enumeration<InetAddress> addresses = iface.getInetAddresses();
+				if (addresses.hasMoreElements()) {
+					InetAddress addr = addresses.nextElement();
+					senderSocket.setInterface(addr);
+					senderSocket.send(packet);
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	// method used only for testing exit works
+		// method used only for testing exit works
 	// will be replaced in future clean up
 	public void exit(DatagramPacket received){
 		InetAddress address;
@@ -60,7 +75,7 @@ public class ServerSender extends Thread {
 			address = received.getAddress();
 			port = received.getPort();
 			packet = new DatagramPacket(buffer, buffer.length, address, port);
-			socket.send(packet);
+			senderSocket.send(packet);
 			// Running is set to false so that this thread will end gracefully
 			running = false;
 		} catch (IOException e) {

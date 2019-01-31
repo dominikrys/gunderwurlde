@@ -1,31 +1,28 @@
 package server.serverclientthreads;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 public class ClientSender extends Thread {
-
-	private InetAddress address;
-	private DatagramSocket socket;
-	private int port;
+	MulticastSocket senderSocket;
+	InetAddress senderAddress;
 	Boolean running;
-	Scanner scan;
-	byte[] buffer;
 	DatagramPacket packet;
+	int port;
+	byte[] buffer;
+	Scanner scan;
 
-	ClientSender(InetAddress address, DatagramSocket socket, int port) {
-		this.address = address;
-		this.socket = socket;
+	ClientSender(InetAddress address, MulticastSocket socket, int port) {
+		this.senderAddress = address;
+		this.senderSocket = socket;
 		this.port = port;
 		running = true;
+		this.start();
 	}
 
 	public void run() {
-		// For now the messages are created from System.in
-		// Will eventually be created by through the objects
 		scan = new Scanner(System.in);
 		try {
 			while (running) {
@@ -35,8 +32,28 @@ public class ClientSender extends Thread {
 
 				// Creates and sends the packet to the server
 				buffer = userInput.getBytes();
-				packet = new DatagramPacket(buffer, buffer.length, address, port);
-				socket.send(packet);
+				packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+
+				// Each time we send a packet we need to ensure the interfaces match up
+				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+				while (interfaces.hasMoreElements()) {
+					NetworkInterface iface = interfaces.nextElement();
+					if (iface.isLoopback() || !iface.isUp())
+						continue;
+
+					Enumeration<InetAddress> addresses = iface.getInetAddresses();
+//					if(addresses.hasMoreElements()){
+//						InetAddress addr = addresses.nextElement();
+//						senderSocket.setInterface(addr);
+//						senderSocket.send(packet);
+//					}
+					while(addresses.hasMoreElements()) {
+						InetAddress addr = addresses.nextElement();
+						senderSocket.setInterface(addr);
+						senderSocket.send(packet);
+					}
+
+				}
 
 				// If the messages is exit then the Thread should terminate
 				if (userInput.equals("exit")){

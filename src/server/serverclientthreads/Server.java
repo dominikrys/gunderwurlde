@@ -1,45 +1,47 @@
 package server.serverclientthreads;
 
-import java.net.BindException;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.io.IOException;
+import java.net.*;
 
 public class Server extends Thread {
-    DatagramSocket socket;
-    int port = 4445;
+    // Socket to listen to the server
+    MulticastSocket listenSocket = null;
+    // Socket to send requests to the server
+    MulticastSocket senderSocket = null;
+    InetAddress listenAddress = null;
+    InetAddress senderAddress = null;
+    static final int SENDPORT = 4444;
+    static final int LISTENPORT = 4445;
+
 
     public Server() {
-        try {
-            this.socket = new DatagramSocket(port);
-        }
-        catch (SocketException e) {
-            e.printStackTrace();
-        }
     }
 
     public void run(){
-        // Create the socket that will be used to transfer data
-
-        // Specify the port as this is the primary machine listening on that port
         try {
-
+            listenSocket = new MulticastSocket(LISTENPORT);
+            senderSocket = new MulticastSocket();
+            listenAddress = InetAddress.getByName("230.0.0.1");
+            senderAddress = InetAddress.getByName("230.0.1.1");
+            System.out.println("Server starting");
             // Create the threads that will run as sender and receiver
-            ServerSender sender = new ServerSender(socket);
-            ServerReceiver receiver = new ServerReceiver(socket, sender);
-
-            // Start the sender and receiver
-            sender.start();
-            receiver.start();
-
+            ServerSender sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
+            ServerReceiver receiver = new ServerReceiver(listenAddress, listenSocket, sender);
+            System.out.println("Threads up");
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
             receiver.join();
             // Socket is closed as server should end
-            socket.close();
+            senderSocket.close();
+            listenSocket.close();
             System.out.println("Server ended successfully");
         } catch (InterruptedException e) {
             e.printStackTrace();
             System.out.println("Server ended due an interrupt");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
