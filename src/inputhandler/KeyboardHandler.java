@@ -7,6 +7,7 @@ import data.GameState;
 import data.Pose;
 import data.entity.item.Item;
 import data.entity.item.ItemList;
+import data.entity.item.weapon.Pistol;
 import data.entity.player.Player;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -14,9 +15,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
-public class KeyboardHandler {
+public class KeyboardHandler extends UserInteraction{
 	
-	private Image pImage;
+	//private Image pImage;
 	private Scene scene;
 	private GameState gameState;
 	private Player player;
@@ -27,8 +28,9 @@ public class KeyboardHandler {
 	private boolean dPressed = false;
 	private boolean rPressed = false;
 	
-	public KeyboardHandler(String imagePath, Scene scene, GameState gameState) {
-		this.pImage = new Image(imagePath);
+	public KeyboardHandler(Scene scene, GameState gameState) {
+		//this.pImage = new Image(imagePath);
+		super(scene, gameState);
 		this.scene = scene;
 		this.gameState = gameState;
 		Iterator<Player> playerIterator = gameState.getPlayers().iterator();
@@ -118,8 +120,16 @@ public class KeyboardHandler {
 				}
 				if(rPressed) {
 					ItemList iList = player.getCurrentItem().getItemID();
-					Item currentItem = player.getCurrentItem();
-					
+					Item cItem = player.getCurrentItem();
+					if(cItem instanceof Pistol) {
+						Pistol currentItem = (Pistol)cItem;
+						if(currentItem.attemptReload()) {
+							// TODO: send reload request here
+						}
+						else {
+							// TODO: reload fail stuff here
+						}
+					}
 				}
 				
 				// TODO: send changes(player location, reload) to server

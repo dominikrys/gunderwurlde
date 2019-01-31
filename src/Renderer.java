@@ -194,8 +194,8 @@ public class Renderer {
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         
         //UserInteraction userInteraction = new UserInteraction(scene, inputGameState);
-        KeyboardHandler kbHandler = new KeyboardHandler("file:assets/img/player.png", scene, inputGameState);
-        MouseHandler mHandler = new MouseHandler("file:assets/img/player.png", scene, mapCanvas, inputGameState);
+        KeyboardHandler kbHandler = new KeyboardHandler(scene, inputGameState);
+        MouseHandler mHandler = new MouseHandler(scene, mapCanvas, inputGameState);
 
         // Setting title to the Stage
         stage.setTitle("Game");
