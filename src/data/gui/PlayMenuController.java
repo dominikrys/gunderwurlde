@@ -24,7 +24,7 @@ public class PlayMenuController extends AbstractMenuController {
     private Button backButton;
 
     public PlayMenuController(){
-        super("/data/gui/play_menu.fxml");
+        super("/data/gui/play_menu.fxml", Menus.PLAY);
     }
 
     @FXML

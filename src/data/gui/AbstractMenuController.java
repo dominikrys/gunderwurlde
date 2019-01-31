@@ -3,10 +3,13 @@ package data.gui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 
+import java.awt.Menu;
 import java.io.IOException;
 
 public abstract class AbstractMenuController extends VBox {
-    public AbstractMenuController(String menuPath) {
+    protected Menus currentMenu;
+
+    protected AbstractMenuController(String menuPath, Menus currentMenu) {
         // Load FXML file, set controller and root
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(menuPath));
         fxmlLoader.setRoot(this);
@@ -17,5 +20,15 @@ public abstract class AbstractMenuController extends VBox {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        this.currentMenu = currentMenu;
+    }
+
+    public Menus getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public void setCurrentMenu(Menus currentMenu) {
+        this.currentMenu = currentMenu;
     }
 }

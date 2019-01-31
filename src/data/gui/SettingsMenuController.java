@@ -40,7 +40,7 @@ public class SettingsMenuController extends AbstractMenuController {
     private Button backButton;
 
     public SettingsMenuController(){
-        super("/data/gui/settings_menu.fxml");
+        super("/data/gui/settings_menu.fxml", Menus.SETTINGS);
     }
 
     @FXML

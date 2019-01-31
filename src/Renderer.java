@@ -32,6 +32,7 @@ public class Renderer {
     private SystemState systemState;
     private Menus currentMenu;
     private boolean menuChanged;
+    AbstractMenuController currentMenuController;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
@@ -42,6 +43,8 @@ public class Renderer {
         currentMenu = Menus.MAIN_MENU;
 
         menuChanged = true;
+
+        currentMenuController = null;
 
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
@@ -322,9 +325,16 @@ public class Renderer {
     }
 
     public void renderMenu() {
-        if (menuChanged) { // TODO: see if this is necessary or not
-            AbstractMenuController currentMenuController = null;
+        if (currentMenuController != null) {
+            Menus controllerMenu = currentMenuController.getCurrentMenu();
 
+            if (controllerMenu != currentMenu) {
+                currentMenu = controllerMenu;
+                menuChanged = true;
+            }
+        }
+
+        if (menuChanged) { // TODO: see if this is necessary or not
             switch (currentMenu) {
                 case MAIN_MENU:
                     currentMenuController = new MainMenuController();
@@ -335,7 +345,7 @@ public class Renderer {
                 case PLAY:
                     currentMenuController = new PlayMenuController();
                     break;
-                case MAP:
+                case MAP_SELECTION:
                     currentMenuController = new MapSelectionController();
                     break;
             }

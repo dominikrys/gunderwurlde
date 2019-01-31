@@ -2,11 +2,7 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class MainMenuController extends AbstractMenuController {
 
@@ -22,8 +18,18 @@ public class MainMenuController extends AbstractMenuController {
     @FXML
     private Button quitButton;
 
-    public MainMenuController(){
-        super("/data/gui/main_menu.fxml");
+    public MainMenuController() {
+        super("/data/gui/main_menu.fxml", Menus.MAIN_MENU);
+    }
+
+    @FXML
+    void playButtonPress(ActionEvent event) {
+        currentMenu = Menus.PLAY;
+    }
+
+    @FXML
+    void settingsButtonPress(ActionEvent event) {
+
     }
 
     @FXML
@@ -32,17 +38,7 @@ public class MainMenuController extends AbstractMenuController {
     }
 
     @FXML
-    void playButtonPress(ActionEvent event) {
-
-    }
-
-    @FXML
     void quitButtonPress(ActionEvent event) {
-
-    }
-
-    @FXML
-    void settingsButtonPress(ActionEvent event) {
 
     }
 
