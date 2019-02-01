@@ -34,7 +34,7 @@
                      <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../assets/img/map_thumbnail/meadow.png" />
+                              <Image url="file:assets/img/map_thumbnail/meadow.png" />
                            </image>
                         </ImageView>
                         <Label style="-fx-padding: 3px;" text="Meadow">
@@ -52,7 +52,7 @@
                      <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../assets/img/map_thumbnail/meadow.png" />
+                              <Image url="file:assets/img/map_thumbnail/meadow.pngfile:assets/img/map_thumbnail/meadow.png" />
                            </image>
                         </ImageView>
                         <Label style="-fx-padding: 3px;" text="Placeholder">
@@ -70,7 +70,7 @@
                      <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../assets/img/map_thumbnail/meadow.png" />
+                              <Image url="file:assets/img/map_thumbnail/meadow.png" />
                            </image>
                         </ImageView>
                         <Label style="-fx-padding: 3px;" text="Placeholder">

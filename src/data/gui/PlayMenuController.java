@@ -46,12 +46,12 @@ public class PlayMenuController extends AbstractMenuController {
 
     @FXML
     void multiPlayerButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.MULTI_PLAYER;
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
-
+        currentMenu = Menus.SINGLE_PLAYER;
     }
 
 }

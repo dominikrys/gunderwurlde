@@ -352,9 +352,15 @@ public class Renderer {
                 case HELP:
                     currentMenuController = new HelpMenuController();
                     break;
+                case SINGLE_PLAYER:
+                    systemState = SystemState.SINGLE_PLAYER;
+                    break;
+                case MULTI_PLAYER:
+                    systemState = SystemState.MULTI_PLAYER;
+                    break;
                 case QUIT:
                     systemState = SystemState.QUIT;
-                    break;
+                    return;
             }
 
             // Create the main scene

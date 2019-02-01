@@ -9,6 +9,7 @@ import data.entity.player.Player;
 import data.entity.player.Teams;
 import data.entity.projectile.SmallBullet;
 import data.map.Meadow;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashSet;
@@ -43,6 +44,7 @@ public class ClientHandler extends Thread{
         while(running) {
             switch (systemState) {
                 case MENU:
+                    // Render menu
                     renderer.renderMenu();
                     systemState = renderer.getSystemState();
                     break;
@@ -51,9 +53,21 @@ public class ClientHandler extends Thread{
                     renderer.renderGameState(exampleState);
                     systemState = renderer.getSystemState();
                     break;
+                case SINGLE_PLAYER:
+                    // CODE FOR ESTABLISHING LOCAL SERVER
+                    break;
+                case MULTI_PLAYER:
+                    // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
+                    break;
                 case QUIT:
+                    // Quit program
                     running = false;
-                    stage.close();
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            // Add scene to stage, request focus and show the stage
+                            stage.close();
+                        }
+                    });
                     break;
             }
         }

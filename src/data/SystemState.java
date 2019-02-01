@@ -1,5 +1,5 @@
 package data;
 
 public enum SystemState {
-    MENU, GAME, QUIT;
+    MENU, GAME, QUIT, SINGLE_PLAYER, MULTI_PLAYER;
 }
