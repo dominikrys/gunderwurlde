@@ -5,10 +5,10 @@ import data.Pose;
 
 public abstract class EntityView {
     protected Pose pose;
-    protected double size;
+    protected int size;
     protected String pathToGraphic;
 
-    protected EntityView(Pose pose, double size) {
+    protected EntityView(Pose pose, int size) {
         this.pose = pose;
         this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
         this.size = size;
