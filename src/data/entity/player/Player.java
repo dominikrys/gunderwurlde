@@ -25,12 +25,12 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList,Integer> ammo;
+    protected LinkedHashMap<AmmoList, Integer> ammo;
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
     protected int currentItem;
-    protected int score;  
+    protected int score;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE);
@@ -48,13 +48,13 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.score = DEFAULT_SCORE;
         this.team = team;
         this.name = name;
-        this.playerID = nextPlayerID++;    
-    }  
+        this.playerID = nextPlayerID++;
+    }
 
     @Override
     public int getID() {
         return playerID;
-    }   
+    }
 
     public int getAmmo(AmmoList type) {
         if (ammo.containsKey(type)) {

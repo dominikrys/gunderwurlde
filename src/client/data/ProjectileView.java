@@ -6,7 +6,7 @@ import data.entity.projectile.ProjectileList;
 public class ProjectileView extends EntityView {
     protected ProjectileList name;
 
-    protected ProjectileView(Pose pose, int size, ProjectileList name) {
+    protected ProjectileView(Pose pose, double size, ProjectileList name) {
         super(pose, size);
         this.name = name;
 
