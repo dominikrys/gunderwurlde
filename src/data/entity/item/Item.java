@@ -1,28 +1,27 @@
 package data.entity.item;
 
-import java.util.Optional;
+import data.Constants;
+import data.HasGraphic;
 
-import data.Location;
+public abstract class Item implements HasGraphic {
+    protected final IsItem itemName;
+    protected String pathToGraphic;
 
-public abstract class Item {
-	protected final ItemList itemID;
-	protected final ItemType itemType;
+    protected Item(IsItem itemName) {
+        this.itemName = itemName;    
+        this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
+    }
 
-	protected Item(ItemList itemID, ItemType itemType) {
-		this.itemID = itemID;
-		this.itemType = itemType;
-	}
+    public ItemList getItemName() {
+        return itemName.toItemList();
+    }
 
-	public String getItemName() {
-		return itemID.toString();
-	}
+    public ItemType getItemType() {
+        return itemName.getItemType();
+    }
 
-	public ItemList getItemID() {
-		return itemID;
-	}
-
-	public ItemType getItemType() {
-		return itemType;
-	}
+    public String getPathToGraphic() {
+        return pathToGraphic;
+    }
 
 }

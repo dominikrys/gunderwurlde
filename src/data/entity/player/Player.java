@@ -2,23 +2,26 @@ package data.entity.player;
 
 import data.HasHealth;
 import data.IsMovable;
-import data.Location;
 import data.Pose;
 import data.entity.Entity;
+import data.entity.HasID;
 import data.entity.item.Item;
-import data.entity.item.weapon.Pistol;
+import data.entity.item.weapon.gun.Pistol;
+import data.map.tile.Tile;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
-public class Player extends Entity implements HasHealth, IsMovable {
-    public static final int DEFAULT_HEALTH = 6;
-    public static final int DEFAULT_MOVESPEED = 10;
+public class Player extends Entity implements HasHealth, IsMovable, HasID {
+    public static final int DEFAULT_HEALTH = 20;
+    public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
+    public static final int DEFAULT_SIZE = 1;
 
     private static int nextPlayerID = 0;
 
     protected final int playerID;
+    protected final Teams team;
+    protected final String name;
 
     protected ArrayList<Item> items;
     protected int health;
@@ -26,22 +29,30 @@ public class Player extends Entity implements HasHealth, IsMovable {
     protected int moveSpeed;
     protected int currentItem;
     protected int score;
-    protected Teams team;
-    protected String name;
 
     public Player(Pose pose, Teams team, String name) {
-        super(pose);
+        super(pose, DEFAULT_SIZE);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
-        this.items = new ArrayList<Item>() {{
-            new Pistol();
-        }};
+        this.items = new ArrayList<Item>() {
+            private static final long serialVersionUID = 1L;
+
+            {
+                new Pistol();
+            }
+        };
         this.currentItem = 0;
         this.score = DEFAULT_SCORE;
         this.team = team;
         this.name = name;
         this.playerID = nextPlayerID++;
+        this.pathToGraphic = "file:assets/img/mobs/player.png";
+    }  
+
+    @Override
+    public int getID() {
+        return playerID;
     }
 
     public ArrayList<Item> getItems() {
@@ -63,7 +74,8 @@ public class Player extends Entity implements HasHealth, IsMovable {
     public boolean removeItem(int itemIndex) {
         try {
             items.remove(itemIndex);
-            if (currentItem == itemIndex) previousItem();
+            if (currentItem == itemIndex)
+                previousItem();
             return true;
         } catch (IndexOutOfBoundsException e) {
             return false;
@@ -74,32 +86,34 @@ public class Player extends Entity implements HasHealth, IsMovable {
         return items.get(currentItem);
     }
 
-    public void setCurrentItem(int slot) {
-        if (slot < 0) slot = 0;
-        else if (slot > items.size() - 1) slot = items.size() - 1;
-        currentItem = slot;
+    public void setCurrentItem(Item item) {
+        this.items.set(currentItem, item);
     }
 
     public void nextItem() {
-        if (currentItem == items.size() - 1) currentItem = 0;
-        else currentItem++;
+        if (currentItem == items.size() - 1)
+            currentItem = 0;
+        else
+            currentItem++;
     }
 
     public void previousItem() {
-        if (currentItem == 0) currentItem = items.size() - 1;
-        else currentItem--;
+        if (currentItem == 0)
+            currentItem = items.size() - 1;
+        else
+            currentItem--;
     }
 
     public int getCurrentItemIndex() {
         return currentItem;
     }
 
-    public boolean setCurrentItemIndex(int currentItem) {
-        if (currentItem > items.size() - 1) return false;
-        else {
-            this.currentItem = currentItem;
-            return true;
-        }
+    public void setCurrentItemIndex(int slot) {
+        if (slot < 0)
+            slot = 0;
+        else if (slot > items.size() - 1)
+            slot = items.size() - 1;
+        currentItem = slot;
     }
 
     public int getScore() {
@@ -116,10 +130,6 @@ public class Player extends Entity implements HasHealth, IsMovable {
 
     public Teams getTeam() {
         return team;
-    }
-
-    public void setTeam(Teams team) {
-        this.team = team;
     }
 
     public String getName() {
@@ -143,7 +153,8 @@ public class Player extends Entity implements HasHealth, IsMovable {
 
     @Override
     public void setHealth(int health) {
-        if (health < 0) health = 0;
+        if (health < 0)
+            health = 0;
         this.health = health;
     }
 
@@ -165,7 +176,8 @@ public class Player extends Entity implements HasHealth, IsMovable {
 
     @Override
     public void setMaxHealth(int maxHealth) {
-        if (maxHealth < 0) maxHealth = 0;
+        if (maxHealth < 0)
+            maxHealth = 0;
         this.maxHealth = maxHealth;
     }
 

@@ -1,14 +1,12 @@
 package data;
 
 import data.entity.enemy.Enemy;
-import data.entity.item.Item;
 import data.entity.item.ItemDrop;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import data.map.GameMap;
-import data.map.Tile;
+import data.map.tile.Tile;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -18,13 +16,12 @@ public class GameState {
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashSet<Player> players;
     protected LinkedHashSet<ItemDrop> items;
+    protected Iterator<Location> spawnIterator;
 
     public GameState(GameMap currentMap, LinkedHashSet<Player> players) {
         this.players = players;
+        this.spawnIterator = currentMap.getPlayerSpawns().iterator();
         setCurrentMap(currentMap);
-        this.enemies = new LinkedHashSet<Enemy>();
-        this.projectiles = new LinkedHashSet<Projectile>();
-        this.items = new LinkedHashSet<ItemDrop>();
     }
 
     public GameMap getCurrentMap() {
@@ -36,13 +33,9 @@ public class GameState {
         this.enemies = new LinkedHashSet<Enemy>();
         this.projectiles = new LinkedHashSet<Projectile>();
         this.items = new LinkedHashSet<ItemDrop>();
-
-        ArrayList<Location> playerSpawns = currentMap.getPlayerSpawns();
-        Iterator<Location> spawnIterator = playerSpawns.iterator();
-
+       
         for (Player p : players) {
-            if (!spawnIterator.hasNext()) spawnIterator = playerSpawns.iterator();
-            p.setPose(new Pose(spawnIterator.next()));
+            addPlayer(p);
         }
     }
 
@@ -56,12 +49,6 @@ public class GameState {
 
     public void addItem(ItemDrop item) {
         this.items.add(item);
-    }
-
-    public boolean setTile(Tile tile, int x, int y) {
-        //Optional checks here
-        currentMap.setTile(tile, x, y);
-        return true;
     }
 
     public LinkedHashSet<Enemy> getEnemies() {
@@ -94,6 +81,16 @@ public class GameState {
 
     public void setPlayers(LinkedHashSet<Player> players) {
         this.players = players;
+    }
+
+    public void setTileMap(Tile[][] tileMap) {
+        this.currentMap.setTileMap(tileMap);
+    }
+
+    public void addPlayer(Player player) {
+        if (!spawnIterator.hasNext())
+            spawnIterator = currentMap.getPlayerSpawns().iterator();
+        player.setPose(new Pose(spawnIterator.next()));
     }
 
 }

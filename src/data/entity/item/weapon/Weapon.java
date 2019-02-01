@@ -1,13 +1,12 @@
 package data.entity.item.weapon;
 
 import data.entity.item.Item;
-import data.entity.item.ItemList;
-import data.entity.item.ItemType;
+import data.entity.item.weapon.gun.IsWeapon;
 
-abstract class Weapon extends Item {
+public abstract class Weapon extends Item {
 
-    Weapon(ItemList itemID, ItemType itemType) {
-        super(itemID, itemType);
+    public Weapon(IsWeapon weaponName) {
+        super(weaponName);
     }
 
 }
