@@ -1,7 +1,7 @@
 package server.request;
 
 import java.util.LinkedHashMap;
-import data.Pose;
+
 
 public class ClientRequests {
     protected LinkedHashMap<Integer, Request> playerRequests;
@@ -16,9 +16,17 @@ public class ClientRequests {
         return playerRequests;
     }
 
-    public boolean playerRequestPose(int playerID, Pose pose) {
+    public boolean playerRequestMovement(int playerID, int direction) {
         if (playerRequests.containsKey(playerID)) {
-            playerRequests.get(playerID).setPose(pose);
+            playerRequests.get(playerID).setMovementDirection(direction);
+            return true;
+        } else
+            return false;
+    }
+    
+    public boolean playerRequestFacing(int playerID, int direction) {
+        if (playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).setFacing(direction);
             return true;
         } else
             return false;

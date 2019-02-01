@@ -1,6 +1,6 @@
 package data.map;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import data.Location;
 import data.map.tile.Tile;
@@ -9,15 +9,27 @@ public abstract class GameMap {
     protected final int DEFAULT_X_DIM;
     protected final int DEFAULT_Y_DIM;
     protected Tile[][] tileMap;
-    protected ArrayList<Location> playerSpawns;
-    protected ArrayList<Location> enemySpawns;
+    protected LinkedHashSet<Location> playerSpawns;
+    protected LinkedHashSet<Location> enemySpawns;
+    protected LinkedHashSet<Round> rounds;
+    protected MapList mapName;
 
-    GameMap(int xDim, int yDim, Tile[][] tileMap, ArrayList<Location> playerSpawns, ArrayList<Location> enemySpawns) {
-        this.DEFAULT_Y_DIM = yDim;
+    GameMap(int xDim, int yDim, Tile[][] tileMap, LinkedHashSet<Location> playerSpawns, LinkedHashSet<Location> enemySpawns, LinkedHashSet<Round> rounds, MapList mapName) {
         this.DEFAULT_X_DIM = xDim;
+        this.DEFAULT_Y_DIM = yDim;
         this.tileMap = tileMap;
         this.playerSpawns = playerSpawns;
         this.enemySpawns = enemySpawns;
+        this.rounds = rounds;
+        this.mapName = mapName;
+    }
+    
+    public MapList getMapName( ) {
+        return mapName;
+    }
+
+    public LinkedHashSet<Round> getRounds() {
+        return rounds;
     }
 
     public int getXDim() {
@@ -32,24 +44,24 @@ public abstract class GameMap {
         return tileMap;
     }
 
-    public void setTile(Tile tile, int x, int y) { // Used for dynamically changing tiles
-        tileMap[x][y] = tile;
-    }
-
-    public ArrayList<Location> getPlayerSpawns() {
+    public LinkedHashSet<Location> getPlayerSpawns() {
         return playerSpawns;
     }
 
-    public void setPlayerSpawns(ArrayList<Location> playerSpawns) {
+    public void setPlayerSpawns(LinkedHashSet<Location> playerSpawns) {
         this.playerSpawns = playerSpawns;
     }
 
-    public ArrayList<Location> getEnemySpawns() {
+    public LinkedHashSet<Location> getEnemySpawns() {
         return enemySpawns;
     }
 
-    public void setEnemySpawns(ArrayList<Location> enemySpawns) {
+    public void setEnemySpawns(LinkedHashSet<Location> enemySpawns) {
         this.enemySpawns = enemySpawns;
+    }
+
+    public void setTileMap(Tile[][] tileMap) {
+        this.tileMap = tileMap;
     }
 
 }

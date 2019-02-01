@@ -8,13 +8,15 @@ public class GameStateChanges {
     protected final LinkedHashSet<EnemyChange> enemyChanges;
     protected final LinkedHashMap<Integer, PlayerChange> playerChanges;
     protected final TileChange[][] tileChanges;
+    protected final LinkedHashSet<ItemDropChange> itemDropChanges;
 
     public GameStateChanges(LinkedHashSet<ProjectileChange> projectileChanges, LinkedHashSet<EnemyChange> enemyChanges,
-            LinkedHashMap<Integer, PlayerChange> playerChanges, TileChange[][] tileChanges) {
+            LinkedHashMap<Integer, PlayerChange> playerChanges, TileChange[][] tileChanges, LinkedHashSet<ItemDropChange> itemDropChanges) {
         this.projectileChanges = projectileChanges;
         this.enemyChanges = enemyChanges;
         this.playerChanges = playerChanges;
         this.tileChanges = tileChanges;
+        this.itemDropChanges = itemDropChanges;
     }
 
     public LinkedHashSet<ProjectileChange> getProjectileChanges() {
@@ -33,4 +35,8 @@ public class GameStateChanges {
         return tileChanges;
     }
 
+    public LinkedHashSet<ItemDropChange> getItemChanges() {
+        return itemDropChanges;
+    }
+    
 }

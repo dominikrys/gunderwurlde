@@ -4,33 +4,38 @@ import data.HasHealth;
 import data.IsMovable;
 import data.Pose;
 import data.entity.Entity;
-import data.entity.item.Item;
+import data.entity.HasID;
 import data.entity.enemy.EnemyList;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
-public abstract class Enemy extends Entity implements HasHealth, IsMovable {
-    protected final LinkedHashMap<Item, Double> drops;
+public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
+    private static int nextID = 0;
+    
+    private int id;
+    
+    protected final LinkedHashSet<Drop> drops;
 
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
     protected EnemyList enemyName;
 
-    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size, LinkedHashMap<Item, Double> drops) {
+    Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size, LinkedHashSet<Drop> drops) {
         super(pose, size);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.moveSpeed = moveSpeed;
         this.drops = drops;
         this.enemyName = enemyName;
+        this.id = nextID++;
     }
 
     Enemy(int maxHealth, int moveSpeed, Pose pose, EnemyList enemyName, int size) {
-        this(maxHealth, moveSpeed, pose, enemyName, size, new LinkedHashMap<Item, Double>());
+        this(maxHealth, moveSpeed, pose, enemyName, size, new LinkedHashSet<Drop>());
     }
 
-    public LinkedHashMap<Item, Double> getDrops() {
+    public LinkedHashSet<Drop> getDrops() {
         return drops;
     }
 
@@ -81,6 +86,11 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable {
         if (maxHealth < 0)
             maxHealth = 0;
         this.maxHealth = maxHealth;
+    }
+    
+    @Override
+    public int getID() {
+        return id;
     }
 
 }
