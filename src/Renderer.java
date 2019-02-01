@@ -47,33 +47,33 @@ public class Renderer {
         }
     }
 
-    // Render input gamestate to stage
-    public void renderGameState(GameView inputGameState) {
+    // Render input gameview to stage
+    public void renderGameView(GameView inputGameView, int playerID) {
         // Create canvas according to dimensions of the map
-        Canvas mapCanvas = new Canvas(inputGameState.getXDim() * Constants.TILE_SIZE,
-                inputGameState.getYDim() * Constants.TILE_SIZE);
+        Canvas mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
         // Render map
-        renderMap(inputGameState, mapGC);
+        renderMap(inputGameView, mapGC);
 
         // Render players
-        for (PlayerView currentPlayer : inputGameState.getPlayers()) {
+        for (PlayerView currentPlayer : inputGameView.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
-        for (EnemyView currentEnemy : inputGameState.getEnemies()) {
+        for (EnemyView currentEnemy : inputGameView.getEnemies()) {
             renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
-        for (ProjectileView currentProjectile : inputGameState.getProjectiles()) {
+        for (ProjectileView currentProjectile : inputGameView.getProjectiles()) {
             renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
-        for (ItemDropView currentItem : inputGameState.getItemDrops()) {
+        for (ItemDropView currentItem : inputGameView.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
 
@@ -84,7 +84,7 @@ public class Renderer {
         mainHBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        VBox HUDBox = createHUD(inputGameState);
+        VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
 
         // Create root stackpane and add elements to be rendered to it
@@ -95,7 +95,7 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Setting title to the Stage
+        // Setting title to the Stage TODO: put this outside of renderer after integrating
         stage.setTitle("Game");
 
         // Adding scene to the stage
@@ -129,14 +129,14 @@ public class Renderer {
         }
     }
 
-    private VBox createHUD(GameView inputGameState) {
+    private VBox createHUD(GameView inputGameState, int playerID) {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
         HUDBox.setSpacing(5);
 
-        // Make a separate HUD for each player in case coop
+        // Make a separate HUD for each player in case coop TODO: no coop, remove this!!
         for (PlayerView currentPlayer : inputGameState.getPlayers()) {
             // Label with player name to tell which player this part of the HUD is for
             Label playerLabel = new Label(currentPlayer.getName());
@@ -195,8 +195,7 @@ public class Renderer {
 
             // Ammo hbox
             HBox ammoBox = new HBox();
-            
-            // TODO: Fix this, I leave the rest to you Dom :)
+
             // TODO: extend this for classes that also use ammo?
             ItemView currentItem = currentPlayer.getCurrentItem(); // Get current item
 
