@@ -14,9 +14,10 @@ public class PlayerView extends EntityView {
     protected int score;
     protected String name;
     protected LinkedHashMap<AmmoList, Integer> ammo;
+    protected final int id;
 
     public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
-            LinkedHashMap<AmmoList, Integer> ammo) {
+            LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
         super(pose, size);
         this.pathToGraphic = "file:assets/img/mobs/player.png";
         this.health = health;
@@ -26,6 +27,11 @@ public class PlayerView extends EntityView {
         this.score = score;
         this.name = name;
         this.ammo = ammo;
+        this.id = playerID;
+    }
+    
+    public int getID() {
+        return id;
     }
 
     public LinkedHashMap<AmmoList, Integer> getAmmo() {
