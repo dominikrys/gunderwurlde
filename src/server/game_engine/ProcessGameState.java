@@ -48,8 +48,9 @@ public class ProcessGameState extends Thread {
 
     public ProcessGameState(Server server, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
         this.server = server;
-        LinkedHashSet<Player> players = new LinkedHashSet<>();
-        players.add(new Player(new Pose(), Teams.RED, hoastName));
+        LinkedHashMap<Integer,Player> players = new LinkedHashMap<>();
+        Player hoastPlayer = new Player(new Pose(), Teams.RED, hoastName);
+        players.put(hoastPlayer.getID(),hoastPlayer);
         switch (mapName) {
         case MEADOW:
             this.gameState = new GameState(new Meadow(), players);
@@ -110,13 +111,11 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
             LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
 
-            LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
-            gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i)); // TODO change gamestate to use hashmaps to improve performance
+            LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
 
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
-            LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
-            gameState.getPlayers().stream().forEach((p) -> players.put(p.getID(), p));
+            LinkedHashMap<Integer, Player> players = gameState.getPlayers();
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
@@ -277,8 +276,7 @@ public class ProcessGameState extends Thread {
             }
 
             // process enemies
-            LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
-            gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
+            LinkedHashMap<Integer, Enemy> enemies = gameState.getEnemies();
 
             HashSet<Pose> playerPoses = new HashSet<>();
             players.values().stream().forEach((p) -> playerPoses.add(p.getPose()));
@@ -436,23 +434,21 @@ public class ProcessGameState extends Thread {
             }
             currentWaves = newWaves;
 
-            gameState.setPlayers(new LinkedHashSet<>(players.values()));
+            gameState.setPlayers(players);
 
             // maintain order.
-            otherNewProjectiles.addAll(newProjectiles);
+            otherNewProjectiles.addAll(newProjectiles); //TODO remove new versions alltogether?
             // TODO changes loop of news
             newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
 
-            LinkedHashSet<Enemy> enemiesToBeAdded = new LinkedHashSet<>(enemies.values());
-            enemiesToBeAdded.addAll(newEnemies);
+            newEnemies.stream().forEach((e)->enemies.put(e.getID(), e));
             // TODO changes loop of news
-            gameState.setEnemies(enemiesToBeAdded);
+            gameState.setEnemies(enemies);
 
-            LinkedHashSet<ItemDrop> itemsToBeAdded = new LinkedHashSet<>(items.values());
-            itemsToBeAdded.addAll(newItems);
+            newItems.stream().forEach((i)->items.put(i.getID(), i));
             // TODO changes loop of news
-            gameState.setItems(itemsToBeAdded);
+            gameState.setItems(items);
             gameState.setTileMap(tileMap);
 
             // TODO overhaul gamestatechanges if used for multithreading
