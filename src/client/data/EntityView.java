@@ -18,7 +18,7 @@ public abstract class EntityView {
         return pose;
     }
 
-    public double getSize() {
+    public int getSize() {
         return size;
     }
 
