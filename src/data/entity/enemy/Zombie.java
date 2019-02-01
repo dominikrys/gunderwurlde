@@ -25,8 +25,7 @@ public class Zombie extends Enemy implements HasContactDamage {
     }
 
     Zombie(int maxHealth, int moveSpeed, Pose pose, int size, LinkedHashSet<Drop> drops) {
-        super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE, size, drops);
-        this.pathToGraphic = "file:assets/img/mobs/zombie.png";
+        super(maxHealth, moveSpeed, pose, EnemyList.ZOMBIE, size, drops);      
     }
 
     @Override

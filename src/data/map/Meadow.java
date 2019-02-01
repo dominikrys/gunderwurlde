@@ -59,7 +59,7 @@ public class Meadow extends GameMap {
 
         // Simple rounds just for testings
         // Round 1
-        Enemy enemyType = new Zombie(new Pose());
+        Enemy enemyType = new Zombie(new Pose()); //workaround
         waves.add(new Wave(0, 2000, enemyType, 2, 20));
         waves.add(new Wave(28000, 1600, enemyType, 2, 30));
         waves.add(new Wave(60000, 1000, enemyType, 2, 40));

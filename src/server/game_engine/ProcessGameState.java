@@ -17,6 +17,7 @@ import data.entity.enemy.EnemyList;
 import data.entity.item.Item;
 import data.entity.item.ItemDrop;
 import data.entity.item.ItemType;
+import data.entity.item.weapon.gun.AmmoList;
 import data.entity.item.weapon.gun.Gun;
 import data.entity.player.Player;
 import data.entity.player.Teams;
@@ -48,8 +49,9 @@ public class ProcessGameState extends Thread {
 
     public ProcessGameState(Server server, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
         this.server = server;
-        LinkedHashSet<Player> players = new LinkedHashSet<>();
-        players.add(new Player(new Pose(), Teams.RED, hoastName));
+        LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
+        Player hoastPlayer = new Player(Teams.RED, hoastName);
+        players.put(hoastPlayer.getID(), hoastPlayer);
         switch (mapName) {
         case MEADOW:
             this.gameState = new GameState(new Meadow(), players);
@@ -68,7 +70,7 @@ public class ProcessGameState extends Thread {
     }
 
     public void addPlayer(String playerName, Teams team) {
-        gameState.addPlayer(new Player(new Pose(), team, playerName));
+        gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override
@@ -101,7 +103,8 @@ public class ProcessGameState extends Thread {
                 continue; // waits until clients start doing something.
 
             // TODO can be multi-threaded with immutable gamestate for each process stage
-            // and detailed gamestatechanges used instead which is merged at the end
+            // and detailed gamestatechanges used instead which is merged at the end (may be
+            // unnecessary)
 
             // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
@@ -110,13 +113,11 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
             LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
 
-            LinkedHashMap<Integer, ItemDrop> items = new LinkedHashMap<>();
-            gameState.getItems().stream().forEach((i) -> items.put(i.getID(), i)); // TODO change gamestate to use hashmaps to improve performance
+            LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
 
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
-            LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
-            gameState.getPlayers().stream().forEach((p) -> players.put(p.getID(), p));
+            LinkedHashMap<Integer, Player> players = gameState.getPlayers();
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
@@ -130,9 +131,10 @@ public class ProcessGameState extends Thread {
                 }
 
                 Item currentItem = currentPlayer.getCurrentItem();
-                if (currentItem.getItemType() == ItemType.GUN) {
-                    if (((Gun) currentItem).isReloading()) {
-                        if (((Gun) currentItem).reload()) {
+                if (currentItem instanceof Gun) {
+                    Gun currentGun = ((Gun) currentItem);
+                    if (currentGun.isReloading()) {
+                        if (currentGun.reload(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             // TODO reload complete, gun updates itself but it might be good to send
                             // confirmation as well?
                         }
@@ -172,8 +174,9 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getReload()) {
-                    if (currentItem.getItemType() == ItemType.GUN) {
-                        ((Gun) currentItem).attemptReload();
+                    if (currentItem instanceof Gun) {
+                        Gun currentGun = ((Gun) currentItem);
+                        currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType()));
                     }
                 }
 
@@ -205,34 +208,11 @@ public class ProcessGameState extends Thread {
                                 int dropQuantity = currentItemDrop.getQuantity();
                                 switch (currentItemDrop.getItemType()) {
                                 case AMMO:
-                                    LinkedHashSet<Gun> compatibleGuns = new LinkedHashSet<>();
-                                    playerItems.stream().forEach((g) -> {
-                                        if (g instanceof Gun && ((Gun) g).getAmmoType().toItemList() == currentItemDrop.getItemName())
-                                            compatibleGuns.add((Gun) g);
-                                    });
-
-                                    int availableAmmo = dropQuantity;
-                                    for (Gun g : compatibleGuns) {
-                                        int currentAmmo = g.getCurrentAmmo();
-                                        int maxAmmo = g.getMaxAmmo();
-                                        int maxAmmoToTake = maxAmmo - currentAmmo;
-                                        if (availableAmmo > maxAmmoToTake) {
-                                            g.setCurrentAmmo(maxAmmo);
-                                            availableAmmo -= maxAmmoToTake;
-                                        } else {
-                                            g.setCurrentAmmo(currentAmmo + availableAmmo);
-                                            availableAmmo = 0;
-                                            break; // no more available ammo
-                                        }
-                                    }
-
-                                    if (availableAmmo != 0) {
-                                        currentItemDrop.setQuantity(availableAmmo);
-                                        items.put(itemDropID, currentItemDrop);
-                                    } else {
-                                        items.remove(itemDropID);
-                                        tileMap[tileCords[0]][tileCords[1]].removeItemDrop(itemDropID);
-                                    }
+                                    AmmoList ammoType = currentItemDrop.getItemName().toAmmoList();
+                                    currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) + dropQuantity);
+                                    // As there is no max ammo player takes it all and itemdrop is removed
+                                    items.remove(itemDropID);
+                                    tileMap[tileCords[0]][tileCords[1]].removeItemDrop(itemDropID);
                                     break;
                                 case GUN:
                                     if (playerItems.stream().anyMatch((i) -> i.getItemName() == currentItemDrop.getItemName())) {
@@ -277,8 +257,7 @@ public class ProcessGameState extends Thread {
             }
 
             // process enemies
-            LinkedHashMap<Integer, Enemy> enemies = new LinkedHashMap<>();
-            gameState.getEnemies().stream().forEach((e) -> enemies.put(e.getID(), e));
+            LinkedHashMap<Integer, Enemy> enemies = gameState.getEnemies();
 
             HashSet<Pose> playerPoses = new HashSet<>();
             players.values().stream().forEach((p) -> playerPoses.add(p.getPose()));
@@ -436,23 +415,21 @@ public class ProcessGameState extends Thread {
             }
             currentWaves = newWaves;
 
-            gameState.setPlayers(new LinkedHashSet<>(players.values()));
+            gameState.setPlayers(players);
 
             // maintain order.
-            otherNewProjectiles.addAll(newProjectiles);
+            otherNewProjectiles.addAll(newProjectiles); // TODO remove new versions alltogether?
             // TODO changes loop of news
             newProjectiles = otherNewProjectiles;
             gameState.setProjectiles(newProjectiles);
 
-            LinkedHashSet<Enemy> enemiesToBeAdded = new LinkedHashSet<>(enemies.values());
-            enemiesToBeAdded.addAll(newEnemies);
+            newEnemies.stream().forEach((e) -> enemies.put(e.getID(), e));
             // TODO changes loop of news
-            gameState.setEnemies(enemiesToBeAdded);
+            gameState.setEnemies(enemies);
 
-            LinkedHashSet<ItemDrop> itemsToBeAdded = new LinkedHashSet<>(items.values());
-            itemsToBeAdded.addAll(newItems);
+            newItems.stream().forEach((i) -> items.put(i.getID(), i));
             // TODO changes loop of news
-            gameState.setItems(itemsToBeAdded);
+            gameState.setItems(items);
             gameState.setTileMap(tileMap);
 
             // TODO overhaul gamestatechanges if used for multithreading
