@@ -46,8 +46,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.score = DEFAULT_SCORE;
         this.team = team;
         this.name = name;
-        this.playerID = nextPlayerID++;
-        this.pathToGraphic = "file:assets/img/mobs/player.png";
+        this.playerID = nextPlayerID++;    
     }  
 
     @Override

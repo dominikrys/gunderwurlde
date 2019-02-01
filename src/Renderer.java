@@ -1,3 +1,10 @@
+import client.data.EnemyView;
+import client.data.EntityView;
+import client.data.GameView;
+import client.data.ItemDropView;
+import client.data.ItemView;
+import client.data.PlayerView;
+import client.data.ProjectileView;
 import data.Constants;
 import data.GameState;
 import data.entity.Entity;
@@ -41,32 +48,32 @@ public class Renderer {
     }
 
     // Render input gamestate to stage
-    public void renderGameState(GameState inputGameState) {
+    public void renderGameState(GameView inputGameState) {
         // Create canvas according to dimensions of the map
-        Canvas mapCanvas = new Canvas(inputGameState.getCurrentMap().getXDim() * Constants.TILE_SIZE,
-                inputGameState.getCurrentMap().getYDim() * Constants.TILE_SIZE);
+        Canvas mapCanvas = new Canvas(inputGameState.getXDim() * Constants.TILE_SIZE,
+                inputGameState.getYDim() * Constants.TILE_SIZE);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
         // Render map
         renderMap(inputGameState, mapGC);
 
         // Render players
-        for (Player currentPlayer : inputGameState.getPlayers()) {
+        for (PlayerView currentPlayer : inputGameState.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
-        for (Enemy currentEnemy : inputGameState.getEnemies()) {
+        for (EnemyView currentEnemy : inputGameState.getEnemies()) {
             renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
-        for (Projectile currentProjectile : inputGameState.getProjectiles()) {
+        for (ProjectileView currentProjectile : inputGameState.getProjectiles()) {
             renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
-        for (ItemDrop currentItem : inputGameState.getItems()) {
+        for (ItemDropView currentItem : inputGameState.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
 
@@ -98,19 +105,19 @@ public class Renderer {
         stage.show();
     }
 
-    private void renderMap(GameState inputGameState, GraphicsContext mapGC) {
+    private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
         // Get map X and Y dimensions
-        int mapX = inputGameState.getCurrentMap().getXDim();
-        int mapY = inputGameState.getCurrentMap().getYDim();
+        int mapX = inputGameState.getXDim();
+        int mapY = inputGameState.getYDim();
 
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = new Image(inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
+                Image tileImage = new Image(inputGameState.getTileMap()[x][y].getPathToGraphic());
 
                 // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
-                if (!(checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic()))
+                if (!(checkImageLoaded(tileImage, inputGameState.getTileMap()[x][y].getPathToGraphic()))
                         || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
                     tileImage = defaultGraphic;
                 }
@@ -122,7 +129,7 @@ public class Renderer {
         }
     }
 
-    private VBox createHUD(GameState inputGameState) {
+    private VBox createHUD(GameView inputGameState) {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
@@ -130,7 +137,7 @@ public class Renderer {
         HUDBox.setSpacing(5);
 
         // Make a separate HUD for each player in case coop
-        for (Player currentPlayer : inputGameState.getPlayers()) {
+        for (PlayerView currentPlayer : inputGameState.getPlayers()) {
             // Label with player name to tell which player this part of the HUD is for
             Label playerLabel = new Label(currentPlayer.getName());
             playerLabel.setFont(new Font("Consolas", 32));
@@ -168,7 +175,7 @@ public class Renderer {
 
             int currentItemIndex = 0; // Keep track of current item since iterator is used
 
-            for (Item currentItem : currentPlayer.getItems()) {
+            for (ItemView currentItem : currentPlayer.getItems()) {
                 // Make image view out of graphic
                 ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
 
@@ -188,9 +195,10 @@ public class Renderer {
 
             // Ammo hbox
             HBox ammoBox = new HBox();
-
+            
+            // TODO: Fix this, I leave the rest to you Dom :)
             // TODO: extend this for classes that also use ammo?
-            Item currentItem = currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current item
+            ItemView currentItem = currentPlayer.getCurrentItem(); // Get current item
 
             // Add ammo amount to hud if it's a gun
             if (currentItem instanceof Gun) {
@@ -227,7 +235,7 @@ public class Renderer {
     }
 
     // Method for rendering entity onto map
-    private void renderEntity(Entity entity, GraphicsContext gc, String imagePath) {
+    private void renderEntity(EntityView entity, GraphicsContext gc, String imagePath) {
         // Get image to render from path
         Image imageToRender = new Image(imagePath);
 

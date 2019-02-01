@@ -1,22 +1,18 @@
 package data.entity;
 
-import data.Constants;
-import data.HasGraphic;
 import data.Location;
 import data.Pose;
 import data.map.tile.Tile;
 
 // Class for renderable entities
-public abstract class Entity implements HasGraphic {
+public abstract class Entity {
     public static final int MAX_SIZE = (3 * Tile.TILE_SIZE);
     
     protected Pose pose;
     protected int size;
-    protected String pathToGraphic;
 
     protected Entity(Pose pose, int size) {
         this.pose = pose;
-        this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
         this.size = size;
     }
 
@@ -67,8 +63,5 @@ public abstract class Entity implements HasGraphic {
             this.size = size;
         }
     }
-
-    public String getPathToGraphic() {
-        return pathToGraphic;
-    }
+    
 }
