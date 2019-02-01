@@ -4,7 +4,6 @@ import data.entity.projectile.ProjectileList;
 
 public class Pistol extends Gun {
     public static final GunList NAME = GunList.PISTOL;
-    public static final int DEFAULT_AMMO_AMOUNT = Integer.MAX_VALUE;
     public static final int DEFAULT_CLIP_SIZE = 12;
     public static final int DEFAULT_RELOAD_TIME = 3500;
     public static final int DEFAULT_AMMO_PER_SHOT = 1;
@@ -14,7 +13,7 @@ public class Pistol extends Gun {
     public static final int DEFAULT_COOL_DOWN = 500; //2bps
 
     public Pistol() {
-        super(NAME, DEFAULT_AMMO_AMOUNT, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
+        super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
                 DEFAULT_PROJECTILE_TYPE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN);
     }
 

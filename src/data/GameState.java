@@ -32,7 +32,7 @@ public class GameState {
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
         this.enemies = new LinkedHashMap<>();
-        this.projectiles = new LinkedHashSet<>();
+        this.projectiles = new LinkedHashSet<>(); //TODO see if setting to higher initial size improves performance (probably negligible)
         this.items = new LinkedHashMap<>();
        
         for (Player p : players.values()) {

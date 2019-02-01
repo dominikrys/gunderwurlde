@@ -15,6 +15,11 @@ public abstract class Entity {
         this.pose = pose;
         this.size = size;
     }
+    
+    protected Entity(int size) {
+        this.pose = new Pose(); //workaround for now
+        this.size = size;
+    }
 
     protected Entity(Location location, int size) {
         this(new Pose(location), size);
