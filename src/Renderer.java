@@ -196,8 +196,8 @@ public class Renderer {
         // Ammo hbox
         HBox ammoBox = new HBox();
 
-        // TODO: extend this for classes that also use ammo?
-        ItemView currentItem = currentPlayer.getCurrentItem(); // Get current item
+        // Get currently selected item
+        ItemView currentItem = currentPlayer.getCurrentItem();
 
         // Add ammo amount to hud if the item has ammo
         if (currentItem.getAmmoType() != AmmoList.NONE) {
