@@ -237,9 +237,9 @@ public class Renderer {
         }
 
         // If entity's size isn't zero, enlarge the graphic
-        if (entity.getSize() != 1) {
-            imageToRender = resampleImage(imageToRender, entity.getSize());
-        }
+//        if (entity.getSize() != 1) {
+//            imageToRender = resampleImage(imageToRender, entity.getSize());
+//        }
 
         // Render entity to specified location on graphicscontext
         drawRotatedImage(gc, imageToRender, entity.getPose().getDirection(), entity.getPose().getX(),
