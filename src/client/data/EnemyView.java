@@ -6,7 +6,7 @@ import data.entity.enemy.EnemyList;
 public class EnemyView extends EntityView {
     protected EnemyList name;
 
-    protected EnemyView(Pose pose, int size, EnemyList name) {
+    public EnemyView(Pose pose, int size, EnemyList name) {
         super(pose, size);
         this.name = name;
 

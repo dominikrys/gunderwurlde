@@ -6,7 +6,7 @@ import data.entity.item.ItemDrop;
 public class ItemDropView extends EntityView {
     protected ItemDrop name;
 
-    protected ItemDropView(Pose pose, int size, ItemDrop name) {
+    public ItemDropView(Pose pose, int size, ItemDrop name) {
         super(pose, size);
         this.name = name;
     }

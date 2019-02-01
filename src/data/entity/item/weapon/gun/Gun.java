@@ -29,6 +29,7 @@ public abstract class Gun extends Weapon implements Limited {
         this.projectileType = projectileType;
         this.ammoType = ammoType;
         this.shootCoolDown = coolDown;
+        this.lastShootTime = 0;
     }
     
     
@@ -102,11 +103,13 @@ public abstract class Gun extends Weapon implements Limited {
             ammoInClip -= amount;
     }
 
-    public boolean shoot() { // This method doesn't create the projectile ProcessGameState is responsible for this.       
-        if (ammoInClip > ammoPerShot && (System.currentTimeMillis() - lastShootTime) >= shootCoolDown) {
+    public boolean shoot() { // This method doesn't create the projectile ProcessGameState is responsible for this.
+        long now = System.currentTimeMillis();
+        if (ammoInClip > ammoPerShot && (now - lastShootTime) >= shootCoolDown) {
             if (reloading)
                 reloading = false;
             ammoInClip -= ammoPerShot;
+            lastShootTime = now;
             return true;
         }
         return false;

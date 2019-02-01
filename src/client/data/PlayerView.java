@@ -15,7 +15,7 @@ public class PlayerView extends EntityView {
     protected String name;
     protected LinkedHashMap<AmmoList, Integer> ammo;
 
-    protected PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
+    public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
             LinkedHashMap<AmmoList, Integer> ammo) {
         super(pose, size);
         this.pathToGraphic = "file:assets/img/mobs/player.png";

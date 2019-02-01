@@ -13,13 +13,13 @@ import java.util.LinkedHashSet;
 
 public class GameState {
     protected GameMap currentMap;
-    protected LinkedHashMap<Integer,Enemy> enemies;
+    protected LinkedHashMap<Integer, Enemy> enemies;
     protected LinkedHashSet<Projectile> projectiles;
-    protected LinkedHashMap<Integer,Player> players;
-    protected LinkedHashMap<Integer,ItemDrop> items;
+    protected LinkedHashMap<Integer, Player> players;
+    protected LinkedHashMap<Integer, ItemDrop> items;
     protected Iterator<Location> spawnIterator;
 
-    public GameState(GameMap currentMap, LinkedHashMap<Integer,Player> players) {
+    public GameState(GameMap currentMap, LinkedHashMap<Integer, Player> players) {
         this.players = players;
         this.spawnIterator = currentMap.getPlayerSpawns().iterator();
         setCurrentMap(currentMap);
@@ -32,36 +32,37 @@ public class GameState {
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
         this.enemies = new LinkedHashMap<>();
-        this.projectiles = new LinkedHashSet<>(); //TODO see if setting to higher initial size improves performance (probably negligible)
+        this.projectiles = new LinkedHashSet<>(); // TODO see if setting to higher initial size improves performance (probably
+                                                  // negligible)
         this.items = new LinkedHashMap<>();
-       
+
         for (Player p : players.values()) {
             addPlayer(p);
         }
     }
 
-    public LinkedHashMap<Integer,ItemDrop> getItems() {
+    public LinkedHashMap<Integer, ItemDrop> getItems() {
         return items;
     }
 
-    public void setItems(LinkedHashMap<Integer,ItemDrop> items) {
+    public void setItems(LinkedHashMap<Integer, ItemDrop> items) {
         this.items = items;
     }
 
     public void addItem(ItemDrop item) {
-        this.items.put(item.getID(),item);
+        this.items.put(item.getID(), item);
     }
 
-    public LinkedHashMap<Integer,Enemy> getEnemies() {
+    public LinkedHashMap<Integer, Enemy> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(LinkedHashMap<Integer,Enemy> enemies) {
+    public void setEnemies(LinkedHashMap<Integer, Enemy> enemies) {
         this.enemies = enemies;
     }
 
     public void addEnemy(Enemy enemy) {
-        this.enemies.put(enemy.getID(),enemy);
+        this.enemies.put(enemy.getID(), enemy);
     }
 
     public LinkedHashSet<Projectile> getProjectiles() {
@@ -76,11 +77,11 @@ public class GameState {
         this.projectiles.add(projectile);
     }
 
-    public LinkedHashMap<Integer,Player> getPlayers() {
+    public LinkedHashMap<Integer, Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(LinkedHashMap<Integer,Player> players) {
+    public void setPlayers(LinkedHashMap<Integer, Player> players) {
         this.players = players;
     }
 

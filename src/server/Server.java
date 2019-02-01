@@ -1,15 +1,15 @@
 package server;
 
-import data.GameState;
+import client.data.GameView;
 
 public class Server {
 
-    public void updateGameState(GameState gameState) { //TODO change to view state
+    public void removePlayer(int playerID) {
         // TODO Auto-generated method stub
         
     }
 
-    public void removePlayer(int playerID) {
+    public void updateGameView(GameView view) {
         // TODO Auto-generated method stub
         
     }

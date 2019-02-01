@@ -194,4 +194,8 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.maxHealth = maxHealth;
     }
 
+    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
+    }
+
 }

@@ -18,9 +18,6 @@ public class Tile {
     protected HashSet<Integer> enemiesOnTile;
     // TODO maybe players ontile needed?
 
-    // Path to the graphic of the tile
-    protected String pathToGraphic;
-
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
         this.tileState = tileState;
@@ -73,6 +70,10 @@ public class Tile {
     public static int[] locationToTile(Location location) {
         int[] i = { ((location.getX() - 1) / TILE_SIZE), ((location.getY() - 1) / TILE_SIZE) };
         return i;
+    }
+    
+    public static int scaledSize(int size) {
+        return size/TILE_SIZE;
     }
 
 }

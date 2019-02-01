@@ -8,6 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+import client.data.GameView;
+import client.data.PlayerView;
+import client.data.TileView;
 import data.GameState;
 import data.Location;
 import data.Pose;
@@ -83,6 +86,9 @@ public class ProcessGameState extends Thread {
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
         Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
+        int xDim = gameState.getCurrentMap().getXDim();
+        int yDim = gameState.getCurrentMap().getYDim();
+        TileView[][] tileMapView = new TileView[xDim][yDim];
 
         while (!serverClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
@@ -99,7 +105,7 @@ public class ProcessGameState extends Thread {
                 currentTimeDifference = MIN_TIME_DIFFERENCE;
             }
             lastProcessTime = System.currentTimeMillis();
-            if (clientRequests != null)
+            if (clientRequests == null)
                 continue; // waits until clients start doing something.
 
             // TODO can be multi-threaded with immutable gamestate for each process stage
@@ -432,9 +438,11 @@ public class ProcessGameState extends Thread {
             gameState.setItems(items);
             gameState.setTileMap(tileMap);
 
+            LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
+            // TODO turn players to playerview
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
+            server.updateGameView(view);
             // TODO overhaul gamestatechanges if used for multithreading
-
-            server.updateGameState(gameState); // TODO convert gamestate into viewstate for clients
         }
     }
 
