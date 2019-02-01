@@ -15,13 +15,16 @@ public class Main extends Application {
         // Create renderer and pass primary stage to it
         primaryStage.setResizable(false); // Disable resizing of the window
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                Platform.exit();
-            }
-        });
-
+        // Create clienthandler thread
         ClientHandler handler = new ClientHandler(primaryStage);
         handler.start();
+
+        // Set stage to close and to kill handler when the window is closed
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                handler.end();
+                primaryStage.close();
+            }
+        });
     }
 }

@@ -10,17 +10,21 @@ import data.entity.player.Teams;
 import data.entity.projectile.SmallBullet;
 import data.map.Meadow;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.LinkedHashSet;
 
 import static data.SystemState.MENU;
 
 public class ClientHandler extends Thread{
-    Stage stage;
+    private Stage stage;
+    private boolean running;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
+        running = true;
     }
 
     public void run() {
@@ -37,8 +41,6 @@ public class ClientHandler extends Thread{
         exampleState.addItem(new ItemDrop(new Pistol(), new Location(50, 250)));
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
-
-        boolean running = true;
         SystemState systemState = MENU;
 
         while(running) {
@@ -71,5 +73,9 @@ public class ClientHandler extends Thread{
                     break;
             }
         }
+    }
+
+    public void end() {
+        this.running = false;
     }
 }
