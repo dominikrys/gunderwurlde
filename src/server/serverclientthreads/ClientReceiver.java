@@ -61,7 +61,7 @@ public class ClientReceiver extends Thread {
 
                 // Creates a string and prints it to the user
                 String received = new String(packet.getData(), 0, packet.getLength());
-                System.out.println("Client Received: " + received);
+                System.out.println("ClientOnline Received: " + received);
 
                 // If message is exit the terminate
                 if (received.equals("exit")) {

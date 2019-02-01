@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Scanner;
 
-public class Client {
+public class ClientOnline {
     // Socket to listen to the server
     MulticastSocket listenSocket;
     // Socket to send requests to the server
@@ -14,7 +14,7 @@ public class Client {
     static final int LISTENPORT = 4444;
     static final int SENDPORT = 4445;
 
-    public Client(){
+    public ClientOnline(){
         // To assign the objects to be integrated
     }
 
@@ -26,9 +26,7 @@ public class Client {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            System.out.println("Client calls server");
-//            Server server = new Server();
-//            server.start();
+            System.out.println("ClientOnline calls server");
 
             // Start the sender and receiver threads for the client
             ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);

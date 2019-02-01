@@ -1,6 +1,6 @@
 package server.serverclientdirect;
 // Usage:
-//        java serverclientdirect.Client user-nickname server-hostname
+//        java serverclientdirect.ClientOnline user-nickname server-hostname
 //
 // After initializing and opening appropriate sockets, we start two
 // client threads, one to send messages, and another one to get
@@ -26,7 +26,7 @@ class Client {
 			socket = new MulticastSocket();
 			groupAddress = InetAddress.getByName("239.0.0.1");
 
-			System.out.println("serverclientdirect.Client Running");
+			System.out.println("serverclientdirect.ClientOnline Running");
 			while(running){
 				System.out.print(">> ");
 				String userInput = sc.nextLine();

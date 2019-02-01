@@ -33,7 +33,7 @@ public class GameState {
         this.enemies = new LinkedHashSet<Enemy>();
         this.projectiles = new LinkedHashSet<Projectile>();
         this.items = new LinkedHashSet<ItemDrop>();
-       
+
         for (Player p : players) {
             addPlayer(p);
         }
