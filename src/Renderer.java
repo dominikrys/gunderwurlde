@@ -9,6 +9,7 @@ import data.entity.item.weapon.Gun;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import data.gui.*;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -359,12 +360,15 @@ public class Renderer {
             // Create the main scene
             Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-            // Adding scene to the stage
-            stage.setScene(scene);
-
-            // Request focus and show stage
-            scene.getRoot().requestFocus();
-            stage.show();
+            // runLater because not JavaFX thread
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    // Add scene to stage, request focus and show the stage
+                    stage.setScene(scene);
+                    scene.getRoot().requestFocus();
+                    stage.show();
+                }
+            });
 
             menuChanged = false;
         }

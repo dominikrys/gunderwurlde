@@ -22,40 +22,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Create renderer and pass primary stage to it
         primaryStage.setResizable(false); // Disable resizing of the window
-        Renderer renderer = new Renderer(primaryStage);
 
-        // Example game state to render
-        LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        Player examplePlayer = new Player(new Pose(64, 64, 45), Teams.RED, "Player 1");
-        examplePlayer.addItem(new Pistol());
-        examplePlayer.addItem(new Pistol());
-        examplePlayer.addItem(new Pistol());
-        examplePlayers.add(examplePlayer);
-        GameState exampleState = new GameState(new Meadow(), examplePlayers);
-        exampleState.addItem(new ItemDrop(new Pistol(), new Location(50, 250)));
-        exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
-        exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
-
-        boolean running = true;
-        SystemState systemState = MENU;
-
-        while(running) { // TODO: add this to loop somehow
-            switch (systemState) {
-                case MENU:
-                    renderer.renderMenu();
-                    systemState = renderer.getSystemState();
-                    break;
-                case GAME:
-                    // Render game state
-                    renderer.renderGameState(exampleState);
-                    systemState = renderer.getSystemState();
-                    break;
-                case QUIT:
-                    running = false;
-                    primaryStage.close();
-                    break;
-            }
-        }
+        ClientHandler handler = new ClientHandler(primaryStage);
+        handler.start();
     }
 
     // Main method
