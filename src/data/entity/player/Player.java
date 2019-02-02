@@ -37,13 +37,8 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
-        this.items = new ArrayList<Item>() {
-            private static final long serialVersionUID = 1L;
-
-            {
-                new Pistol();
-            }
-        };
+        this.items = new ArrayList<Item>();
+        items.add(new Pistol());
         this.currentItem = 0;
         this.score = DEFAULT_SCORE;
         this.team = team;

@@ -37,7 +37,6 @@ import data.map.Round;
 import data.map.Wave;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
-import server.Server;
 import server.game_engine.ai.AIAction;
 import server.game_engine.ai.Attack;
 import server.game_engine.ai.EnemyAI;
@@ -48,15 +47,15 @@ import server.request.Request;
 public class ProcessGameState extends Thread {
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
 
-    private final Server server;
+    private final HasEngine handler;
 
     private GameState gameState;
     private GameView view;
     private ClientRequests clientRequests;
     private boolean serverClosing;
 
-    public ProcessGameState(Server server, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
-        this.server = server;
+    public ProcessGameState(HasEngine handler, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
+        this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hoastPlayer = new Player(Teams.RED, hoastName);
         players.put(hoastPlayer.getID(), hoastPlayer);
@@ -89,7 +88,7 @@ public class ProcessGameState extends Thread {
 
     public void serverClosing() {
         this.serverClosing = true;
-        this.notify();
+        //this.notify(); //TODO fix this somehow.
     }
 
     public void addPlayer(String playerName, Teams team) {
@@ -125,7 +124,7 @@ public class ProcessGameState extends Thread {
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
             if (timeDiff > 0) {
                 try {
-                    this.wait(timeDiff);
+                    Thread.sleep(timeDiff);                   
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                     continue;
@@ -133,8 +132,10 @@ public class ProcessGameState extends Thread {
                 if (serverClosing)
                     break;
                 currentTimeDifference = MIN_TIME_DIFFERENCE;
+            } else {
+                System.out.println("Can't keep up!");
             }
-            lastProcessTime = System.currentTimeMillis();
+            lastProcessTime = System.currentTimeMillis();            
             if (clientRequests == null)
                 continue; // waits until clients start doing something.
 
@@ -153,8 +154,9 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
 
             // process player requests
-            LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
+            LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();            
             LinkedHashMap<Integer, Player> players = gameState.getPlayers();
+            clientRequests =  new ClientRequests(players.size()); //clears requests
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
@@ -163,7 +165,7 @@ public class ProcessGameState extends Thread {
 
                 if (request.getLeave()) {
                     players.remove(playerID);
-                    server.removePlayer(playerID);
+                    handler.removePlayer(playerID);
                     continue;
                 }
 
@@ -504,7 +506,7 @@ public class ProcessGameState extends Thread {
             }
 
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
-            server.updateGameView(view);
+            handler.updateGameView(view);
             // TODO overhaul gamestatechanges if used for multithreading
         }
         System.out.println("LongestTimeProcessing: " + longestTimeProcessing);

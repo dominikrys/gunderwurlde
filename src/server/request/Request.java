@@ -16,6 +16,9 @@ public class Request {
         this.shoot = false;
         this.reload = false;
         this.leave = false;
+        this.movementDir = Optional.empty();
+        this.facing = Optional.empty();
+        this.selectItem = Optional.empty();
     }
 
     public boolean movementExists() {
