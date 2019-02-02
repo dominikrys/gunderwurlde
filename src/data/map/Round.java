@@ -18,6 +18,7 @@ public class Round {
     }
 
     public boolean isWaveReady() {
+        if (waves.isEmpty()) return false;
         if ((System.currentTimeMillis() - startTime) >= waves.first().startTime)
             return true;
         else

@@ -424,7 +424,7 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
 
             if (currentRound.hasWavesLeft()) {
-                if (currentRound.isWaveReady()) {
+                while (currentRound.isWaveReady()) {
                     currentWaves.add(currentRound.getNextWave());
                 }
             }

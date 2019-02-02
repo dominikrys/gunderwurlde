@@ -17,7 +17,7 @@ public abstract class Entity {
     }
     
     protected Entity(int size) {
-        this.pose = new Pose(); //workaround for now
+        this.pose = new Pose();
         this.size = size;
     }
 
