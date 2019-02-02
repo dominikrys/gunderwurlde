@@ -52,7 +52,7 @@ public class ProcessGameState extends Thread {
     private GameState gameState;
     private GameView view;
     private ClientRequests clientRequests;
-    private boolean serverClosing;
+    private boolean handlerClosing;
 
     public ProcessGameState(HasEngine handler, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
         this.handler = handler;
@@ -64,7 +64,7 @@ public class ProcessGameState extends Thread {
             this.gameState = new GameState(new Meadow(), players);
             break;
         }
-        this.serverClosing = false;
+        this.handlerClosing = false;
 
         // setup GameView
         GameMap map = this.gameState.getCurrentMap();
@@ -86,9 +86,9 @@ public class ProcessGameState extends Thread {
         this.clientRequests = clientRequests;
     }
 
-    public void serverClosing() {
-        this.serverClosing = true;
-        //this.notify(); //TODO fix this somehow.
+    public void handlerClosing() {
+        this.handlerClosing = true;
+        // this.notify(); //TODO fix this somehow.
     }
 
     public void addPlayer(String playerName, Teams team) {
@@ -105,37 +105,38 @@ public class ProcessGameState extends Thread {
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
         Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
-        
-        //performance checking variables
+
+        // performance checking variables
         long totalTimeProcessing = 0;
         long numOfProcesses = -1;
         long longestTimeProcessing = 0;
 
-        while (!serverClosing) {
+        while (!handlerClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
-            
+
             // performance checks
             numOfProcesses++;
             if (numOfProcesses != 0) {
                 totalTimeProcessing += currentTimeDifference;
-                if (currentTimeDifference > longestTimeProcessing) longestTimeProcessing = currentTimeDifference;                
+                if (currentTimeDifference > longestTimeProcessing)
+                    longestTimeProcessing = currentTimeDifference;
             }
-            
+
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
             if (timeDiff > 0) {
                 try {
-                    Thread.sleep(timeDiff);                   
+                    Thread.sleep(timeDiff);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                     continue;
                 }
-                if (serverClosing)
+                if (handlerClosing)
                     break;
                 currentTimeDifference = MIN_TIME_DIFFERENCE;
             } else {
                 System.out.println("Can't keep up!");
             }
-            lastProcessTime = System.currentTimeMillis();            
+            lastProcessTime = System.currentTimeMillis();
             if (clientRequests == null)
                 continue; // waits until clients start doing something.
 
@@ -154,9 +155,9 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
 
             // process player requests
-            LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();            
+            LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
             LinkedHashMap<Integer, Player> players = gameState.getPlayers();
-            clientRequests =  new ClientRequests(players.size()); //clears requests
+            clientRequests = new ClientRequests(players.size()); // clears requests
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
