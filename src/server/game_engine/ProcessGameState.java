@@ -190,7 +190,7 @@ public class ProcessGameState extends Thread {
                                     SmallBullet b = new SmallBullet(p);
                                     newProjectiles.add(b);
                                     projectilesView.add(new ProjectileView(p, b.getSize(), b.getProjectileType()));
-                                }                                    
+                                }
                                 break;
                             default:
                                 System.out.println("Projectile type not known for: " + currentItem.getItemName().toString());
@@ -334,7 +334,8 @@ public class ProcessGameState extends Thread {
                 currentEnemy.setPose(new Pose(newLocation, direction));
                 int enemyID = currentEnemy.getID();
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEnemyName())); //slightly outdated for enemies that die
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEnemyName())); // slightly outdated for enemies
+                                                                                                                             // that die
 
                 int[] oldTileCords = Tile.locationToTile(enemyPose);
                 int[] newTileCords = Tile.locationToTile(newLocation);
@@ -349,7 +350,7 @@ public class ProcessGameState extends Thread {
 
             // process projectiles
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
-            LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();            
+            LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();
 
             for (Projectile p : projectiles) {
                 boolean removed = false;
@@ -411,7 +412,8 @@ public class ProcessGameState extends Thread {
                     } else {
                         // TODO basic projectile change
                         otherNewProjectiles.add(currentProjectile);
-                        projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getProjectileType()));
+                        projectilesView
+                                .add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getProjectileType()));
                     }
                 }
             }
@@ -420,6 +422,12 @@ public class ProcessGameState extends Thread {
 
             LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
+
+            if (currentRound.hasWavesLeft()) {
+                if (currentRound.isWaveReady()) {
+                    currentWaves.add(currentRound.getNextWave());
+                }
+            }
 
             if (!currentWaves.isEmpty()) {
                 for (Wave wave : currentWaves) {
