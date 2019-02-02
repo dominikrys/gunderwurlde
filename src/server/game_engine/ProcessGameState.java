@@ -106,9 +106,22 @@ public class ProcessGameState extends Thread {
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
         Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
+        
+        //performance checking variables
+        long totalTimeProcessing = 0;
+        long numOfProcesses = -1;
+        long longestTimeProcessing = 0;
 
         while (!serverClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
+            
+            // performance checks
+            numOfProcesses++;
+            if (numOfProcesses != 0) {
+                totalTimeProcessing += currentTimeDifference;
+                if (currentTimeDifference > longestTimeProcessing) longestTimeProcessing = currentTimeDifference;                
+            }
+            
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
             if (timeDiff > 0) {
                 try {
@@ -494,6 +507,9 @@ public class ProcessGameState extends Thread {
             server.updateGameView(view);
             // TODO overhaul gamestatechanges if used for multithreading
         }
+        System.out.println("LongestTimeProcessing: " + longestTimeProcessing);
+        long avgTimeProcessing = totalTimeProcessing / numOfProcesses;
+        System.out.println("AverageTimeProcessing: " + avgTimeProcessing);
     }
 
     private static int getDistanceMoved(long timeDiff, int speed) {
