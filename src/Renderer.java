@@ -27,6 +27,10 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class Renderer {
     private Stage stage;
     private Image defaultGraphic;
@@ -139,24 +143,39 @@ public class Renderer {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
+        HUDBox.setMaxWidth(Constants.TILE_SIZE * 7);
         HUDBox.setSpacing(5);
+
+        // Load font to use in HUD. If font not found, load other, default font
+        Font fontManaspace28;
+        Font fontManaspace18;
+        try {
+            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
+            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
+        } catch (FileNotFoundException e) {
+            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
+            fontManaspace28 = new Font("Consolas", 28);
+            fontManaspace18 = new Font("Consolas", 18);
+        }
 
         // Make a separate HUD for each player in case coop
         for (Player currentPlayer : inputGameState.getPlayers()) {
             // Label with player name to tell which player this part of the HUD is for
             Label playerLabel = new Label(currentPlayer.getName());
-            playerLabel.setFont(new Font("Consolas", 32));
+            playerLabel.setFont(fontManaspace28);
             playerLabel.setTextFill(Color.BLACK);
 
             // Player score
-            Label playerScore = new Label("Score: " + currentPlayer.getScore());
-            playerScore.setFont(new Font("Consolas", 32));
-            playerScore.setTextFill(Color.BLACK);
+            Label playerScoreLabel = new Label("SCORE: ");
+            playerScoreLabel.setFont(fontManaspace28);
+            playerScoreLabel.setTextFill(Color.BLACK);
+            Label playerScoreNumber = new Label(Integer.toString(currentPlayer.getScore()));
+            playerScoreNumber.setFont(fontManaspace28);
+            playerScoreNumber.setTextFill(Color.BLACK);
 
-            // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
+            // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
             FlowPane heartBox = new FlowPane();
-            //heartBox.setPrefWrapLength((new Image("file:assets/img/other/heart.png")).getWidth() * 5);
+            heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
 
             // Calculate amount of hearts to generate from health
             int halfHearts = currentPlayer.getHealth() % 2;
@@ -212,12 +231,12 @@ public class Renderer {
                 // Make label for current ammo
                 Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
                         new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
-                currentAmmo.setFont(new Font("Consolas", 32));
+                currentAmmo.setFont(fontManaspace28);
                 currentAmmo.setTextFill(Color.BLACK);
 
                 // Make label for ammo in clip
                 Label clipAmmo = new Label("/" + currentGun.getClipSize());
-                clipAmmo.setFont(new Font("Consolas", 18));
+                clipAmmo.setFont(fontManaspace18);
                 clipAmmo.setTextFill(Color.DARKSLATEGREY);
 
                 // Add to ammo hbox
@@ -225,7 +244,7 @@ public class Renderer {
             } else {
                 // Make label for infinite use if it's not a weapon
                 Label currentAmmo = new Label("∞");
-                currentAmmo.setFont(new Font("Consolas", 32));
+                currentAmmo.setFont(fontManaspace28);
                 currentAmmo.setTextFill(Color.BLACK);
 
                 // Add to ammo hbox
@@ -233,7 +252,7 @@ public class Renderer {
             }
 
             // Add elements of HUD for player to HUD
-            HUDBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
+            HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
         }
 
         return HUDBox;

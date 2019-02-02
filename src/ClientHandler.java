@@ -1,7 +1,4 @@
-import data.GameState;
-import data.Location;
-import data.Pose;
-import data.SystemState;
+import data.*;
 import data.entity.enemy.Zombie;
 import data.entity.item.ItemDrop;
 import data.entity.item.weapon.Pistol;
@@ -11,9 +8,13 @@ import data.entity.projectile.SmallBullet;
 import data.map.Meadow;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.LinkedHashSet;
 
 import static data.SystemState.MENU;
@@ -42,6 +43,9 @@ public class ClientHandler extends Thread{
         exampleState.addEnemy(new Zombie(new Pose(120, 120, 45)));
         exampleState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
         SystemState systemState = MENU;
+
+        // Load font
+        Font.loadFont(getClass().getResourceAsStream(Constants.MANASPACE_FONT_PATH), 36);
 
         while(running) {
             switch (systemState) {

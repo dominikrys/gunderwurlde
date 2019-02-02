@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -23,6 +24,9 @@ public class PlayMenuController extends AbstractMenuController {
     @FXML
     private Button backButton;
 
+    @FXML
+    private Label characterErrorText;
+
     public PlayMenuController(){
         super("/data/gui/play_menu.fxml", Menus.PLAY);
     }
@@ -35,12 +39,18 @@ public class PlayMenuController extends AbstractMenuController {
     @FXML
     void handleNameInput(ActionEvent event) {
         // Only allow going into single or multi player if a name has been entered
-        if (nameField.getCharacters().length() > 0) {
+        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
             singlePlayerButton.setDisable(false);
             multiPlayerButton.setDisable(false);
+            characterErrorText.setVisible(false);
+        } else if (nameField.getCharacters().length() == 0){
+            singlePlayerButton.setDisable(true);
+            multiPlayerButton.setDisable(true);
+            characterErrorText.setVisible(false);
         } else {
             singlePlayerButton.setDisable(true);
             multiPlayerButton.setDisable(true);
+            characterErrorText.setVisible(true);
         }
     }
 
