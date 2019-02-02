@@ -57,6 +57,7 @@ public class ClientHandler extends Thread{
                     break;
                 case SINGLE_PLAYER:
                     // CODE FOR ESTABLISHING LOCAL SERVER
+                    systemState = SystemState.GAME; // REMOVE THIS
                     break;
                 case MULTI_PLAYER:
                     // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER

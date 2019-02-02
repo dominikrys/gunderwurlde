@@ -107,11 +107,8 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Adding scene to the stage
-        stage.setScene(scene);
-
-        // Displaying the contents of the stage
-        stage.show();
+        // Update stage
+        updateStageWithScene(stage, scene);
     }
 
     private void renderMap(GameState inputGameState, GraphicsContext mapGC) {
@@ -353,8 +350,10 @@ public class Renderer {
                     currentMenuController = new HelpMenuController();
                     break;
                 case SINGLE_PLAYER:
-                    systemState = SystemState.SINGLE_PLAYER;
-                    break;
+                    //systemState = SystemState.SINGLE_PLAYER;
+                    systemState = SystemState.GAME;
+                    return;
+                    //break;
                 case MULTI_PLAYER:
                     systemState = SystemState.MULTI_PLAYER;
                     break;
@@ -366,17 +365,23 @@ public class Renderer {
             // Create the main scene
             Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-            // runLater because not JavaFX thread
-            Platform.runLater(new Runnable() {
-                @Override public void run() {
-                    // Add scene to stage, request focus and show the stage
-                    stage.setScene(scene);
-                    scene.getRoot().requestFocus();
-                    stage.show();
-                }
-            });
+            // Update stage
+            updateStageWithScene(stage, scene);
 
             menuChanged = false;
         }
+    }
+
+    // Method for updating the stage with a given scene since not on JavaFX thread
+    private void updateStageWithScene(Stage stage, Scene scene) {
+        // runLater because not JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                // Add scene to stage, request focus and show the stage
+                stage.setScene(scene);
+                scene.getRoot().requestFocus();
+                stage.show();
+            }
+        });
     }
 }
