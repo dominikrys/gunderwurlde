@@ -1,15 +1,18 @@
 package server;
 
-import data.GameState;
+import client.data.GameView;
+import server.game_engine.HasEngine;
 
-public class Server {
+public class Server implements HasEngine {
 
-    public void updateGameState(GameState gameState) { //TODO change to view state
+    @Override
+    public void removePlayer(int playerID) {
         // TODO Auto-generated method stub
         
     }
-
-    public void removePlayer(int playerID) {
+    
+    @Override
+    public void updateGameView(GameView view) {
         // TODO Auto-generated method stub
         
     }

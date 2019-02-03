@@ -1,9 +1,8 @@
 package data.entity.item;
 
 import data.Constants;
-import data.HasGraphic;
 
-public abstract class Item implements HasGraphic {
+public abstract class Item {
     protected final IsItem itemName;
     protected String pathToGraphic;
 

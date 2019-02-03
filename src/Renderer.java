@@ -1,12 +1,7 @@
+import client.data.*;
 import data.Constants;
-import data.GameState;
-import data.entity.Entity;
-import data.entity.enemy.Enemy;
-import data.entity.item.Item;
-import data.entity.item.ItemDrop;
+import data.entity.item.weapon.gun.AmmoList;
 import data.entity.item.weapon.gun.Gun;
-import data.entity.player.Player;
-import data.entity.projectile.Projectile;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -40,33 +35,33 @@ public class Renderer {
         }
     }
 
-    // Render input gamestate to stage
-    public void renderGameState(GameState inputGameState) {
+    // Render input gameview to stage
+    public void renderGameView(GameView inputGameView, int playerID) {
         // Create canvas according to dimensions of the map
-        Canvas mapCanvas = new Canvas(inputGameState.getCurrentMap().getXDim() * Constants.TILE_SIZE,
-                inputGameState.getCurrentMap().getYDim() * Constants.TILE_SIZE);
+        Canvas mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
         GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
 
         // Render map
-        renderMap(inputGameState, mapGC);
+        renderMap(inputGameView, mapGC);
 
         // Render players
-        for (Player currentPlayer : inputGameState.getPlayers()) {
+        for (PlayerView currentPlayer : inputGameView.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
-        for (Enemy currentEnemy : inputGameState.getEnemies()) {
+        for (EnemyView currentEnemy : inputGameView.getEnemies()) {
             renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
-        for (Projectile currentProjectile : inputGameState.getProjectiles()) {
+        for (ProjectileView currentProjectile : inputGameView.getProjectiles()) {
             renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
-        for (ItemDrop currentItem : inputGameState.getItems()) {
+        for (ItemDropView currentItem : inputGameView.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
 
@@ -77,7 +72,7 @@ public class Renderer {
         mainHBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        VBox HUDBox = createHUD(inputGameState);
+        VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
 
         // Create root stackpane and add elements to be rendered to it
@@ -88,7 +83,7 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Setting title to the Stage
+        // Setting title to the Stage TODO: put this outside of renderer after integrating
         stage.setTitle("Game");
 
         // Adding scene to the stage
@@ -98,19 +93,19 @@ public class Renderer {
         stage.show();
     }
 
-    private void renderMap(GameState inputGameState, GraphicsContext mapGC) {
+    private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
         // Get map X and Y dimensions
-        int mapX = inputGameState.getCurrentMap().getXDim();
-        int mapY = inputGameState.getCurrentMap().getYDim();
+        int mapX = inputGameState.getXDim();
+        int mapY = inputGameState.getYDim();
 
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = new Image(inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic());
+                Image tileImage = new Image(inputGameState.getTileMap()[x][y].getPathToGraphic());
 
                 // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
-                if (!(checkImageLoaded(tileImage, inputGameState.getCurrentMap().getTileMap()[x][y].getPathToGraphic()))
+                if (!(checkImageLoaded(tileImage, inputGameState.getTileMap()[x][y].getPathToGraphic()))
                         || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
                     tileImage = defaultGraphic;
                 }
@@ -122,118 +117,127 @@ public class Renderer {
         }
     }
 
-    private VBox createHUD(GameState inputGameState) {
+    private VBox createHUD(GameView inputGameView, int playerID) {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
         HUDBox.setSpacing(5);
 
-        // Make a separate HUD for each player in case coop
-        for (Player currentPlayer : inputGameState.getPlayers()) {
-            // Label with player name to tell which player this part of the HUD is for
-            Label playerLabel = new Label(currentPlayer.getName());
-            playerLabel.setFont(new Font("Consolas", 32));
-            playerLabel.setTextFill(Color.BLACK);
+        PlayerView currentPlayer = null;
 
-            // Player score
-            Label playerScore = new Label("Score: " + currentPlayer.getScore());
-            playerScore.setFont(new Font("Consolas", 32));
-            playerScore.setTextFill(Color.BLACK);
-
-            // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
-            FlowPane heartBox = new FlowPane();
-            //heartBox.setPrefWrapLength((new Image("file:assets/img/other/heart.png")).getWidth() * 5);
-
-            // Calculate amount of hearts to generate from health
-            int halfHearts = currentPlayer.getHealth() % 2;
-            int wholeHearts = currentPlayer.getHealth() / 2;
-            int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
-
-            // Populate heart box in GUI TODO: load default heart texture?
-            for (int i = 0; i < wholeHearts; i++) {
-                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
+        // Get the current player from the player list
+        for (PlayerView player : inputGameView.getPlayers()) {
+            if (player.getID() == playerID) {
+                currentPlayer = player;
             }
-            // Populate half heart
-            for (int i = 0; i < halfHearts; i++) {
-                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
-            }
-            // Populate lost life
-            for (int i = 0; i < missingHearts; i++) {
-                heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
-            }
-
-            // Iterate through held items list and add to the HUD
-            FlowPane heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
-
-            int currentItemIndex = 0; // Keep track of current item since iterator is used
-
-            for (Item currentItem : currentPlayer.getItems()) {
-                // Make image view out of graphic
-                ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
-
-                // Check if the item currently being checked is the current selected item, and if it is, show that
-                if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                    DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
-                    dropShadow.setSpread(0.75);
-                    imageView.setEffect(dropShadow);
-                }
-
-                // Add item to list
-                heldItems.getChildren().add(imageView);
-
-                // Increment current item index
-                currentItemIndex++;
-            }
-
-            // Ammo hbox
-            HBox ammoBox = new HBox();
-
-            // TODO: extend this for classes that also use ammo?
-            Item currentItem = currentPlayer.getItems().get(currentPlayer.getCurrentItemIndex()); // Get current item
-
-            // Add ammo amount to hud if it's a gun
-            if (currentItem instanceof Gun) {
-                Gun currentGun = (Gun) currentItem; // Make Gun object from the input item
-
-                // Make label for current ammo
-                Label currentAmmo = new Label(Integer.toString(currentGun.getCurrentAmmo()),
-                        new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
-                currentAmmo.setFont(new Font("Consolas", 32));
-                currentAmmo.setTextFill(Color.BLACK);
-
-                // Make label for ammo in clip
-                Label clipAmmo = new Label("/" + currentGun.getClipSize());
-                clipAmmo.setFont(new Font("Consolas", 18));
-                clipAmmo.setTextFill(Color.DARKSLATEGREY);
-
-                // Add to ammo hbox
-                ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
-            } else {
-                // Make label for infinite use if it's not a weapon
-                Label currentAmmo = new Label("∞");
-                currentAmmo.setFont(new Font("Consolas", 32));
-                currentAmmo.setTextFill(Color.BLACK);
-
-                // Add to ammo hbox
-                ammoBox.getChildren().addAll(currentAmmo);
-            }
-
-            // Add elements of HUD for player to HUD
-            HUDBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
         }
+
+        // If for some reason the player hasn't been found, return an empty HUD
+        if (currentPlayer == null) {
+            return new VBox();
+        }
+
+        // Label with player name to tell which player this part of the HUD is for
+        Label playerLabel = new Label(currentPlayer.getName());
+        playerLabel.setFont(new Font("Consolas", 32));
+        playerLabel.setTextFill(Color.BLACK);
+
+        // Player score
+        Label playerScore = new Label("Score: " + currentPlayer.getScore());
+        playerScore.setFont(new Font("Consolas", 32));
+        playerScore.setTextFill(Color.BLACK);
+
+        // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
+        FlowPane heartBox = new FlowPane();
+        //heartBox.setPrefWrapLength((new Image("file:assets/img/other/heart.png")).getWidth() * 5);
+
+        // Calculate amount of hearts to generate from health
+        int halfHearts = currentPlayer.getHealth() % 2;
+        int wholeHearts = currentPlayer.getHealth() / 2;
+        int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
+
+        // Populate heart box in GUI
+        for (int i = 0; i < wholeHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
+        }
+        // Populate half heart
+        for (int i = 0; i < halfHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
+        }
+        // Populate lost life
+        for (int i = 0; i < missingHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
+        }
+
+        // Iterate through held items list and add to the HUD
+        FlowPane heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
+
+        int currentItemIndex = 0; // Keep track of current item since iterator is used
+
+        for (ItemView currentItem : currentPlayer.getItems()) {
+            // Make image view out of graphic
+            ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
+
+            // Check if the item currently being checked is the current selected item, and if it is, show that
+            if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
+                DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
+                dropShadow.setSpread(0.75);
+                imageView.setEffect(dropShadow);
+            }
+
+            // Add item to list
+            heldItems.getChildren().add(imageView);
+
+            // Increment current item index
+            currentItemIndex++;
+        }
+
+        // Ammo hbox
+        HBox ammoBox = new HBox();
+
+        // Get currently selected item
+        ItemView currentItem = currentPlayer.getCurrentItem();
+
+        // Add ammo amount to hud if the item has ammo
+        if (currentItem.getAmmoType() != AmmoList.NONE) {
+            // Make label for current ammo in item
+            Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
+                    new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
+            currentAmmo.setFont(new Font("Consolas", 32));
+            currentAmmo.setTextFill(Color.BLACK);
+
+            // Make label for total ammo
+            Label clipAmmo = new Label("/" + currentItem.getClipSize());
+            clipAmmo.setFont(new Font("Consolas", 18));
+            clipAmmo.setTextFill(Color.DARKSLATEGREY);
+
+            // Add to ammo hbox
+            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
+        } else {
+            // Make label for infinite use if it's not a weapon
+            Label currentAmmo = new Label("∞");
+            currentAmmo.setFont(new Font("Consolas", 32));
+            currentAmmo.setTextFill(Color.BLACK);
+
+            // Add to ammo hbox
+            ammoBox.getChildren().addAll(currentAmmo);
+        }
+
+        // Add elements of HUD for player to HUD
+        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
 
         return HUDBox;
     }
 
     // Method for rendering entity onto map
-    private void renderEntity(Entity entity, GraphicsContext gc, String imagePath) {
+    private void renderEntity(EntityView entity, GraphicsContext gc, String imagePath) {
         // Get image to render from path
         Image imageToRender = new Image(imagePath);
 
         // If image not loaded properly, print error and load default graphic
         if (!checkImageLoaded(imageToRender, imagePath)) {
-           imageToRender = defaultGraphic;
+            imageToRender = defaultGraphic;
         }
 
         // If entity's size isn't zero, enlarge the graphic
