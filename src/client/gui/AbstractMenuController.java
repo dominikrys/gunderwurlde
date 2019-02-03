@@ -1,9 +1,8 @@
-package data.gui;
+package client.gui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 
-import java.awt.Menu;
 import java.io.IOException;
 
 public abstract class AbstractMenuController extends VBox {

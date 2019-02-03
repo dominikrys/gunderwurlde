@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +24,7 @@ public class PlayMenuController extends AbstractMenuController {
     private Label characterErrorText;
 
     public PlayMenuController(){
-        super("/data/gui/fxml/play_menu.fxml", Menus.PLAY);
+        super("/client/gui/fxml/play_menu.fxml", Menus.PLAY);
     }
 
     @FXML

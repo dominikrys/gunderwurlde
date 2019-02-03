@@ -3,7 +3,7 @@ import client.data.*;
 import data.Constants;
 import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
-import data.gui.*;
+import client.gui.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

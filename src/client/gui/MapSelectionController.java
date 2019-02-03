@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ public class MapSelectionController extends AbstractMenuController {
     private Button backButton;
 
     public MapSelectionController(){
-        super("/data/gui/fxml/map_selection.fxml", Menus.MAP_SELECTION);
+        super("/client/gui/fxml/map_selection.fxml", Menus.MAP_SELECTION);
     }
 
     @FXML

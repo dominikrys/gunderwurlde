@@ -15,7 +15,7 @@
             <Font name="Consolas" size="50.0" />
          </font>
       </Label>
-      <Label text="Enter Name:">
+      <Label text="Enter Name and Press Enter:">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>

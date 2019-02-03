@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ public class MainMenuController extends AbstractMenuController {
     private Button quitButton;
 
     public MainMenuController() {
-        super("/data/gui/fxml/main_menu.fxml", Menus.MAIN_MENU);
+        super("/client/gui/fxml/main_menu.fxml", Menus.MAIN_MENU);
     }
 
     @FXML

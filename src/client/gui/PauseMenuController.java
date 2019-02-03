@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +13,7 @@ public class PauseMenuController extends AbstractMenuController {
     private Button menuButton;
 
     public PauseMenuController(String menuPath){
-        super("/data/gui/fxml/pause_menu.fxml", Menus.MAIN_MENU);
+        super("/client/gui/fxml/pause_menu.fxml", Menus.MAIN_MENU);
     }
 
     @FXML

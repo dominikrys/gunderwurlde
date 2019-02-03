@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,7 +36,7 @@ public class SettingsMenuController extends AbstractMenuController {
     private Button backButton;
 
     public SettingsMenuController(){
-        super("/data/gui/fxml/settings_menu.fxml", Menus.SETTINGS);
+        super("/client/gui/fxml/settings_menu.fxml", Menus.SETTINGS);
     }
 
     @FXML

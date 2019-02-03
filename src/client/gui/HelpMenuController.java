@@ -1,4 +1,4 @@
-package data.gui;
+package client.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,7 +9,7 @@ public class HelpMenuController extends AbstractMenuController{
     private Button backButton;
 
     public HelpMenuController() {
-        super("/data/gui/fxml/help_menu.fxml", Menus.HELP);
+        super("/client/gui/fxml/help_menu.fxml", Menus.HELP);
     }
 
     @FXML
