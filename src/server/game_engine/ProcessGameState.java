@@ -349,7 +349,7 @@ public class ProcessGameState extends Thread {
                 currentEnemy.setPose(new Pose(newLocation, direction));
                 int enemyID = currentEnemy.getID();
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEnemyName())); // slightly outdated for enemies
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), Tile.scaledSize(currentEnemy.getSize()), currentEnemy.getEnemyName())); // slightly outdated for enemies
                                                                                                                              // that die
 
                 int[] oldTileCords = Tile.locationToTile(enemyPose);
@@ -426,6 +426,7 @@ public class ProcessGameState extends Thread {
                         // TODO removed projectile change
                     } else {
                         // TODO basic projectile change
+                        currentProjectile.setLocation(newLocation);
                         otherNewProjectiles.add(currentProjectile);
                         projectilesView
                                 .add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getProjectileType()));
@@ -501,7 +502,6 @@ public class ProcessGameState extends Thread {
                         playerItems.add(new ItemView(i.getItemName(), AmmoList.NONE, 0, 0));
                     }
                 }
-                System.out.println(Tile.scaledSize(p.getSize()));
                 playersView.add(new PlayerView(p.getPose(), Tile.scaledSize(p.getSize()), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
                         p.getScore(), p.getName(), p.getAmmoList(), p.getID()));
             }

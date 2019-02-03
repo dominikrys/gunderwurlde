@@ -22,7 +22,12 @@ public class TestEngine extends Application implements HasEngine {
 
     @Override
     public void updateGameView(GameView view) {
-        rend.renderGameView(view, 0);
+        new Thread()
+        {
+            public void run() {
+                rend.renderGameView(view, 0);
+            }
+        }.start(); 
     }
 
     @Override
