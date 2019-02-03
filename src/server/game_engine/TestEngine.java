@@ -43,7 +43,7 @@ public class TestEngine extends Application implements HasEngine {
         engine.addPlayer("Bob3", Teams.RED);
         engine.addPlayer("Bob4", Teams.RED);
         
-        ClientRequests requests = new ClientRequests(2);
+        ClientRequests requests = new ClientRequests(4);
         for (int i=0;i<1000;i++) {
             requests.playerRequestFacing(0,rand.nextInt(360));
             requests.playerRequestMovement(0, rand.nextInt(360));
