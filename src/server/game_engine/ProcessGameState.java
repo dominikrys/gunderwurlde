@@ -88,7 +88,7 @@ public class ProcessGameState extends Thread {
 
     public void handlerClosing() {
         this.handlerClosing = true;
-        // this.notify(); //TODO fix this somehow.
+        this.interrupt();
     }
 
     public void addPlayer(String playerName, Teams team) {
@@ -127,8 +127,7 @@ public class ProcessGameState extends Thread {
                 try {
                     Thread.sleep(timeDiff);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                    continue;
+                    continue; // Most likely that the handler is closing.
                 }
                 if (handlerClosing)
                     break;
@@ -456,7 +455,7 @@ public class ProcessGameState extends Thread {
                             for (int i = 0; i < amountToSpawn; i++) {
                                 if (!enemySpawnIterator.hasNext())
                                     enemySpawnIterator = currentMap.getEnemySpawns().iterator();
-                                Enemy enemyToSpawn = templateEnemyToSpawn;
+                                Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
                                 enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
                                 newEnemies.add(enemyToSpawn);
                             }
@@ -511,8 +510,12 @@ public class ProcessGameState extends Thread {
             // TODO overhaul gamestatechanges if used for multithreading
         }
         System.out.println("LongestTimeProcessing: " + longestTimeProcessing);
-        long avgTimeProcessing = totalTimeProcessing / numOfProcesses;
+        double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
+        System.out.println("TimeProcessing: " + totalTimeProcessing);
+        System.out.println("NumOfProcesses: " + numOfProcesses);
         System.out.println("AverageTimeProcessing: " + avgTimeProcessing);
+        System.out.println("ProjectileCount: " + gameState.getProjectiles().size());
+        System.out.println("EnemyCount: " + gameState.getEnemies().size());
     }
 
     private static int getDistanceMoved(long timeDiff, int speed) {

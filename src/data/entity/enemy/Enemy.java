@@ -7,6 +7,7 @@ import data.entity.HasID;
 import data.entity.enemy.EnemyList;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;
@@ -40,6 +41,19 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
 
     public EnemyList getEnemyName() {
         return enemyName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Enemy) {
+            return (((Enemy) o).getID() == this.getID());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pose, size, maxHealth, health, moveSpeed, enemyName, drops, id);
     }
 
     @Override
@@ -91,5 +105,7 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     public int getID() {
         return id;
     }
+
+    public abstract Enemy makeCopy();
 
 }
