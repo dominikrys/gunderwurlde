@@ -13,6 +13,7 @@ import server.request.ClientRequests;
 public class TestEngine extends Application implements HasEngine {
     private ProcessGameState engine;
     private Renderer rend;
+    private GameView view;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -22,12 +23,7 @@ public class TestEngine extends Application implements HasEngine {
 
     @Override
     public void updateGameView(GameView view) {
-        new Thread()
-        {
-            public void run() {
-                rend.renderGameView(view, 0);
-            }
-        }.start(); 
+        this.view = view;
     }
 
     @Override
@@ -63,6 +59,8 @@ public class TestEngine extends Application implements HasEngine {
             requests.playerRequestShoot(3);
             engine.setClientRequests(requests);
             Thread.sleep(17);
+            if (view != null) rend.renderGameView(view, 0);
+            else System.out.println("View is null");
         }
 
         engine.handlerClosing();       
