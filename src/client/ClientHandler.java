@@ -1,3 +1,5 @@
+package client;
+
 import client.data.GameView;
 import data.Constants;
 import data.SystemState;
