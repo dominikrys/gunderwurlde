@@ -54,11 +54,11 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hoastName) { // TODO have the engine create the inital gameState
+    public ProcessGameState(HasEngine handler, MapList mapName, String hostName) {
         this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
-        Player hoastPlayer = new Player(Teams.RED, hoastName);
-        players.put(hoastPlayer.getID(), hoastPlayer);
+        Player hostPlayer = new Player(Teams.RED, hostName);
+        players.put(hostPlayer.getID(), hostPlayer);
         switch (mapName) {
         case MEADOW:
             this.gameState = new GameState(new Meadow(), players);
@@ -146,8 +146,7 @@ public class ProcessGameState extends Thread {
             // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
-            LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
-            LinkedHashSet<ItemDrop> newItems = new LinkedHashSet<>();
+            LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>(); //TODO change projectiles to use hashmap with id which may improve performance
             LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
 
             TileView[][] tileMapView = view.getTileMap();
@@ -365,7 +364,6 @@ public class ProcessGameState extends Thread {
 
             // process projectiles
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
-            LinkedHashSet<Projectile> otherNewProjectiles = new LinkedHashSet<>();
 
             for (Projectile p : projectiles) {
                 boolean removed = false;
@@ -409,7 +407,8 @@ public class ProcessGameState extends Thread {
                                         Item itemToDrop = d.getItem();
                                         // TODO have itemdrops of the same type stack
                                         ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
-                                        newItems.add(newDrop);
+                                        items.put(newDrop.getID(), newDrop);
+                                        // TODO item change here
                                         itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getItemName()));
                                         tileMap[tileCords[0]][tileCords[1]].addItemDrop(newDrop.getID());
                                     }
@@ -427,7 +426,7 @@ public class ProcessGameState extends Thread {
                     } else {
                         // TODO basic projectile change
                         currentProjectile.setLocation(newLocation);
-                        otherNewProjectiles.add(currentProjectile);
+                        newProjectiles.add(currentProjectile);
                         projectilesView
                                 .add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getProjectileType()));
                     }
@@ -436,7 +435,6 @@ public class ProcessGameState extends Thread {
 
             // TODO process tiles?
 
-            LinkedHashSet<Enemy> newEnemies = new LinkedHashSet<>();
             LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
 
             if (currentRound.hasWavesLeft()) {
@@ -458,7 +456,8 @@ public class ProcessGameState extends Thread {
                                     enemySpawnIterator = currentMap.getEnemySpawns().iterator();
                                 Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
                                 enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
-                                newEnemies.add(enemyToSpawn);
+                                enemies.put(enemyToSpawn.getID(), enemyToSpawn);
+                                // TODO enemy change here
                             }
                         }
                         newWaves.add(currentWave);
@@ -474,19 +473,9 @@ public class ProcessGameState extends Thread {
             currentWaves = newWaves;
 
             gameState.setPlayers(players);
-
-            // maintain order.
-            otherNewProjectiles.addAll(newProjectiles); // TODO remove new versions alltogether (only if single thread perf is good)
-            // TODO changes loop of news
-            newProjectiles = otherNewProjectiles;
+            // TODO changes loop of new projectiles
             gameState.setProjectiles(newProjectiles);
-
-            newEnemies.stream().forEach((e) -> enemies.put(e.getID(), e));
-            // TODO changes loop of news
             gameState.setEnemies(enemies);
-
-            newItems.stream().forEach((i) -> items.put(i.getID(), i));
-            // TODO changes loop of news
             gameState.setItems(items);
             gameState.setTileMap(tileMap);
 
