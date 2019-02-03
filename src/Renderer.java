@@ -1,7 +1,9 @@
 import client.data.*;
 import data.Constants;
+import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
-import data.entity.item.weapon.gun.Gun;
+import data.gui.*;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,20 +21,38 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class Renderer {
+    AbstractMenuController currentMenuController;
     private Stage stage;
     private Image defaultGraphic;
+    private SystemState systemState;
+    private Menus currentMenu;
+    private boolean menuChanged;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
 
+        systemState = SystemState.MENU;
+        currentMenu = Menus.MAIN_MENU;
+
+        menuChanged = true;
+
+        currentMenuController = null;
+
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
         if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
             System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
         }
+
+        // Setting title to the Stage
+        stage.setTitle("Gunderwurlde");
     }
 
     // Render input gameview to stage
@@ -83,14 +103,8 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Setting title to the Stage TODO: put this outside of renderer after integrating
-        stage.setTitle("Game");
-
-        // Adding scene to the stage
-        stage.setScene(scene);
-
-        // Displaying the contents of the stage
-        stage.show();
+        // Update stage
+        updateStageWithScene(stage, scene);
     }
 
     private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
@@ -121,7 +135,7 @@ public class Renderer {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
+        HUDBox.setMaxWidth(Constants.TILE_SIZE * 7);
         HUDBox.setSpacing(5);
 
         PlayerView currentPlayer = null;
@@ -138,26 +152,41 @@ public class Renderer {
             return new VBox();
         }
 
+        // Load font to use in HUD. If font not found, load other, default font
+        Font fontManaspace28;
+        Font fontManaspace18;
+        try {
+            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
+            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
+        } catch (FileNotFoundException e) {
+            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
+            fontManaspace28 = new Font("Consolas", 28);
+            fontManaspace18 = new Font("Consolas", 18);
+        }
+
         // Label with player name to tell which player this part of the HUD is for
         Label playerLabel = new Label(currentPlayer.getName());
-        playerLabel.setFont(new Font("Consolas", 32));
+        playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
         // Player score
-        Label playerScore = new Label("Score: " + currentPlayer.getScore());
-        playerScore.setFont(new Font("Consolas", 32));
-        playerScore.setTextFill(Color.BLACK);
+        Label playerScoreLabel = new Label("SCORE: ");
+        playerScoreLabel.setFont(fontManaspace28);
+        playerScoreLabel.setTextFill(Color.BLACK);
+        Label playerScoreNumber = new Label(Integer.toString(currentPlayer.getScore()));
+        playerScoreNumber.setFont(fontManaspace28);
+        playerScoreNumber.setTextFill(Color.BLACK);
 
-        // HBox to horizontally keep heart graphics. Populate HBox with amount of life necessary
+        // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
         FlowPane heartBox = new FlowPane();
-        //heartBox.setPrefWrapLength((new Image("file:assets/img/other/heart.png")).getWidth() * 5);
+        heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
 
         // Calculate amount of hearts to generate from health
         int halfHearts = currentPlayer.getHealth() % 2;
         int wholeHearts = currentPlayer.getHealth() / 2;
         int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
 
-        // Populate heart box in GUI
+        // Populate heart box in GUI TODO: load default heart texture?
         for (int i = 0; i < wholeHearts; i++) {
             heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
         }
@@ -225,7 +254,7 @@ public class Renderer {
         }
 
         // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScore, heldItems, ammoBox);
+        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
     }
@@ -308,4 +337,73 @@ public class Renderer {
         }
         return outputImage;
     }
+
+    public SystemState getSystemState() {
+        return systemState;
+    }
+
+    public void renderMenu() {
+        if (currentMenuController != null) {
+            Menus controllerMenu = currentMenuController.getCurrentMenu();
+
+            if (controllerMenu != currentMenu) {
+                currentMenu = controllerMenu;
+                menuChanged = true;
+            }
+        }
+
+        if (menuChanged) { // TODO: see if this is necessary or not
+            switch (currentMenu) {
+                case MAIN_MENU:
+                    currentMenuController = new MainMenuController();
+                    break;
+                case SETTINGS:
+                    currentMenuController = new SettingsMenuController();
+                    break;
+                case PLAY:
+                    currentMenuController = new PlayMenuController();
+                    break;
+                case MAP_SELECTION:
+                    currentMenuController = new MapSelectionController();
+                    break;
+                case HELP:
+                    currentMenuController = new HelpMenuController();
+                    break;
+                case SINGLE_PLAYER:
+                    //systemState = SystemState.SINGLE_PLAYER;
+                    systemState = SystemState.GAME;
+                    return;
+                //break;
+                case MULTI_PLAYER:
+                    systemState = SystemState.MULTI_PLAYER;
+                    break;
+                case QUIT:
+                    systemState = SystemState.QUIT;
+                    return;
+            }
+
+            // Create the main scene
+            Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+            // Update stage
+            updateStageWithScene(stage, scene);
+
+            menuChanged = false;
+        }
+    }
+
+    // Method for updating the stage with a given scene since not on JavaFX thread
+    private void updateStageWithScene(Stage stage, Scene scene) {
+        // runLater because not JavaFX thread
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Add scene to stage, request focus and show the stage
+                stage.setScene(scene);
+                scene.getRoot().requestFocus();
+                stage.show();
+            }
+        });
+    }
 }
+
