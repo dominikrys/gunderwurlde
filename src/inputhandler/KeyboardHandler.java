@@ -1,18 +1,12 @@
 package inputhandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-
 import data.GameState;
 import data.Pose;
 import data.entity.item.Item;
 import data.entity.item.weapon.gun.Pistol;
 import data.entity.player.Player;
-import data.map.GameMap;
-import data.map.tile.Tile;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -25,35 +19,28 @@ public class KeyboardHandler extends UserInteraction{
 	private GameState gameState;
 	private Player player;
 	private Image pImage;
+	private Collision collision;
 	private ArrayList<String> input = new ArrayList<String>();
-	private boolean wPressed = false;
-	private boolean aPressed = false;
-	private boolean sPressed = false;
-	private boolean dPressed = false;
-	private boolean rPressed = false;
-	private HashMap<Integer, ArrayList<Integer>> obstacle = new HashMap<Integer, ArrayList<Integer>>();
+	private KeyboardSettings kbSettings = new KeyboardSettings();
+	private boolean upPressed = false;
+	private boolean leftPressed = false;
+	private boolean downPressed = false;
+	private boolean rightPressed = false;
+	private boolean reloadPressed = false;
 	
 	public KeyboardHandler(Scene scene, GameState gameState) {
 		super(scene, gameState);
 		this.scene = scene;
 		this.gameState = gameState;
 		this.pImage = new Image("file:assets/img/player.png");
+		this.collision = new Collision(gameState.getCurrentMap().getTileMap(), pImage);
 		Iterator<Player> playerIterator = gameState.getPlayers().iterator();
 		for (Player p : gameState.getPlayers()) {
             if(p.getName() == "Player 1") {
             	this.player = p;
-            	//System.out.println("X: " + p.getPose().getX());
-            	//System.out.println("Y: " + p.getPose().getY());
-            	//System.out.println("D: " + p.getPose().getDirection());
             	break;
             }
         }
-		getBoundary(gameState.getCurrentMap());
-		for (Map.Entry<Integer, ArrayList<Integer>> entry : obstacle.entrySet()) {
-		    String key = entry.getKey().toString();
-		    String value = entry.getValue().toString();
-		    System.out.println("key, " + key + " value " + value);
-		}
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -62,22 +49,20 @@ public class KeyboardHandler extends UserInteraction{
 				if (!input.contains(pressed)) {
 					input.add(pressed);
 					System.out.println(input.toString());
-					switch(pressed) {
-						case "W" :
-							wPressed = true;
-							break;
-						case "A" :
-							aPressed = true;
-							break;
-						case "S" :
-							sPressed = true;
-							break;
-						case "D" :
-							dPressed = true;
-							break;
-						case "R" :
-							rPressed = true;
-							break;
+					if (kbSettings.getKey("up").equals(pressed)) {
+						upPressed = true;
+					}
+					if (kbSettings.getKey("left").equals(pressed)) {
+						leftPressed = true;
+					}
+					if (kbSettings.getKey("down").equals(pressed)) {
+						downPressed = true;
+					}
+					if (kbSettings.getKey("right").equals(pressed)) {
+						rightPressed = true;
+					}
+					if (kbSettings.getKey("reload").equals(pressed)) {
+						reloadPressed = true;
 					}
 				}
 			}
@@ -89,22 +74,20 @@ public class KeyboardHandler extends UserInteraction{
 				String released = event.getCode().toString();
 				input.remove(released);
 				System.out.println(input.toString());
-				switch(released) {
-					case "W" :
-						wPressed = false;
-						break;
-					case "A" :
-						aPressed = false;
-						break;
-					case "S" :
-						sPressed = false;
-						break;
-					case "D" :
-						dPressed = false;
-						break;
-					case "R" :
-						rPressed = false;
-						break;
+				if (kbSettings.getKey("up").equals(released)) {
+					upPressed = false;
+				}
+				if (kbSettings.getKey("left").equals(released)) {
+					leftPressed = false;
+				}
+				if (kbSettings.getKey("down").equals(released)) {
+					downPressed = false;
+				}
+				if (kbSettings.getKey("right").equals(released)) {
+					rightPressed = false;
+				}
+				if (kbSettings.getKey("reload").equals(released)) {
+					reloadPressed = false;
 				}
 			}
 		});
@@ -112,27 +95,25 @@ public class KeyboardHandler extends UserInteraction{
 		AnimationTimer t = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				Pose pose = player.getPose();
-				if(wPressed || aPressed || sPressed || dPressed) {
-					if(wPressed) {
+				Pose pose = new Pose(player.getPose().getX(), player.getPose().getY(), player.getPose().getDirection());
+				if(upPressed || leftPressed || downPressed || rightPressed) {
+					if(upPressed) {
 						pose.setY(pose.getY() - player.getMoveSpeed());
 					}
-					if(aPressed) {
+					if(leftPressed) {
 						pose.setX(pose.getX() - player.getMoveSpeed());
 					}
-					if(sPressed) {
+					if(downPressed) {
 						pose.setY(pose.getY() + player.getMoveSpeed());
 					}
-					if(dPressed) {
+					if(rightPressed) {
 						pose.setX(pose.getX() + player.getMoveSpeed());
 					}
-					if(checkBoundary(pose.getX(), pose.getY())) {
+					if(collision.checkBoundary(pose.getX(), pose.getY())) {
 						player.setPose(pose);
 					}
-					System.out.println("playerX: " + pose.getX());
-					System.out.println("playerY: " + pose.getY());
 				}
-				if(rPressed) {
+				if(reloadPressed) {
 					Item cItem = player.getCurrentItem();
 					if(cItem instanceof Pistol) {
 						Pistol currentItem = (Pistol)cItem;
@@ -151,80 +132,6 @@ public class KeyboardHandler extends UserInteraction{
 		
 		t.start();
 		
-	}
-	
-	private void getBoundary(GameMap map) {
-		Tile[][] tileMap = map.getTileMap();
-		ArrayList<Integer> columns = new ArrayList<Integer>();
-		for(int row = 0 ; row < map.getXDim() ; row++) {
-			columns = new ArrayList<Integer>();
-			for(int column = 0 ; column < map.getYDim() ; column++) {
-				if(tileMap[row][column].getState().toString().equals("SOLID")) {
-					columns.add(column);
-					System.out.println(column);
-				}
-			}
-			if(!columns.isEmpty()) {
-				obstacle.put(row, columns);
-			}
-		}
-	}
-	
-	
-	private boolean checkBoundary(int toGoX, int toGoY) {
-		double top = toGoY - pImage.getHeight()/2;
-		double down = toGoY + pImage.getHeight()/2;
-		double left = toGoX - pImage.getWidth()/2;
-		double right = toGoX + pImage.getWidth()/2;
-		int[] upward = checkTile(toGoX, top);
-		System.out.println(Arrays.toString(upward));
-		int[] downward = checkTile(toGoX, down);
-		System.out.println(Arrays.toString(downward));
-		int[] leftward = checkTile(left, toGoY);
-		System.out.println(Arrays.toString(leftward));
-		int[] rightward = checkTile(right, toGoY);
-		System.out.println(Arrays.toString(rightward));
-		
-		if(obstacle.containsKey(upward[1])) {
-			if(obstacle.get(upward[1]).contains(upward[0])) {
-				// bump
-				System.out.println("upward bump");
-				return false;
-			}
-			// move
-		}
-		else if(obstacle.containsKey(downward[1])) {
-			if(obstacle.get(downward[1]).contains(downward[0])) {
-				// bump
-				System.out.println("downward bump");
-				return false;
-			}
-			// move
-		}
-		else if(obstacle.containsKey(leftward[1])) {
-			if(obstacle.get(leftward[1]).contains(leftward[0])) {
-				// bump
-				System.out.println("leftward bump");
-				return false;
-			}
-			// move
-		}
-		else if(obstacle.containsKey(rightward[1])) {
-			if(obstacle.get(rightward[1]).contains(rightward[0])) {
-				// bump
-				System.out.println("rightward bump");
-				return false;
-			}
-			// move
-		}
-		// move
-		return true;
-	}
-	
-	
-	private int[] checkTile(double x, double y) {
-		int[] tile = {(int) (x/Tile.TILE_SIZE), (int) (y/Tile.TILE_SIZE)};
-		return tile;
 	}
 	
 	// NOT USED

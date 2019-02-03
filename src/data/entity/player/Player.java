@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 20;
-    public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
+    public static final int DEFAULT_MOVESPEED = 1;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_SIZE = 1;
 
