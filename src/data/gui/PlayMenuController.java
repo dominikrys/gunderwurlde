@@ -2,13 +2,9 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class PlayMenuController extends AbstractMenuController {
 
@@ -28,7 +24,7 @@ public class PlayMenuController extends AbstractMenuController {
     private Label characterErrorText;
 
     public PlayMenuController(){
-        super("/data/gui/play_menu.fxml", Menus.PLAY);
+        super("/data/gui/fxml/play_menu.fxml", Menus.PLAY);
     }
 
     @FXML

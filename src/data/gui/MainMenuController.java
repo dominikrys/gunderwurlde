@@ -19,7 +19,7 @@ public class MainMenuController extends AbstractMenuController {
     private Button quitButton;
 
     public MainMenuController() {
-        super("/data/gui/main_menu.fxml", Menus.MAIN_MENU);
+        super("/data/gui/fxml/main_menu.fxml", Menus.MAIN_MENU);
     }
 
     @FXML

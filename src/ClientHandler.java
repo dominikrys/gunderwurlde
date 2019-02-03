@@ -71,7 +71,7 @@ public class ClientHandler extends Thread{
                     running = false;
                     Platform.runLater(new Runnable() {
                         @Override public void run() {
-                            // Add scene to stage, request focus and show the stage
+                            // Close stage
                             stage.close();
                         }
                     });

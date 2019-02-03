@@ -2,12 +2,7 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class MapSelectionController extends AbstractMenuController {
 
@@ -24,7 +19,7 @@ public class MapSelectionController extends AbstractMenuController {
     private Button backButton;
 
     public MapSelectionController(){
-        super("/data/gui/map_selection.fxml", Menus.MAP_SELECTION);
+        super("/data/gui/fxml/map_selection.fxml", Menus.MAP_SELECTION);
     }
 
     @FXML

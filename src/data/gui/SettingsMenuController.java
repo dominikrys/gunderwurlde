@@ -2,13 +2,9 @@ package data.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class SettingsMenuController extends AbstractMenuController {
 
@@ -40,7 +36,7 @@ public class SettingsMenuController extends AbstractMenuController {
     private Button backButton;
 
     public SettingsMenuController(){
-        super("/data/gui/settings_menu.fxml", Menus.SETTINGS);
+        super("/data/gui/fxml/settings_menu.fxml", Menus.SETTINGS);
     }
 
     @FXML

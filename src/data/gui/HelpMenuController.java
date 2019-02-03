@@ -9,7 +9,7 @@ public class HelpMenuController extends AbstractMenuController{
     private Button backButton;
 
     public HelpMenuController() {
-        super("/data/gui/help_menu.fxml", Menus.HELP);
+        super("/data/gui/fxml/help_menu.fxml", Menus.HELP);
     }
 
     @FXML
