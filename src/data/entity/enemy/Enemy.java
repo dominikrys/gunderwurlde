@@ -44,19 +44,6 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof Enemy) {
-            return (((Enemy) o).getID() == this.getID());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pose, size, maxHealth, health, moveSpeed, enemyName, drops, id);
-    }
-
-    @Override
     public int getMoveSpeed() {
         return moveSpeed;
     }
