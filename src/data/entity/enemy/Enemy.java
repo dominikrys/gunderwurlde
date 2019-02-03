@@ -7,7 +7,6 @@ import data.entity.HasID;
 import data.entity.enemy.EnemyList;
 
 import java.util.LinkedHashSet;
-import java.util.Objects;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;

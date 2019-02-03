@@ -1,3 +1,4 @@
+package client;
 import client.data.*;
 import data.Constants;
 import data.entity.item.weapon.gun.AmmoList;
