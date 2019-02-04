@@ -9,12 +9,23 @@ import server.game_engine.ai.Attack;
 
 public abstract class EnemyAI {
 
+    private Pose pose;
+    private int size;
+    private HashSet<Pose> playerPoses;
+    private Tile [][] tileMap;
+    private int maxDistanceMoved;
+
     public EnemyAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
-        // TODO Auto-generated constructor stub
+        this.pose = pose;
+        this.size = size;
+        this.playerPoses = playerPoses;
+        this.tileMap = tileMap;
+        this.maxDistanceMoved = maxDistanceMoved;
+       // System.out.println("testas");
     }
 
     public AIAction getAction() {
-        // TODO Auto-generated method stub
+//        System.out.println("testas");
         return AIAction.WAIT;
     }
 
