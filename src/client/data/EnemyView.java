@@ -1,9 +1,12 @@
 package client.data;
 
+import java.io.Serializable;
+
 import data.Pose;
 import data.entity.enemy.EnemyList;
 
-public class EnemyView extends EntityView {
+public class EnemyView extends EntityView implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected EnemyList name;
 
     public EnemyView(Pose pose, int size, EnemyList name) {

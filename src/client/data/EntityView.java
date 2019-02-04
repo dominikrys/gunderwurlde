@@ -1,9 +1,12 @@
 package client.data;
 
+import java.io.Serializable;
+
 import data.Constants;
 import data.Pose;
 
-public abstract class EntityView {
+public abstract class EntityView implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected Pose pose;
     protected int size;
     protected String pathToGraphic;

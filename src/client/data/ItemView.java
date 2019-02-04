@@ -1,9 +1,12 @@
 package client.data;
 
+import java.io.Serializable;
+
 import data.entity.item.ItemList;
 import data.entity.item.weapon.gun.AmmoList;
 
-public class ItemView {
+public class ItemView implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected ItemList name;
     protected String pathToGraphic;
     protected AmmoList ammoType;
@@ -17,11 +20,11 @@ public class ItemView {
         this.ammoInClip = ammoInClip;
 
         switch (name) {
-            case BASIC_AMMO:
-                break;
-            case PISTOL:
-                this.pathToGraphic = "file:assets/img/items/pistol.png";
-                break;
+        case BASIC_AMMO:
+            break;
+        case PISTOL:
+            this.pathToGraphic = "file:assets/img/items/pistol.png";
+            break;
         }
     }
 
