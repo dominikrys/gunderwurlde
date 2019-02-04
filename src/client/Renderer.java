@@ -377,10 +377,10 @@ public class Renderer {
                     break;
                 case SINGLE_PLAYER:
                     systemState = SystemState.SINGLE_PLAYER;
-                    break;
+                    return;
                 case MULTI_PLAYER:
                     systemState = SystemState.MULTI_PLAYER;
-                    break;
+                    return;
                 case QUIT:
                     systemState = SystemState.QUIT;
                     return;

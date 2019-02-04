@@ -7,6 +7,8 @@ import data.SystemState;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import server.serverclientthreads.ClientOnline;
+import server.serverclientthreads.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +21,8 @@ import static data.SystemState.MENU;
 public class ClientHandler extends Thread {
     private Stage stage;
     private boolean running;
+    private Server server;
+    private ClientOnline clientOnline;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
@@ -43,28 +47,29 @@ public class ClientHandler extends Thread {
                     break;
                 case GAME:
                     // Render game state
+
                     //renderer.renderGameView(new GameView());
                     systemState = renderer.getSystemState();
                     break;
                 case SINGLE_PLAYER:
-                    //
-                    //
-                    //
-                    // CODE FOR ESTABLISHING LOCAL SERVER
-                    //
-                    //
-                    //
+                    // Start local server and run it
+                    server = new Server();
+                    server.start();
+                    clientOnline = new ClientOnline();
+                    clientOnline.run();
+
+                    // Set appropriate systemstates
                     systemState = SystemState.GAME;
                     renderer.setSystemState(SystemState.GAME);
                     break;
                 case MULTI_PLAYER:
-                    //
-                    //
-                    //
-                    // CODE FOR ESTABLISHING CONNECTION WITH REMOTE SERVER
-                    //
-                    //
-                    //
+                    // Start server and run it
+                    server = new Server();
+                    server.start();
+                    clientOnline = new ClientOnline();
+                    clientOnline.run();
+
+                    // Set appropriate systemstates
                     systemState = SystemState.GAME;
                     renderer.setSystemState(SystemState.GAME);
                     break;
@@ -86,10 +91,6 @@ public class ClientHandler extends Thread {
 }
 
 /*
-    protected GameState gameState;
-    protected String playerName;
-    protected int playerID;
-
     private ClientSender sender;
     private ClientReceiver receiver;
     private RendererController renderer;
@@ -97,12 +98,6 @@ public class ClientHandler extends Thread {
     private inputChecker inChecker;
     //private audioController audio;
     private Socket server;
-
-
-    public Client() {
-        renderer = new RendererController(this);
-    }
-
 
     public void setPlayerName(String name) {
         this.playerName = name;
