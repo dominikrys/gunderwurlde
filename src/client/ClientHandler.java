@@ -1,20 +1,12 @@
 package client;
 
-import client.data.GameView;
 import data.Constants;
-import data.GameState;
 import data.SystemState;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import server.serverclientthreads.ClientOnline;
 import server.serverclientthreads.Server;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.Socket;
 
 import static data.SystemState.MENU;
 
