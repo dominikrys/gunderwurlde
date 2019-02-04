@@ -49,12 +49,9 @@ public class ClientHandler extends Thread {
                 case QUIT:
                     // Quit program
                     running = false;
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Close stage
-                            stage.close();
-                        }
+                    Platform.runLater(() -> {
+                        // Close stage
+                        stage.close();
                     });
                     break;
             }

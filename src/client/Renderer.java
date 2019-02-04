@@ -1,9 +1,10 @@
 package client;
+
 import client.data.*;
+import client.gui.*;
 import data.Constants;
 import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
-import client.gui.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -234,12 +235,12 @@ public class Renderer {
             // Make label for current ammo in item
             Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
                     new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
-            currentAmmo.setFont(new Font("Consolas", 32));
+            currentAmmo.setFont(fontManaspace28);
             currentAmmo.setTextFill(Color.BLACK);
 
             // Make label for total ammo
             Label clipAmmo = new Label("/" + currentItem.getClipSize());
-            clipAmmo.setFont(new Font("Consolas", 18));
+            clipAmmo.setFont(fontManaspace18);
             clipAmmo.setTextFill(Color.DARKSLATEGREY);
 
             // Add to ammo hbox
@@ -313,7 +314,7 @@ public class Renderer {
     }
 
     // Method for scaling image by integer value by resampling - useful for large enemies/powerups
-    public Image resampleImage(Image inputImage, int scaleFactor) {
+    private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 
@@ -396,14 +397,11 @@ public class Renderer {
     // Method for updating the stage with a given scene since not on JavaFX thread
     private void updateStageWithScene(Stage stage, Scene scene) {
         // runLater because not JavaFX thread
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                // Add scene to stage, request focus and show the stage
-                stage.setScene(scene);
-                scene.getRoot().requestFocus();
-                stage.show();
-            }
+        Platform.runLater(() -> {
+            // Add scene to stage, request focus and show the stage
+            stage.setScene(scene);
+            scene.getRoot().requestFocus();
+            stage.show();
         });
     }
 }
