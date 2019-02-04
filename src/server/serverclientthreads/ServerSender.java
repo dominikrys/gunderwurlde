@@ -1,5 +1,7 @@
 package server.serverclientthreads;
 
+import server.game_engine.ProcessGameState;
+
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
@@ -14,8 +16,14 @@ public class ServerSender extends Thread {
     int port;
     byte[] buffer;
     Scanner scan;
+    ProcessGameState gameEngine;
 
-    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    // How often does the server send the changed GameView to the clients
+
+
+
+
+    public ServerSender(InetAddress address, MulticastSocket socket, int port, ProcessGameState gameEngine) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
@@ -29,6 +37,7 @@ public class ServerSender extends Thread {
         while (running) {
             // While loop is running it takes up CPU cycles unnecessarily
             // Thread.onSpinWait gives more CPU time to other threads
+
             Thread.yield();
         }
         System.out.println("Ending server sender");

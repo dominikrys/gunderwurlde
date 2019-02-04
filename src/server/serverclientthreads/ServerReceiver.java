@@ -1,5 +1,7 @@
 package server.serverclientthreads;
 
+import server.game_engine.ProcessGameState;
+
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
@@ -16,7 +18,7 @@ public class ServerReceiver extends Thread {
     byte[] buffer;
 
 
-    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender) {
+    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, ProcessGameState engine) {
         this.listenSocket = listenSocket;
         this.listenAddress = address;
         this.sender = sender;

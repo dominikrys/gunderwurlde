@@ -1,53 +1,62 @@
 package client;
 
-import renderer.Renderer;
+
 import data.GameState;
-import data.Location;
-import data.Pose;
-import data.entity.enemy.Zombie;
-import data.entity.item.ItemDrop;
-import data.entity.item.weapon.gun.Pistol;
-import data.entity.player.Player;
-import data.entity.player.Teams;
-import data.entity.projectile.SmallBullet;
-import data.map.Meadow;
-import javafx.application.Application;
-import javafx.stage.Stage;
-import server.serverclientthreads.ClientOnline;
-import server.serverclientthreads.Server;
 
-import javax.swing.*;
-import java.util.LinkedHashSet;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
-public class Client extends Application {
-
+public class Client {
+    MulticastSocket listenSocket;
+    MulticastSocket sendSocket;
+    InetAddress listenAddress;
+    InetAddress senderAddress;
+    private static final int LISTENPORT = 4444;
+    private static final int SENDPORT = 4445;
     GameState gameState;
+    Renderer renderer;
 
-    public static void main(String args[]) {
+    // Where am i getting 'inputChecker' from
+    // Should the client have a gameState or a gameView
 
-        ClientOnline online = new ClientOnline();
-        Server server = new Server();
-        launch(args);
-
+    public Client(Renderer renderer, GameState gameState){
+        this.gameState = gameState;
+        this.renderer = renderer;
+        networkSetup();
     }
 
-    @Override
-    public void start(Stage stage) {
-        // Example code for testing - TODO: remove this later
-        LinkedHashSet<Player> examplePlayers = new LinkedHashSet<Player>();
-        Player examplePlayer = new Player(new Pose(64, 64, 45), Teams.RED, "Player 1");
-        examplePlayer.addItem(new Pistol());
-        examplePlayer.addItem(new Pistol());
-        examplePlayer.addItem(new Pistol());
-        examplePlayers.add(examplePlayer);
-        GameState gameState = new GameState(new Meadow(), examplePlayers);
-        gameState.addItem(new ItemDrop(new Pistol(), new Location(50, 250)));
-        gameState.addEnemy(new Zombie(new Pose(120, 120, 45)));
-        gameState.addProjectile(new SmallBullet(new Pose(400, 300, 70)));
 
-        // Create renderer and call it
-        stage.setResizable(false); // Disable resizing of the window
-        Renderer renderer = new Renderer(stage);
-        renderer.renderGameState(gameState);
+    public void networkSetup(){
+        try{
+            listenSocket = new MulticastSocket(LISTENPORT);
+            sendSocket = new MulticastSocket();
+            listenAddress = InetAddress.getByName("230.0.1.1");
+            senderAddress = InetAddress.getByName("230.0.0.1");
+
+            // Start the sender and receiver threads for the client
+            ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
+            ClientReceiver receiver = new ClientReceiver(listenAddress, listenSocket);
+
+            // Waits for the sender to join as that will be the first thread to close
+            sender.join();
+            // Waits for the receiver thread to end as this will be the second thread to close
+            receiver.join();
+            // Closes the socket as communication has finished
+            sendSocket.close();
+            listenSocket.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }
