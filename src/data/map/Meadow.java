@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.TreeSet;
 
 import data.Location;
-import data.Pose;
 import data.entity.enemy.Enemy;
 import data.entity.enemy.Zombie;
 import data.map.tile.Tile;
@@ -48,8 +47,8 @@ public class Meadow extends GameMap {
 
     private static LinkedHashSet<Location> generateEnemySpawns() {
         LinkedHashSet<Location> enemySpawns = new LinkedHashSet<Location>();
-        enemySpawns.add(Tile.tileToLocation((DEFAULT_X_DIM - 1) / 2, 0));
-        enemySpawns.add(Tile.tileToLocation((DEFAULT_X_DIM - 1) / 2, DEFAULT_Y_DIM - 1));
+        enemySpawns.add(Tile.tileToLocation(0, (DEFAULT_Y_DIM - 1) / 2));
+        enemySpawns.add(Tile.tileToLocation(DEFAULT_X_DIM - 1, (DEFAULT_Y_DIM - 1) / 2));
         return enemySpawns;
     }
 
@@ -59,7 +58,7 @@ public class Meadow extends GameMap {
 
         // Simple rounds just for testings
         // Round 1
-        Enemy enemyType = new Zombie(new Pose());
+        Enemy enemyType = new Zombie();
         waves.add(new Wave(0, 2000, enemyType, 2, 20));
         waves.add(new Wave(28000, 1600, enemyType, 2, 30));
         waves.add(new Wave(60000, 1000, enemyType, 2, 40));
@@ -70,20 +69,20 @@ public class Meadow extends GameMap {
 
         // Round 2
         waves = new TreeSet<>();
-        enemyType = new Zombie(new Pose());
+        enemyType = new Zombie();
         waves.add(new Wave(0, 1000, enemyType, 2, 50));
         enemyType.setMoveSpeed(Zombie.DEFAULT_MOVESPEED * 2);
         waves.add(new Wave(20000, 500, enemyType, 2, 6));
-        enemyType = new Zombie(new Pose());
+        enemyType = new Zombie();
         enemyType.setHealth(Zombie.DEFAULT_HEALTH + 1);
         waves.add(new Wave(25000, 2000, enemyType, 2, 10));
-        enemyType = new Zombie(new Pose());
+        enemyType = new Zombie();
         enemyType.setMoveSpeed(Zombie.DEFAULT_MOVESPEED * 2);
         waves.add(new Wave(27000, 500, enemyType, 1, 20));
         enemyType.setHealth(Zombie.DEFAULT_HEALTH * 4);
         enemyType.setMoveSpeed((int) Math.ceil(Zombie.DEFAULT_MOVESPEED * 2.5));
         waves.add(new Wave(40000, 1000, enemyType, 2, 2));
-        enemyType = new Zombie(new Pose());
+        enemyType = new Zombie();
         waves.add(new Wave(50000, 1000, enemyType, 2, 100));
         round = new Round(waves, false);
         rounds.add(round);

@@ -2,7 +2,9 @@ package inputhandler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import data.GameState;
+
+import client.data.GameView;
+import client.data.PlayerView;
 import data.Pose;
 import data.entity.item.Item;
 import data.entity.item.weapon.gun.Pistol;
@@ -16,10 +18,11 @@ import javafx.scene.input.KeyEvent;
 public class KeyboardHandler extends UserInteraction{
 	
 	private Scene scene;
-	private GameState gameState;
-	private Player player;
+	private GameView gameView;
+	private PlayerView playerView;
 	private Image pImage;
-	private Collision collision;
+	private Movement movement;
+	private Reload reload;
 	private ArrayList<String> input = new ArrayList<String>();
 	private KeyboardSettings kbSettings = new KeyboardSettings();
 	private boolean upPressed = false;
@@ -27,20 +30,23 @@ public class KeyboardHandler extends UserInteraction{
 	private boolean downPressed = false;
 	private boolean rightPressed = false;
 	private boolean reloadPressed = false;
+	private boolean dropPressed = false;
+	private boolean interactPressed = false;
 	
-	public KeyboardHandler(Scene scene, GameState gameState) {
-		super(scene, gameState);
+	public KeyboardHandler(Scene scene, GameView gameView) {
+		super(scene, gameView);
 		this.scene = scene;
-		this.gameState = gameState;
-		this.pImage = new Image("file:assets/img/player.png");
-		this.collision = new Collision(gameState.getCurrentMap().getTileMap(), pImage);
-		Iterator<Player> playerIterator = gameState.getPlayers().iterator();
-		for (Player p : gameState.getPlayers()) {
+		this.gameView = gameView;
+		// TODO: get player here
+		for (PlayerView p : gameView.getPlayers()) {
             if(p.getName() == "Player 1") {
-            	this.player = p;
+            	this.playerView = p;
             	break;
             }
         }
+		this.pImage = new Image(playerView.getPathToGraphic());
+		this.movement = new Movement(playerView, pImage, gameView.getTileMap(), kbSettings);
+		this.reload = new Reload(playerView);
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -63,6 +69,12 @@ public class KeyboardHandler extends UserInteraction{
 					}
 					if (kbSettings.getKey("reload").equals(pressed)) {
 						reloadPressed = true;
+					}
+					if (kbSettings.getKey("drop").equals(pressed)) {
+						dropPressed = true;
+					}
+					if (kbSettings.getKey("interact").equals(pressed)) {
+						interactPressed = true;
 					}
 				}
 			}
@@ -89,44 +101,38 @@ public class KeyboardHandler extends UserInteraction{
 				if (kbSettings.getKey("reload").equals(released)) {
 					reloadPressed = false;
 				}
+				if (kbSettings.getKey("drop").equals(released)) {
+					dropPressed = false;
+				}
+				if (kbSettings.getKey("interact").equals(released)) {
+					interactPressed = false;
+				}
 			}
 		});
 		
 		AnimationTimer t = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				Pose pose = new Pose(player.getPose().getX(), player.getPose().getY(), player.getPose().getDirection());
 				if(upPressed || leftPressed || downPressed || rightPressed) {
-					if(upPressed) {
-						pose.setY(pose.getY() - player.getMoveSpeed());
-					}
-					if(leftPressed) {
-						pose.setX(pose.getX() - player.getMoveSpeed());
-					}
-					if(downPressed) {
-						pose.setY(pose.getY() + player.getMoveSpeed());
-					}
-					if(rightPressed) {
-						pose.setX(pose.getX() + player.getMoveSpeed());
-					}
-					if(collision.checkBoundary(pose.getX(), pose.getY())) {
-						player.setPose(pose);
+					for(int i = 0 ; i < input.size() ; i++) {
+						String key = input.get(i);
+						if(key.equals(kbSettings.getKey("up")) ||
+								key.equals(kbSettings.getKey("left")) ||
+								key.equals(kbSettings.getKey("down")) ||
+								key.equals(kbSettings.getKey("right"))) {
+							movement.move(key);
+						}
 					}
 				}
 				if(reloadPressed) {
-					Item cItem = player.getCurrentItem();
-					if(cItem instanceof Pistol) {
-						Pistol currentItem = (Pistol)cItem;
-						if(currentItem.attemptReload()) {
-							// TODO: send reload request here
-						}
-						else {
-							// TODO: reload fail stuff here
-						}
-					}
+					reload.reload();
 				}
-				
-				// TODO: send changes(player location, reload) to server
+				if(dropPressed) {
+					
+				}
+				if(interactPressed) {
+					
+				}
 			}
 		};
 		

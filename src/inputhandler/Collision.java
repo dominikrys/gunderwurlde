@@ -1,20 +1,19 @@
 package inputhandler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import data.map.GameMap;
+import client.data.TileView;
 import data.map.tile.Tile;
 import javafx.scene.image.Image;
 
 public class Collision {
 	
-	private Tile[][] tileMap;
+	private TileView[][] tileMap;
 	private Image pImage;
-	private int pWidth = 32;
+	private int pWidth = 32;		// TODO: get image width and height
 	private int pHeight = 32;
 	
-	public Collision(Tile[][] tileMap, Image pImage) {
+	public Collision(TileView[][] tileMap, Image pImage) {
 		this.tileMap = tileMap;
 		this.pImage = pImage;
 	}
@@ -48,10 +47,10 @@ public class Collision {
 		System.out.println("downLeft: " + Arrays.toString(downLeft));
 		int[] downRight = checkTile(toGoX + pWidth/2, toGoY + pHeight/2);
 		System.out.println("downRight: " + Arrays.toString(downRight));
-		if(tileMap[topLeft[0]][topLeft[1]].getState().toString().equals("SOLID") ||
-				tileMap[topRight[0]][topRight[1]].getState().toString().equals("SOLID") ||
-				tileMap[downLeft[0]][downLeft[1]].getState().toString().equals("SOLID") ||
-				tileMap[downRight[0]][downRight[1]].getState().toString().equals("SOLID")) {
+		if(tileMap[topLeft[0]][topLeft[1]].getTileState().toString().equals("SOLID") ||
+				tileMap[topRight[0]][topRight[1]].getTileState().toString().equals("SOLID") ||
+				tileMap[downLeft[0]][downLeft[1]].getTileState().toString().equals("SOLID") ||
+				tileMap[downRight[0]][downRight[1]].getTileState().toString().equals("SOLID")) {
 			return false;
 		}
 		return true;

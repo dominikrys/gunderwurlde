@@ -44,7 +44,7 @@ public class Wave implements Comparable<Wave> {
 
     public int getSpawn() {
         lastSpawnTime = System.currentTimeMillis();
-        if (amountPerSpawn > amountLeftToSpawn) {
+        if (amountPerSpawn < amountLeftToSpawn) {
             amountLeftToSpawn -= amountPerSpawn;
             return amountPerSpawn;
         } else {

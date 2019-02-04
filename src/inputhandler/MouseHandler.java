@@ -2,6 +2,8 @@ package inputhandler;
 
 import java.util.ArrayList;
 
+import client.data.GameView;
+import client.data.PlayerView;
 import data.GameState;
 import data.entity.item.Item;
 import data.entity.item.ItemList;
@@ -17,8 +19,9 @@ public class MouseHandler extends UserInteraction{
 	
 	private Scene scene;
 	private Canvas mapCanvas;
-	private GameState gameState;
-	private Player player;
+	private GameView gameView;
+	private PlayerView playerView;
+	private Attack attack;
 	private double mouseX;
 	private double mouseY;
 	private double playerX;
@@ -27,18 +30,19 @@ public class MouseHandler extends UserInteraction{
 	private double playerDegree;
 	private double toRotate;
 	
-	public MouseHandler(Scene scene, Canvas mapCanvas, GameState gameState) {
-		super(scene,gameState);
+	public MouseHandler(Scene scene, Canvas mapCanvas, GameView gameView) {
+		super(scene,gameView);
 		this.scene = scene;
 		this.mapCanvas = mapCanvas;
-		this.gameState = gameState;
+		this.gameView = gameView;
 		// TODO: get name of client here
-		for (Player p : gameState.getPlayers()) {
+		for (PlayerView p : gameView.getPlayers()) {
             if(p.getName() == "Player 1") {
-            	this.player = p;
+            	this.playerView = p;
             	break;
             }
         }
+		this.attack = new Attack(playerView);
 		
 		scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
 			mouseMovement(e);
@@ -46,28 +50,19 @@ public class MouseHandler extends UserInteraction{
 		
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			mouseMovement(e);
-			
-			Item cItem = player.getCurrentItem();
-			if(cItem instanceof Pistol) {
-				Pistol currentItem = (Pistol)cItem;
-			}
-			
-			if(true) {
-				System.out.println("Shooting");
-				// TODO: send shooting request
-			}
+			attack.attack();
 		});
 		
 		scene.setOnScroll(new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
 				if(event.getDeltaY() > 0) {
-					player.previousItem();
+					playerView.previousItem();
 				}
 				else if(event.getDeltaY() < 0) {
-					player.nextItem();
+					playerView.nextItem();
 				}
-				System.out.println(player.getCurrentItemIndex());
+				System.out.println(playerView.getCurrentItemIndex());
 				// TODO: send changes(item change) to server
 			}
 		});
@@ -92,16 +87,11 @@ public class MouseHandler extends UserInteraction{
 	private void mouseMovement(MouseEvent e) {
 		mouseX = e.getSceneX();
 		mouseY = e.getSceneY();
-		playerX = mapCanvas.getLayoutX() + player.getPose().getX();
-		playerY = mapCanvas.getLayoutY() + player.getPose().getY();
-		//System.out.println("playerX: " + playerX);
-		//System.out.println("playerY: " + playerY);
-		//System.out.println("scenex: " + e.getSceneX() + ", sceney: " + e.getSceneY());
+		playerX = mapCanvas.getLayoutX() + playerView.getPose().getX();
+		playerY = mapCanvas.getLayoutY() + playerView.getPose().getY();
 		
 		toRotate = Math.toDegrees(Math.atan((mouseX - playerX)/(mouseY - playerY)));
-		//System.out.println("toRotate: " + toRotate);
 		int quarter = quarter(playerX, playerY, mouseX, mouseY);
-		//System.out.println("quater: " + quarter);
 		if(quarter == 1) {
 			mouseDegree = 360 - toRotate;
 		}
@@ -118,7 +108,6 @@ public class MouseHandler extends UserInteraction{
 			mouseDegree = 0;
 		}
 		playerDegree = mouseDegree;
-		//System.out.println("mouseDegree: " + mouseDegree);
 		System.out.println("playerDegree: " + playerDegree);
 		// TODO: send changes(playerDegree) to server
 	}

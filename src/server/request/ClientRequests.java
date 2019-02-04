@@ -6,6 +6,7 @@ public class ClientRequests {
     protected LinkedHashMap<Integer, Request> playerRequests;
 
     public ClientRequests(int numOfPlayers) {
+        this.playerRequests = new LinkedHashMap<>();
         for (int i = 0; i < numOfPlayers; i++) {
             playerRequests.put(i, new Request());
         }
