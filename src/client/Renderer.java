@@ -344,6 +344,10 @@ public class Renderer {
         return systemState;
     }
 
+    public void setSystemState(SystemState systemState) {
+        this.systemState = systemState;
+    }
+
     public void renderMenu() {
         if (currentMenuController != null) {
             Menus controllerMenu = currentMenuController.getCurrentMenu();
@@ -372,10 +376,8 @@ public class Renderer {
                     currentMenuController = new HelpMenuController();
                     break;
                 case SINGLE_PLAYER:
-                    //systemState = SystemState.SINGLE_PLAYER;
-                    systemState = SystemState.GAME;
-                    return;
-                //break;
+                    systemState = SystemState.SINGLE_PLAYER;
+                    break;
                 case MULTI_PLAYER:
                     systemState = SystemState.MULTI_PLAYER;
                     break;

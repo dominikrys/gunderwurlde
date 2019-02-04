@@ -40,11 +40,26 @@ public class ClientHandler extends Thread {
                     systemState = renderer.getSystemState();
                     break;
                 case SINGLE_PLAYER:
+                    //
+                    //
+                    //
                     // CODE FOR ESTABLISHING LOCAL SERVER
-                    systemState = SystemState.GAME; // REMOVE THIS
+                    //
+                    //
+                    //
+                    systemState = SystemState.GAME;
+                    renderer.setSystemState(SystemState.GAME);
                     break;
                 case MULTI_PLAYER:
-                    // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
+                    //
+                    //
+                    //
+                    // CODE FOR ESTABLISHING CONNECTION WITH REMOTE SERVER
+                    //
+                    //
+                    //
+                    systemState = SystemState.GAME;
+                    renderer.setSystemState(SystemState.GAME);
                     break;
                 case QUIT:
                     // Quit program
