@@ -2,6 +2,7 @@ package server.request;
 
 import java.util.LinkedHashMap;
 
+
 public class ClientRequests {
     protected LinkedHashMap<Integer, Request> playerRequests;
 
