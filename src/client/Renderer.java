@@ -281,8 +281,7 @@ public class Renderer {
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot
-    // point.
+    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
