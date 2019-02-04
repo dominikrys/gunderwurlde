@@ -111,7 +111,7 @@ public class ProcessGameState extends Thread {
         long numOfProcesses = -1;
         long longestTimeProcessing = 0;
 
-        while (!handlerClosing) {
+        while (!handlerClosing) {            
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
 
             // performance checks
@@ -136,6 +136,8 @@ public class ProcessGameState extends Thread {
                 System.out.println("Can't keep up!");
             }
             lastProcessTime = System.currentTimeMillis();
+            
+            handler.requestClientRequests();
             if (clientRequests == null)
                 continue; // waits until clients start doing something.
 

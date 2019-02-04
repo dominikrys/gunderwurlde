@@ -14,12 +14,11 @@ public class TestEngine extends Application implements HasEngine {
     private ProcessGameState engine;
     private Renderer rend;
     private GameView view;
+    private ClientRequests requests;
 
     public static void main(String[] args) throws Exception {
         launch(args);
     }
-
-
 
     @Override
     public void updateGameView(GameView view) {
@@ -30,6 +29,11 @@ public class TestEngine extends Application implements HasEngine {
     public void removePlayer(int playerID) {
         // TODO Auto-generated method stub
 
+    }
+    
+    @Override
+    public void requestClientRequests() {
+        if (requests != null) engine.setClientRequests(requests);
     }
 
     @Override
@@ -57,7 +61,6 @@ public class TestEngine extends Application implements HasEngine {
             requests.playerRequestFacing(3, rand.nextInt(360));
             requests.playerRequestMovement(3, rand.nextInt(360));
             requests.playerRequestShoot(3);
-            engine.setClientRequests(requests);
             Thread.sleep(17);
             if (view != null) rend.renderGameView(view, 0);
             else System.out.println("View is null");
