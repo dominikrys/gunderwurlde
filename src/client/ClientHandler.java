@@ -103,9 +103,6 @@ public class ClientHandler extends Thread {
         renderer = new RendererController(this);
     }
 
-    /*
-    Methods called by renderer:
-    */
 
     public void setPlayerName(String name) {
         this.playerName = name;
@@ -123,7 +120,7 @@ public class ClientHandler extends Thread {
 
     /*
     Methods called by receiver:
-    */
+    *//*
 
     public void setID(int id) {
         this.playerID = id;
@@ -142,11 +139,11 @@ public class ClientHandler extends Thread {
         sender.close();
         //whatever you wanna do here to close the client, System.exit(0)?
     }
-
+*/
     /*
     Request methods to be called by input controller:
     They are to be checked and if it passes return true after submitting the request to the sender to handle.
-    */
+    *//*
     public void requestToFace(int direction) {
         sender.requestToFace(direction);
     }
@@ -193,14 +190,14 @@ public class ClientHandler extends Thread {
     /*
     Other methods that call the sender:
     */
-
+/*
     private void sendName() {
         sender.sendName(this.playerName);
     }
 
     /*
     Misc:
-    */
+    *//*
 
     private void tryConnection() {
 
