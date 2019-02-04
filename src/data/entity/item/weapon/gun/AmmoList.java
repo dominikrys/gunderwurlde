@@ -5,7 +5,7 @@ import data.entity.item.ItemList;
 import data.entity.item.ItemType;
 
 public enum AmmoList implements IsDroppable {
-    BASIC_AMMO;
+    BASIC_AMMO, NONE/* Use none for items with infinite ammo*/;
 
     @Override
     public ItemType getItemType() {

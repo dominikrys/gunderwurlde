@@ -8,17 +8,18 @@ import data.map.GameMap;
 import data.map.tile.Tile;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class GameState {
     protected GameMap currentMap;
-    protected LinkedHashSet<Enemy> enemies;
+    protected LinkedHashMap<Integer, Enemy> enemies;
     protected LinkedHashSet<Projectile> projectiles;
-    protected LinkedHashSet<Player> players;
-    protected LinkedHashSet<ItemDrop> items;
+    protected LinkedHashMap<Integer, Player> players;
+    protected LinkedHashMap<Integer, ItemDrop> items;
     protected Iterator<Location> spawnIterator;
 
-    public GameState(GameMap currentMap, LinkedHashSet<Player> players) {
+    public GameState(GameMap currentMap, LinkedHashMap<Integer, Player> players) {
         this.players = players;
         this.spawnIterator = currentMap.getPlayerSpawns().iterator();
         setCurrentMap(currentMap);
@@ -30,37 +31,38 @@ public class GameState {
 
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
-        this.enemies = new LinkedHashSet<Enemy>();
-        this.projectiles = new LinkedHashSet<Projectile>();
-        this.items = new LinkedHashSet<ItemDrop>();
+        this.enemies = new LinkedHashMap<>();
+        this.projectiles = new LinkedHashSet<>(); // TODO see if setting to higher initial size improves performance (probably
+                                                  // negligible)
+        this.items = new LinkedHashMap<>();
 
-        for (Player p : players) {
+        for (Player p : players.values()) {
             addPlayer(p);
         }
     }
 
-    public LinkedHashSet<ItemDrop> getItems() {
+    public LinkedHashMap<Integer, ItemDrop> getItems() {
         return items;
     }
 
-    public void setItems(LinkedHashSet<ItemDrop> items) {
+    public void setItems(LinkedHashMap<Integer, ItemDrop> items) {
         this.items = items;
     }
 
     public void addItem(ItemDrop item) {
-        this.items.add(item);
+        this.items.put(item.getID(), item);
     }
 
-    public LinkedHashSet<Enemy> getEnemies() {
+    public LinkedHashMap<Integer, Enemy> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(LinkedHashSet<Enemy> enemies) {
+    public void setEnemies(LinkedHashMap<Integer, Enemy> enemies) {
         this.enemies = enemies;
     }
 
     public void addEnemy(Enemy enemy) {
-        this.enemies.add(enemy);
+        this.enemies.put(enemy.getID(), enemy);
     }
 
     public LinkedHashSet<Projectile> getProjectiles() {
@@ -75,11 +77,11 @@ public class GameState {
         this.projectiles.add(projectile);
     }
 
-    public LinkedHashSet<Player> getPlayers() {
+    public LinkedHashMap<Integer, Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(LinkedHashSet<Player> players) {
+    public void setPlayers(LinkedHashMap<Integer, Player> players) {
         this.players = players;
     }
 
@@ -91,6 +93,7 @@ public class GameState {
         if (!spawnIterator.hasNext())
             spawnIterator = currentMap.getPlayerSpawns().iterator();
         player.setPose(new Pose(spawnIterator.next()));
+        this.players.put(player.getID(), player);
     }
 
 }

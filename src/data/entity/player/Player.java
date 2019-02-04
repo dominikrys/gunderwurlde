@@ -2,20 +2,21 @@ package data.entity.player;
 
 import data.HasHealth;
 import data.IsMovable;
-import data.Pose;
 import data.entity.Entity;
 import data.entity.HasID;
 import data.entity.item.Item;
+import data.entity.item.weapon.gun.AmmoList;
 import data.entity.item.weapon.gun.Pistol;
 import data.map.tile.Tile;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 20;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
-    public static final int DEFAULT_SIZE = 1;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
     private static int nextPlayerID = 0;
 
@@ -24,35 +25,42 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected final String name;
 
     protected ArrayList<Item> items;
+    protected LinkedHashMap<AmmoList, Integer> ammo;
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
     protected int currentItem;
     protected int score;
 
-    public Player(Pose pose, Teams team, String name) {
-        super(pose, DEFAULT_SIZE);
+    public Player(Teams team, String name) {
+        super(DEFAULT_SIZE);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
-        this.items = new ArrayList<Item>() {
-            private static final long serialVersionUID = 1L;
-
-            {
-                new Pistol();
-            }
-        };
+        this.items = new ArrayList<Item>();
+        items.add(new Pistol());
         this.currentItem = 0;
         this.score = DEFAULT_SCORE;
         this.team = team;
         this.name = name;
         this.playerID = nextPlayerID++;
-        this.pathToGraphic = "file:assets/img/mobs/player.png";
-    }  
+    }
 
     @Override
     public int getID() {
         return playerID;
+    }
+
+    public int getAmmo(AmmoList type) {
+        if (ammo.containsKey(type)) {
+            return ammo.get(type);
+        } else {
+            return 0;
+        }
+    }
+
+    public void setAmmo(AmmoList type, int amount) {
+        ammo.put(type, amount);
     }
 
     public ArrayList<Item> getItems() {
@@ -179,6 +187,10 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         if (maxHealth < 0)
             maxHealth = 0;
         this.maxHealth = maxHealth;
+    }
+
+    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
     }
 
 }
