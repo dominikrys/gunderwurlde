@@ -47,8 +47,8 @@ public class Meadow extends GameMap {
 
     private static LinkedHashSet<Location> generateEnemySpawns() {
         LinkedHashSet<Location> enemySpawns = new LinkedHashSet<Location>();
-        enemySpawns.add(Tile.tileToLocation((DEFAULT_X_DIM - 1) / 2, 0));
-        enemySpawns.add(Tile.tileToLocation((DEFAULT_X_DIM - 1) / 2, DEFAULT_Y_DIM - 1));
+        enemySpawns.add(Tile.tileToLocation(0, (DEFAULT_Y_DIM - 1) / 2));
+        enemySpawns.add(Tile.tileToLocation(DEFAULT_X_DIM - 1, (DEFAULT_Y_DIM - 1) / 2));
         return enemySpawns;
     }
 

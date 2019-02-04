@@ -24,6 +24,7 @@ public abstract class Gun extends Weapon implements Limited {
         super(gunName);
         this.gunName = gunName;
         this.clipSize = clipSize;
+        this.ammoInClip = clipSize;
         this.reloadTime = reloadTime;
         this.ammoPerShot = ammoPerShot;
         this.projectileType = projectileType;

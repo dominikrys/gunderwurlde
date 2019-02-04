@@ -93,6 +93,7 @@ public class GameState {
         if (!spawnIterator.hasNext())
             spawnIterator = currentMap.getPlayerSpawns().iterator();
         player.setPose(new Pose(spawnIterator.next()));
+        this.players.put(player.getID(), player);
     }
 
 }

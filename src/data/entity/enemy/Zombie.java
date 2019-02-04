@@ -37,4 +37,9 @@ public class Zombie extends Enemy implements HasContactDamage {
         this.contactDamage = contactDamage;
     }
 
+    @Override
+    public Enemy makeCopy() {
+        return new Zombie(this.maxHealth,this.moveSpeed,this.size,this.drops);
+    }
+
 }
