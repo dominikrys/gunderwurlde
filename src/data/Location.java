@@ -40,10 +40,23 @@ public class Location {
         double directionInRadians = (direction/180.0) * Math.PI;
         double x_dist = (double) distance * Math.sin(directionInRadians);
         double y_dist = (double) -distance * Math.cos(directionInRadians);
-        int x = l.getX() + (int) Math.round(x_dist);
-        int y = l.getY() + (int) Math.round(y_dist);
+
+        if (x_dist < 0)
+            x_dist = Math.floor(x_dist);
+        else
+            x_dist = Math.ceil(x_dist);
+
+        if (y_dist < 0)
+            y_dist = Math.floor(y_dist);
+        else
+            y_dist = Math.ceil(y_dist);
+
+        int x = l.getX() + (int) x_dist;
+        int y = l.getY() + (int) y_dist;
+
         if (x < 0) x = 0;
         if (y < 0) y = 0;
+
         return new Location(x, y);
     }
 }
