@@ -41,12 +41,19 @@ public class ServerSender extends Thread {
         try {
             // Turn the received GameView into a byte array
             // view.toBytes()
+            // Output Stream for the byteArray. Will grow as data is added
+            // Allows the object to be written to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutput out = null;
+            // Output stream that will hold the object
+            ObjectOutputStream out = null;
             try {
+                // OOutputStream to read the GameView into the byteArray
                 out = new ObjectOutputStream(bos);
+                // Writes the view object into the BAOutputStream
                 out.writeObject(view);
+                //flushes anything in the OOutputStream
                 out.flush();
+                // Writes the info in the BOutputStream to a byte array to be transmitted
                 byte[] yourBytes = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
@@ -58,9 +65,7 @@ public class ServerSender extends Thread {
                     ex.printStackTrace();
                 }
             }
-
-            // Creates a new packet to be sent to the group address and sends it
-            // Will be set on a loop to send every ______ seconds
+            // TODO Will be set on a loop to send every ______ seconds
 
         } catch (SocketException e) {
             e.printStackTrace();

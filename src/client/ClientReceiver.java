@@ -62,8 +62,10 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
+                // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
-                ObjectInput in = null;
+                //ObjectinputStream to turn the bytes back into an object.
+                ObjectInputStream in = null;
                 try {
                     in = new ObjectInputStream(bis);
                     GameView view = (GameView) in.readObject();
@@ -76,15 +78,9 @@ public class ClientReceiver extends Thread {
                             in.close();
                         }
                     } catch (IOException ex) {
-                        // ignore close exception
+                        ex.printStackTrace();
                     }
                 }
-                // Turns packet of bytes back into GameView
-                //GameView view = new GameView();
-
-
-                // Passes the GameView back to the handler
-                //client.setGameView(view);
 
                 // TODO how do threads exit?
             }

@@ -44,7 +44,6 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Server starting");
             // Create the initial GameView to be sent to the clients
 
-
             // Create the threads that will run as sender and receiver
             sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
