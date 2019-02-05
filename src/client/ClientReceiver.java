@@ -1,5 +1,7 @@
 package client;
 
+import client.data.GameView;
+
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
@@ -13,10 +15,12 @@ public class ClientReceiver extends Thread {
     Boolean running;
     DatagramPacket packet;
     byte[] buffer;
+    Client client;
 
-    ClientReceiver(InetAddress listenAddress, MulticastSocket listenSocket) {
+    ClientReceiver(InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
         this.listenSocket = listenSocket;
         this.listenAddress = listenAddress;
+        this.client = client;
         buffer = new byte[255];
         running = true;
         setInterfaces(listenSocket);
@@ -59,15 +63,14 @@ public class ClientReceiver extends Thread {
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
 
-                // Creates a string and prints it to the user
-                String received = new String(packet.getData(), 0, packet.getLength());
-                System.out.println("ClientOnline Received: " + received);
+                // Turns packet of bytes back into GameView
+                GameView view = new GameView();
 
-                // If message is exit the terminate
-                if (received.equals("exit")) {
-                    running = false;
-                    continue;
-                }
+
+                // Passes the GameView back to the handler
+                client.setGameView(view);
+
+                // TODO how do threads exit?
             }
         } catch (SocketException e) {
             System.out.println("Socket closed unexpectedly");

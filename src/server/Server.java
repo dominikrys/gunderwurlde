@@ -14,6 +14,8 @@ import java.net.*;
 public class Server extends Thread implements HasEngine {
     private final String host;
     private final ProcessGameState gameEngine;
+    ServerSender sender;
+    ServerReceiver receiver;
     // Socket to listen to the server
     MulticastSocket listenSocket = null;
     // Socket to send requests to the server
@@ -22,7 +24,7 @@ public class Server extends Thread implements HasEngine {
     InetAddress senderAddress = null;
     // Ports to be sent and received on
     static final int SENDPORT = 4444;
-    static final int LISTENPORT = 4445;;
+    static final int LISTENPORT = 4445;
 
 
     public Server(String host) {
@@ -41,8 +43,8 @@ public class Server extends Thread implements HasEngine {
             senderAddress = InetAddress.getByName("230.0.1.1");
             System.out.println("Server starting");
             // Create the threads that will run as sender and receiver
-            ServerSender sender = new ServerSender(senderAddress, senderSocket, SENDPORT, gameEngine);
-            ServerReceiver receiver = new ServerReceiver(listenAddress, listenSocket, sender, host, gameEngine);
+            sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
+            receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
             System.out.println("Threads up");
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
@@ -63,7 +65,7 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void updateGameView(GameView view) {
-
+        sender.send(view);
     }
 
     @Override
@@ -73,6 +75,6 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void sendClientRequest(ClientRequests request) {
-
+        gameEngine.setClientRequests(request);
     }
 }

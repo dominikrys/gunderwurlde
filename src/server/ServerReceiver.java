@@ -15,7 +15,7 @@ import java.util.Enumeration;
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
-public class ServerReceiver extends Thread implements HasEngine {
+public class ServerReceiver extends Thread{
     MulticastSocket listenSocket;
     InetAddress listenAddress;
     ServerSender sender;
@@ -24,14 +24,15 @@ public class ServerReceiver extends Thread implements HasEngine {
     byte[] buffer;
     ClientRequests requests;
     int numOfPlayers;
-    ProcessGameState gameEngine;
+    Server handler;
 
 
-    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, String host, ProcessGameState gameEngine) {
+    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, Server handler) {
 
         this.listenSocket = listenSocket;
         this.listenAddress = address;
         this.sender = sender;
+        this.handler = handler;
         buffer = new byte[255];
         running = true;
         this.start();
@@ -75,14 +76,12 @@ public class ServerReceiver extends Thread implements HasEngine {
                 requests = new ClientRequests(numOfPlayers);
 
                 // Send the request to the Engine
-                sendClientRequest(requests);
-
+                handler.sendClientRequest(requests);
 
 
                 // Need some sort of exit sequence for the server
                 if (true) {
-                    // Tells the sender to exit
-                    sender.exit(packet);
+
                     // Waits for the sender to finish its processes before ending itself
                     sender.join();
                     // Running = false so the Thread ends gracefully
@@ -94,20 +93,5 @@ public class ServerReceiver extends Thread implements HasEngine {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void updateGameView(GameView view) {
-
-    }
-
-    @Override
-    public void removePlayer(int playerID) {
-
-    }
-
-    @Override
-    public void sendClientRequest(ClientRequests request) {
-
     }
 }
