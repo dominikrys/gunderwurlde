@@ -33,7 +33,7 @@ public class Renderer {
     private Image defaultGraphic;
     private SystemState systemState;
     private Menus currentMenu;
-    private boolean menuChanged;
+    private boolean stageChanged;
 
     // Variables used in rendering gameview
     private Font fontManaspace28;
@@ -51,10 +51,12 @@ public class Renderer {
         // Set stage
         this.stage = inputStage;
 
+        // Set system states
         systemState = SystemState.MENU;
         currentMenu = Menus.MAIN_MENU;
 
-        menuChanged = true;
+        // Flag for changing stages
+        stageChanged = true;
 
         currentMenuController = null;
 
@@ -81,41 +83,15 @@ public class Renderer {
         playerScoreNumber = null;
         heartBox = null;
         currentPlayer = null;
-        FlowPane heldItems = null;
+        heldItems = null;
         ammoBox = null;
     }
 
     // Render input gameview to stage
     public void renderGameView(GameView inputGameView, int playerID) {
-        if (menuChanged) {
-            // Create canvas according to dimensions of the map
-            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                    inputGameView.getYDim() * Constants.TILE_SIZE);
-            mapGC = mapCanvas.getGraphicsContext2D();
-
-            // Create hbox to centre map canvas in and add map canvas to it
-            HBox mainHBox = new HBox();
-            mainHBox.setAlignment(Pos.CENTER_RIGHT);
-            mainHBox.setPadding(new Insets(0, 15, 0, 0));
-            mainHBox.getChildren().addAll(mapCanvas);
-
-            // Create HUD
-            VBox HUDBox = createHUD(inputGameView, playerID);
-            HUDBox.setAlignment(Pos.TOP_LEFT);
-
-            // Create root stackpane and add elements to be rendered to it
-            StackPane root = new StackPane();
-            root.setAlignment(Pos.TOP_LEFT);
-            root.getChildren().addAll(mainHBox, HUDBox);
-
-            // Create the main scene
-            Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-            // Update stage
-            updateStageWithScene(stage, scene);
-
-            // Menu set up, change flag to false
-            menuChanged = false;
+        if (stageChanged) {
+            // If stage has changes, set up the game view
+            setUpGameView(inputGameView, playerID);
         }
 
         // Render map
@@ -219,6 +195,37 @@ public class Renderer {
         }
     }
 
+    private void setUpGameView(GameView inputGameView, int playerID) {
+        // Create canvas according to dimensions of the map
+        mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
+        mapGC = mapCanvas.getGraphicsContext2D();
+
+        // Create hbox to centre map canvas in and add map canvas to it
+        HBox mainHBox = new HBox();
+        mainHBox.setAlignment(Pos.CENTER_RIGHT);
+        mainHBox.setPadding(new Insets(0, 15, 0, 0));
+        mainHBox.getChildren().addAll(mapCanvas);
+
+        // Create HUD
+        VBox HUDBox = createHUD(inputGameView, playerID);
+        HUDBox.setAlignment(Pos.TOP_LEFT);
+
+        // Create root stackpane and add elements to be rendered to it
+        StackPane root = new StackPane();
+        root.setAlignment(Pos.TOP_LEFT);
+        root.getChildren().addAll(mainHBox, HUDBox);
+
+        // Create the main scene
+        Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+        // Update stage
+        updateStageWithScene(stage, scene);
+
+        // Menu set up, change flag to false
+        stageChanged = false;
+    }
+
     private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
         // Get map X and Y dimensions
         int mapX = inputGameState.getXDim();
@@ -312,8 +319,7 @@ public class Renderer {
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot
-    // point.
+    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
@@ -385,11 +391,11 @@ public class Renderer {
 
             if (controllerMenu != currentMenu) {
                 currentMenu = controllerMenu;
-                menuChanged = true;
+                stageChanged = true;
             }
         }
 
-        if (menuChanged) { // TODO: see if this is necessary or not
+        if (stageChanged) {
             switch (currentMenu) {
                 case MAIN_MENU:
                     currentMenuController = new MainMenuController();
@@ -408,9 +414,11 @@ public class Renderer {
                     break;
                 case SINGLE_PLAYER:
                     systemState = SystemState.SINGLE_PLAYER;
+                    stageChanged = true;
                     return;
                 case MULTI_PLAYER:
                     systemState = SystemState.MULTI_PLAYER;
+                    stageChanged = true;
                     return;
                 case QUIT:
                     systemState = SystemState.QUIT;
@@ -423,7 +431,7 @@ public class Renderer {
             // Update stage
             updateStageWithScene(stage, scene);
 
-            menuChanged = false;
+            stageChanged = false;
         }
     }
 
