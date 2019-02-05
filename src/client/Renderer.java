@@ -414,11 +414,9 @@ public class Renderer {
                     break;
                 case SINGLE_PLAYER:
                     systemState = SystemState.SINGLE_PLAYER;
-                    stageChanged = true;
                     return;
                 case MULTI_PLAYER:
                     systemState = SystemState.MULTI_PLAYER;
-                    stageChanged = true;
                     return;
                 case QUIT:
                     systemState = SystemState.QUIT;
