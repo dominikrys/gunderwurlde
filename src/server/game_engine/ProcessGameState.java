@@ -163,6 +163,7 @@ public class ProcessGameState extends Thread {
                 int playerID = playerRequest.getKey();
                 Player currentPlayer = players.get(playerID);
                 Request request = playerRequest.getValue();
+                Pose playerPose = currentPlayer.getPose();
 
                 if (request.getLeave()) {
                     players.remove(playerID);
@@ -192,7 +193,7 @@ public class ProcessGameState extends Thread {
                                 bulletSpacing = (2 * spread) / (numOfBullets - 1);
 
                             LinkedList<Pose> bulletPoses = new LinkedList<>();
-                            Pose gunPose = currentPlayer.getPose(); // TODO change pose to include gunlength/position
+                            Pose gunPose = playerPose; // TODO change pose to include gunlength/position
 
                             int nextDirection = gunPose.getDirection() - spread;
                             for (int i = 0; i < numOfBullets; i++) {
@@ -217,9 +218,10 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
-                    ItemDrop itemDropped = new ItemDrop(currentItem, currentPlayer.getLocation());
-                    // TODO and cooldown to item drop to prevent it from instantly being picked up
+                    ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
                     items.put(itemDropped.getID(), itemDropped);
+                    int[] tileCords = Tile.locationToTile(playerPose);
+                    tileMap[tileCords[0]][tileCords[1]].addItemDrop(itemDropped.getID());
                     currentPlayer.removeItem(currentPlayer.getCurrentItemIndex());
                 } else if (request.getReload()) {
                     if (currentItem instanceof Gun) {
@@ -229,7 +231,6 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.facingExists() || request.movementExists()) {
-                    Pose playerPose = currentPlayer.getPose();
                     int facingDirection = playerPose.getDirection();
                     Location newLocation = playerPose;
 
@@ -253,6 +254,7 @@ public class ProcessGameState extends Thread {
                             ArrayList<Item> playerItems = currentPlayer.getItems();
                             for (Integer itemDropID : itemsOnTile) {
                                 ItemDrop currentItemDrop = items.get(itemDropID);
+                                // TODO have delay to prevent picking up immediate drops
                                 int dropQuantity = currentItemDrop.getQuantity();
                                 switch (currentItemDrop.getItemType()) {
                                 case AMMO:
@@ -301,6 +303,8 @@ public class ProcessGameState extends Thread {
             for (ItemDrop i : items.values()) {
                 if ((lastProcessTime - i.getDropTime()) > ItemDrop.DECAY_LENGTH) {
                     items.remove(i.getID());
+                    int[] tileCords = Tile.locationToTile(i.getLocation());
+                    tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
                     // TODO itemdrop change here
                 } else {
                     itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getItemName()));
