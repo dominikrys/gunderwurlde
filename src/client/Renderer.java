@@ -219,8 +219,10 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Update stage
-        updateStageWithScene(stage, scene);
+        // Update stage TODO: see what works!
+        //updateStageWithScene(stage, scene);
+        stage.setScene(scene);
+        scene.getRoot().requestFocus();
 
         // Menu set up, change flag to false
         stageChanged = false;
