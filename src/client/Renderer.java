@@ -52,7 +52,7 @@ public class Renderer {
         this.stage = inputStage;
 
         // Set system states
-        systemState = SystemState.MENU;
+        systemState = SystemState.MENUS;
         currentMenu = Menus.MAIN_MENU;
 
         // Flag for changing stages
@@ -413,10 +413,10 @@ public class Renderer {
                     currentMenuController = new HelpMenuController();
                     break;
                 case SINGLE_PLAYER:
-                    systemState = SystemState.SINGLE_PLAYER;
+                    systemState = SystemState.SINGLE_PLAYER_CONNECTION;
                     return;
                 case MULTI_PLAYER:
-                    systemState = SystemState.MULTI_PLAYER;
+                    systemState = SystemState.MULTI_PLAYER_CONNECTION;
                     return;
                 case QUIT:
                     systemState = SystemState.QUIT;

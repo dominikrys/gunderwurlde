@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import server.serverclientthreads.ClientOnline;
 import server.serverclientthreads.Server;
 
-import static data.SystemState.MENU;
+import static data.SystemState.MENUS;
 
 public class ClientHandler extends Thread {
     private Stage stage;
@@ -25,14 +25,14 @@ public class ClientHandler extends Thread {
         Renderer renderer = new Renderer(stage);
 
         // Example game state to render
-        SystemState systemState = MENU;
+        SystemState systemState = MENUS;
 
         // Load font
         Font.loadFont(getClass().getResourceAsStream(Constants.MANASPACE_FONT_PATH), 36);
 
         while (running) {
             switch (systemState) {
-                case MENU:
+                case MENUS:
                     // Render menu
                     renderer.renderMenu();
                     systemState = renderer.getSystemState();
@@ -43,7 +43,7 @@ public class ClientHandler extends Thread {
                     //renderer.renderGameView(new GameView());
                     systemState = renderer.getSystemState();
                     break;
-                case SINGLE_PLAYER:
+                case SINGLE_PLAYER_CONNECTION:
                     // Start local server and run it
                     server = new Server();
                     server.start();
@@ -54,7 +54,7 @@ public class ClientHandler extends Thread {
                     systemState = SystemState.GAME;
                     renderer.setSystemState(SystemState.GAME);
                     break;
-                case MULTI_PLAYER:
+                case MULTI_PLAYER_CONNECTION:
                     // Start server and run it
                     server = new Server();
                     server.start();

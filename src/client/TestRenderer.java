@@ -28,7 +28,6 @@ public class TestRenderer extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
         Renderer rend = new Renderer(primaryStage);
-        rend.run();
         GameMap map = new Meadow();
         int xDim = map.getXDim();
         int yDim = map.getYDim();
@@ -50,14 +49,12 @@ public class TestRenderer extends Application {
         playerView = new PlayerView(new Pose(90,90,210), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList,Integer>(), 0);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
-        
+
         for (int i=0;i<500;i++) {
             rend.renderGameView(view1, 0);
             //Thread.sleep(500);
             rend.renderGameView(view2, 0);
             //Thread.sleep(500);
         }
-        
     }
-
 }
