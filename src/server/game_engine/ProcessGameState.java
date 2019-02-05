@@ -491,7 +491,7 @@ public class ProcessGameState extends Thread {
                         playerItems.add(new ItemView(i.getItemName(), AmmoList.NONE, 0, 0));
                     }
                 }
-                playersView.add(new PlayerView(p.getPose(), Tile.scaledSize(p.getSize()), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
+                playersView.add(new PlayerView(p.getPose(), Tile.scaledSize(p.getSize()), p.getHealth(), p.getMaxHealth(), p.getMoveSpeed(),playerItems, p.getCurrentItemIndex(),
                         p.getScore(), p.getName(), p.getAmmoList(), p.getID()));
             }
 

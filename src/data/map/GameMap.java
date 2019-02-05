@@ -8,7 +8,7 @@ import data.map.tile.Tile;
 public abstract class GameMap {
     protected final int DEFAULT_X_DIM;
     protected final int DEFAULT_Y_DIM;
-    protected Tile[][] tileMap;
+    protected static Tile[][] tileMap;
     protected LinkedHashSet<Location> playerSpawns;
     protected LinkedHashSet<Location> enemySpawns;
     protected LinkedHashSet<Round> rounds;
@@ -40,7 +40,7 @@ public abstract class GameMap {
         return DEFAULT_Y_DIM;
     }
 
-    public Tile[][] getTileMap() {
+    public static Tile[][] getTileMap() {
         return tileMap;
     }
 

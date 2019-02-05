@@ -3,6 +3,8 @@ import client.data.*;
 import data.Constants;
 import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
+import inputhandler.KeyboardHandler;
+import inputhandler.MouseHandler;
 import client.gui.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -103,6 +105,9 @@ public class Renderer {
 
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        
+        KeyboardHandler kbHandler = new KeyboardHandler(scene, inputGameView);
+        MouseHandler mHandler = new MouseHandler(scene, mapCanvas, inputGameView);
 
         // Update stage
         updateStageWithScene(stage, scene);

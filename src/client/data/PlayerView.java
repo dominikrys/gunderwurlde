@@ -9,6 +9,7 @@ import data.entity.item.weapon.gun.AmmoList;
 public class PlayerView extends EntityView {
     protected int health;
     protected int maxHealth;
+    protected int moveSpeed;
     protected ArrayList<ItemView> items;
     protected int currentItemIndex;
     protected int score;
@@ -16,12 +17,13 @@ public class PlayerView extends EntityView {
     protected LinkedHashMap<AmmoList, Integer> ammo;
     protected final int id;
 
-    public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
+    public PlayerView(Pose pose, int size, int health, int maxHealth, int moveSpeed, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
             LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
         super(pose, size);
         this.pathToGraphic = "file:assets/img/mobs/player.png";
         this.health = health;
         this.maxHealth = health;
+        this.moveSpeed = moveSpeed;
         this.items = items;
         this.currentItemIndex = currentItemIndex;
         this.score = score;
@@ -56,6 +58,10 @@ public class PlayerView extends EntityView {
 
     public int getMaxHealth() {
         return maxHealth;
+    }
+    
+    public int getMoveSpeed() {
+    	return moveSpeed;
     }
 
     public ItemView getCurrentItem() {
