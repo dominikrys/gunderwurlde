@@ -8,7 +8,7 @@ import java.util.*;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-public class AStart {
+public class AStar {
 
     private static final int COST_OF_TRAVEL = 1;
     private static double[][] realDist;
