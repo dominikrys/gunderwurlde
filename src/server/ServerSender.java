@@ -40,7 +40,6 @@ public class ServerSender extends Thread {
     public void send(GameView view) {
         try {
             // Turn the received GameView into a byte array
-            // view.toBytes()
             // Output Stream for the byteArray. Will grow as data is added
             // Allows the object to be written to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

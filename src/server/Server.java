@@ -44,13 +44,16 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Server starting");
             // Create the initial GameView to be sent to the clients
 
+
             // Create the threads that will run as sender and receiver
+            // TODO Server must send an initial GameView to the client before changes are made
             sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
             System.out.println("Threads up");
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
             receiver.join();
+            gameEngine.handlerClosing();
             // Socket is closed as server should end
             senderSocket.close();
             listenSocket.close();
@@ -72,7 +75,6 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void removePlayer(int playerID) {
-
     }
 
     @Override

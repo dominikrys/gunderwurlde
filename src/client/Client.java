@@ -20,6 +20,8 @@ public class Client extends Thread {
     Renderer renderer;
     String playerName;
     int playerID;
+    Boolean running;
+
 
 
     public Client(Renderer renderer, String playerName, int playerID){
@@ -27,6 +29,7 @@ public class Client extends Thread {
         this.view = null;
         this.playerName = playerName;
         this.playerID = playerID;
+        this.running = true;
     }
 
     public void run(){
@@ -42,8 +45,10 @@ public class Client extends Thread {
             ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             ClientReceiver receiver = new ClientReceiver(listenAddress, listenSocket, this);
 
-            if(view != null)
-                renderer.renderGameView(view, 0);
+            while(running){
+                if(view != null)
+                    renderer.renderGameView(view, 0);
+            }
 
 
 
