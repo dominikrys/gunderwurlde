@@ -219,10 +219,8 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-        // Update stage TODO: see what works!
-        //updateStageWithScene(stage, scene);
-        stage.setScene(scene);
-        scene.getRoot().requestFocus();
+        // Update stage
+        updateStageWithScene(stage, scene);
 
         // Menu set up, change flag to false
         stageChanged = false;
@@ -435,15 +433,21 @@ public class Renderer {
         }
     }
 
-    // Method for updating the stage with a given scene since not on JavaFX thread
+    // Method for updating the stage with a given scene
     private void updateStageWithScene(Stage stage, Scene scene) {
-        // runLater because not JavaFX thread
-        Platform.runLater(() -> {
-            // Add scene to stage, request focus and show the stage
+        // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
+        if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
             scene.getRoot().requestFocus();
-            stage.show();
-        });
+        } else {
+            // runLater because not JavaFX thread
+            Platform.runLater(() -> {
+                // Add scene to stage, request focus and show the stage
+                stage.setScene(scene);
+                scene.getRoot().requestFocus();
+                stage.show();
+            });
+        }
     }
 }
 
