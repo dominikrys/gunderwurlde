@@ -216,7 +216,12 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.getReload()) {
+                if (request.getDrop() && currentPlayer.getItems().size() > 1) {
+                    ItemDrop itemDropped = new ItemDrop(currentItem, currentPlayer.getLocation());
+                    // TODO and cooldown to item drop to prevent it from instantly being picked up
+                    items.put(itemDropped.getID(), itemDropped);
+                    currentPlayer.removeItem(currentPlayer.getCurrentItemIndex());
+                } else if (request.getReload()) {
                     if (currentItem instanceof Gun) {
                         Gun currentGun = ((Gun) currentItem);
                         currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType()));
@@ -257,10 +262,10 @@ public class ProcessGameState extends Thread {
                                     items.remove(itemDropID);
                                     tileMap[tileCords[0]][tileCords[1]].removeItemDrop(itemDropID);
                                     break;
-                                case GUN:
+                                case GUN: // TODO change for everything that isn't ammo or powerup
                                     if (playerItems.stream().anyMatch((i) -> i.getItemName() == currentItemDrop.getItemName())) {
                                         // player already has that item TODO take some ammo from it
-                                    } else {
+                                    } else if (playerItems.size() < currentPlayer.getMaxItems()) {
                                         playerItems.add(currentItemDrop.getItem());
                                         dropQuantity -= 1;
                                         if (dropQuantity != 0) {

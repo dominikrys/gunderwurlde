@@ -1,5 +1,8 @@
 package data.entity.player;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
@@ -9,14 +12,12 @@ import data.entity.item.weapon.gun.AmmoList;
 import data.entity.item.weapon.gun.Pistol;
 import data.map.tile.Tile;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 20;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
+    public static final int DEFAULT_ITEM_CAP = 3;
 
     private static int nextPlayerID = 0;
 
@@ -31,6 +32,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected int moveSpeed;
     protected int currentItem;
     protected int score;
+    protected int maxItems;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE);
@@ -39,6 +41,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.moveSpeed = DEFAULT_MOVESPEED;
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
+        this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.score = DEFAULT_SCORE;
         this.team = team;
@@ -49,6 +52,16 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     @Override
     public int getID() {
         return playerID;
+    }
+
+    public int getMaxItems() {
+        return maxItems;
+    }
+
+    public void setMaxItems(int maxItems) {
+        if (maxItems < 1)
+            maxItems = 1;
+        this.maxItems = maxItems;
     }
 
     public int getAmmo(AmmoList type) {
