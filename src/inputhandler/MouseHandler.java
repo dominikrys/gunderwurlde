@@ -1,14 +1,7 @@
 package inputhandler;
 
-import java.util.ArrayList;
-
 import client.data.GameView;
 import client.data.PlayerView;
-import data.GameState;
-import data.entity.item.Item;
-import data.entity.item.ItemList;
-import data.entity.item.weapon.gun.Pistol;
-import data.entity.player.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,6 +15,7 @@ public class MouseHandler extends UserInteraction{
 	private GameView gameView;
 	private PlayerView playerView;
 	private Attack attack;
+	private ChangeItem changeItem;
 	private double mouseX;
 	private double mouseY;
 	private double playerX;
@@ -57,10 +51,10 @@ public class MouseHandler extends UserInteraction{
 			@Override
 			public void handle(ScrollEvent event) {
 				if(event.getDeltaY() > 0) {
-					playerView.previousItem();
+					changeItem.previousItem();
 				}
 				else if(event.getDeltaY() < 0) {
-					playerView.nextItem();
+					changeItem.nextItem();
 				}
 				System.out.println(playerView.getCurrentItemIndex());
 				// TODO: send changes(item change) to server
@@ -87,8 +81,12 @@ public class MouseHandler extends UserInteraction{
 	private void mouseMovement(MouseEvent e) {
 		mouseX = e.getSceneX();
 		mouseY = e.getSceneY();
-		playerX = mapCanvas.getLayoutX() + playerView.getPose().getX();
-		playerY = mapCanvas.getLayoutY() + playerView.getPose().getY();
+		playerX = mapCanvas.getLayoutX() + playerView.getPose().getX() + 16;
+		playerY = mapCanvas.getLayoutY() + playerView.getPose().getY() + 16;
+		System.out.println("mouseX: "+ mouseX);
+		System.out.println("mouseY: "+ mouseY);
+		System.out.println("playerX: "+ playerX);
+		System.out.println("playerY: "+ playerY);
 		
 		toRotate = Math.toDegrees(Math.atan((mouseX - playerX)/(mouseY - playerY)));
 		int quarter = quarter(playerX, playerY, mouseX, mouseY);

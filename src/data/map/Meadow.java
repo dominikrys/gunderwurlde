@@ -18,7 +18,7 @@ public class Meadow extends GameMap {
         super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
     }
 
-    private static Tile[][] generateTileMap() {
+    public static Tile[][] generateTileMap() {
         Tile[][] tileMap = new Tile[DEFAULT_X_DIM][DEFAULT_Y_DIM];
 
         for (int x = 0; x < DEFAULT_X_DIM; x++) {

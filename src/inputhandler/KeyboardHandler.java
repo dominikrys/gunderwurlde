@@ -1,14 +1,11 @@
 package inputhandler;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import client.data.GameView;
 import client.data.PlayerView;
+import data.GameState;
 import data.Pose;
-import data.entity.item.Item;
-import data.entity.item.weapon.gun.Pistol;
-import data.entity.player.Player;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -23,6 +20,8 @@ public class KeyboardHandler extends UserInteraction{
 	private Image pImage;
 	private Movement movement;
 	private Reload reload;
+	private DropItem dropItem;
+	private PickItem pickItem;
 	private ArrayList<String> input = new ArrayList<String>();
 	private KeyboardSettings kbSettings = new KeyboardSettings();
 	private boolean upPressed = false;
@@ -45,8 +44,9 @@ public class KeyboardHandler extends UserInteraction{
             }
         }
 		this.pImage = new Image(playerView.getPathToGraphic());
-		this.movement = new Movement(playerView, pImage, gameView.getTileMap(), kbSettings);
+		this.movement = new Movement(playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
 		this.reload = new Reload(playerView);
+		this.dropItem = new DropItem(playerView);
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -128,7 +128,7 @@ public class KeyboardHandler extends UserInteraction{
 					reload.reload();
 				}
 				if(dropPressed) {
-					
+					dropItem.drop();
 				}
 				if(interactPressed) {
 					

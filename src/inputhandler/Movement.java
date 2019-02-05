@@ -1,9 +1,11 @@
 package inputhandler;
 
+import java.util.LinkedHashSet;
+
+import client.data.ItemDropView;
 import client.data.PlayerView;
 import client.data.TileView;
 import data.Pose;
-import data.map.tile.Tile;
 import javafx.scene.image.Image;
 
 public class Movement extends Action{
@@ -12,16 +14,19 @@ public class Movement extends Action{
 	private Image pImage;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
+	private PickItem pickItem;
 
-	public Movement(PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings) {
+	public Movement(PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
 		super(playerView);
 		this.playerView = playerView;
 		this.kbSettings = kbSettings;
 		this.collision = new Collision(tileMap, pImage);
+		this.pickItem = new PickItem(playerView, itemDropView);
 	}
 	
 	public void move(String key) {
 		Pose pose = new Pose(playerView.getPose().getX(), playerView.getPose().getY(), playerView.getPose().getDirection());
+		pickItem.checkPick();
 		String action = kbSettings.getAction(key);
 		switch (action) {
 			case "up" :
