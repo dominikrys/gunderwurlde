@@ -401,7 +401,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), Tile.scaledSize(currentEnemy.getSize()), currentEnemy.getEnemyName()));
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEnemyName()));
 
                 // TODO enemy change here
             }
@@ -545,7 +545,7 @@ public class ProcessGameState extends Thread {
                         playerItems.add(new ItemView(i.getItemName(), AmmoList.NONE, 0, 0));
                     }
                 }
-                playersView.add(new PlayerView(p.getPose(), Tile.scaledSize(p.getSize()), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
+                playersView.add(new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
                         p.getScore(), p.getName(), p.getAmmoList(), p.getID()));
             }
 

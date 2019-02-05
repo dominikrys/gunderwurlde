@@ -71,9 +71,5 @@ public class Tile {
         int[] i = { ((location.getX() - 1) / TILE_SIZE), ((location.getY() - 1) / TILE_SIZE) };
         return i;
     }
-    
-    public static int scaledSize(int size) {
-        return size/TILE_SIZE;
-    }
 
 }

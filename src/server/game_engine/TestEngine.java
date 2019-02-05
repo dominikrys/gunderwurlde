@@ -47,8 +47,8 @@ public class TestEngine extends Application implements HasEngine {
         engine.addPlayer("Bob3", Teams.RED);
         engine.addPlayer("Bob4", Teams.RED);
         
-        ClientRequests requests = new ClientRequests(4);
-        for (int i=0;i<100;i++) {
+        requests = new ClientRequests(4);
+        for (int i = 0; i < 100; i++) {
             requests.playerRequestFacing(0,rand.nextInt(360));
             requests.playerRequestMovement(0, rand.nextInt(360));
             requests.playerRequestShoot(0);
@@ -62,10 +62,11 @@ public class TestEngine extends Application implements HasEngine {
             requests.playerRequestMovement(3, rand.nextInt(360));
             requests.playerRequestShoot(3);
             Thread.sleep(17);
-            if (view != null) rend.renderGameView(view, 0);
-            else System.out.println("View is null");
+            if (view != null)
+                rend.renderGameView(view, 0);
+            else
+                System.out.println("View is null");
         }
-
         engine.handlerClosing();       
     }
 

@@ -38,10 +38,10 @@ public class Location {
 
     public static Location calculateNewLocation(Location l, int direction, int distance) {
         double directionInRadians = (direction/180.0) * Math.PI;
-        int x_dist = (int) Math.ceil(distance * Math.cos(directionInRadians));
-        int y_dist = (int) Math.ceil(distance * Math.sin(directionInRadians));
-        int x = l.getX() + x_dist;
-        int y = l.getY() + y_dist;
+        double x_dist = (double) distance * Math.sin(directionInRadians);
+        double y_dist = (double) -distance * Math.cos(directionInRadians);
+        int x = l.getX() + (int) Math.round(x_dist);
+        int y = l.getY() + (int) Math.round(y_dist);
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         return new Location(x, y);

@@ -12,9 +12,10 @@ public abstract class EntityView implements Serializable {
     protected String pathToGraphic;
 
     protected EntityView(Pose pose, int size) {
-        this.pose = pose;
+        int radius = size / 2;
+        this.pose = new Pose(pose.getX() - radius, pose.getY() - radius, pose.getDirection());
         this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
-        this.size = size;
+        this.size = 1; // TODO sort out scaling
     }
 
     public Pose getPose() {
