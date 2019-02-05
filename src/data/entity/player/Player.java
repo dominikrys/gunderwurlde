@@ -95,7 +95,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public boolean removeItem(int itemIndex) {
         try {
             items.remove(itemIndex);
-            if (currentItem == itemIndex)
+            if (currentItem >= itemIndex)
                 previousItem();
             return true;
         } catch (IndexOutOfBoundsException e) {

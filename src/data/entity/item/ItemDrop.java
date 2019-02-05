@@ -9,6 +9,7 @@ import data.map.tile.Tile;
 public class ItemDrop extends Entity implements HasID {
     public static final int DROP_SIZE = Tile.TILE_SIZE;
     public static final long DECAY_LENGTH = 10000; //10 seconds
+    public static final int DROP_FREEZE = 1000; // drop freeze of 1 second
     
     private static int nextID = 0;
 

@@ -254,7 +254,6 @@ public class ProcessGameState extends Thread {
                             ArrayList<Item> playerItems = currentPlayer.getItems();
                             for (Integer itemDropID : itemsOnTile) {
                                 ItemDrop currentItemDrop = items.get(itemDropID);
-                                // TODO have delay to prevent picking up immediate drops
                                 int dropQuantity = currentItemDrop.getQuantity();
                                 switch (currentItemDrop.getItemType()) {
                                 case AMMO:
@@ -267,7 +266,8 @@ public class ProcessGameState extends Thread {
                                 case GUN: // TODO change for everything that isn't ammo or powerup
                                     if (playerItems.stream().anyMatch((i) -> i.getItemName() == currentItemDrop.getItemName())) {
                                         // player already has that item TODO take some ammo from it
-                                    } else if (playerItems.size() < currentPlayer.getMaxItems()) {
+                                    } else if (playerItems.size() < currentPlayer.getMaxItems()
+                                            && (lastProcessTime - currentItemDrop.getDropTime()) > ItemDrop.DROP_FREEZE) {
                                         playerItems.add(currentItemDrop.getItem());
                                         dropQuantity -= 1;
                                         if (dropQuantity != 0) {
