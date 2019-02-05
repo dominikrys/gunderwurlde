@@ -38,45 +38,21 @@ public class AStart {
             int[][] tiles, Pair<Integer, Integer> playerLoc, Pair<Integer, Integer> enemLoc) {
 
         double[][] realDist = calcRealDist(tiles, playerLoc);
-        List<Node> open = openNodes(tiles, enemLoc, 0d, realDist);
         List<Pair<Integer, Integer>> closed = new ArrayList();
-        List<Node> newNodes = null;
-//        PriorityQueue<Node> opened = new PriorityQueue<>(6, (Node o1, Node o2) -> {
-//            if (o1.getSum() < o2.getSum())
-//                return -1;
-//            if (o1.getSum() > o2.getSum())
-//                return 1;
-//            return 0;
-//        });
-
-
+        PriorityQueue<Node> newNodes = null;
+        PriorityQueue<Node> opened = openNodes(tiles, enemLoc, 0d, realDist);
 
         closed.add(enemLoc);
 
         while(!closed.contains(playerLoc)) {
+            Node nodeToOpen = opened.peek();
+            newNodes = openNodes(tiles, nodeToOpen.getCoordinates(), nodeToOpen.getCostToGo(), realDist);
+            closed.add(opened.poll().getCoordinates());
 
-            Collections.sort(open, (Node o1, Node o2) -> {
-                    if (o1.getSum() < o2.getSum())
-                        return -1;
-                    if (o1.getSum() > o2.getSum())
-                        return 1;
-                    return 0;
-            });
-
-//            System.out.println("\n\n\n\nAdded nodes: ");
-//            for (Node n : open) {
-//                System.out.println(n.toString());
-//            }
-
-            newNodes = openNodes(tiles, open.get(0).getCoordinates(), open.get(0).getCostToGo(), realDist);
             for (Node n: newNodes) {
-                if((!closed.contains(n.getCoordinates()) && (!open.contains(n))))
-                    open.add(n);
+                if((!closed.contains(n.getCoordinates()) && (!opened.contains(n))))
+                    opened.add(n);
             }
-
-            closed.add(open.get(0).getCoordinates());
-            open.remove(0);
-
         }
 
         return closed;
@@ -97,8 +73,15 @@ public class AStart {
         return realDist;
     }
 
-    private static ArrayList<Node> openNodes(int[][] tiles, Pair<Integer, Integer> nodeLoc, double costToGo, double[][] realDist) {
-        ArrayList<Node> initNodes = new ArrayList<Node>();
+    private static PriorityQueue<Node> openNodes(int[][] tiles, Pair<Integer, Integer> nodeLoc, double costToGo, double[][] realDist) {
+        PriorityQueue<Node> initNodes = new PriorityQueue<>(8, (Node o1, Node o2) -> {
+            if (o1.getSum() < o2.getSum())
+                return -1;
+            if (o1.getSum() > o2.getSum())
+                return 1;
+            return 0;
+        });
+
 
         int topNodes = nodeLoc.getKey() - 1;
         int leftNodes = nodeLoc.getValue() - 1;
