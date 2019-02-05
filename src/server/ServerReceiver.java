@@ -1,4 +1,12 @@
-package server.serverclientthreads;
+package server;
+
+import client.data.GameView;
+import data.entity.player.Teams;
+import data.map.MapList;
+import server.game_engine.HasEngine;
+import server.game_engine.ProcessGameState;
+import server.request.ClientRequests;
+import server.request.Request;
 
 import java.io.*;
 import java.net.*;
@@ -7,16 +15,20 @@ import java.util.Enumeration;
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
-public class ServerReceiver extends Thread {
+public class ServerReceiver extends Thread implements HasEngine {
     MulticastSocket listenSocket;
     InetAddress listenAddress;
     ServerSender sender;
     Boolean running;
     DatagramPacket packet;
     byte[] buffer;
+    ClientRequests requests;
+    int numOfPlayers;
+    ProcessGameState gameEngine;
 
 
-    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender) {
+    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, String host, ProcessGameState gameEngine) {
+
         this.listenSocket = listenSocket;
         this.listenAddress = address;
         this.sender = sender;
@@ -31,27 +43,12 @@ public class ServerReceiver extends Thread {
         try {
             // for all interfaces that are not loopback or up get the addresses associated with thos
             // interfaces and set the sockets interface to that address
-//			interfaces = NetworkInterface.getNetworkInterfaces();
-//			while (interfaces.hasMoreElements()) {
-//				NetworkInterface iface = interfaces.nextElement();
-//				if (iface.isLoopback() || !iface.isUp())
-//					continue;
-//
-//				Enumeration<InetAddress> addresses = iface.getInetAddresses();
-//				while(addresses.hasMoreElements()) {
-//					InetAddress addr = addresses.nextElement();
-//					listenSocket.setInterface(addr);
-//					break;
-//				}
-//				break;
-//			}
             interfaces = NetworkInterface.getNetworkInterfaces();
             //while (interfaces.hasMoreElements()) {
             NetworkInterface iface = null;
             if (interfaces.hasMoreElements()) {
                 iface = interfaces.nextElement();
             }
-
             if (!iface.isLoopback() || iface.isUp()) {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 if (addresses.hasMoreElements()) {
@@ -73,11 +70,17 @@ public class ServerReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
-                // creates a string from the received packet
-                String receivedString = new String(packet.getData(), 0, packet.getLength());
-                System.out.println("Server received: " + receivedString);
-                // If string == exitCode then begin the exit sequence
-                if (receivedString.equals("exit")) {
+                // Read the received packet into a request
+
+                requests = new ClientRequests(numOfPlayers);
+
+                // Send the request to the Engine
+                sendClientRequest(requests);
+
+
+
+                // Need some sort of exit sequence for the server
+                if (true) {
                     // Tells the sender to exit
                     sender.exit(packet);
                     // Waits for the sender to finish its processes before ending itself
@@ -85,15 +88,26 @@ public class ServerReceiver extends Thread {
                     // Running = false so the Thread ends gracefully
                     running = false;
                 }
-                // If not the exit code simply send the confirmation message to the client
-                else {
-                    sender.confirm(packet);
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void updateGameView(GameView view) {
+
+    }
+
+    @Override
+    public void removePlayer(int playerID) {
+
+    }
+
+    @Override
+    public void sendClientRequest(ClientRequests request) {
+
     }
 }

@@ -1,8 +1,7 @@
-package server.serverclientthreads;
+package client;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Scanner;
 
 public class ClientOnline {
     // Socket to listen to the server

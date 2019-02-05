@@ -1,4 +1,6 @@
-package server.serverclientthreads;
+package server;
+
+import server.game_engine.ProcessGameState;
 
 import java.io.*;
 import java.net.*;
@@ -15,7 +17,7 @@ public class ServerSender extends Thread {
     byte[] buffer;
     Scanner scan;
 
-    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ServerSender(InetAddress address, MulticastSocket socket, int port, ProcessGameState gameState) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;

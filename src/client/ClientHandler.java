@@ -6,6 +6,7 @@ import data.SystemState;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import server.Server;
 
 import static data.SystemState.MENU;
 
@@ -41,6 +42,9 @@ public class ClientHandler extends Thread {
                     break;
                 case SINGLE_PLAYER:
                     // CODE FOR ESTABLISHING LOCAL SERVER
+                    // Starts the server
+                    Server server = new Server();
+                    server.start();
                     systemState = SystemState.GAME; // REMOVE THIS
                     break;
                 case MULTI_PLAYER:
