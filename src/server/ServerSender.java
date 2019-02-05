@@ -41,11 +41,26 @@ public class ServerSender extends Thread {
         try {
             // Turn the received GameView into a byte array
             // view.toBytes()
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = null;
+            try {
+                out = new ObjectOutputStream(bos);
+                out.writeObject(view);
+                out.flush();
+                byte[] yourBytes = bos.toByteArray();
+                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                senderSocket.send(packet);
+
+            } finally {
+                try {
+                    bos.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
 
             // Creates a new packet to be sent to the group address and sends it
             // Will be set on a loop to send every ______ seconds
-            packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-            senderSocket.send(packet);
 
         } catch (SocketException e) {
             e.printStackTrace();

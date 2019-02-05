@@ -44,9 +44,10 @@ public class ClientHandler extends Thread {
                     // CODE FOR ESTABLISHING LOCAL SERVER
                     // Starts the server
                     // TODO pass the text from the box into the server and client
-                    Server server = new Server(host);
+                    Server server = new Server("Host");
                     server.start();
-                    Client client = new Client(renderer, playerName);
+                    Client client = new Client(renderer, "Host", 0);
+                    client.start();
                     systemState = SystemState.GAME; // REMOVE THIS
                     break;
                 case MULTI_PLAYER:

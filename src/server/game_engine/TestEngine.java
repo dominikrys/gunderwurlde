@@ -33,6 +33,11 @@ public class TestEngine extends Application implements HasEngine {
     }
 
     @Override
+    public void sendClientRequest(ClientRequests request) {
+
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         Random rand = new Random();
         this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
