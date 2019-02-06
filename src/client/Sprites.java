@@ -11,8 +11,15 @@ public enum Sprites {
     // Items
     PISTOL("assets/img/items/pistol.png", true),
 
+    // Players
+    PLAYER("assets/img/mobs/player_1.png", true),
+    PLAYER_1("assets/img/mobs/player_1.png", true),
+    PLAYER_2("assets/img/mobs/player_2.png", true),
+    PLAYER_3("assets/img/mobs/player_3.png", true),
+    PLAYER_4("assets/img/mobs/player_4.png", true),
+
+
     // Mobs
-    PLAYER("assets/img/mobs/player.png", true),
     ZOMBIE("assets/img/mobs/zombie.png", true),
 
     // Projectiles
