@@ -176,7 +176,7 @@ public class GameRenderer implements Runnable {
 
     private void renderEntityToCanvas(EntityView entityView) {
         // Get image from loaded sprites
-        Image imageToRender = loadedSprites.get(entityView.getEntityName());
+        Image imageToRender = loadedSprites.get(entityView.getEntityListName());
 
         // Render image
         renderEntity(entityView, mapGC, imageToRender);

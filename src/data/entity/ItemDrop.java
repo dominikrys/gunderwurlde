@@ -2,15 +2,12 @@ package data.entity;
 
 import data.Location;
 import data.Pose;
-import data.entity.Entity;
-import data.entity.HasID;
 import data.item.Item;
 import data.item.ItemList;
 import data.item.ItemType;
 import data.map.tile.Tile;
 
 public class ItemDrop extends Entity implements HasID {
-    public static final int DROP_SIZE = Tile.TILE_SIZE;
     public static final long DECAY_LENGTH = 10000; //10 seconds
     public static final int DROP_FREEZE = 1000; // drop freeze of 1 second
     
@@ -22,8 +19,8 @@ public class ItemDrop extends Entity implements HasID {
     protected int quantity;
     protected long dropTime;
 
-    public ItemDrop(Item item, Location location, int quantity) {
-        super(new Pose(location), DROP_SIZE);
+    public ItemDrop(Item item, Location location, int quantity, EntityList entityListName) {
+        super(new Pose(location), 1, entityListName);
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;
@@ -43,7 +40,7 @@ public class ItemDrop extends Entity implements HasID {
     }
 
     public ItemType getItemType() {
-        return item.getItemType();
+        return item.getItemListName();
     }
 
     public int getQuantity() {

@@ -13,7 +13,7 @@ public enum GunList implements IsDroppable, IsWeapon {
     }
 
     @Override
-    public ItemList toItemList() {
+    public ItemList getItemListName() {
         return ItemList.valueOf(this.toString());
     }
 

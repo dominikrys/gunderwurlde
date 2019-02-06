@@ -1,26 +1,20 @@
 package data.item;
 
-import data.Constants;
-
 public abstract class Item {
     protected final IsItem itemName;
-    protected String pathToGraphic;
+    protected ItemList itemListName;
 
-    protected Item(IsItem itemName) {
+    protected Item(IsItem itemName, ItemList itemListName) {
         this.itemName = itemName;    
-        this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
+        this.itemListName = itemListName;
     }
 
     public ItemList getItemName() {
-        return itemName.toItemList();
+        return itemName.getItemListName();
     }
 
-    public ItemType getItemType() {
+    public ItemType getItemListName() {
         return itemName.getItemType();
-    }
-
-    public String getPathToGraphic() {
-        return pathToGraphic;
     }
 
 }

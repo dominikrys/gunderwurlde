@@ -184,7 +184,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getShoot()) {
-                    if (currentItem.getItemType() == ItemType.GUN) {
+                    if (currentItem.getItemListName() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot()) {
                             int numOfBullets = currentGun.getProjectilesPerShot();

@@ -8,11 +8,11 @@ public enum ItemList {
     BASIC_AMMO(EntityList.AMMO_CLIP);
 
     private String spritePath;
-    private EntityList entityName;
+    private EntityList entityListName;
 
-    ItemList(EntityList entityName) {
-        this.entityName = entityName;
-        this.spritePath = entityName.getPath();
+    ItemList(EntityList entityListName) {
+        this.entityListName = entityListName;
+        this.spritePath = entityListName.getPath();
     }
 
     public AmmoList toAmmoList() { //only works if you know the item is definitely ammo TODO make this less error prone
@@ -24,7 +24,7 @@ public enum ItemList {
     }
 
     public EntityList getEntityList() {
-        return entityName;
+        return entityListName;
     }
 }
 
