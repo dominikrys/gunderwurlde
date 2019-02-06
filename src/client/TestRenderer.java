@@ -67,6 +67,6 @@ public class TestRenderer extends Application {
 
             }
 
-        }, 0, 100);
+        }, 0, 50);
     }
 }
