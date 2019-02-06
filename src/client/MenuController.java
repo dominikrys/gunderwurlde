@@ -42,15 +42,18 @@ public class MenuController {
     }
 
     public void renderMenu() {
+        // See if stage should have changed to a new menu
         if (currentMenuController != null) {
-            Menus controllerMenu = currentMenuController.getCurrentMenu();
 
-            if (controllerMenu != currentMenu) {
-                currentMenu = controllerMenu;
+            Menus newestControllerMenu = currentMenuController.getCurrentMenu();
+
+            if (newestControllerMenu != currentMenu) {
+                currentMenu = newestControllerMenu;
                 stageChanged = true;
             }
         }
 
+        // If the stage has changed, set new controller
         if (stageChanged) {
             switch (currentMenu) {
                 case MAIN_MENU:
@@ -84,14 +87,13 @@ public class MenuController {
 
             // Update stage
             updateStageWithScene(stage, scene);
-
             stageChanged = false;
         }
     }
 
     // Method for updating the stage with a given scene
     private void updateStageWithScene(Stage stage, Scene scene) {
-        // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
+        // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
             scene.getRoot().requestFocus();

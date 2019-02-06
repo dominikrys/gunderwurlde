@@ -28,16 +28,23 @@ import java.io.FileNotFoundException;
 
 public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
-    private Font fontManaspace28;
-    private Font fontManaspace18;
-    private PlayerView currentPlayer;
-    private FlowPane heldItems;
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
+    // Fonts
+    private Font fontManaspace28;
+    private Font fontManaspace18;
+    // HUD items
     private Label playerScoreNumber;
+    private FlowPane heldItems;
     private FlowPane heartBox;
     private HBox ammoBox;
-    private Image defaultGraphic;
+
+    // Default graphic in case incorrect tile loaded
+    private Image defaultTileGraphic;
+
+    // Current player info
+    private PlayerView currentPlayer;
+    private int playerID;
 
     // GameView object which is to be updated
     private GameView gameView;
@@ -45,15 +52,10 @@ public class GameRenderer implements Runnable {
     // Stage to render to
     private Stage stage;
 
-    // PlayerID of current client
-    private int playerID;
-
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
         // Initialise gameView, stage and playerID
         this.gameView = gameView;
-
         this.stage = stage;
-
         this.playerID = playerID;
 
         // Load fonts
@@ -67,9 +69,9 @@ public class GameRenderer implements Runnable {
         }
 
         // Load the default graphic
-        defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
-        if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
-            System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
+        defaultTileGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
+        if (!checkImageLoaded(defaultTileGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
+            System.out.println("Default tile texture couldn't be loaded! There could be potential issues with the game!");
         }
 
         // Initialize HUD elements
@@ -252,7 +254,7 @@ public class GameRenderer implements Runnable {
                 // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
                 if (!(checkImageLoaded(tileImage, inputGameState.getTileMap()[x][y].getPathToGraphic()))
                         || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
-                    tileImage = defaultGraphic;
+                    tileImage = defaultTileGraphic;
                 }
 
                 // Add tile to canvas
@@ -318,7 +320,7 @@ public class GameRenderer implements Runnable {
 
         // If image not loaded properly, print error and load default graphic
         if (!checkImageLoaded(imageToRender, imagePath)) {
-            imageToRender = defaultGraphic;
+            imageToRender = defaultTileGraphic;
         }
 
         // If entity's size isn't zero, enlarge the graphic
