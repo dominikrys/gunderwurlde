@@ -1,5 +1,6 @@
 package data.entity;
 
+// List of all entities as well as renderable objects
 public enum EntityList {
     // Item
     PISTOL("assets/img/entity/item/pistol.png"),
@@ -22,7 +23,7 @@ public enum EntityList {
     WOOD_TILE("assets/img/tiles/wood.png"),
     DEFAULT("assets/img/tiles/default.png"),
 
-    // Other - some applicable to Item
+    // Other/Not real entities - some applicable to Item
     AMMO_CLIP("assets/img/other/ammo_clip.png"),
     HEART_FULL("assets/img/other/heart_full.png"),
     HEART_HALF("assets/img/other/heart_half.png"),

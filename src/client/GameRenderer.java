@@ -1,8 +1,9 @@
 package client;
 
-import client.data.*;
+import client.data.ItemView;
 import client.data.entity.*;
 import data.Constants;
+import data.entity.EntityList;
 import data.entity.item.weapon.gun.AmmoList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -31,7 +32,7 @@ import java.util.Map;
 
 public class GameRenderer implements Runnable {
     // HashMap to store all graphics
-    Map<SpritesNonGame, Image> loadedSprites;
+    Map<EntityList, Image> loadedSprites;
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
@@ -71,18 +72,16 @@ public class GameRenderer implements Runnable {
         // Iterate over sprites array and load all sprites used in the game
         loadedSprites = new HashMap<>();
 
-        for (SpritesNonGame sprite : SpritesNonGame.values()) {
-            // Check if the sprite is used in the game
-            if (sprite.isUsedInGame()) {
-                // Load image
-                Image tempImage = new Image(sprite.getPath());
+        for (EntityList entity : EntityList.values()) {
+            // Load image
+            Image tempImage = new Image(entity.getPath());
 
-                // Check if loaded properly, and if loaded properly then store in the loaded sprites hashmap
-                if (tempImage.isError()) {
-                    System.out.println("Error when loading image: " + sprite.name() + " from directory: " + sprite.getPath());
-                } else {
-                    loadedSprites.put(sprite, tempImage);
-                }
+            // Check if loaded properly, and if loaded properly then store in the loaded sprites hashmap
+            if (tempImage.isError()) {
+                System.out.println("Error when loading image: " + entity.name() + " from directory: " + entity.getPath());
+                loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
+            } else {
+                loadedSprites.put(entity, tempImage);
             }
         }
 
@@ -136,7 +135,27 @@ public class GameRenderer implements Runnable {
     private void renderEntitiesFromGameViewToCanvas() {
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
-            renderEntityToCanvas(currentPlayer);
+            // Get the correct sprite according to playerID, otherwise load the default player graphic
+            Image spriteToRender;
+            switch (currentPlayer.getID()) {
+                case 1:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_1);
+                    break;
+                case 2:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_2);
+                    break;
+                case 3:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_3);
+                    break;
+                case 4:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_4);
+                    break;
+                default:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                    break;
+            }
+
+            renderEntity(currentPlayer, mapGC, loadedSprites.get(spriteToRender));
         }
 
         // Render enemies
@@ -156,39 +175,11 @@ public class GameRenderer implements Runnable {
     }
 
     private void renderEntityToCanvas(EntityView entityView) {
-        SpritesNonGame spriteToRender = null;
+        // Get image from loaded sprites
+        Image imageToRender = loadedSprites.get(entityView.getEntityName());
 
-        // Check what entity type it is and render accordingly TODO: this is quite an ugly way of doing things, can be done better
-        if (entityView instanceof PlayerView) {
-            // Get the correct sprite according to playerID, otherwise load the default player graphic
-            spriteToRender = SpritesNonGame.valueOf("PLAYER_" + currentPlayer.getID());
-
-            if (spriteToRender != null) {
-                renderEntity(currentPlayer, mapGC, loadedSprites.get(spriteToRender));
-                return;
-            } else {
-                System.out.println("Couldn't find right player number, loading default player...");
-                renderEntity(currentPlayer, mapGC, loadedSprites.get(SpritesNonGame.PLAYER));
-                return;
-            }
-        } else if (entityView instanceof EnemyView) {
-            EnemyView enemyView = (EnemyView) entityView;
-            spriteToRender = SpritesNonGame.valueOf(enemyView.getName().toString());
-        } else if (entityView instanceof ProjectileView) {
-            ProjectileView projectileView = (ProjectileView) entityView;
-            spriteToRender = SpritesNonGame.valueOf(projectileView.getName().toString());
-        } else if (entityView instanceof ItemDropView) {
-            ItemDropView itemDropView = (ItemDropView) entityView;
-            spriteToRender = SpritesNonGame.valueOf(itemDropView.getName().toString());
-        }
-
-        // If sprite found, render it, otherwise render default graphic
-        if (spriteToRender != null) {
-            renderEntity(entityView, mapGC, loadedSprites.get(spriteToRender));
-        } else {
-            System.out.println("Couldn't find graphic for entity so loading default...");
-            renderEntity(currentPlayer, mapGC, loadedSprites.get(SpritesNonGame.DEFAULT));
-        }
+        // Render image
+        renderEntity(entityView, mapGC, imageToRender);
     }
 
     // Update all HUD elements
@@ -204,15 +195,15 @@ public class GameRenderer implements Runnable {
 
         // Populate heart box in GUI
         for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(SpritesNonGame.HEART_FULL)));
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_FULL)));
         }
         // Populate half heart
         for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(SpritesNonGame.HEART_HALF)));
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_HALF)));
         }
         // Populate lost hearts
         for (int i = 0; i < lostHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(SpritesNonGame.HEART_LOST)));
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_LOST)));
         }
 
         // Update held items
@@ -228,7 +219,7 @@ public class GameRenderer implements Runnable {
             if (imageToRender != null) {
                 itemImageView = new ImageView(imageToRender);
             } else {
-                itemImageView = new ImageView(loadedSprites.get(SpritesNonGame.DEFAULT));
+                itemImageView = new ImageView(loadedSprites.get(EntityList.DEFAULT));
             }
 
 
@@ -401,15 +392,15 @@ public class GameRenderer implements Runnable {
     }
 
     // Get image from the HashMap of loaded images according to the entity name
-    private Image getImageFromEntityName(String imageName) {
+    private Image getImageFromEntity(EntityList entityName) {
         // Try to get the correct sprite, if not found then return default
-        Image image = loadedSprites.get(imageName);
+        Image image = loadedSprites.get(entityName);
 
-        if (image != null) {
+        if (image != null && !image.isError()) {
             return image;
         } else {
-            System.out.println("Couldn't find the graphic for " + imageName + " so loading default...");
-            return loadedSprites.get(SpritesNonGame.DEFAULT);
+            System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
+            return loadedSprites.get(EntityList.DEFAULT);
         }
     }
 
