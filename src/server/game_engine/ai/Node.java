@@ -2,7 +2,9 @@ package server.game_engine.ai;
 
 import javafx.util.Pair;
 
-public class Node {
+import java.util.Comparator;
+
+public class Node implements Comparable<Node> {
     private Pair<Integer, Integer> coordinates; // y x
     private double costToGo = 0;
     private double costLeft;
@@ -30,10 +32,36 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Coordinates: " + coordinates.getKey() + " - " + coordinates.getValue() + "\n"
-                + "Cost to go there : " + costToGo + "\n"
-                + "Distance to enemy: " + costLeft + "\n"
-                + "Sum: " + sum;
+        return "Coords: " + coordinates.getKey() + " " + coordinates.getValue()
+                + "\nSum: " + costToGo + " + " + String.format("%.3f", costLeft) + " = " + String.format("%.3f", sum);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        // If the object is compared with itself then return true
+        if (o == this) {
+            return true;
+        }
+
+        /* Check if o is an instance of Complex or not
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof Node)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        Node c = (Node) o;
+
+        // Compare the data members and return accordingly
+        return (this.sum == c.getSum() && this.coordinates == c.getCoordinates() && this.costToGo == c.getCostToGo());
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        if (this.getSum() < o.getSum())
+            return -1;
+        if (this.getSum() > o.getSum())
+            return 1;
+        return 0;
+    }
 }

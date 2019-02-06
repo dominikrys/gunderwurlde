@@ -13,8 +13,8 @@ public class AStar {
     private static final int COST_OF_TRAVEL = 1;
     private static double[][] realDist;
     private static final int[][] tiles = {
-            {1, 0, 0, 0, 0, 0, 1, 0, 0},
-            {0, 1, 0, 0, 0, 1, 1, 0, 0},
+            {1, 1, 0, 0, 0, 0, 1, 0, 0},
+            {0, 1, 1, 0, 0, 1, 1, 0, 0},
             {0, 0, 1, 0, 0, 1, 1, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 1, 1, 1, 1, 1, 0, 0},
@@ -22,8 +22,8 @@ public class AStar {
     };
 
     public static void main(String[] args) {
-        Pair<Integer, Integer> playerLoc = new Pair<Integer, Integer>(0, 1); //y and x
-        Pair<Integer, Integer> enemLoc = new Pair<Integer, Integer>(5, 5);
+        Pair<Integer, Integer> playerLoc = new Pair<Integer, Integer>(2, 7); //y and x
+        Pair<Integer, Integer> enemLoc = new Pair<Integer, Integer>(1, 0);
 
         ArrayList<Pair<Integer, Integer>> path = aStar(enemLoc, playerLoc);
 
@@ -34,7 +34,6 @@ public class AStar {
 
     private static ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> path){
         Pair<Integer,Integer> biggestDist = path.get(0);
-        Pair<Integer,Integer> peak;
 
         // Find a node that has the biggest distance to the final end node.
         // At this point realDist array still have values for the last A* search
@@ -73,26 +72,64 @@ public class AStar {
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
+        PriorityQueue<Node> test = new PriorityQueue<>(8);
+
+        Node testNode = new Node(new Pair<Integer, Integer>(3,4), 1,1);
+        System.out.println(test.offer(testNode));
+        if(opened.contains(testNode)){
+            System.out.println("veikia");
+        }
+
+
+
+
+
+
+
+        System.out.println("init nodes");
+        for (Node node : opened) {
+            System.out.println(node);
+        }
         // You cannot expand start node
         closed.add(startCoords);
 
         // A* finishes only when the end node is expanded
         while(!closed.contains(endCoords)) {
+            System.out.println("\nNode to expand: " + opened.peek() + "\n");
             newNodes = openNodes(opened.peek().getCoordinates(), opened.peek().getCostToGo());
             // Add the coordinates of expanded node to the closed list and remove it from the opened queue
             closed.add(opened.poll().getCoordinates());
 
+            System.out.println("\nNewly added nodes");
             for (Node n: newNodes) {
                 // Only add nodes to the open queue if they are not already there and the have not been expanded yet
-                if((!closed.contains(n.getCoordinates()) && (!opened.contains(n))))
+                if((!closed.contains(n.getCoordinates())) && (!opened.contains(n))) {
                     opened.add(n);
+                    System.out.println(n);
+                }
             }
+
+            printOut(opened);
         }
 
         // Shorten the path by finding shortcuts
-        closed  = removeLeafs(closed);
+        //closed  = removeLeafs(closed);
+
+
+//        Set<Pair<Integer, Integer>> set = new HashSet<>(closed);
+//        closed.clear();
+//        closed.addAll(set);
 
         return closed;
+    }
+
+    private static void printOut(PriorityQueue<Node> queue){
+        PriorityQueue<Node> queueToPrint = new PriorityQueue<Node>(queue);
+
+        System.out.println("\nOpen nodes");
+        while(queueToPrint.size() != 0){
+            System.out.println(queueToPrint.poll());
+        }
     }
 
     private static double[][] calcRealDist(Pair<Integer, Integer> endCoords) {
@@ -111,13 +148,7 @@ public class AStar {
 
     private static PriorityQueue<Node> openNodes(Pair<Integer, Integer> nodeLoc, double costToGo) {
         // Nodes in the PriorityQueue are ordered by costLeft + costToGo
-        PriorityQueue<Node> initNodes = new PriorityQueue<>(8, (Node o1, Node o2) -> {
-            if (o1.getSum() < o2.getSum())
-                return -1;
-            if (o1.getSum() > o2.getSum())
-                return 1;
-            return 0;
-        });
+        PriorityQueue<Node> initNodes = new PriorityQueue<>(8);
 
 
         int topNodes = nodeLoc.getKey() - 1;
