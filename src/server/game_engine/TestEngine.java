@@ -15,6 +15,7 @@ public class TestEngine extends Application implements HasEngine {
     private GameRenderer rend;
     private GameView view;
     private ClientRequests requests;
+    private boolean firstRender;
 
     private static final int LOOPS = 1000;
 
@@ -25,6 +26,8 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void updateGameView(GameView view) {
         this.view = view;
+        if (!firstRender)
+            rend.updateGameView(this.view);
     }
 
     @Override
@@ -32,14 +35,16 @@ public class TestEngine extends Application implements HasEngine {
         // TODO Auto-generated method stub
 
     }
-    
+
     @Override
     public void requestClientRequests() {
-        if (requests != null) engine.setClientRequests(requests);
+        if (requests != null)
+            engine.setClientRequests(requests);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        firstRender = true;
         this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
         stage.setResizable(false);
         engine.start();
@@ -48,15 +53,13 @@ public class TestEngine extends Application implements HasEngine {
         engine.addPlayer("Bob4", Teams.RED);
         requests = new ClientRequests(4);
         loopDeDoop(stage);
-        boolean firstRender = true;
         while (firstRender) {
             if (view != null) {
                 stage.show();
                 rend = new GameRenderer(stage, view, 0);
                 firstRender = false;
                 rend.run();
-                System.out.println("Timer started");
-                startTheTimer();
+                System.out.println("Renderer started");
             } else {
                 System.out.println("View is null");
             }
@@ -88,26 +91,6 @@ public class TestEngine extends Application implements HasEngine {
                     }
                 }
                 engine.handlerClosing();
-            }
-        }.start();
-    }
-
-    private void startTheTimer() {
-        new Thread() {
-            public void run() {
-                GameView oldGameView = view;
-                for (int i = 0; i < LOOPS; i++) {
-                    if (oldGameView != view) {
-                        oldGameView = view;
-                        rend.updateGameView(oldGameView);
-                    }
-                    try {
-                        Thread.sleep(17);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
             }
         }.start();
     }
