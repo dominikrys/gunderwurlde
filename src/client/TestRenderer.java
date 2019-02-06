@@ -13,6 +13,7 @@ import data.map.tile.Tile;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

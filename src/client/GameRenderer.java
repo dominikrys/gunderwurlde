@@ -25,6 +25,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
@@ -39,9 +41,6 @@ public class GameRenderer implements Runnable {
     private FlowPane heartBox;
     private HBox ammoBox;
 
-    // Default graphic in case incorrect tile loaded
-    private Image defaultTileGraphic;
-
     // Current player info
     private PlayerView currentPlayer;
     private int playerID;
@@ -51,6 +50,9 @@ public class GameRenderer implements Runnable {
 
     // Stage to render to
     private Stage stage;
+
+    // HashMap to store all graphics
+    Map<String, Image> loadedSprites;
 
     // Constructor
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
@@ -68,6 +70,13 @@ public class GameRenderer implements Runnable {
             fontManaspace28 = new Font("Consolas", 28);
             fontManaspace18 = new Font("Consolas", 18);
         }
+
+        // Load images
+        imageCache = new HashMap<>();
+
+        // File representing the folder that you select using a FileChooser
+        final File dir = new File("assets/img/");
+        System.out.println(dir.listFiles());
 
         // Load the default graphic
         defaultTileGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
