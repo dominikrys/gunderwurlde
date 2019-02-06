@@ -1,6 +1,6 @@
 package server;
 
-import client.data.GameView;
+import client.data.entity.GameView;
 import data.map.MapList;
 import server.game_engine.HasEngine;
 import server.game_engine.ProcessGameState;

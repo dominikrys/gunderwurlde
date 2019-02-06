@@ -1,14 +1,17 @@
-package client.data;
+package client.data.entity;
+
+import client.data.ItemView;
+import data.Pose;
+import data.entity.EntityList;
+import data.entity.item.weapon.gun.AmmoList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import data.Pose;
-import data.entity.item.weapon.gun.AmmoList;
-
 public class PlayerView extends EntityView implements Serializable {
     private static final long serialVersionUID = 1L;
+    protected final int id;
     protected int health;
     protected int maxHealth;
     protected ArrayList<ItemView> items;
@@ -16,11 +19,10 @@ public class PlayerView extends EntityView implements Serializable {
     protected int score;
     protected String name;
     protected LinkedHashMap<AmmoList, Integer> ammo;
-    protected final int id;
 
     public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
-            String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
-        super(pose, size);
+                      String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
+        super(pose, size, EntityList.PLAYER);
         this.health = health;
         this.maxHealth = health;
         this.items = items;

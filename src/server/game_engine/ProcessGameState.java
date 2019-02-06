@@ -8,12 +8,12 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-import client.data.EnemyView;
-import client.data.GameView;
-import client.data.ItemDropView;
+import client.data.entity.EnemyView;
+import client.data.entity.GameView;
+import client.data.entity.ItemDropView;
 import client.data.ItemView;
-import client.data.PlayerView;
-import client.data.ProjectileView;
+import client.data.entity.PlayerView;
+import client.data.entity.ProjectileView;
 import client.data.TileView;
 import data.GameState;
 import data.Location;

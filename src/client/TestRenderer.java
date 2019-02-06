@@ -1,8 +1,8 @@
 package client;
 
-import client.data.GameView;
+import client.data.entity.GameView;
 import client.data.ItemView;
-import client.data.PlayerView;
+import client.data.entity.PlayerView;
 import client.data.TileView;
 import data.Pose;
 import data.entity.item.ItemList;
@@ -13,7 +13,6 @@ import data.map.tile.Tile;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

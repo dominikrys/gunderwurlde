@@ -3,8 +3,7 @@ package server.game_engine;
 import java.util.Random;
 
 import client.GameRenderer;
-import client.MenuController;
-import client.data.GameView;
+import client.data.entity.GameView;
 import data.entity.player.Teams;
 import data.map.MapList;
 import javafx.application.Application;
