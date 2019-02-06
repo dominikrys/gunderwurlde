@@ -2,6 +2,7 @@ package client;
 
 import client.data.*;
 import data.Constants;
+import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +54,7 @@ public class GameRenderer implements Runnable {
     private Stage stage;
 
     // HashMap to store all graphics
-    Map<String, Image> loadedSprites;
+    Map<Sprites, Image> loadedSprites;
 
     // Constructor
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
@@ -71,8 +73,23 @@ public class GameRenderer implements Runnable {
             fontManaspace18 = new Font("Consolas", 18);
         }
 
-        // Load images
-        imageCache = new HashMap<>();
+        // Iterate over sprites array and load all sprites used in the game
+        loadedSprites = new HashMap<>();
+
+        for (Sprites sprite : Sprites.values()) {
+            // Check if the sprite is used in the game
+            if (sprite.isUsedInGame()) {
+                // Load image
+                Image tempImage = new Image(sprite.getPath());
+
+                // Check if loaded properly, and if loaded properly then store in the loaded sprites hashmap
+                if (tempImage.isError()) {
+                    System.out.println("Error when loading image: " + sprite.name() + " from directory: " + sprite.getPath());
+                } else {
+                    loadedSprites.put(sprite, tempImage);
+                }
+            }
+        }
 
         // File representing the folder that you select using a FileChooser
         final File dir = new File("assets/img/");
@@ -375,16 +392,6 @@ public class GameRenderer implements Runnable {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
-    }
-
-    // Check if an image has been loaded correctly
-    private boolean checkImageLoaded(Image inputImage, String imageDirectory) {
-        if (inputImage.isError()) {
-            System.out.println("Image not loaded properly from: " + imageDirectory);
-            return false;
-        }
-
-        return true;
     }
 
     // Scale image by integer value through resampling - useful for large enemies/powerups
