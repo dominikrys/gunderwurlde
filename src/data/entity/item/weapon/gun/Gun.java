@@ -104,14 +104,16 @@ public abstract class Gun extends Weapon implements Limited {
             ammoInClip -= amount;
     }
 
-    public boolean shoot() { // This method doesn't create the projectile ProcessGameState is responsible for this.
+    public boolean shoot(int amountAvailable) { // This method doesn't create the projectile
         long now = System.currentTimeMillis();
-        if (ammoInClip > ammoPerShot && (now - lastShootTime) >= shootCoolDown) {
+        if (ammoInClip >= ammoPerShot && (now - lastShootTime) >= shootCoolDown) {
             if (reloading)
                 reloading = false;
             ammoInClip -= ammoPerShot;
             lastShootTime = now;
             return true;
+        } else if (ammoInClip < ammoPerShot) {
+            attemptReload(amountAvailable);
         }
         return false;
     }
@@ -127,15 +129,18 @@ public abstract class Gun extends Weapon implements Limited {
         return false;
     }
 
-    public boolean reload(int amountAvailable) {
+    public int reload(int amountAvailable) {
+        int amountTaken = 0;
         if (reloading && (System.currentTimeMillis() - reloadStartTime) >= reloadTime) {
-            if ((amountAvailable + ammoInClip) >= clipSize)
+            if ((amountAvailable + ammoInClip) >= clipSize) {
+                amountTaken = clipSize - ammoInClip;
                 ammoInClip = clipSize;
-            else
+            } else {
                 ammoInClip += amountAvailable;
+                amountTaken = amountAvailable;
+            }
             reloading = false;
-            return true;
         }
-        return false;
+        return amountTaken;
     }
 }

@@ -176,7 +176,10 @@ public class ProcessGameState extends Thread {
                 if (currentItem instanceof Gun) {
                     Gun currentGun = ((Gun) currentItem);
                     if (currentGun.isReloading()) {
-                        if (currentGun.reload(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
+                        AmmoList ammoType = currentGun.getAmmoType();
+                        int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
+                        if (amountTaken > 0) {
+                            currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
                             // TODO reload complete, gun updates itself but it might be good to send
                             // confirmation as well?
                         }
@@ -186,7 +189,7 @@ public class ProcessGameState extends Thread {
                 if (request.getShoot()) {
                     if (currentItem.getItemType() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
-                        if (currentGun.shoot()) {
+                        if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             int numOfBullets = currentGun.getProjectilesPerShot();
                             int spread = currentGun.getSpread();
                             int bulletSpacing = 0;

@@ -46,6 +46,8 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.score = DEFAULT_SCORE;
         this.team = team;
         this.name = name;
+        this.ammo = new LinkedHashMap<>();
+        this.ammo.put(AmmoList.BASIC_AMMO, Integer.MAX_VALUE);
         this.playerID = nextPlayerID++;
     }
 
