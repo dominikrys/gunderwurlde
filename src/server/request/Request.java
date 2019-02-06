@@ -11,14 +11,24 @@ public class Request {
     protected boolean shoot;
     protected boolean reload;
     protected boolean leave;
+    protected boolean drop;
 
     public Request() {
         this.shoot = false;
         this.reload = false;
         this.leave = false;
+        this.drop = false;
         this.movementDir = Optional.empty();
         this.facing = Optional.empty();
         this.selectItem = Optional.empty();
+    }
+
+    public void requestDrop() {
+        this.drop = true;
+    }
+
+    public boolean getDrop() {
+        return drop;
     }
 
     public boolean movementExists() {

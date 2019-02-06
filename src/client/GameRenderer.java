@@ -1,9 +1,9 @@
 package client;
+
 import client.data.*;
 import data.Constants;
-import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
-import client.gui.*;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,25 +26,45 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class Renderer {
-    AbstractMenuController currentMenuController;
-    private Stage stage;
+public class GameRenderer implements Runnable {
+    // Reusable variables used in rendering gameview
+    private Font fontManaspace28;
+    private Font fontManaspace18;
+    private PlayerView currentPlayer;
+    private FlowPane heldItems;
+    private Canvas mapCanvas;
+    private GraphicsContext mapGC;
+    private Label playerScoreNumber;
+    private FlowPane heartBox;
+    private HBox ammoBox;
     private Image defaultGraphic;
-    private SystemState systemState;
-    private Menus currentMenu;
-    private boolean menuChanged;
 
-    // Constructor - take stage
-    public Renderer(Stage inputStage) {
-        // Set stage
-        this.stage = inputStage;
+    // GameView object which is to be updated
+    private GameView gameView;
 
-        systemState = SystemState.MENU;
-        currentMenu = Menus.MAIN_MENU;
+    // Stage to render to
+    private Stage stage;
 
-        menuChanged = true;
+    // PlayerID of current client
+    private int playerID;
 
-        currentMenuController = null;
+    public GameRenderer(Stage stage, GameView gameView, int playerID) {
+        // Initialise gameView, stage and playerID
+        this.gameView = gameView;
+
+        this.stage = stage;
+
+        this.playerID = playerID;
+
+        // Load fonts
+        try {
+            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
+            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
+        } catch (FileNotFoundException e) {
+            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
+            fontManaspace28 = new Font("Consolas", 28);
+            fontManaspace18 = new Font("Consolas", 18);
+        }
 
         // Load the default graphic
         defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
@@ -52,39 +72,149 @@ public class Renderer {
             System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
         }
 
-        // Setting title to the Stage
-        stage.setTitle("Gunderwurlde");
+        // Initialize HUD elements
+        playerScoreNumber = null;
+        heartBox = null;
+        currentPlayer = null;
+        heldItems = null;
+        ammoBox = null;
     }
 
-    // Render input gameview to stage
-    public void renderGameView(GameView inputGameView, int playerID) {
-        // Create canvas according to dimensions of the map
-        Canvas mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                inputGameView.getYDim() * Constants.TILE_SIZE);
-        GraphicsContext mapGC = mapCanvas.getGraphicsContext2D();
+    @Override
+    public void run() {
+        // Set up GameView - change the stage
+        setUpGameView(gameView, playerID);
 
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: tweak this
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                renderGameView();
+            }
+        }.start();
+
+        //        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//        timeline.play();
+    }
+
+    // Method for updating the gameview
+    public void updateGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
+
+    // Method for rendering the gameview
+    public void renderGameView() {
         // Render map
-        renderMap(inputGameView, mapGC);
+        renderMap(gameView, mapGC);
 
         // Render players
-        for (PlayerView currentPlayer : inputGameView.getPlayers()) {
+        for (PlayerView currentPlayer : gameView.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
-        for (EnemyView currentEnemy : inputGameView.getEnemies()) {
+        for (EnemyView currentEnemy : gameView.getEnemies()) {
             renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
-        for (ProjectileView currentProjectile : inputGameView.getProjectiles()) {
+        for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
-        for (ItemDropView currentItem : inputGameView.getItemDrops()) {
+        for (ItemDropView currentItem : gameView.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
+
+        // Update HUD
+        updateHUD();
+    }
+
+    private void updateHUD() {
+        // Update score
+        playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
+
+        // Update hearts
+        heartBox.getChildren().clear();
+        int halfHearts = currentPlayer.getHealth() % 2;
+        int wholeHearts = currentPlayer.getHealth() / 2;
+        int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
+
+        // Populate heart box in GUI
+        for (int i = 0; i < wholeHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
+        }
+        // Populate half heart
+        for (int i = 0; i < halfHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
+        }
+        // Populate lost life
+        for (int i = 0; i < missingHearts; i++) {
+            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
+        }
+
+        // Update held items
+        heldItems.getChildren().clear();
+
+        int currentItemIndex = 0; // Keep track of current item since iterator is used
+
+        for (ItemView currentItem : currentPlayer.getItems()) {
+            // Make image view out of graphic
+            ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
+
+            // Check if the item currently being checked is the current selected item, and if it is, show that
+            if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
+                DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
+                dropShadow.setSpread(0.75);
+                imageView.setEffect(dropShadow);
+            }
+
+            // Add item to list
+            heldItems.getChildren().add(imageView);
+
+            // Increment current item index
+            currentItemIndex++;
+        }
+
+        // Get currently selected item
+        ItemView currentItem = currentPlayer.getCurrentItem();
+
+        // Update ammo counts
+        ammoBox.getChildren().clear();
+
+        // Add ammo amount to hud if the item has ammo
+        if (currentItem.getAmmoType() != AmmoList.NONE) {
+            // Make label for current ammo in item
+            Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
+                    new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
+            currentAmmo.setFont(fontManaspace28);
+            currentAmmo.setTextFill(Color.BLACK);
+
+            // Make label for total ammo
+            Label clipAmmo = new Label("/" + currentItem.getClipSize());
+            clipAmmo.setFont(fontManaspace18);
+            clipAmmo.setTextFill(Color.DARKSLATEGREY);
+
+            // Add to ammo hbox
+            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
+        } else {
+            // Make label for infinite use if it's not a weapon
+            Label currentAmmo = new Label("∞");
+            currentAmmo.setFont(new Font("Consolas", 32));
+            currentAmmo.setTextFill(Color.BLACK);
+
+            // Add to ammo hbox
+            ammoBox.getChildren().addAll(currentAmmo);
+        }
+    }
+
+    private void setUpGameView(GameView inputGameView, int playerID) {
+        // Create canvas according to dimensions of the map
+        mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
+        mapGC = mapCanvas.getGraphicsContext2D();
 
         // Create hbox to centre map canvas in and add map canvas to it
         HBox mainHBox = new HBox();
@@ -139,8 +269,6 @@ public class Renderer {
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 7);
         HUDBox.setSpacing(5);
 
-        PlayerView currentPlayer = null;
-
         // Get the current player from the player list
         for (PlayerView player : inputGameView.getPlayers()) {
             if (player.getID() == playerID) {
@@ -153,17 +281,9 @@ public class Renderer {
             return new VBox();
         }
 
-        // Load font to use in HUD. If font not found, load other, default font
-        Font fontManaspace28;
-        Font fontManaspace18;
-        try {
-            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
-            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
-        } catch (FileNotFoundException e) {
-            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
-            fontManaspace28 = new Font("Consolas", 28);
-            fontManaspace18 = new Font("Consolas", 18);
-        }
+        playerScoreNumber = new Label();
+        playerScoreNumber.setFont(fontManaspace28);
+        playerScoreNumber.setTextFill(Color.BLACK);
 
         // Label with player name to tell which player this part of the HUD is for
         Label playerLabel = new Label(currentPlayer.getName());
@@ -174,85 +294,16 @@ public class Renderer {
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
         playerScoreLabel.setTextFill(Color.BLACK);
-        Label playerScoreNumber = new Label(Integer.toString(currentPlayer.getScore()));
-        playerScoreNumber.setFont(fontManaspace28);
-        playerScoreNumber.setTextFill(Color.BLACK);
 
         // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
-        FlowPane heartBox = new FlowPane();
+        heartBox = new FlowPane();
         heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
 
-        // Calculate amount of hearts to generate from health
-        int halfHearts = currentPlayer.getHealth() % 2;
-        int wholeHearts = currentPlayer.getHealth() / 2;
-        int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
-
-        // Populate heart box in GUI TODO: load default heart texture?
-        for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
-        }
-        // Populate half heart
-        for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
-        }
-        // Populate lost life
-        for (int i = 0; i < missingHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
-        }
-
         // Iterate through held items list and add to the HUD
-        FlowPane heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
-
-        int currentItemIndex = 0; // Keep track of current item since iterator is used
-
-        for (ItemView currentItem : currentPlayer.getItems()) {
-            // Make image view out of graphic
-            ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
-
-            // Check if the item currently being checked is the current selected item, and if it is, show that
-            if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
-                dropShadow.setSpread(0.75);
-                imageView.setEffect(dropShadow);
-            }
-
-            // Add item to list
-            heldItems.getChildren().add(imageView);
-
-            // Increment current item index
-            currentItemIndex++;
-        }
+        heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
 
         // Ammo hbox
-        HBox ammoBox = new HBox();
-
-        // Get currently selected item
-        ItemView currentItem = currentPlayer.getCurrentItem();
-
-        // Add ammo amount to hud if the item has ammo
-        if (currentItem.getAmmoType() != AmmoList.NONE) {
-            // Make label for current ammo in item
-            Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
-            currentAmmo.setFont(new Font("Consolas", 32));
-            currentAmmo.setTextFill(Color.BLACK);
-
-            // Make label for total ammo
-            Label clipAmmo = new Label("/" + currentItem.getClipSize());
-            clipAmmo.setFont(new Font("Consolas", 18));
-            clipAmmo.setTextFill(Color.DARKSLATEGREY);
-
-            // Add to ammo hbox
-            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
-        } else {
-            // Make label for infinite use if it's not a weapon
-            Label currentAmmo = new Label("∞");
-            currentAmmo.setFont(new Font("Consolas", 32));
-            currentAmmo.setTextFill(Color.BLACK);
-
-            // Add to ammo hbox
-            ammoBox.getChildren().addAll(currentAmmo);
-        }
+        ammoBox = new HBox();
 
         // Add elements of HUD for player to HUD
         HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
@@ -280,8 +331,7 @@ public class Renderer {
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot
-    // point.
+    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
@@ -313,7 +363,7 @@ public class Renderer {
     }
 
     // Method for scaling image by integer value by resampling - useful for large enemies/powerups
-    public Image resampleImage(Image inputImage, int scaleFactor) {
+    private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 
@@ -339,72 +389,19 @@ public class Renderer {
         return outputImage;
     }
 
-    public SystemState getSystemState() {
-        return systemState;
-    }
-
-    public void renderMenu() {
-        if (currentMenuController != null) {
-            Menus controllerMenu = currentMenuController.getCurrentMenu();
-
-            if (controllerMenu != currentMenu) {
-                currentMenu = controllerMenu;
-                menuChanged = true;
-            }
-        }
-
-        if (menuChanged) { // TODO: see if this is necessary or not
-            switch (currentMenu) {
-                case MAIN_MENU:
-                    currentMenuController = new MainMenuController();
-                    break;
-                case SETTINGS:
-                    currentMenuController = new SettingsMenuController();
-                    break;
-                case PLAY:
-                    currentMenuController = new PlayMenuController();
-                    break;
-                case MAP_SELECTION:
-                    currentMenuController = new MapSelectionController();
-                    break;
-                case HELP:
-                    currentMenuController = new HelpMenuController();
-                    break;
-                case SINGLE_PLAYER:
-                    //systemState = SystemState.SINGLE_PLAYER;
-                    systemState = SystemState.GAME;
-                    return;
-                //break;
-                case MULTI_PLAYER:
-                    systemState = SystemState.MULTI_PLAYER;
-                    break;
-                case QUIT:
-                    systemState = SystemState.QUIT;
-                    return;
-            }
-
-            // Create the main scene
-            Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-            // Update stage
-            updateStageWithScene(stage, scene);
-
-            menuChanged = false;
-        }
-    }
-
-    // Method for updating the stage with a given scene since not on JavaFX thread
     private void updateStageWithScene(Stage stage, Scene scene) {
-        // runLater because not JavaFX thread
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+        // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
+        if (Platform.isFxApplicationThread()) {
+            stage.setScene(scene);
+            scene.getRoot().requestFocus();
+        } else {
+            // runLater because not JavaFX thread
+            Platform.runLater(() -> {
                 // Add scene to stage, request focus and show the stage
                 stage.setScene(scene);
                 scene.getRoot().requestFocus();
                 stage.show();
-            }
-        });
+            });
+        }
     }
 }
-

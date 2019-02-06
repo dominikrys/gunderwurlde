@@ -1,8 +1,10 @@
 package client.data;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 
-public class GameView {
+public class GameView implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected LinkedHashSet<PlayerView> players;
     protected LinkedHashSet<EnemyView> enemies;
     protected LinkedHashSet<ProjectileView> projectiles;

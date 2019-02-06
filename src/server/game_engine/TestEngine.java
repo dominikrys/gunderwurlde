@@ -1,8 +1,11 @@
 package server.game_engine;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import client.Renderer;
+import client.GameRenderer;
 import client.data.GameView;
 import data.entity.player.Teams;
 import data.map.MapList;
@@ -12,14 +15,13 @@ import server.request.ClientRequests;
 
 public class TestEngine extends Application implements HasEngine {
     private ProcessGameState engine;
-    private Renderer rend;
+    private GameRenderer rend;
     private GameView view;
+    private ClientRequests requests;
 
     public static void main(String[] args) throws Exception {
         launch(args);
     }
-
-
 
     @Override
     public void updateGameView(GameView view) {
@@ -31,20 +33,25 @@ public class TestEngine extends Application implements HasEngine {
         // TODO Auto-generated method stub
 
     }
+    
+    @Override
+    public void requestClientRequests() {
+        if (requests != null) engine.setClientRequests(requests);
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
         Random rand = new Random();
         this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
         stage.setResizable(false);
-        this.rend = new Renderer(stage);
         engine.start();
         engine.addPlayer("Bob2", Teams.RED);
         engine.addPlayer("Bob3", Teams.RED);
         engine.addPlayer("Bob4", Teams.RED);
+        boolean firstRender = true;
         
-        ClientRequests requests = new ClientRequests(4);
-        for (int i=0;i<1000;i++) {
+        requests = new ClientRequests(4);
+        for (int i = 0; i < 1000; i++) {
             requests.playerRequestFacing(0,rand.nextInt(360));
             requests.playerRequestMovement(0, rand.nextInt(360));
             requests.playerRequestShoot(0);
@@ -57,13 +64,40 @@ public class TestEngine extends Application implements HasEngine {
             requests.playerRequestFacing(3, rand.nextInt(360));
             requests.playerRequestMovement(3, rand.nextInt(360));
             requests.playerRequestShoot(3);
-            engine.setClientRequests(requests);
             Thread.sleep(17);
-            if (view != null) rend.renderGameView(view, 0);
-            else System.out.println("View is null");
+            
+            if (firstRender && view != null) {
+                stage.show();
+                rend = new GameRenderer(stage, view, 0);
+                firstRender = false;
+                rend.run();
+                System.out.println("Timer started");
+                startTheTimer();
+            }
         }
-
         engine.handlerClosing();       
+    }
+
+    private void startTheTimer() {
+        new Thread() {
+            public void run() {
+                final AtomicBoolean a = new AtomicBoolean(true);
+                Timer t = new Timer();
+                t.scheduleAtFixedRate(new TimerTask() {
+                    public void run() {
+                        if (a.get()) {
+                            rend.updateGameView(view);
+                            a.set(false);
+                        } else {
+                            rend.updateGameView(view);
+                            a.set(true);
+                        }
+
+                    }
+
+                }, 0, 1000);
+            }
+        }.start();
     }
 
 }

@@ -1,12 +1,14 @@
 package client.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import data.Pose;
 import data.entity.item.weapon.gun.AmmoList;
 
-public class PlayerView extends EntityView {
+public class PlayerView extends EntityView implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected int health;
     protected int maxHealth;
     protected ArrayList<ItemView> items;
@@ -16,8 +18,8 @@ public class PlayerView extends EntityView {
     protected LinkedHashMap<AmmoList, Integer> ammo;
     protected final int id;
 
-    public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score, String name,
-            LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
+    public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
+            String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
         super(pose, size);
         this.pathToGraphic = "file:assets/img/mobs/player.png";
         this.health = health;
@@ -29,7 +31,7 @@ public class PlayerView extends EntityView {
         this.ammo = ammo;
         this.id = playerID;
     }
-    
+
     public int getID() {
         return id;
     }
