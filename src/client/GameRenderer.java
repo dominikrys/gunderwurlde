@@ -2,7 +2,6 @@ package client;
 
 import client.data.*;
 import data.Constants;
-import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -26,7 +25,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,16 +87,6 @@ public class GameRenderer implements Runnable {
                     loadedSprites.put(sprite, tempImage);
                 }
             }
-        }
-
-        // File representing the folder that you select using a FileChooser
-        final File dir = new File("assets/img/");
-        System.out.println(dir.listFiles());
-
-        // Load the default graphic
-        defaultTileGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
-        if (!checkImageLoaded(defaultTileGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
-            System.out.println("Default tile texture couldn't be loaded! There could be potential issues with the game!");
         }
 
         // Initialize HUD elements
@@ -363,9 +351,9 @@ public class GameRenderer implements Runnable {
             imageToRender = defaultTileGraphic;
         }
 
-        // If entity's size isn't zero, enlarge the graphic
-        if (entity.getSize() != 1) {
-            imageToRender = resampleImage(imageToRender, entity.getSize());
+        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
+        if (entity.getSizeScaleFactor() != 1) {
+            imageToRender = resampleImage(imageToRender, entity.getSizeScaleFactor());
         }
 
         // Render entity to specified location on graphicscontext

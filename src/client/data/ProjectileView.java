@@ -15,7 +15,6 @@ public class ProjectileView extends EntityView implements Serializable {
 
         switch (name) {
         case SMALLBULLET:
-            this.pathToGraphic = "file:assets/img/projectiles/bullet.png";
             break;
         }
     }

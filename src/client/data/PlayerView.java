@@ -21,7 +21,6 @@ public class PlayerView extends EntityView implements Serializable {
     public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
             String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
         super(pose, size);
-        this.pathToGraphic = "file:assets/img/mobs/player.png";
         this.health = health;
         this.maxHealth = health;
         this.items = items;

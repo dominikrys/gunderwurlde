@@ -207,7 +207,7 @@ public class ProcessGameState extends Thread {
                                 for (Pose p : bulletPoses) {
                                     SmallBullet b = new SmallBullet(p);
                                     newProjectiles.add(b);
-                                    projectilesView.add(new ProjectileView(p, b.getSize(), b.getProjectileType()));
+                                    projectilesView.add(new ProjectileView(p, b.getSizeScaleFactor(), b.getProjectileType()));
                                 }
                                 break;
                             default:
@@ -338,7 +338,7 @@ public class ProcessGameState extends Thread {
                     }
                     // TODO itemdrop change here
                 } else {
-                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getItemName()));
+                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSizeScaleFactor(), i.getItemName()));
                 }
             }
 
@@ -360,11 +360,11 @@ public class ProcessGameState extends Thread {
 
                 switch (enemyName) {
                 case ZOMBIE:
-                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
+                    ai = new ZombieAI(enemyPose, currentEnemy.getSizeScaleFactor(), playerPoses, tileMap, maxDistanceMoved);
                     break;
                 default:
                     System.out.println("Enemy " + enemyName.toString() + " not known!");
-                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
+                    ai = new ZombieAI(enemyPose, currentEnemy.getSizeScaleFactor(), playerPoses, tileMap, maxDistanceMoved);
                     break;
                 }
 
@@ -401,7 +401,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEnemyName()));
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSizeScaleFactor(), currentEnemy.getEnemyName()));
 
                 // TODO enemy change here
             }
@@ -456,7 +456,7 @@ public class ProcessGameState extends Thread {
                                                 ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO item change here
-                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getItemName()));
+                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSizeScaleFactor(), newDrop.getItemName()));
 
                                                 LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
                                                 for (int[] itemTileCords : itemTilesOn) {
@@ -483,7 +483,7 @@ public class ProcessGameState extends Thread {
                 } else {
                     // TODO basic projectile change
                     newProjectiles.add(currentProjectile);
-                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getProjectileType()));
+                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSizeScaleFactor(), currentProjectile.getProjectileType()));
                 }
             }
 
@@ -545,7 +545,7 @@ public class ProcessGameState extends Thread {
                         playerItems.add(new ItemView(i.getItemName(), AmmoList.NONE, 0, 0));
                     }
                 }
-                playersView.add(new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
+                playersView.add(new PlayerView(p.getPose(), p.getSizeScaleFactor(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
                         p.getScore(), p.getName(), p.getAmmoList(), p.getID()));
             }
 
@@ -568,12 +568,12 @@ public class ProcessGameState extends Thread {
 
     private static boolean haveCollided(Entity e1, Entity e2) {
         Location e1_loc = e1.getLocation();
-        int e1_radius = e1.getSize() / 2;
+        int e1_radius = e1.getSizeScaleFactor() / 2;
         int e1_x = e1_loc.getX();
         int e1_y = e1_loc.getY();
 
         Location e2_loc = e2.getLocation();
-        int e2_radius = e2.getSize() / 2;
+        int e2_radius = e2.getSizeScaleFactor() / 2;
         int e2_x = e2_loc.getX();
         int e2_y = e2_loc.getY();
 
@@ -583,7 +583,7 @@ public class ProcessGameState extends Thread {
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) {
         Location loc = e.getLocation();
-        int size = e.getSize();
+        int size = e.getSizeScaleFactor();
         int radius = size / 2;
         int x = loc.getX();
         int max_x = x + radius;
