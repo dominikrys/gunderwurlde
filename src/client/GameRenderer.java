@@ -213,7 +213,7 @@ public class GameRenderer implements Runnable {
 
         for (ItemView currentItem : currentPlayer.getItems()) {
             // Make image view out of graphic
-            Image imageToRender = loadedSprites.get(currentItem.getName().toString());
+            Image imageToRender = loadedSprites.get(currentItem.getName().ge);
             ImageView itemImageView;
 
             if (imageToRender != null) {
