@@ -52,6 +52,7 @@ public class GameRenderer implements Runnable {
     // Stage to render to
     private Stage stage;
 
+    // Constructor
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
         // Initialise gameView, stage and playerID
         this.gameView = gameView;
@@ -82,12 +83,13 @@ public class GameRenderer implements Runnable {
         ammoBox = null;
     }
 
+    // Run the thread - set up window and update game on a timer
     @Override
     public void run() {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: tweak this
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: see if this causes issues
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -95,21 +97,32 @@ public class GameRenderer implements Runnable {
             }
         }.start();
 
-        //        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.play();
+        /*
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+        */
     }
 
-    // Method for updating the gameview
+    // Update stored gameView
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
     }
 
-    // Method for rendering the gameview
+    // Render gameView
     public void renderGameView() {
         // Render map
         renderMap(gameView, mapGC);
 
+        // Render entities onto canvas
+        renderEntitiesToCanvas();
+
+        // Update HUD
+        updateHUD();
+    }
+
+    // Render entities to the map canvas
+    private void renderEntitiesToCanvas() {
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
@@ -129,11 +142,9 @@ public class GameRenderer implements Runnable {
         for (ItemDropView currentItem : gameView.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
-
-        // Update HUD
-        updateHUD();
     }
 
+    // Update all HUD elements
     private void updateHUD() {
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
@@ -212,6 +223,7 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
         // Create canvas according to dimensions of the map
         mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
@@ -240,6 +252,7 @@ public class GameRenderer implements Runnable {
         updateStageWithScene(stage, scene);
     }
 
+    // Render map from tiles
     private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
         // Get map X and Y dimensions
         int mapX = inputGameState.getXDim();
@@ -264,6 +277,7 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Create HUD and initialise all elements
     private VBox createHUD(GameView inputGameView, int playerID) {
         // Make HUD
         VBox HUDBox = new VBox();
@@ -313,7 +327,7 @@ public class GameRenderer implements Runnable {
         return HUDBox;
     }
 
-    // Method for rendering entity onto map
+    // Render entity onto the map canas
     private void renderEntity(EntityView entity, GraphicsContext gc, String imagePath) {
         // Get image to render from path
         Image imageToRender = new Image(imagePath);
@@ -333,13 +347,13 @@ public class GameRenderer implements Runnable {
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
+    // Set transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
     }
 
-    // Method for drawing the rotated image
+    // Draw rotated image
     private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
         gc.save(); // Saves the current state on stack, including the current transform for later
         rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
@@ -347,14 +361,14 @@ public class GameRenderer implements Runnable {
         gc.restore(); // Back to original state (before rotation)
     }
 
-    // Method for creating an image from a specified colour
+    // Create an Image object from specified colour
     private Image createImageFromColor(Color color) {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
     }
 
-    // Method for checking if an image has loaded in correctly
+    // Check if an image has been loaded correctly
     private boolean checkImageLoaded(Image inputImage, String imageDirectory) {
         if (inputImage.isError()) {
             System.out.println("Image not loaded properly from: " + imageDirectory);
@@ -364,7 +378,7 @@ public class GameRenderer implements Runnable {
         return true;
     }
 
-    // Method for scaling image by integer value by resampling - useful for large enemies/powerups
+    // Scale image by integer value through resampling - useful for large enemies/powerups
     private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
@@ -391,6 +405,7 @@ public class GameRenderer implements Runnable {
         return outputImage;
     }
 
+    // Update stage with scene - only called when game first made
     private void updateStageWithScene(Stage stage, Scene scene) {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
         if (Platform.isFxApplicationThread()) {

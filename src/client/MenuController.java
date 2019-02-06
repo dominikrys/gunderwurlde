@@ -14,7 +14,7 @@ public class MenuController {
     private Menus currentMenu;
     private boolean stageChanged;
 
-    // Constructor - take stage
+    // Constructor
     public MenuController(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
@@ -41,6 +41,7 @@ public class MenuController {
         this.systemState = systemState;
     }
 
+    // Render menu
     public void renderMenu() {
         // See if stage should have changed to a new menu
         if (currentMenuController != null) {
