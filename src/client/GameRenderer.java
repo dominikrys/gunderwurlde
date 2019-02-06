@@ -213,15 +213,7 @@ public class GameRenderer implements Runnable {
 
         for (ItemView currentItem : currentPlayer.getItems()) {
             // Make image view out of graphic
-            Image imageToRender = loadedSprites.get(currentItem.getName().ge);
-            ImageView itemImageView;
-
-            if (imageToRender != null) {
-                itemImageView = new ImageView(imageToRender);
-            } else {
-                itemImageView = new ImageView(loadedSprites.get(EntityList.DEFAULT));
-            }
-
+            ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
 
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
@@ -247,7 +239,7 @@ public class GameRenderer implements Runnable {
         if (currentItem.getAmmoType() != AmmoList.NONE) {
             // Make label for current ammo in item
             Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
+                    new ImageView(loadedSprites.get(EntityList.AMMO_CLIP)));
             currentAmmo.setFont(fontManaspace28);
             currentAmmo.setTextFill(Color.BLACK);
 
@@ -299,22 +291,16 @@ public class GameRenderer implements Runnable {
     }
 
     // Render map from tiles
-    private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
+    private void renderMap(GameView inputGameView, GraphicsContext mapGC) {
         // Get map X and Y dimensions
-        int mapX = inputGameState.getXDim();
-        int mapY = inputGameState.getYDim();
+        int mapX = inputGameView.getXDim();
+        int mapY = inputGameView.getYDim();
 
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = new Image(inputGameState.getTileMap()[x][y].getPathToGraphic());
-
-                // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
-                if (!(checkImageLoaded(tileImage, inputGameState.getTileMap()[x][y].getPathToGraphic()))
-                        || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
-                    tileImage = defaultTileGraphic;
-                }
+                Image tileImage = loadedSprites.get(inputGameView.getTileMap()[x][y].getTileType().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,

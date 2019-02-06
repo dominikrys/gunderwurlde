@@ -28,7 +28,7 @@ public class ItemView implements Serializable {
         }
     }
 
-    public ItemList getName() {
+    public ItemList getItemListName() {
         return name;
     }
 
