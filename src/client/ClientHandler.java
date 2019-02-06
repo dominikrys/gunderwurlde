@@ -1,5 +1,6 @@
 package client;
 
+import client.data.GameView;
 import data.Constants;
 import data.SystemState;
 import javafx.application.Platform;
@@ -15,14 +16,18 @@ public class ClientHandler extends Thread {
     private boolean running;
     private Server server;
     private ClientOnline clientOnline;
+    private boolean gameRunning;
+    GameRenderer gameRenderer;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
         running = true;
+        gameRunning = false;
+        gameRenderer = null;
     }
 
     public void run() {
-        Renderer renderer = new Renderer(stage);
+        MenuController menuController = new MenuController(stage);
 
         // Example game state to render
         SystemState systemState = MENUS;
@@ -34,14 +39,22 @@ public class ClientHandler extends Thread {
             switch (systemState) {
                 case MENUS:
                     // Render menu
-                    renderer.renderMenu();
-                    systemState = renderer.getSystemState();
+                    gameRunning = false;
+                    menuController.renderMenu();
+                    systemState = menuController.getSystemState();
                     break;
                 case GAME:
                     // Render game state
+                    /*
+                    if (!gameRunning) {
+                        gameRenderer = new GameRenderer(stage, gameView, 0);
+                        gameRenderer.run();
+                        gameRunning = true;
+                    }
 
-                    //renderer.renderGameView(new GameView());
-                    systemState = renderer.getSystemState();
+                    gameRenderer.updateGameView(gameView);
+                    */
+                    //systemState = menuController.getSystemState(); TODO: change this to update state from game/controller
                     break;
                 case SINGLE_PLAYER_CONNECTION:
                     // Start local server and run it
@@ -52,7 +65,7 @@ public class ClientHandler extends Thread {
 
                     // Set appropriate systemstates
                     systemState = SystemState.GAME;
-                    renderer.setSystemState(SystemState.GAME);
+                    menuController.setSystemState(SystemState.GAME);
                     break;
                 case MULTI_PLAYER_CONNECTION:
                     // Start server and run it
@@ -63,11 +76,12 @@ public class ClientHandler extends Thread {
 
                     // Set appropriate systemstates
                     systemState = SystemState.GAME;
-                    renderer.setSystemState(SystemState.GAME);
+                    menuController.setSystemState(SystemState.GAME);
                     break;
                 case QUIT:
                     // Quit program
                     running = false;
+
                     Platform.runLater(() -> {
                         // Close stage
                         stage.close();

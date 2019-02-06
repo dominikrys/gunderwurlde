@@ -27,7 +27,6 @@ public class TestRenderer extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setResizable(false);
         primaryStage.show();
-        Renderer rend = new Renderer(primaryStage);
         GameMap map = new Meadow();
         int xDim = map.getXDim();
         int yDim = map.getYDim();
@@ -50,10 +49,13 @@ public class TestRenderer extends Application {
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 
-        for (int i=0;i<500;i++) {
-            rend.renderGameView(view1, 0);
+        GameRenderer rend = new GameRenderer(primaryStage, view1, 0);
+        rend.run();
+
+        for (int i=0;i<20000;i++) {
+            rend.updateGameView(view1);
             //Thread.sleep(500);
-            rend.renderGameView(view2, 0);
+            rend.updateGameView(view2);
             //Thread.sleep(500);
         }
     }

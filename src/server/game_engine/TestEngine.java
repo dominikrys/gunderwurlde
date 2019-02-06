@@ -2,7 +2,8 @@ package server.game_engine;
 
 import java.util.Random;
 
-import client.Renderer;
+import client.GameRenderer;
+import client.MenuController;
 import client.data.GameView;
 import data.entity.player.Teams;
 import data.map.MapList;
@@ -12,7 +13,7 @@ import server.request.ClientRequests;
 
 public class TestEngine extends Application implements HasEngine {
     private ProcessGameState engine;
-    private Renderer rend;
+    private GameRenderer rend;
     private GameView view;
     private ClientRequests requests;
 
@@ -41,7 +42,7 @@ public class TestEngine extends Application implements HasEngine {
         Random rand = new Random();
         this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
         stage.setResizable(false);
-        this.rend = new Renderer(stage);
+        this.rend = new GameRenderer(stage);
         engine.start();
         engine.addPlayer("Bob2", Teams.RED);
         engine.addPlayer("Bob3", Teams.RED);

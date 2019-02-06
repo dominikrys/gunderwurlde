@@ -1,10 +1,9 @@
 package client;
 
 import client.data.*;
-import client.gui.*;
 import data.Constants;
-import data.SystemState;
 import data.entity.item.weapon.gun.AmmoList;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,15 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class Renderer {
-    AbstractMenuController currentMenuController;
-    private Stage stage;
-    private Image defaultGraphic;
-    private SystemState systemState;
-    private Menus currentMenu;
-    private boolean stageChanged;
-
-    // Variables used in rendering gameview
+public class GameRenderer implements Runnable {
+    // Reusable variables used in rendering gameview
     private Font fontManaspace28;
     private Font fontManaspace18;
     private PlayerView currentPlayer;
@@ -45,29 +37,24 @@ public class Renderer {
     private Label playerScoreNumber;
     private FlowPane heartBox;
     private HBox ammoBox;
+    private Image defaultGraphic;
 
-    // Constructor - take stage
-    public Renderer(Stage inputStage) {
-        // Set stage
-        this.stage = inputStage;
+    // GameView object which is to be updated
+    private GameView gameView;
 
-        // Set system states
-        systemState = SystemState.MENUS;
-        currentMenu = Menus.MAIN_MENU;
+    // Stage to render to
+    private Stage stage;
 
-        // Flag for changing stages
-        stageChanged = true;
+    // PlayerID of current client
+    private int playerID;
 
-        currentMenuController = null;
+    public GameRenderer(Stage stage, GameView gameView, int playerID) {
+        // Initialise gameView, stage and playerID
+        this.gameView = gameView;
 
-        // Load the default graphic
-        defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
-        if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
-            System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
-        }
+        this.stage = stage;
 
-        // Setting title to the Stage
-        stage.setTitle("Gunderwurlde");
+        this.playerID = playerID;
 
         // Load fonts
         try {
@@ -79,6 +66,12 @@ public class Renderer {
             fontManaspace18 = new Font("Consolas", 18);
         }
 
+        // Load the default graphic
+        defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
+        if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
+            System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
+        }
+
         // Initialize HUD elements
         playerScoreNumber = null;
         heartBox = null;
@@ -87,42 +80,60 @@ public class Renderer {
         ammoBox = null;
     }
 
-    // Render input gameview to stage
-    public void renderGameView(GameView inputGameView, int playerID) {
-        if (stageChanged) {
-            // If stage has changes, set up the game view
-            setUpGameView(inputGameView, playerID);
-        }
+    @Override
+    public void run() {
+        // Set up GameView - change the stage
+        setUpGameView(gameView, playerID);
 
+        // Update the HUD and game at intervals
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                renderGameView();
+            }
+        }.start();
+    }
+
+    // Method for updating the gameview
+    public void updateGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
+
+    // Method for rendering the gameview
+    public void renderGameView() {
         // Render map
-        renderMap(inputGameView, mapGC);
+        renderMap(gameView, mapGC);
 
         // Render players
-        for (PlayerView currentPlayer : inputGameView.getPlayers()) {
+        for (PlayerView currentPlayer : gameView.getPlayers()) {
             renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
         }
 
         // Render enemies
-        for (EnemyView currentEnemy : inputGameView.getEnemies()) {
+        for (EnemyView currentEnemy : gameView.getEnemies()) {
             renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
         }
 
         // Render projectiles
-        for (ProjectileView currentProjectile : inputGameView.getProjectiles()) {
+        for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
         }
 
         // Render items
-        for (ItemDropView currentItem : inputGameView.getItemDrops()) {
+        for (ItemDropView currentItem : gameView.getItemDrops()) {
             renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
         }
 
         // Update HUD
-        playerScoreNumber.setText(Integer.toString(currentPlayer.getScore())); // Update score
+        updateHUD();
+    }
+
+    private void updateHUD() {
+        // Update score
+        playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
         // Update hearts
         heartBox.getChildren().clear();
-
         int halfHearts = currentPlayer.getHealth() % 2;
         int wholeHearts = currentPlayer.getHealth() / 2;
         int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
@@ -221,9 +232,6 @@ public class Renderer {
 
         // Update stage
         updateStageWithScene(stage, scene);
-
-        // Menu set up, change flag to false
-        stageChanged = false;
     }
 
     private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
@@ -377,63 +385,6 @@ public class Renderer {
         return outputImage;
     }
 
-    public SystemState getSystemState() {
-        return systemState;
-    }
-
-    public void setSystemState(SystemState systemState) {
-        this.systemState = systemState;
-    }
-
-    public void renderMenu() {
-        if (currentMenuController != null) {
-            Menus controllerMenu = currentMenuController.getCurrentMenu();
-
-            if (controllerMenu != currentMenu) {
-                currentMenu = controllerMenu;
-                stageChanged = true;
-            }
-        }
-
-        if (stageChanged) {
-            switch (currentMenu) {
-                case MAIN_MENU:
-                    currentMenuController = new MainMenuController();
-                    break;
-                case SETTINGS:
-                    currentMenuController = new SettingsMenuController();
-                    break;
-                case PLAY:
-                    currentMenuController = new PlayMenuController();
-                    break;
-                case MAP_SELECTION:
-                    currentMenuController = new MapSelectionController();
-                    break;
-                case HELP:
-                    currentMenuController = new HelpMenuController();
-                    break;
-                case SINGLE_PLAYER:
-                    systemState = SystemState.SINGLE_PLAYER_CONNECTION;
-                    return;
-                case MULTI_PLAYER:
-                    systemState = SystemState.MULTI_PLAYER_CONNECTION;
-                    return;
-                case QUIT:
-                    systemState = SystemState.QUIT;
-                    return;
-            }
-
-            // Create the main scene
-            Scene scene = new Scene(currentMenuController, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-            // Update stage
-            updateStageWithScene(stage, scene);
-
-            stageChanged = false;
-        }
-    }
-
-    // Method for updating the stage with a given scene
     private void updateStageWithScene(Stage stage, Scene scene) {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
         if (Platform.isFxApplicationThread()) {
@@ -450,4 +401,3 @@ public class Renderer {
         }
     }
 }
-
