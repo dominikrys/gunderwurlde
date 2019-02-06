@@ -1,4 +1,4 @@
-package data.entity.item.weapon.gun;
+package data.item.weapon.gun;
 
 import data.entity.projectile.ProjectileList;
 

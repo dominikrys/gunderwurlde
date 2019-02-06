@@ -10,28 +10,31 @@ public abstract class Entity {
     
     protected Pose pose;
     protected int sizeScaleFactor;
+    protected EntityList entityName;
 
-    protected Entity(Pose pose, int sizeScaleFactor) {
+    protected Entity(Pose pose, int sizeScaleFactor, EntityList entityName) {
         this.pose = pose;
         this.sizeScaleFactor = sizeScaleFactor;
+        this.entityName = entityName;
     }
     
-    protected Entity(int sizeScaleFactor) {
-        this.pose = new Pose();
-        this.sizeScaleFactor = sizeScaleFactor;
+    protected Entity(int sizeScaleFactor, EntityList entityName) {
+        this (new Pose(), 1, entityName);
     }
 
-    protected Entity(Location location, int sizeScaleFactor) {
-        this(new Pose(location), sizeScaleFactor);
+    protected Entity(Location location, int sizeScaleFactor, EntityList entityName) {
+        this(new Pose(location), sizeScaleFactor, entityName);
     }
 
-    protected Entity(Pose pose) {
-        this(pose, 1);
+    protected Entity(Pose pose, EntityList entityName) {
+        this(pose, 1, entityName);
     }
 
     public Pose getPose() {
         return pose;
     }
+
+    public EntityList ge
 
     public void setPose(Pose pose) {
         this.pose = pose;

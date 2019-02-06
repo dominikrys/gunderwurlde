@@ -1,7 +1,7 @@
-package data.entity.item;
+package data.item;
 
 import data.entity.EntityList;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.AmmoList;
 
 public enum ItemList {
     PISTOL(EntityList.PISTOL),

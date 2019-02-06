@@ -7,9 +7,9 @@ import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
 import data.entity.HasID;
-import data.entity.item.Item;
-import data.entity.item.weapon.gun.AmmoList;
-import data.entity.item.weapon.gun.Pistol;
+import data.item.Item;
+import data.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.Pistol;
 import data.map.tile.Tile;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID {

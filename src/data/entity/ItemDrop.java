@@ -1,9 +1,12 @@
-package data.entity.item;
+package data.entity;
 
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
 import data.entity.HasID;
+import data.item.Item;
+import data.item.ItemList;
+import data.item.ItemType;
 import data.map.tile.Tile;
 
 public class ItemDrop extends Entity implements HasID {
@@ -13,7 +16,7 @@ public class ItemDrop extends Entity implements HasID {
     
     private static int nextID = 0;
 
-    private final Item item;   
+    private final Item item;
     private final int id;
 
     protected int quantity;

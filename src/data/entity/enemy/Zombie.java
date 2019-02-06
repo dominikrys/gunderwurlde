@@ -3,8 +3,8 @@ package data.entity.enemy;
 import java.util.LinkedHashSet;
 
 import data.HasContactDamage;
-import data.entity.item.weapon.gun.Ammo;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.Ammo;
+import data.item.weapon.gun.AmmoList;
 import data.map.tile.Tile;
 
 public class Zombie extends Enemy implements HasContactDamage {

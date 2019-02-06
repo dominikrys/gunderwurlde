@@ -1,8 +1,8 @@
-package data.entity.item.weapon.gun;
+package data.item.weapon.gun;
 
-import data.entity.item.IsDroppable;
-import data.entity.item.ItemList;
-import data.entity.item.ItemType;
+import data.item.IsDroppable;
+import data.item.ItemList;
+import data.item.ItemType;
 
 public enum AmmoList implements IsDroppable {
     BASIC_AMMO, NONE/* Use none for items with infinite ammo*/;

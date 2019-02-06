@@ -1,6 +1,6 @@
-package data.entity.item.weapon.gun;
+package data.item.weapon.gun;
 
-import data.entity.item.Item;
+import data.item.Item;
 
 public class Ammo extends Item {
 

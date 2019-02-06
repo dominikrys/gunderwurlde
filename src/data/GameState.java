@@ -1,7 +1,7 @@
 package data;
 
 import data.entity.enemy.Enemy;
-import data.entity.item.ItemDrop;
+import data.entity.ItemDrop;
 import data.entity.player.Player;
 import data.entity.projectile.Projectile;
 import data.map.GameMap;

@@ -1,4 +1,4 @@
-package data.entity.item;
+package data.item;
 
 import data.Constants;
 

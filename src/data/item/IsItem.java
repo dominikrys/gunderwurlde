@@ -1,4 +1,4 @@
-package data.entity.item;
+package data.item;
 
 public interface IsItem {
     public abstract ItemType getItemType();

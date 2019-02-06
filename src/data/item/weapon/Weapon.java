@@ -1,7 +1,7 @@
-package data.entity.item.weapon;
+package data.item.weapon;
 
-import data.entity.item.Item;
-import data.entity.item.weapon.gun.IsWeapon;
+import data.item.Item;
+import data.item.weapon.gun.IsWeapon;
 
 public abstract class Weapon extends Item {
 

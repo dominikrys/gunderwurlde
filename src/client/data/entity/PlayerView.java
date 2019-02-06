@@ -3,7 +3,7 @@ package client.data.entity;
 import client.data.ItemView;
 import data.Pose;
 import data.entity.EntityList;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.AmmoList;
 
 import java.io.Serializable;
 import java.util.ArrayList;

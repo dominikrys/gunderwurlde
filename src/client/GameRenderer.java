@@ -4,7 +4,7 @@ import client.data.ItemView;
 import client.data.entity.*;
 import data.Constants;
 import data.entity.EntityList;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.AmmoList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
