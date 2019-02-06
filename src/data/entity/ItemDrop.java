@@ -5,12 +5,11 @@ import data.Pose;
 import data.item.Item;
 import data.item.ItemList;
 import data.item.ItemType;
-import data.map.tile.Tile;
 
 public class ItemDrop extends Entity implements HasID {
     public static final long DECAY_LENGTH = 10000; //10 seconds
     public static final int DROP_FREEZE = 1000; // drop freeze of 1 second
-    
+
     private static int nextID = 0;
 
     private final Item item;
@@ -19,18 +18,18 @@ public class ItemDrop extends Entity implements HasID {
     protected int quantity;
     protected long dropTime;
 
-    public ItemDrop(Item item, Location location, int quantity, EntityList entityListName) {
-        super(new Pose(location), 1, entityListName);
+    public ItemDrop(Item item, Location location, int quantity) {
+        super(new Pose(location), 1, item.getItemListName());
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;
         this.dropTime = System.currentTimeMillis();
     }
 
-    public ItemDrop(Item item, Location location) {
-        this(item, location, 1);
+    public ItemDrop(Item item, Location location, EntityList entityListName) {
+        this(item, location, 1, entityListName);
     }
-    
+
     public long getDropTime() {
         return dropTime;
     }
@@ -58,14 +57,10 @@ public class ItemDrop extends Entity implements HasID {
     public Item getItem() {
         return item;
     }
-    
+
     @Override
     public int getID() {
         return id;
-    }
-
-    public String getPathToGraphic() {
-        return item.getPathToGraphic();
     }
 
 }

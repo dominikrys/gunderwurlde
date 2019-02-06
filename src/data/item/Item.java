@@ -1,20 +1,20 @@
 package data.item;
 
-public abstract class Item {
-    protected final IsItem itemName;
+public abstract class Item implements IsItem{
     protected ItemList itemListName;
+    protected ItemType itemType;
 
-    protected Item(IsItem itemName, ItemList itemListName) {
-        this.itemName = itemName;    
+    protected Item(ItemList itemListName, ItemType itemType) {
         this.itemListName = itemListName;
+        this.itemType = itemType;
     }
 
-    public ItemList getItemName() {
-        return itemName.getItemListName();
+    public ItemList getItemListName() {
+        return itemListName;
     }
 
-    public ItemType getItemListName() {
-        return itemName.getItemType();
+    public ItemType getItemType() {
+        return itemType;
     }
 
 }
