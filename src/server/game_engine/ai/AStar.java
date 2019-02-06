@@ -4,36 +4,30 @@ package server.game_engine.ai;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class AStar {
 
-    private static final double COST_OF_TRAVEL = 0.8;
-    private static double[][] realDist;
-    private static final int[][] tiles = {
-            {1, 1, 0, 0, 0, 0, 1, 0, 0},
-            {0, 1, 1, 0, 0, 1, 1, 0, 0},
-            {0, 0, 1, 0, 0, 1, 1, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 1, 1, 1, 1, 1, 0, 0},
-            {0, 0, 1, 0, 0, 0, 0, 0, 0}
-    };
+    private final double COST_OF_TRAVEL;
+    private double[][] realDist;
+    private final int[][] tiles;
 
-    public static void main(String[] args) {
-        Pair<Integer, Integer> playerLoc = new Pair<Integer, Integer>(2, 7); //y and x
-        Pair<Integer, Integer> enemLoc = new Pair<Integer, Integer>(1, 0);
-
-        ArrayList<Pair<Integer, Integer>> path = aStar(enemLoc, playerLoc);
-
-        for (Pair<Integer, Integer> pair: path) {
-            System.out.println(pair);
-        }
+    public AStar(double cost_of_travel, int[][] tiles){
+        COST_OF_TRAVEL = cost_of_travel;
+        this.tiles = tiles;
     }
 
-    private static ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> path){
+    private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> path){
         Pair<Integer,Integer> biggestDist = path.get(0);
+
+        // Construct a new list from the set constucted from elements
+        // of the original list
+        List<Pair<Integer, Integer>> newList = path.stream()
+                .distinct()
+                .collect(Collectors.toList());
 
         // Find a node that has the biggest distance to the final end node.
         // At this point realDist array still have values for the last A* search
@@ -62,7 +56,7 @@ public class AStar {
         return path;
     }
 
-    private static ArrayList<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) {
+    protected ArrayList<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);
         // Array list to store nodes after they have been expanded
@@ -99,17 +93,13 @@ public class AStar {
         }
 
         // Shorten the path by finding shortcuts
-        //closed  = removeLeafs(closed);
+        closed  = removeLeafs(closed);
 
-
-//        Set<Pair<Integer, Integer>> set = new HashSet<>(closed);
-//        closed.clear();
-//        closed.addAll(set);
 
         return closed;
     }
 
-    private static void printOut(PriorityQueue<Node> queue){
+    private void printOut(PriorityQueue<Node> queue){
         PriorityQueue<Node> queueToPrint = new PriorityQueue<Node>(queue);
 
         System.out.println("\nOpen nodes");
@@ -118,7 +108,7 @@ public class AStar {
         }
     }
 
-    private static double[][] calcRealDist(Pair<Integer, Integer> endCoords) {
+    private double[][] calcRealDist(Pair<Integer, Integer> endCoords) {
         // Make a new equal sized 2D array
         double[][] realDist = new double[tiles.length][tiles[0].length];
 
@@ -132,7 +122,7 @@ public class AStar {
         return realDist;
     }
 
-    private static PriorityQueue<Node> openNodes(Pair<Integer, Integer> nodeLoc, double costToGo) {
+    private PriorityQueue<Node> openNodes(Pair<Integer, Integer> nodeLoc, double costToGo) {
         // Nodes in the PriorityQueue are ordered by costLeft + costToGo
         PriorityQueue<Node> initNodes = new PriorityQueue<>(8);
 

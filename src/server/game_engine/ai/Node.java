@@ -33,7 +33,7 @@ public class Node implements Comparable<Node> {
     @Override
     public String toString() {
         return "Coords: " + coordinates.getKey() + " " + coordinates.getValue()
-                + "\nSum: " + costToGo + " + " + String.format("%.3f", costLeft) + " = " + String.format("%.3f", sum);
+                + "\nSum: " + String.format("%.3f", costToGo) + " + " + String.format("%.3f", costLeft) + " = " + String.format("%.3f", sum);
     }
 
     @Override
