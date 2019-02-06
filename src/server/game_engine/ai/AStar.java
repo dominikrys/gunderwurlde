@@ -72,20 +72,6 @@ public class AStar {
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
-        PriorityQueue<Node> test = new PriorityQueue<>(8);
-
-        Node testNode = new Node(new Pair<Integer, Integer>(3,4), 1,1);
-        System.out.println(test.offer(testNode));
-        if(opened.contains(testNode)){
-            System.out.println("veikia");
-        }
-
-
-
-
-
-
-
         System.out.println("init nodes");
         for (Node node : opened) {
             System.out.println(node);

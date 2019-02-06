@@ -2,7 +2,7 @@ package server.game_engine.ai;
 
 import javafx.util.Pair;
 
-import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Node implements Comparable<Node> {
     private Pair<Integer, Integer> coordinates; // y x
@@ -43,17 +43,17 @@ public class Node implements Comparable<Node> {
             return true;
         }
 
-        /* Check if o is an instance of Complex or not
+        /* Check if o is an instance of Node or not
           "null instanceof [type]" also returns false */
         if (!(o instanceof Node)) {
             return false;
         }
 
-        // typecast o to Complex so that we can compare data members
+        // typecast o to Node so that we can compare data members
         Node c = (Node) o;
 
         // Compare the data members and return accordingly
-        return (this.sum == c.getSum() && this.coordinates == c.getCoordinates() && this.costToGo == c.getCostToGo());
+        return (this.sum == c.getSum() && this.coordinates.equals(c.getCoordinates()) && this.costToGo == c.getCostToGo());
     }
 
     @Override
@@ -65,3 +65,5 @@ public class Node implements Comparable<Node> {
         return 0;
     }
 }
+
+
