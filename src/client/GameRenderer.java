@@ -2,7 +2,9 @@ package client;
 
 import client.data.*;
 import data.Constants;
+import data.entity.enemy.Enemy;
 import data.entity.item.weapon.gun.AmmoList;
+import data.entity.player.Player;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -129,32 +131,69 @@ public class GameRenderer implements Runnable {
         renderMap(gameView, mapGC);
 
         // Render entities onto canvas
-        renderEntitiesToCanvas();
+        renderEntitiesFromGameViewToCanvas();
 
         // Update HUD
         updateHUD();
     }
 
-    // Render entities to the map canvas
-    private void renderEntitiesToCanvas() {
+    // Render entities to the map canvas TODO: add name to EntityView and have this abstracted into smaller methods
+    private void renderEntitiesFromGameViewToCanvas() {
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
-            renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
+            renderEntityToCanvas(currentPlayer);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
-            renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
+            renderEntityToCanvas(currentEnemy);
         }
 
         // Render projectiles
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
-            renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
+            renderEntityToCanvas(currentProjectile);
         }
 
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
-            renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
+            renderEntityToCanvas(currentItem);
+        }
+    }
+
+    private void renderEntityToCanvas(EntityView entityView) {
+        Sprites spriteToRender = null;
+
+        // Check what entity type it is and render accordingly TODO: this is quite an ugly way of doing things, can be done better
+        if (entityView instanceof PlayerView) {
+            // Get the correct sprite according to playerID, otherwise load the default player graphic
+            spriteToRender = Sprites.valueOf("PLAYER_" + currentPlayer.getID());
+
+            if (spriteToRender != null) {
+                renderEntity(currentPlayer, mapGC, loadedSprites.get(spriteToRender));
+                return;
+            } else {
+                System.out.println("Couldn't find right player number, loading default player...");
+                renderEntity(currentPlayer, mapGC, loadedSprites.get(Sprites.PLAYER));
+                return;
+            }
+        }
+        else if (entityView instanceof EnemyView) {
+            EnemyView enemyView = (EnemyView) entityView;
+            spriteToRender = Sprites.valueOf(enemyView.getName().toString());
+        } else if (entityView instanceof ProjectileView) {
+            ProjectileView projectileView = (ProjectileView) entityView;
+            spriteToRender = Sprites.valueOf(projectileView.getName().toString());
+        } else if (entityView instanceof ItemDropView) {
+            ItemDropView itemDropView = (ItemDropView) entityView;
+            spriteToRender = Sprites.valueOf(itemDropView.getName().toString());
+        }
+
+        // If sprite found, render it, otherwise render default graphic
+        if (spriteToRender != null) {
+            renderEntity(entityView, mapGC, loadedSprites.get(spriteToRender));
+        } else {
+            System.out.println("Couldn't find graphic for entity so loading default...");
+            renderEntity(currentPlayer, mapGC, loadedSprites.get(Sprites.DEFAULT));
         }
     }
 
@@ -342,22 +381,14 @@ public class GameRenderer implements Runnable {
     }
 
     // Render entity onto the map canas
-    private void renderEntity(EntityView entity, GraphicsContext gc, String imagePath) {
-        // Get image to render from path
-        Image imageToRender = new Image(imagePath);
-
-        // If image not loaded properly, print error and load default graphic
-        if (!checkImageLoaded(imageToRender, imagePath)) {
-            imageToRender = defaultTileGraphic;
-        }
-
+    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
         // If entity's sizeScaleFactor isn't zero, enlarge the graphic
         if (entity.getSizeScaleFactor() != 1) {
-            imageToRender = resampleImage(imageToRender, entity.getSizeScaleFactor());
+            image = resampleImage(image, entity.getSizeScaleFactor());
         }
 
-        // Render entity to specified location on graphicscontext
-        drawRotatedImage(gc, imageToRender, entity.getPose().getDirection(), entity.getPose().getX(),
+        // Render entity to specified location on canvas
+        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
                 entity.getPose().getY());
     }
 
