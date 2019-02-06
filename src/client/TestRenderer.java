@@ -1,9 +1,5 @@
 package client;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
 import client.data.GameView;
 import client.data.ItemView;
 import client.data.PlayerView;
@@ -16,6 +12,9 @@ import data.map.Meadow;
 import data.map.tile.Tile;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRenderer extends Application {
 
@@ -41,22 +40,33 @@ public class TestRenderer extends Application {
         LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
         ArrayList<ItemView> playerItems = new ArrayList<>();
         playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12));
-        PlayerView playerView = new PlayerView(new Pose(30,30,30), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList,Integer>(), 0);
+        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0);
         playersView.add(playerView);
         GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
         playersView = new LinkedHashSet<>();
-        playerView = new PlayerView(new Pose(90,90,210), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList,Integer>(), 0);
+        playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 
+        // Set up renderer
         GameRenderer rend = new GameRenderer(primaryStage, view1, 0);
         rend.run();
 
-        for (int i=0;i<20000;i++) {
-            rend.updateGameView(view1);
-            //Thread.sleep(500);
-            rend.updateGameView(view2);
-            //Thread.sleep(500);
-        }
+        // Alternate between the 2 gameviews on a timer
+        final AtomicBoolean a = new AtomicBoolean(true);
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                if (a.get()) {
+                    rend.updateGameView(view1);
+                    a.set(false);
+                } else {
+                    rend.updateGameView(view2);
+                    a.set(true);
+                }
+
+            }
+
+        }, 0, 100);
     }
 }

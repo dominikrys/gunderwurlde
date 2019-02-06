@@ -42,7 +42,7 @@ public class TestEngine extends Application implements HasEngine {
         Random rand = new Random();
         this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
         stage.setResizable(false);
-        this.rend = new GameRenderer(stage);
+        //this.rend = new GameRenderer(stage);
         engine.start();
         engine.addPlayer("Bob2", Teams.RED);
         engine.addPlayer("Bob3", Teams.RED);
@@ -63,10 +63,14 @@ public class TestEngine extends Application implements HasEngine {
             requests.playerRequestMovement(3, rand.nextInt(360));
             requests.playerRequestShoot(3);
             Thread.sleep(17);
+            // If you want the view to work, you'd have to set up the thread etc. and idk if you want that for the engine,
+            // so I commented this code
+            /*
             if (view != null)
                 rend.renderGameView(view, 0);
             else
                 System.out.println("View is null");
+            */
         }
         engine.handlerClosing();       
     }

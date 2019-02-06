@@ -85,13 +85,17 @@ public class GameRenderer implements Runnable {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: tweak this
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                 renderGameView();
             }
         }.start();
+
+        //        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//        timeline.play();
     }
 
     // Method for updating the gameview

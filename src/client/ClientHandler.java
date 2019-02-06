@@ -1,6 +1,5 @@
 package client;
 
-import client.data.GameView;
 import data.Constants;
 import data.SystemState;
 import javafx.application.Platform;
@@ -12,12 +11,12 @@ import server.serverclientthreads.Server;
 import static data.SystemState.MENUS;
 
 public class ClientHandler extends Thread {
+    GameRenderer gameRenderer;
     private Stage stage;
     private boolean running;
     private Server server;
     private ClientOnline clientOnline;
     private boolean gameRunning;
-    GameRenderer gameRenderer;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
@@ -45,9 +44,13 @@ public class ClientHandler extends Thread {
                     break;
                 case GAME:
                     // Render game state
+
+                    // MAKE SURE GAMEVIEW IS SEND TO GAMERENDERER AT A TIMER/TIMELINE!!!
+
                     /*
                     if (!gameRunning) {
                         gameRenderer = new GameRenderer(stage, gameView, 0);
+                        gameRenderer.setDaemon(true);
                         gameRenderer.run();
                         gameRunning = true;
                     }
