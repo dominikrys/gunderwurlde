@@ -66,4 +66,39 @@ public class Node implements Comparable<Node> {
     }
 }
 
-
+//class Main {
+//
+//    public static void main(String[] args) {
+//        Node c1 = new Node(new Pair<>(3,4), 1,1);
+//        Node c2 = new Node(new Pair<>(3,4), 1,1);
+//
+//        Pair<Integer, Integer> p1 = new Pair<>(4,5);
+//        Pair<Integer, Integer> p2 = new Pair<>(4,5);
+//
+//        if (c1.equals(c2)) {
+//            System.out.println("Equal c");
+//        } else {
+//            System.out.println("Not Equal c");
+//        }
+//
+//        if (p1 == p2) {
+//            System.out.println("Equal p");
+//        } else {
+//            System.out.println("Not Equal p");
+//        }
+//
+//
+//        PriorityQueue<Node> test = new PriorityQueue<>(8);
+//
+//        Node testNode = new Node(new Pair<>(3,4), 1,1);
+//        System.out.println(test.offer(testNode));
+//        testNode = new Node(new Pair<>(3,4), 1,4);
+//        System.out.println(test.offer(testNode));
+//        testNode = new Node(new Pair<>(3,4), 1,7);
+//        System.out.println(test.offer(testNode));
+//
+//        if(test.contains(new Node(new Pair<>(3,4), 1,4))){
+//            System.out.println("veikia");
+//        }
+//    }
+//}

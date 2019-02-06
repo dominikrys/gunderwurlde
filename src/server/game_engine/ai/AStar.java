@@ -10,7 +10,7 @@ import static java.lang.Math.sqrt;
 
 public class AStar {
 
-    private static final int COST_OF_TRAVEL = 1;
+    private static final double COST_OF_TRAVEL = 0.8;
     private static double[][] realDist;
     private static final int[][] tiles = {
             {1, 1, 0, 0, 0, 0, 1, 0, 0},
