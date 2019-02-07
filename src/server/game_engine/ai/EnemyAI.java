@@ -9,12 +9,34 @@ import server.game_engine.ai.Attack;
 
 public abstract class EnemyAI {
 
-    public EnemyAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
-        // TODO Auto-generated constructor stub
+    private Pose pose;
+    private int size;
+    private HashSet<Pose> playerPoses;
+    private Tile [][] tileMap;
+    private int maxDistanceMoved;
+    private boolean isProcessing = false;
+
+    protected EnemyAI() {
+//        this.pose = pose;
+//        this.size = size;
+//        this.playerPoses = playerPoses;
+//        this.tileMap = tileMap;
+//        this.maxDistanceMoved = maxDistanceMoved;
+    }
+
+    public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved){
+        this.pose = pose;
+        this.size = size;
+        this.playerPoses = playerPoses;
+        this.tileMap = tileMap;
+        this.maxDistanceMoved = maxDistanceMoved;
+    }
+
+    public boolean isProcessing(){
+        return isProcessing;
     }
 
     public AIAction getAction() {
-        // TODO Auto-generated method stub
         return AIAction.WAIT;
     }
 
@@ -28,7 +50,7 @@ public abstract class EnemyAI {
         return 0;
     }
 
-    public Location getNewLocation() {
+    public Pose getNewLocation() {
         // TODO Auto-generated method stub
         return null;
     } 
