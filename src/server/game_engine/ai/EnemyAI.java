@@ -2,10 +2,8 @@ package server.game_engine.ai;
 
 import java.util.HashSet;
 
-import data.Location;
 import data.Pose;
 import data.map.tile.Tile;
-import server.game_engine.ai.Attack;
 
 public abstract class EnemyAI {
 
@@ -45,12 +43,7 @@ public abstract class EnemyAI {
         return null;
     }
 
-    public int getDirection() { //direction the enemy should face
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public Pose getNewLocation() {
+    public Pose getNewPose() {
         // TODO Auto-generated method stub
         return null;
     } 

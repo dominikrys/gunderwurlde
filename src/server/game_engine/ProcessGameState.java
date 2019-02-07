@@ -360,7 +360,6 @@ public class ProcessGameState extends Thread {
                 EnemyAI ai;
                 EntityList enemyName = currentEnemy.getEntityListName();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
-                Location newLocation = enemyPose;
                 int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
 
@@ -372,12 +371,11 @@ public class ProcessGameState extends Thread {
                 switch (enemyAction) {
                 case ATTACK:
                     Attack enemyAttack = ai.getAttack();
-                    direction = ai.getDirection();
+                    currentEnemy.setPose(ai.getNewPose());
                     // TODO attack processing here once ai is completed.
                     break;
                 case MOVE:
-                    direction = ai.getDirection();
-                    newLocation = ai.getNewLocation();
+                    currentEnemy.setPose(ai.getNewPose());
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
                 case WAIT:
@@ -394,7 +392,7 @@ public class ProcessGameState extends Thread {
                     tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
                 }
 
-                currentEnemy.setPose(new Pose(newLocation, direction));
+
                 tilesOn = tilesOn(currentEnemy);
                 for (int[] tileCords : tilesOn) {
                     tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);

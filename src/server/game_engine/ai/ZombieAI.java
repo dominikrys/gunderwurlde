@@ -1,10 +1,6 @@
 package server.game_engine.ai;
 
-import java.util.HashSet;
-
-import data.Location;
 import data.Pose;
-import data.map.tile.Tile;
 
 public class ZombieAI extends EnemyAI {
 
@@ -24,13 +20,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    public int getDirection() { //direction the enemy should face
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public Pose getNewLocation() {
+    public Pose getNewPose() {
         // TODO Auto-generated method stub
         return null;
     }
