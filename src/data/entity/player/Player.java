@@ -1,5 +1,8 @@
 package data.entity.player;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
@@ -10,16 +13,15 @@ import data.item.weapon.gun.AmmoList;
 import data.item.weapon.gun.Pistol;
 import data.map.tile.Tile;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 20;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
     private static int nextPlayerID = 0;
+    protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
 
     protected final int playerID;
     protected final Teams team;
@@ -31,11 +33,10 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected int maxHealth;
     protected int moveSpeed;
     protected int currentItem;
-    protected int score;
     protected int maxItems;
 
     public Player(Teams team, String name) {
-        super(1, EntityList.PLAYER);
+        super(DEFAULT_SIZE, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
@@ -43,12 +44,26 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         items.add(new Pistol());
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
-        this.score = DEFAULT_SCORE;
         this.team = team;
+        changeScore(team, DEFAULT_SCORE);
         this.name = name;
         this.ammo = new LinkedHashMap<>();
         this.ammo.put(AmmoList.BASIC_AMMO, Integer.MAX_VALUE); // TODO remove after testing is finished
         this.playerID = nextPlayerID++;
+    }
+
+    public static void changeScore(Teams team, int value) {
+        if (teamScore.containsKey(team))
+            teamScore.put(team, teamScore.get(team) + value);
+        else
+            teamScore.put(team, value);
+    }
+
+    public static int getScore(Teams team) {
+        if (teamScore.containsKey(team))
+            return teamScore.get(team);
+        else
+            return 0;
     }
 
     @Override
@@ -140,15 +155,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     }
 
     public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void changeScore(int value) {
-        this.score += value;
+        return teamScore.get(team);
     }
 
     public Teams getTeam() {

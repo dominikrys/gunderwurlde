@@ -9,25 +9,21 @@ public abstract class Entity {
     public static final int MAX_SIZE = (3 * Tile.TILE_SIZE);
     
     protected Pose pose;
-    protected int sizeScaleFactor;
+    protected int size;
     protected EntityList entityListName;
 
-    protected Entity(Pose pose, int sizeScaleFactor, EntityList entityListName) {
+    protected Entity(Pose pose, int size, EntityList entityListName) {
         this.pose = pose;
-        this.sizeScaleFactor = sizeScaleFactor;
+        this.size = size;
         this.entityListName = entityListName;
     }
     
-    protected Entity(int sizeScaleFactor, EntityList entityListName) {
-        this (new Pose(), 1, entityListName);
+    protected Entity(int size, EntityList entityListName) {
+        this (new Pose(), size, entityListName);
     }
 
-    protected Entity(Location location, int sizeScaleFactor, EntityList entityListName) {
-        this(new Pose(location), sizeScaleFactor, entityListName);
-    }
-
-    protected Entity(Pose pose, EntityList entityListName) {
-        this(pose, 1, entityListName);
+    protected Entity(Location location, int size, EntityList entityListName) {
+        this(new Pose(location), size, entityListName);
     }
 
     public Pose getPose() {
@@ -50,27 +46,27 @@ public abstract class Entity {
         this.pose = new Pose(location, this.pose.getDirection());
     }
 
-    public int getSizeScaleFactor() {
-        return sizeScaleFactor;
+    public int getSize() {
+        return size;
     }
 
     public void changeSize(int amount) {
-        if (amount <= -this.sizeScaleFactor) {
-            this.sizeScaleFactor = 1;
-        } else if ((amount + this.sizeScaleFactor) > MAX_SIZE) {
-            this.sizeScaleFactor = MAX_SIZE;
+        if (amount <= -this.size) {
+            this.size = 1;
+        } else if ((amount + this.size) > MAX_SIZE) {
+            this.size = MAX_SIZE;
         } else {
-            this.sizeScaleFactor += amount;
+            this.size += amount;
         }
     }
 
-    public void setSizeScaleFactor(int sizeScaleFactor) {
-        if (sizeScaleFactor <= 0) {
-            this.sizeScaleFactor = 1;
-        } else if (sizeScaleFactor > MAX_SIZE) {
-            this.sizeScaleFactor = MAX_SIZE;
+    public void setSize(int size) {
+        if (size <= 0) {
+            this.size = 1;
+        } else if (size > MAX_SIZE) {
+            this.size = MAX_SIZE;
         } else {
-            this.sizeScaleFactor = sizeScaleFactor;
+            this.size = size;
         }
     }
     

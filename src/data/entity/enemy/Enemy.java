@@ -1,34 +1,36 @@
 package data.entity.enemy;
 
+import java.util.LinkedHashSet;
+
 import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
 import data.entity.EntityList;
 import data.entity.HasID;
 
-import java.util.LinkedHashSet;
-
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;
     protected final LinkedHashSet<Drop> drops;
+    protected int scoreOnKill;
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
     protected EntityList entityListName;
     private int id;
 
-    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int sizeScaleFactor, LinkedHashSet<Drop> drops) {
-        super(sizeScaleFactor, entityListName);
+    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill) {
+        super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.moveSpeed = moveSpeed;
         this.drops = drops;
         this.entityListName = entityListName;
         this.id = nextID++;
+        this.scoreOnKill = scoreOnKill;
     }
 
-    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size) {
-        this(maxHealth, moveSpeed, entityListName, size, new LinkedHashSet<Drop>());
+    public int getScoreOnKill() {
+        return scoreOnKill;
     }
 
     public LinkedHashSet<Drop> getDrops() {
