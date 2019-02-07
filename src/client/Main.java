@@ -15,6 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Create renderer and pass primary stage to it
         primaryStage.setResizable(false); // Disable resizing of the window
+        primaryStage.centerOnScreen();
         primaryStage.setTitle("Gunderwurlde");
 
         // Create clienthandler thread
