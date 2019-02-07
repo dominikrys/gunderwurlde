@@ -1,11 +1,15 @@
 package client.data;
 
+import java.io.Serializable;
+
 import data.Constants;
 import data.entity.EntityList;
 import data.map.tile.TileState;
 import data.map.tile.TileTypes;
 
-public class TileView {
+public class TileView implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static final int TILE_SIZE = Constants.TILE_SIZE;
 
     // Type of tile
