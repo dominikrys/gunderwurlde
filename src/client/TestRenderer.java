@@ -5,6 +5,7 @@ import client.data.ItemView;
 import client.data.entity.PlayerView;
 import client.data.TileView;
 import data.Pose;
+import data.entity.player.Teams;
 import data.item.ItemList;
 import data.item.weapon.gun.AmmoList;
 import data.map.GameMap;
@@ -40,11 +41,11 @@ public class TestRenderer extends Application {
         LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
         ArrayList<ItemView> playerItems = new ArrayList<>();
         playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12));
-        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0);
+        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0, Teams.RED);
         playersView.add(playerView);
         GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
         playersView = new LinkedHashSet<>();
-        playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0);
+        playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new LinkedHashMap<AmmoList, Integer>(), 0, Teams.RED);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 

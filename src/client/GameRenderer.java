@@ -138,16 +138,16 @@ public class GameRenderer implements Runnable {
             // Get the correct sprite according to playerID, otherwise load the default player graphic
             Image spriteToRender;
             switch (currentPlayer.getID()) {
-                case 1:
+                case 0:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_1);
                     break;
-                case 2:
+                case 1:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_2);
                     break;
-                case 3:
+                case 2:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_3);
                     break;
-                case 4:
+                case 3:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_4);
                     break;
                 default:
