@@ -41,8 +41,9 @@ public class KeyboardHandler extends UserInteraction{
 		this.t = null;
 	}
 	
-	public KeyboardHandler(Scene scene, GameView gameView) {
+	public KeyboardHandler(ClientSender sender, Scene scene, GameView gameView) {
 		super(scene, gameView);
+		this.sender = sender;
 		this.scene = scene;
 		this.gameView = gameView;
 		/*
@@ -288,6 +289,10 @@ public class KeyboardHandler extends UserInteraction{
 	@Override
 	public boolean isActivated() {
 		return super.isActivated();
+	}
+	
+	public void setClientSender(ClientSender sender) {
+		this.sender = sender;
 	}
 
 }

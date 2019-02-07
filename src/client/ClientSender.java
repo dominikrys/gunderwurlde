@@ -12,7 +12,7 @@ public class ClientSender extends Thread {
     MulticastSocket senderSocket;
     InetAddress senderAddress;
     Boolean running;
-    DatagramPacket packet;
+    DatagramPacket packet = null;
     int port;
     byte[] buffer;
     Scanner scan;
@@ -48,13 +48,14 @@ public class ClientSender extends Thread {
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
-                byte[] yourBytes = bos.toByteArray();
+                byte[] buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
 
             } finally {
                 try {
                     bos.close();
+                    System.out.println("SENT");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

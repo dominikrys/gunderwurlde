@@ -113,6 +113,7 @@ public class Renderer {
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         
         //KeyboardHandler kbHandler = new KeyboardHandler(scene, inputGameView);
+        kbHandler.setClientSender(sender);
         kbHandler.setScene(scene);
         kbHandler.setGameView(inputGameView);
         if(!kbHandler.isActivated()) {
