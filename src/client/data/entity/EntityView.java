@@ -11,8 +11,8 @@ public abstract class EntityView implements Serializable {
     protected int sizeScaleFactor;
     protected EntityList entityListName;
 
-    protected EntityView(Pose pose, int sizeScaleFactor, EntityList entityListName) {
-        int radius = sizeScaleFactor / 2;
+    protected EntityView(Pose pose, int size, EntityList entityListName) {
+        int radius = size / 2;
         this.pose = new Pose(pose.getX() - radius, pose.getY() - radius, pose.getDirection());
         this.sizeScaleFactor = 1; // TODO sort out scaling
         this.entityListName = entityListName;

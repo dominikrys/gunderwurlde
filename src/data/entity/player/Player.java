@@ -18,6 +18,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
 
     private static int nextPlayerID = 0;
     protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
@@ -35,7 +36,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected int maxItems;
 
     public Player(Teams team, String name) {
-        super(1, EntityList.PLAYER);
+        super(DEFAULT_SIZE, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;
