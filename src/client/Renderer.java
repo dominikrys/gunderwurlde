@@ -37,6 +37,7 @@ public class Renderer {
     private boolean menuChanged;
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
+    ClientSender sender;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
@@ -117,9 +118,9 @@ public class Renderer {
         if(!kbHandler.isActivated()) {
         	kbHandler.activate();
         }
-        //mHandler.setScene(scene);
-        //mHandler.setCanvas(mapCanvas);
-        //mHandler.setGameView(inputGameView);
+        mHandler.setScene(scene);
+        mHandler.setCanvas(mapCanvas);
+        mHandler.setGameView(inputGameView);
         //MouseHandler mHandler = new MouseHandler(scene, mapCanvas, inputGameView);
 
         // Update stage
@@ -424,5 +425,18 @@ public class Renderer {
             }
         });
     }
+    
+    public KeyboardHandler getKeyboardHandler() {
+    	return this.kbHandler;
+    }
+    
+    public MouseHandler getMouseHandler() {
+    	return this.mHandler;
+    }
+    
+    public void setClientSender(ClientSender sender) {
+    	this.sender = sender;
+    }
+    
 }
 

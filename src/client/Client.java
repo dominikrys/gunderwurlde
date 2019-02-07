@@ -14,6 +14,7 @@ import data.entity.item.weapon.gun.AmmoList;
 import data.entity.projectile.ProjectileList;
 import data.map.Meadow;
 import data.map.tile.Tile;
+import inputhandler.KeyboardHandler;
 import inputhandler.Movement;
 
 import java.io.IOException;
@@ -90,6 +91,8 @@ public class Client extends Thread {
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(listenAddress, listenSocket, this);
+            
+            renderer.setClientSender(sender);
 
             while(running){
                 if(view != null)

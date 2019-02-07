@@ -2,6 +2,7 @@ package inputhandler;
 
 import java.util.ArrayList;
 
+import client.ClientSender;
 import client.data.GameView;
 import client.data.PlayerView;
 import data.GameState;
@@ -33,6 +34,7 @@ public class KeyboardHandler extends UserInteraction{
 	private boolean interactPressed = false;
 	private AnimationTimer t;
 	private boolean activated;
+	ClientSender sender;
 	
 	public KeyboardHandler() {
 		super();
@@ -238,10 +240,12 @@ public class KeyboardHandler extends UserInteraction{
             }
         }
 		this.pImage = new Image(playerView.getPathToGraphic());
-		this.movement = new Movement(playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
+		this.movement = new Movement(sender, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
 		this.reload = new Reload(playerView);
 		this.dropItem = new DropItem(playerView);
 	}
+	
+	
 	
 	@Override
 	public void activate() {

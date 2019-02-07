@@ -2,6 +2,7 @@ package inputhandler;
 
 import java.util.LinkedHashSet;
 
+import client.ClientSender;
 import client.data.ItemDropView;
 import client.data.PlayerView;
 import client.data.TileView;
@@ -10,14 +11,16 @@ import javafx.scene.image.Image;
 
 public class Movement extends Action{
 	
+	ClientSender sender;
 	private PlayerView playerView;
 	private Image pImage;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
 	private PickItem pickItem;
 
-	public Movement(PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
+	public Movement(ClientSender sender, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
 		super(playerView);
+		this.sender = sender;
 		this.playerView = playerView;
 		this.kbSettings = kbSettings;
 		this.collision = new Collision(tileMap, pImage);
@@ -48,6 +51,7 @@ public class Movement extends Action{
 		}
 		if(collision.checkBoundary(pose.getX(), pose.getY())) {
 			//playerView.setPose(pose);
+			this.sender.send(pose);
 			// TODO: send request here (send pose)
 		}
 	}
