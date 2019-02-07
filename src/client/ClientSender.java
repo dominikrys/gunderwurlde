@@ -1,5 +1,8 @@
 package client;
 
+import client.data.GameView;
+import data.Pose;
+
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
@@ -24,32 +27,44 @@ public class ClientSender extends Thread {
     }
 
     public void run() {
-        scan = new Scanner(System.in);
+        while (running) {
+            Thread.yield();
+        }
+    }
+
+    public void send(Pose pose) {
         try {
-            while (running) {
-                // Asks for user input
-                System.out.print(">> ");
-                String userInput = scan.nextLine();
-
-                // Creates and sends the packet to the server
-                buffer = userInput.getBytes();
+            // Turn the received GameView into a byte array
+            // Output Stream for the byteArray. Will grow as data is added
+            // Allows the object to be written to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            // Output stream that will hold the object
+            ObjectOutputStream out = null;
+            try {
+                // OOutputStream to read the GameView into the byteArray
+                out = new ObjectOutputStream(bos);
+                // Writes the view object into the BAOutputStream
+                out.writeObject(pose);
+                //flushes anything in the OOutputStream
+                out.flush();
+                // Writes the info in the BOutputStream to a byte array to be transmitted
+                byte[] yourBytes = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-
-                // Each time we send a packet we need to ensure the interfaces match up
-
-
                 senderSocket.send(packet);
 
-
-                // If the messages is exit then the Thread should terminate
-                if (userInput.equals("exit")) {
-                    running = false;
+            } finally {
+                try {
+                    bos.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                Thread.yield();
             }
-            System.out.println("Ending client sender");
-        } catch (IOException e1) {
+            // TODO Will be set on a loop to send every ______ seconds
 
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,7 @@
 package server;
 
 import client.data.GameView;
+import data.Pose;
 import data.entity.player.Teams;
 import data.map.MapList;
 import server.game_engine.HasEngine;
@@ -28,13 +29,13 @@ public class ServerReceiver extends Thread{
 
 
     public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, Server handler) {
-
         this.listenSocket = listenSocket;
         this.listenAddress = address;
         this.sender = sender;
         this.handler = handler;
         buffer = new byte[255];
         running = true;
+        setInterfaces(listenSocket);
         this.start();
     }
 
@@ -65,20 +66,37 @@ public class ServerReceiver extends Thread{
     public void run() {
         try {
             listenSocket.joinGroup(listenAddress);
-            setInterfaces(listenSocket);
+
             while (running) {
                 // packet to receive incoming messages
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.setSoTimeout(10000);
                 listenSocket.receive(packet);
-                // Read the received packet into a request
 
-                requests = new ClientRequests(numOfPlayers);
-
-                // Send the request to the Engine
-                handler.sendClientRequest(requests);
-
+                // Creates a bytearrayinputstream from the received packets data
+                ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
+                //ObjectinputStream to turn the bytes back into an object.
+                ObjectInputStream in = null;
+                try {
+                    in = new ObjectInputStream(bis);
+                    Pose pose = (Pose) in.readObject();
+                    int direction = pose.getDirection();
+                    requests = new ClientRequests(numOfPlayers);
+                    requests.playerRequestMovement(0, direction);
+                    // Send the request to the Engine
+                    handler.sendClientRequest(requests);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
 
                 // Need some sort of exit sequence for the server
                 if (true) {
