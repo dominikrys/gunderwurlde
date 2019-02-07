@@ -19,15 +19,15 @@ public class ItemDrop extends Entity implements HasID {
     protected long dropTime;
 
     public ItemDrop(Item item, Location location, int quantity) {
-        super(new Pose(location), 1, item.getItemListName());
+        super(new Pose(location), 1, item.getItemListName().getEntityList());
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;
         this.dropTime = System.currentTimeMillis();
     }
 
-    public ItemDrop(Item item, Location location, EntityList entityListName) {
-        this(item, location, 1, entityListName);
+    public ItemDrop(Item item, Location location) {
+        this(item, location, 1);
     }
 
     public long getDropTime() {
@@ -35,11 +35,15 @@ public class ItemDrop extends Entity implements HasID {
     }
 
     public ItemList getItemName() {
-        return item.getItemName();
+        return item.getItemListName();
     }
 
     public ItemType getItemType() {
-        return item.getItemListName();
+        return item.getItemType();
+    }
+
+    public EntityList getEntityListName() {
+        return item.getItemListName().getEntityList();
     }
 
     public int getQuantity() {

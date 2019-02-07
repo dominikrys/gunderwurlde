@@ -1,22 +1,22 @@
 package data.entity.player;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
+import data.entity.EntityList;
 import data.entity.HasID;
 import data.item.Item;
 import data.item.weapon.gun.AmmoList;
 import data.item.weapon.gun.Pistol;
 import data.map.tile.Tile;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_HEALTH = 20;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE;
     public static final int DEFAULT_SCORE = 0;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
     public static final int DEFAULT_ITEM_CAP = 3;
 
     private static int nextPlayerID = 0;
@@ -35,7 +35,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected int maxItems;
 
     public Player(Teams team, String name) {
-        super(DEFAULT_SIZE);
+        super(1, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
         this.moveSpeed = DEFAULT_MOVESPEED;

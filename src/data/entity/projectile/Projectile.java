@@ -2,25 +2,25 @@ package data.entity.projectile;
 
 import data.Pose;
 import data.entity.Entity;
+import data.entity.EntityList;
 
 public abstract class Projectile extends Entity {
     protected int speed;
     protected int damage;
-    protected ProjectileList projectileType;
+    protected EntityList entityListName;
     protected int max_range;
     protected int dist_travelled;
 
-    Projectile(int speed, int damage, ProjectileList projectileType, Pose pose, int size, int max_range) {
-        super(pose, size);
+    Projectile(int speed, int damage, EntityList entityListName, Pose pose, int size, int max_range) {
+        super(pose, size, entityListName);
         this.speed = speed;
         this.damage = damage;
-        this.projectileType = projectileType;
         this.max_range = max_range;
         this.dist_travelled = 0;
     }
-    
+
     public boolean maxRangeReached(int distance) {
-        this.dist_travelled+=distance;
+        this.dist_travelled += distance;
         if (this.max_range == 0 || this.dist_travelled < max_range) return false;
         else return true;
     }
@@ -48,14 +48,6 @@ public abstract class Projectile extends Entity {
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public ProjectileList getProjectileType() {
-        return projectileType;
-    }
-
-    public void setProjectileType(ProjectileList projectileType) {
-        this.projectileType = projectileType;
     }
 
 }

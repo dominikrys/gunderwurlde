@@ -1,6 +1,7 @@
 package data.entity.projectile;
 
 import data.Pose;
+import data.entity.EntityList;
 import data.map.tile.Tile;
 
 public class SmallBullet extends Projectile {
@@ -14,7 +15,7 @@ public class SmallBullet extends Projectile {
     }
 
     public SmallBullet(int speed, int damage, Pose pose, int size, int range) {
-        super(speed, damage, ProjectileList.SMALLBULLET, pose, size, range);        
+        super(speed, damage, EntityList.BASIC_BULLET, pose, size, range);
     }
 
 }

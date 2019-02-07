@@ -1,8 +1,9 @@
 package data.item.weapon.gun;
 
+import data.entity.EntityList;
+import data.item.ItemList;
 import data.item.Limited;
 import data.item.weapon.Weapon;
-import data.entity.projectile.ProjectileList;
 
 public abstract class Gun extends Weapon implements Limited {
 
@@ -13,14 +14,14 @@ public abstract class Gun extends Weapon implements Limited {
     protected boolean reloading;
     protected int ammoPerShot;
     protected int spread;
-    protected ProjectileList projectileType;
+    protected EntityList projectileType;
     protected AmmoList ammoType;
-    protected GunList gunName;
+    protected ItemList gunName;
     protected int shootCoolDown; //effectively fire rate
     protected long lastShootTime;
 
-    Gun(GunList gunName, int clipSize, int reloadTime, int ammoPerShot, ProjectileList projectileType,
-            AmmoList ammoType, int spread, int coolDown) {
+    Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, EntityList projectileType,
+        AmmoList ammoType, int spread, int coolDown) {
         super(gunName);
         this.gunName = gunName;
         this.clipSize = clipSize;
@@ -32,9 +33,8 @@ public abstract class Gun extends Weapon implements Limited {
         this.shootCoolDown = coolDown;
         this.lastShootTime = 0;
     }
-    
-    
-    
+
+
     public int getSpread() {
         return spread;
     }
@@ -49,7 +49,7 @@ public abstract class Gun extends Weapon implements Limited {
         return ammoPerShot;
     }
 
-    public GunList getGunName() {
+    public ItemList getGunName() {
         return gunName;
     }
 
@@ -69,11 +69,11 @@ public abstract class Gun extends Weapon implements Limited {
         return clipSize;
     }
 
-    public ProjectileList getProjectileType() {
+    public EntityList getProjectileType() {
         return projectileType;
     }
 
-    public void setProjectileType(ProjectileList projectileType) {
+    public void setProjectileType(EntityList projectileType) {
         this.projectileType = projectileType;
     }
 
