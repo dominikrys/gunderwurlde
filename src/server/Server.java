@@ -52,6 +52,7 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Threads up");
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
+            sender.join();
             receiver.join();
             gameEngine.handlerClosing();
             // Socket is closed as server should end
@@ -80,5 +81,10 @@ public class Server extends Thread implements HasEngine {
     @Override
     public void sendClientRequest(ClientRequests request) {
         gameEngine.setClientRequests(request);
+    }
+    
+    public void close() {
+    	sender.running = false;
+    	receiver.running = false;
     }
 }

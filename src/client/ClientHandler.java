@@ -31,11 +31,15 @@ public class ClientHandler extends Thread {
     private Stage stage;
     private boolean running;
     private boolean inGame;
+    private boolean serverStarted;
+    private Server server;
+    private Client client;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
         running = true;
         inGame = false;
+        serverStarted = false;
     }
 
     public void run() {
@@ -47,7 +51,7 @@ public class ClientHandler extends Thread {
         // Load font
         Font.loadFont(getClass().getResourceAsStream(Constants.MANASPACE_FONT_PATH), 36);
 
-        while (running && !inGame) {
+        while (running) {
             switch (systemState) {
                 case MENU:
                     // Render menu
@@ -56,7 +60,8 @@ public class ClientHandler extends Thread {
                     break;
                 case GAME:
                     // Render game state
-                	inGame = true;
+                	//inGame = true;
+                	/*
                 	LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
                 	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
                 	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
@@ -83,17 +88,21 @@ public class ClientHandler extends Thread {
         			}
                 	
                     renderer.renderGameView(new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile), 1);
-                    systemState = renderer.getSystemState();
+                    */
+                    //systemState = renderer.getSystemState();
                     break;
                 case SINGLE_PLAYER:
                     // CODE FOR ESTABLISHING LOCAL SERVER
                     // Starts the server
                     // TODO pass the text from the box into the server and client
-                    Server server = new Server("Host");
-                    server.start();
-                    Client client = new Client(renderer, "Host", 0);
-                    client.start();
-                    systemState = SystemState.GAME; // REMOVE THIS
+                	if(!serverStarted) {
+	                    server = new Server("Host");
+	                    //server.start();
+	                    client = new Client(renderer, "Host", 0);
+	                    client.start();
+	                    serverStarted = true;
+	                    systemState = SystemState.GAME; // REMOVE THIS
+                	}
                     break;
                 case MULTI_PLAYER:
                     // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
@@ -115,5 +124,7 @@ public class ClientHandler extends Thread {
 
     public void end() {
         this.running = false;
+        this.server.close();
+        this.client.close();
     }
 }

@@ -35,6 +35,8 @@ public class Renderer {
     private SystemState systemState;
     private Menus currentMenu;
     private boolean menuChanged;
+    private KeyboardHandler kbHandler;
+    private MouseHandler mHandler;
 
     // Constructor - take stage
     public Renderer(Stage inputStage) {
@@ -56,6 +58,9 @@ public class Renderer {
 
         // Setting title to the Stage
         stage.setTitle("Gunderwurlde");
+        
+        kbHandler = new KeyboardHandler();
+        mHandler = new MouseHandler();
     }
 
     // Render input gameview to stage
@@ -106,8 +111,16 @@ public class Renderer {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         
-        KeyboardHandler kbHandler = new KeyboardHandler(scene, inputGameView);
-        MouseHandler mHandler = new MouseHandler(scene, mapCanvas, inputGameView);
+        //KeyboardHandler kbHandler = new KeyboardHandler(scene, inputGameView);
+        kbHandler.setScene(scene);
+        kbHandler.setGameView(inputGameView);
+        if(!kbHandler.isActivated()) {
+        	kbHandler.activate();
+        }
+        //mHandler.setScene(scene);
+        //mHandler.setCanvas(mapCanvas);
+        //mHandler.setGameView(inputGameView);
+        //MouseHandler mHandler = new MouseHandler(scene, mapCanvas, inputGameView);
 
         // Update stage
         updateStageWithScene(stage, scene);
@@ -376,8 +389,8 @@ public class Renderer {
                     currentMenuController = new HelpMenuController();
                     break;
                 case SINGLE_PLAYER:
-                    //systemState = SystemState.SINGLE_PLAYER;
-                    systemState = SystemState.GAME;
+                    systemState = SystemState.SINGLE_PLAYER;
+                    //systemState = SystemState.GAME;
                     return;
                 //break;
                 case MULTI_PLAYER:

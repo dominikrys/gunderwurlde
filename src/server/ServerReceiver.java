@@ -70,6 +70,7 @@ public class ServerReceiver extends Thread{
                 // packet to receive incoming messages
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
+                listenSocket.setSoTimeout(10000);
                 listenSocket.receive(packet);
                 // Read the received packet into a request
 
@@ -86,9 +87,14 @@ public class ServerReceiver extends Thread{
                     sender.join();
                     // Running = false so the Thread ends gracefully
                     running = false;
+                    System.out.println("Ending server receiver");
                 }
             }
-        } catch (IOException e) {
+        } catch (SocketTimeoutException e) {
+        	System.out.println("Timeout");
+        	e.printStackTrace();
+        }
+          catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();

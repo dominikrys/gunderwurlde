@@ -2,6 +2,7 @@ package inputhandler;
 
 import client.data.GameView;
 import client.data.PlayerView;
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -23,6 +24,13 @@ public class MouseHandler extends UserInteraction{
 	private double mouseDegree;
 	private double playerDegree;
 	private double toRotate;
+	private AnimationTimer t;
+	private boolean activated;
+	
+	public MouseHandler() {
+		super();
+		this.t = null;
+	}
 	
 	public MouseHandler(Scene scene, Canvas mapCanvas, GameView gameView) {
 		super(scene,gameView);
@@ -38,13 +46,19 @@ public class MouseHandler extends UserInteraction{
         }
 		this.attack = new Attack(playerView);
 		
+		/*
 		scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
 			mouseMovement(e);
 		});
 		
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			mouseMovement(e);
-			attack.attack();
+			if(e.isPrimaryButtonDown()) {
+				mouseMovement(e);
+				attack.attack();
+			}
+			else {
+				mouseMovement(e);
+			}
 		});
 		
 		scene.setOnScroll(new EventHandler<ScrollEvent>() {
@@ -60,6 +74,7 @@ public class MouseHandler extends UserInteraction{
 				// TODO: send changes(item change) to server
 			}
 		});
+		*/
 		
 	}
 	
@@ -109,5 +124,72 @@ public class MouseHandler extends UserInteraction{
 		System.out.println("playerDegree: " + playerDegree);
 		// TODO: send changes(playerDegree) to server
 	}
+	
+	@Override
+	public void setScene(Scene scene) {
+		super.setScene(scene);
+		
+		scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
+			mouseMovement(e);
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+			if(e.isPrimaryButtonDown()) {
+				mouseMovement(e);
+				attack.attack();
+			}
+			else {
+				mouseMovement(e);
+			}
+		});
+		
+		scene.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				if(event.getDeltaY() > 0) {
+					changeItem.previousItem();
+				}
+				else if(event.getDeltaY() < 0) {
+					changeItem.nextItem();
+				}
+				System.out.println(playerView.getCurrentItemIndex());
+				// TODO: send changes(item change) to server
+			}
+		});
+	}
+	
+	public void setCanvas(Canvas mapCanvas) {
+		this.mapCanvas = mapCanvas;
+	}
+
+	@Override
+	public void setGameView(GameView gameView) {
+		super.setGameView(gameView);
+		
+		for (PlayerView p : gameView.getPlayers()) {
+            if(p.getName() == "Player 1") {
+            	this.playerView = p;
+            	break;
+            }
+        }
+		this.attack = new Attack(playerView);
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+	}
+
+	@Override
+	public void deactivate() {
+		super.deactivate();
+	}
+
+	@Override
+	public boolean isActivated() {
+		return super.isActivated();
+	}
+	
+	
 
 }

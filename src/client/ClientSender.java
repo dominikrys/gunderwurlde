@@ -47,6 +47,7 @@ public class ClientSender extends Thread {
                 }
                 Thread.yield();
             }
+            System.out.println("Ending client sender");
         } catch (IOException e1) {
 
         }

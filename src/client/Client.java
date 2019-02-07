@@ -1,12 +1,29 @@
 package client;
 
+import client.data.EnemyView;
 import client.data.GameView;
+import client.data.ItemDropView;
+import client.data.ItemView;
+import client.data.PlayerView;
+import client.data.ProjectileView;
+import client.data.TileView;
+import data.Pose;
+import data.entity.enemy.EnemyList;
+import data.entity.item.ItemList;
+import data.entity.item.weapon.gun.AmmoList;
+import data.entity.projectile.ProjectileList;
+import data.map.Meadow;
+import data.map.tile.Tile;
+import inputhandler.Movement;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class Client extends Thread {
     MulticastSocket listenSocket;
@@ -21,12 +38,41 @@ public class Client extends Thread {
     String playerName;
     int playerID;
     Boolean running;
+    Movement movement;
+    ClientSender sender;
+    ClientReceiver receiver;
 
 
 
     public Client(Renderer renderer, String playerName, int playerID){
         this.renderer = renderer;
-        this.view = null;
+        
+        LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
+    	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
+    	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
+    	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
+    	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
+    	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 0);
+    	examplePlayers.add(examplePlayer);
+    	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
+    	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EnemyList.ZOMBIE);
+    	exampleEnemies.add(exampleEnemy);
+    	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
+    	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, ProjectileList.SMALLBULLET);
+    	exampleProjectiles.add(exampleProjectile);
+    	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
+    	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
+    	exampleItemDrops.add(exampleItemDrop);
+    	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
+    	Tile[][] tile = Meadow.generateTileMap();
+    	for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
+			for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
+				TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
+				exampleTile[i][j] = tileView;
+			}
+		}
+        
+        this.view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
@@ -42,11 +88,12 @@ public class Client extends Thread {
             System.out.println("ClientOnline calls server");
 
             // Start the sender and receiver threads for the client
-            ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
-            ClientReceiver receiver = new ClientReceiver(listenAddress, listenSocket, this);
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
+            receiver = new ClientReceiver(listenAddress, listenSocket, this);
 
             while(running){
                 if(view != null)
+                	System.out.println("here");
                     renderer.renderGameView(view, 0);
             }
 
@@ -73,6 +120,12 @@ public class Client extends Thread {
 
     public void setGameView(GameView view){
         this.view = view;
+    }
+    
+    public void close() {
+    	this.running = false;
+    	sender.running = false;
+    	receiver.running = false;
     }
 
 }

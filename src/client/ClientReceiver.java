@@ -61,6 +61,7 @@ public class ClientReceiver extends Thread {
                 // creates a packet and waits to receive a message from the server
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
+                listenSocket.setSoTimeout(10000);
                 listenSocket.receive(packet);
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
@@ -84,7 +85,12 @@ public class ClientReceiver extends Thread {
 
                 // TODO how do threads exit?
             }
-        } catch (SocketException e) {
+            System.out.println("Ending client receiver");
+        } catch (SocketTimeoutException e) {
+        	System.out.println("Timeout");
+        	e.printStackTrace();
+        }
+          catch (SocketException e) {
             System.out.println("Socket closed unexpectedly");
         } catch (IOException e) {
             e.printStackTrace();
