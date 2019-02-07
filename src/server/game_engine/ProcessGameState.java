@@ -361,15 +361,8 @@ public class ProcessGameState extends Thread {
                 int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
 
-                switch (enemyName) {
-                case ZOMBIE:
-                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
-                    break;
-                default:
-                    System.out.println("Enemy " + enemyName.toString() + " not known!");
-                    ai = new ZombieAI(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
-                    break;
-                }
+                ai = currentEnemy.getAI();
+                // TODO check if AI has finished processing if so update info and process action
 
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
