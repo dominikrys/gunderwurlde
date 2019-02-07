@@ -103,6 +103,7 @@ public class MenuController {
             Platform.runLater(() -> {
                 // Add scene to stage, request focus and show the stage
                 stage.setScene(scene);
+                stage.centerOnScreen();
                 scene.getRoot().requestFocus();
                 stage.show();
             });

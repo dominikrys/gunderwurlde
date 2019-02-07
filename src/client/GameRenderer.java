@@ -447,6 +447,7 @@ public class GameRenderer implements Runnable {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
+
             scene.getRoot().requestFocus();
         } else {
             // runLater because not JavaFX thread
@@ -454,6 +455,7 @@ public class GameRenderer implements Runnable {
                 // Add scene to stage, request focus and show the stage
                 stage.setScene(scene);
                 scene.getRoot().requestFocus();
+                stage.centerOnScreen();
                 stage.show();
             });
         }
