@@ -15,17 +15,15 @@ public abstract class EnemyAI {
     private Tile [][] tileMap;
     private int maxDistanceMoved;
 
-    public EnemyAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
+    protected EnemyAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
         this.pose = pose;
         this.size = size;
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.maxDistanceMoved = maxDistanceMoved;
-       // System.out.println("testas");
     }
 
     public AIAction getAction() {
-//        System.out.println("testas");
         return AIAction.WAIT;
     }
 

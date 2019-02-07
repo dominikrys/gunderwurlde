@@ -1,11 +1,10 @@
 package server.game_engine.ai;
 
-
+import data.map.tile.Tile;
+import data.map.tile.TileState;
 import javafx.util.Pair;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
@@ -13,19 +12,19 @@ public class AStar {
 
     private final double COST_OF_TRAVEL;
     private double[][] realDist;
-    private final int[][] tiles;
+    private final Tile[][] tiles;
 
-    public AStar(double cost_of_travel, int[][] tiles){
+    public AStar(double cost_of_travel, Tile[][] tiles){
         COST_OF_TRAVEL = cost_of_travel;
         this.tiles = tiles;
     }
 
-    private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> path){
-        Pair<Integer,Integer> biggestDist = path.get(0);
+    private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> paths){
+        Pair<Integer,Integer> biggestDist = paths.get(0);
 
         // Construct a new list from the set constucted from elements
         // of the original list
-        List<Pair<Integer, Integer>> newList = path.stream()
+        List<Pair<Integer, Integer>> path = paths.stream()
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -44,16 +43,14 @@ public class AStar {
             ArrayList<Pair<Integer, Integer>> shorterPath = new ArrayList<>();
 
             // Add the starting "shortcut" node and the rest of the path
-            for (int i = 0; i < shortCut.size(); i++) {
-                shorterPath.add(shortCut.get(i));
-            }
+            shorterPath.addAll(shortCut);
             shorterPath.addAll(path.subList(path.indexOf(biggestDist) + 1, path.size()));
 
             return shorterPath;
         }
 
         // If unable to find shortcuts, return the original path
-        return path;
+        return (ArrayList<Pair<Integer, Integer>>) path;
     }
 
     protected ArrayList<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) {
@@ -100,7 +97,7 @@ public class AStar {
     }
 
     private void printOut(PriorityQueue<Node> queue){
-        PriorityQueue<Node> queueToPrint = new PriorityQueue<Node>(queue);
+        PriorityQueue<Node> queueToPrint = new PriorityQueue<>(queue);
 
         System.out.println("\nOpen nodes");
         while(queueToPrint.size() != 0){
@@ -134,7 +131,7 @@ public class AStar {
         for (int i = topNodes; i < topNodes + 3; i++) {
             for (int j = leftNodes; j < leftNodes + 3; j++) {
                 try {
-                    if (tiles[i][j] != 1 && (!((i == nodeLoc.getKey()) && (j == nodeLoc.getValue())))) {
+                    if (tiles[i][j].getState() != TileState.SOLID && (!((i == nodeLoc.getKey()) && (j == nodeLoc.getValue())))) {
                         initNodes.add(new Node(new Pair<>(i, j), costToGo + COST_OF_TRAVEL, realDist[i][j]));
                     }
                 } catch (Exception e) {

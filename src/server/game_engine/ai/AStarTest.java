@@ -1,5 +1,8 @@
 package server.game_engine.ai;
 
+import data.map.tile.Tile;
+import data.map.tile.TileState;
+import data.map.tile.TileTypes;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -26,5 +29,12 @@ public class AStarTest {
         for (Pair<Integer, Integer> pair : path) {
             System.out.println(pair);
         }
+//        TileTypes tileType = TileTypes.GRASS;
+//        TileState tileState = TileState.PASSABLE;
+
+        Tile tile1 = new Tile(TileTypes.GRASS, TileState.PASSABLE);
+        Tile tile2 = new Tile(TileTypes.WOOD, TileState.PASSABLE);
+
+        System.out.println(tile1.getState() == tile2.getState());
     }
 }

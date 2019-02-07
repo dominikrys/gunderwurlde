@@ -2,7 +2,7 @@ package data;
 
 public class Pose extends Location {
     protected int direction;
-    
+
     public Pose() { //workaround for template enemies
         this(0, 0, 0);
     }
@@ -31,7 +31,7 @@ public class Pose extends Location {
     public void setDirection(int direction) {
         this.direction = normaliseDirection(direction);
     }
-    
+
     public static int normaliseDirection(int direction) {
         if (direction > 360)
             direction = direction % 360;
