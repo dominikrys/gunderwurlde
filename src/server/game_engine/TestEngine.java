@@ -48,8 +48,8 @@ public class TestEngine extends Application implements HasEngine {
         stage.setResizable(false);
         engine.start();
         engine.addPlayer("Bob2", Teams.RED);
-        engine.addPlayer("Bob3", Teams.RED);
-        engine.addPlayer("Bob4", Teams.RED);
+        engine.addPlayer("Bob3", Teams.BLUE);
+        engine.addPlayer("Bob4", Teams.GREEN);
         requests = new ClientRequests(4);
         loopDeDoop(stage);
         while (firstRender) {

@@ -3,6 +3,7 @@ package client.data.entity;
 import client.data.ItemView;
 import data.Pose;
 import data.entity.EntityList;
+import data.entity.player.Teams;
 import data.item.weapon.gun.AmmoList;
 
 import java.io.Serializable;
@@ -19,9 +20,10 @@ public class PlayerView extends EntityView implements Serializable {
     protected int score;
     protected String name;
     protected LinkedHashMap<AmmoList, Integer> ammo;
+    protected Teams team;
 
     public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
-                      String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID) {
+                      String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team) {
         super(pose, size, EntityList.PLAYER);
         this.health = health;
         this.maxHealth = health;
@@ -31,6 +33,7 @@ public class PlayerView extends EntityView implements Serializable {
         this.name = name;
         this.ammo = ammo;
         this.id = playerID;
+        this.team = team;
     }
 
     public int getID() {
@@ -67,6 +70,10 @@ public class PlayerView extends EntityView implements Serializable {
 
     public ArrayList<ItemView> getItems() {
         return items;
+    }
+
+    public Teams getTeam() {
+        return team;
     }
 
 }
