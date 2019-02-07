@@ -52,14 +52,14 @@ public class AStar {
         // If unable to find shortcuts, return the original path
         return (ArrayList<Pair<Integer, Integer>>) path;
     }
-
+    // Coordinates are y x
     protected ArrayList<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);
         // Array list to store nodes after they have been expanded
         ArrayList<Pair<Integer, Integer>> closed = new ArrayList<>();
         // To store newly opened nodes
-        PriorityQueue<Node> newNodes = null;
+        PriorityQueue<Node> newNodes;
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
@@ -71,22 +71,24 @@ public class AStar {
         closed.add(startCoords);
 
         // A* finishes only when the end node is expanded
-        while(!closed.contains(endCoords)) {
+        while(!closed.contains(endCoords)) try {
             System.out.println("\nNode to expand: " + opened.peek() + "\n");
             newNodes = openNodes(opened.peek().getCoordinates(), opened.peek().getCostToGo());
             // Add the coordinates of expanded node to the closed list and remove it from the opened queue
             closed.add(opened.poll().getCoordinates());
 
             System.out.println("\nNewly added nodes");
-            for (Node n: newNodes) {
+            for (Node n : newNodes) {
                 // Only add nodes to the open queue if they are not already there and the have not been expanded yet
-                if((!closed.contains(n.getCoordinates())) && (!opened.contains(n))) {
+                if ((!closed.contains(n.getCoordinates())) && (!opened.contains(n))) {
                     opened.add(n);
                     System.out.println(n);
                 }
             }
 
             printOut(opened);
+        } catch (NullPointerException e) {
+            System.out.println("Nowhere to go for the enemy!");
         }
 
         // Shorten the path by finding shortcuts
@@ -132,6 +134,7 @@ public class AStar {
             for (int j = leftNodes; j < leftNodes + 3; j++) {
                 try {
                     if (tiles[i][j].getState() != TileState.SOLID && (!((i == nodeLoc.getKey()) && (j == nodeLoc.getValue())))) {
+                        System.out.println("true");
                         initNodes.add(new Node(new Pair<>(i, j), costToGo + COST_OF_TRAVEL, realDist[i][j]));
                     }
                 } catch (Exception e) {
