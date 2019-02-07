@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import data.Location;
 import data.entity.enemy.Enemy;
 import data.entity.enemy.Zombie;
+import data.map.GameMap;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import data.map.tile.TileTypes;

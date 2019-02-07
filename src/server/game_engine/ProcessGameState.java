@@ -31,13 +31,17 @@ import data.item.Item;
 import data.item.ItemType;
 import data.item.weapon.gun.AmmoList;
 import data.item.weapon.gun.Gun;
-import data.map.*;
+import data.map.GameMap;
+import data.map.MapList;
+import data.map.Meadow;
+import data.map.MeadowTest;
+import data.map.Round;
+import data.map.Wave;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import server.game_engine.ai.AIAction;
 import server.game_engine.ai.Attack;
 import server.game_engine.ai.EnemyAI;
-import server.game_engine.ai.ZombieAI;
 import server.request.ClientRequests;
 import server.request.Request;
 
@@ -60,9 +64,9 @@ public class ProcessGameState extends Thread {
         case MEADOW:
             this.gameState = new GameState(new Meadow(), players);
             break;
-            case MEADOWTEST:
-                this.gameState = new GameState(new data.map.MeadowTest(), players);
-                break;
+        case MEADOWTEST:
+            this.gameState = new GameState(new MeadowTest(), players);
+            break;
         }
         this.handlerClosing = false;
 
@@ -205,7 +209,7 @@ public class ProcessGameState extends Thread {
                             }
 
                             switch (currentGun.getProjectileType()) {
-                                case BASIC_BULLET:
+                            case BASIC_BULLET:
                                 for (Pose p : bulletPoses) {
                                     SmallBullet b = new SmallBullet(p, currentPlayer.getTeam());
                                     newProjectiles.add(b);
@@ -261,7 +265,7 @@ public class ProcessGameState extends Thread {
                                 break;
                             }
                         }
-                        
+
                         if (!pushedBack) {
                             for (int[] tileCords : tilesOn) {
                                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
@@ -313,7 +317,7 @@ public class ProcessGameState extends Thread {
                                     }
                                 }
                             }
-                        }                                              
+                        }
                     }
 
                     // TODO player changed data
@@ -361,7 +365,8 @@ public class ProcessGameState extends Thread {
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
 
                 ai = currentEnemy.getAI();
-                // TODO check if AI has finished processing if so update info and process action
+                if (!ai.isProcessing())
+                    ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
 
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
@@ -546,8 +551,8 @@ public class ProcessGameState extends Thread {
                         playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0));
                     }
                 }
-                playersView.add(new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),
-                        p.getScore(), p.getName(), p.getAmmoList(), p.getID(), p.getTeam()));
+                playersView.add(new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(),
+                        p.getName(), p.getAmmoList(), p.getID(), p.getTeam()));
             }
 
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
