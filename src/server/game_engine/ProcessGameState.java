@@ -19,9 +19,9 @@ import data.GameState;
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
+import data.entity.EntityList;
 import data.entity.enemy.Drop;
 import data.entity.enemy.Enemy;
-import data.entity.enemy.EnemyList;
 import data.item.Item;
 import data.entity.ItemDrop;
 import data.item.ItemType;
@@ -184,7 +184,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getShoot()) {
-                    if (currentItem.getItemListName() == ItemType.GUN) {
+                    if (currentItem.getItemType() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot()) {
                             int numOfBullets = currentGun.getProjectilesPerShot();
@@ -203,15 +203,15 @@ public class ProcessGameState extends Thread {
                             }
 
                             switch (currentGun.getProjectileType()) {
-                            case SMALLBULLET:
+                                case BASIC_BULLET:
                                 for (Pose p : bulletPoses) {
                                     SmallBullet b = new SmallBullet(p);
                                     newProjectiles.add(b);
-                                    projectilesView.add(new ProjectileView(p, b.getSizeScaleFactor(), b.getProjectileType()));
+                                    projectilesView.add(new ProjectileView(p, b.getSizeScaleFactor(), b.getEntityListName()));
                                 }
                                 break;
                             default:
-                                System.out.println("Projectile type not known for: " + currentItem.getItemName().toString());
+                                System.out.println("Projectile type not known for: " + currentItem.getItemListName().toString());
                                 break;
                             }
                         }
@@ -284,7 +284,7 @@ public class ProcessGameState extends Thread {
                                             removed = true;
                                             break;
                                         case GUN: // TODO change for everything that isn't ammo or powerup
-                                            if (playerItems.stream().anyMatch((i) -> i.getItemName() == currentItemDrop.getItemName())) {
+                                            if (playerItems.stream().anyMatch((i) -> i.getItemListName() == currentItemDrop.getItemName())) {
                                                 // player already has that item TODO take some ammo from it
                                             } else if (playerItems.size() < currentPlayer.getMaxItems()
                                                     && (lastProcessTime - currentItemDrop.getDropTime()) > ItemDrop.DROP_FREEZE) {
@@ -338,7 +338,7 @@ public class ProcessGameState extends Thread {
                     }
                     // TODO itemdrop change here
                 } else {
-                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSizeScaleFactor(), i.getItemName()));
+                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSizeScaleFactor(), i.getEntityListName()));
                 }
             }
 
@@ -352,7 +352,7 @@ public class ProcessGameState extends Thread {
             for (Enemy e : enemies.values()) {
                 Enemy currentEnemy = e;
                 EnemyAI ai;
-                EnemyList enemyName = currentEnemy.getEnemyName();
+                EntityList enemyName = currentEnemy.getEntityListName();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
                 Location newLocation = enemyPose;
                 int direction = enemyPose.getDirection();
@@ -401,7 +401,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSizeScaleFactor(), currentEnemy.getEnemyName()));
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSizeScaleFactor(), currentEnemy.getEntityListName()));
 
                 // TODO enemy change here
             }
@@ -456,7 +456,7 @@ public class ProcessGameState extends Thread {
                                                 ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO item change here
-                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSizeScaleFactor(), newDrop.getItemName()));
+                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSizeScaleFactor(), newDrop.getEntityListName()));
 
                                                 LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
                                                 for (int[] itemTileCords : itemTilesOn) {
@@ -483,7 +483,7 @@ public class ProcessGameState extends Thread {
                 } else {
                     // TODO basic projectile change
                     newProjectiles.add(currentProjectile);
-                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSizeScaleFactor(), currentProjectile.getProjectileType()));
+                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSizeScaleFactor(), currentProjectile.getEntityListName()));
                 }
             }
 
@@ -540,9 +540,9 @@ public class ProcessGameState extends Thread {
                 for (Item i : p.getItems()) {
                     if (i instanceof Gun) {
                         Gun g = (Gun) i;
-                        playerItems.add(new ItemView(g.getItemName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip()));
+                        playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip()));
                     } else {
-                        playerItems.add(new ItemView(i.getItemName(), AmmoList.NONE, 0, 0));
+                        playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0));
                     }
                 }
                 playersView.add(new PlayerView(p.getPose(), p.getSizeScaleFactor(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(),

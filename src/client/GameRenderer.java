@@ -131,7 +131,7 @@ public class GameRenderer implements Runnable {
         updateHUD();
     }
 
-    // Render entities to the map canvas TODO: add name to EntityView and have this abstracted into smaller methods
+    // Render entities to the map canvas
     private void renderEntitiesFromGameViewToCanvas() {
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
@@ -155,26 +155,26 @@ public class GameRenderer implements Runnable {
                     break;
             }
 
-            renderEntity(currentPlayer, mapGC, loadedSprites.get(spriteToRender));
+            renderEntity(currentPlayer, mapGC, spriteToRender);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
-            renderEntityToCanvas(currentEnemy);
+            renderEntityView(currentEnemy);
         }
 
         // Render projectiles
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
-            renderEntityToCanvas(currentProjectile);
+            renderEntityView(currentProjectile);
         }
 
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
-            renderEntityToCanvas(currentItem);
+            renderEntityView(currentItem);
         }
     }
 
-    private void renderEntityToCanvas(EntityView entityView) {
+    private void renderEntityView(EntityView entityView) {
         // Get image from loaded sprites
         Image imageToRender = loadedSprites.get(entityView.getEntityListName());
 
