@@ -43,7 +43,7 @@ public class GameRenderer implements Runnable {
     private Label playerScoreNumber;
     private FlowPane heldItems;
     private FlowPane heartBox;
-    private HBox ammoBox;
+    private VBox ammoBox;
     // Current player info
     private PlayerView currentPlayer;
     private int playerID;
@@ -232,32 +232,42 @@ public class GameRenderer implements Runnable {
         // Get currently selected item
         ItemView currentItem = currentPlayer.getCurrentItem();
 
-        // Update ammo counts
+        // Clear ammo box
         ammoBox.getChildren().clear();
+
+        // Information about current gun - ammo in clip and clip size
+        HBox currentGunInfo = new HBox();
 
         // Add ammo amount to hud if the item has ammo
         if (currentItem.getAmmoType() != AmmoList.NONE) {
             // Make label for current ammo in item
-            Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
+            Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
                     new ImageView(loadedSprites.get(EntityList.AMMO_CLIP)));
-            currentAmmo.setFont(fontManaspace28);
-            currentAmmo.setTextFill(Color.BLACK);
+            ammoInGun.setFont(fontManaspace28);
+            ammoInGun.setTextFill(Color.BLACK);
+            // Make label for total ammo in clip
+            Label totalAmmoInClip = new Label("/" + currentItem.getClipSize());
+            totalAmmoInClip.setFont(fontManaspace18);
+            totalAmmoInClip.setTextFill(Color.BLACK);
 
-            // Make label for total ammo
-            Label clipAmmo = new Label("/" + currentItem.getClipSize());
-            clipAmmo.setFont(fontManaspace18);
-            clipAmmo.setTextFill(Color.DARKSLATEGREY);
+            //Make label for total amount of ammo the current item uses
+            Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
+            totalAmmoForCurrentItem.setFont(fontManaspace28);
+            totalAmmoForCurrentItem.setTextFill(Color.DARKSLATEGRAY);
 
-            // Add to ammo hbox
-            ammoBox.getChildren().addAll(currentAmmo, clipAmmo);
+            // Add info on current gun to the right element
+            currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
+            // Add the total amount of ammo the current gun uses under the gun info
+            ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
         } else {
             // Make label for infinite use if it's not a weapon
             Label currentAmmo = new Label("∞");
             currentAmmo.setFont(new Font("Consolas", 32));
             currentAmmo.setTextFill(Color.BLACK);
 
-            // Add to ammo hbox
-            ammoBox.getChildren().addAll(currentAmmo);
+            // Add info on current gun to the right element and to ammo box
+            currentGunInfo.getChildren().addAll(currentAmmo);
+            ammoBox.getChildren().add(currentGunInfo);
         }
     }
 
@@ -350,8 +360,8 @@ public class GameRenderer implements Runnable {
         // Iterate through held items list and add to the HUD
         heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
 
-        // Ammo hbox
-        ammoBox = new HBox();
+        // Ammo vbox
+        ammoBox = new VBox();
 
         // Add elements of HUD for player to HUD
         HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
