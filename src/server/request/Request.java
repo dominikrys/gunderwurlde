@@ -1,13 +1,14 @@
 package server.request;
 
-import java.util.Optional;
+import java.io.Serializable;
 
 import data.Pose;
 
-public class Request {
-    protected Optional<Integer> movementDir;
-    protected Optional<Integer> facing;
-    protected Optional<Integer> selectItem;
+public class Request implements Serializable {
+    private static final long serialVersionUID = 1L;
+    protected int movementDir;
+    protected int facing;
+    protected int selectItemAt;
     protected boolean shoot;
     protected boolean reload;
     protected boolean leave;
@@ -18,9 +19,9 @@ public class Request {
         this.reload = false;
         this.leave = false;
         this.drop = false;
-        this.movementDir = Optional.empty();
-        this.facing = Optional.empty();
-        this.selectItem = Optional.empty();
+        this.movementDir = -1;
+        this.facing = -1;
+        this.selectItemAt = -1;
     }
 
     public void requestDrop() {
@@ -32,39 +33,39 @@ public class Request {
     }
 
     public boolean movementExists() {
-        return movementDir.isPresent();
+        return (movementDir != -1);
     }
 
     public int getMovementDirection() {
-        return movementDir.get(); // can throw exception if used incorrectly
+        return movementDir;
     }
 
     public void setMovementDirection(int direction) {
-        this.movementDir = Optional.of(Pose.normaliseDirection(direction));
+        this.movementDir = Pose.normaliseDirection(direction);
     }
     
     public boolean facingExists() {
-        return facing.isPresent();
+        return (facing != -1);
     }
     
     public int getFacing() {
-        return facing.get(); // can throw exception if used incorrectly
+        return facing;
     }
 
     public void setFacing(int direction) {
-        this.facing = Optional.of(Pose.normaliseDirection(direction));
+        this.facing = Pose.normaliseDirection(direction);
     }
 
-    public boolean selectItemExists() {
-        return selectItem.isPresent();
+    public boolean selectItemAtExists() {
+        return (selectItemAt != -1);
     }
 
-    public Integer getSelectItem() {
-        return selectItem.get(); // can throw exception if used incorrectly
+    public Integer getSelectItemAt() {
+        return selectItemAt;
     }
 
-    public void setSelectItem(Integer selectWeapon) {
-        this.selectItem = Optional.of(selectWeapon);
+    public void setSelectItem(Integer itemIndex) {
+        this.selectItemAt = itemIndex;
     }
 
     public void requestShoot() {

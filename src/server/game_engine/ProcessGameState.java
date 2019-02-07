@@ -322,8 +322,8 @@ public class ProcessGameState extends Thread {
 
                 currentPlayer.setCurrentItem(currentItem); // sets item changes before switching
 
-                if (request.selectItemExists()) {
-                    currentPlayer.setCurrentItemIndex(request.getSelectItem());
+                if (request.selectItemAtExists()) {
+                    currentPlayer.setCurrentItemIndex(request.getSelectItemAt());
                 }
 
                 players.put(playerID, currentPlayer);
