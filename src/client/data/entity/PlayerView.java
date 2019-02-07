@@ -22,9 +22,9 @@ public class PlayerView extends EntityView implements Serializable {
     protected LinkedHashMap<AmmoList, Integer> ammo;
     protected Teams team;
 
-    public PlayerView(Pose pose, int size, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
+    public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
                       String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team) {
-        super(pose, size, EntityList.PLAYER);
+        super(pose, sizeScaleFactor, EntityList.PLAYER);
         this.health = health;
         this.maxHealth = health;
         this.items = items;
