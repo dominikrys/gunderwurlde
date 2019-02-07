@@ -8,29 +8,29 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+import client.data.ItemView;
+import client.data.TileView;
 import client.data.entity.EnemyView;
 import client.data.entity.GameView;
 import client.data.entity.ItemDropView;
-import client.data.ItemView;
 import client.data.entity.PlayerView;
 import client.data.entity.ProjectileView;
-import client.data.TileView;
 import data.GameState;
 import data.Location;
 import data.Pose;
 import data.entity.Entity;
 import data.entity.EntityList;
+import data.entity.ItemDrop;
 import data.entity.enemy.Drop;
 import data.entity.enemy.Enemy;
-import data.item.Item;
-import data.entity.ItemDrop;
-import data.item.ItemType;
-import data.item.weapon.gun.AmmoList;
-import data.item.weapon.gun.Gun;
 import data.entity.player.Player;
 import data.entity.player.Teams;
 import data.entity.projectile.Projectile;
 import data.entity.projectile.SmallBullet;
+import data.item.Item;
+import data.item.ItemType;
+import data.item.weapon.gun.AmmoList;
+import data.item.weapon.gun.Gun;
 import data.map.GameMap;
 import data.map.MapList;
 import data.map.Meadow;
@@ -208,7 +208,7 @@ public class ProcessGameState extends Thread {
                             switch (currentGun.getProjectileType()) {
                                 case BASIC_BULLET:
                                 for (Pose p : bulletPoses) {
-                                    SmallBullet b = new SmallBullet(p);
+                                    SmallBullet b = new SmallBullet(p, currentPlayer.getTeam());
                                     newProjectiles.add(b);
                                     projectilesView.add(new ProjectileView(p, b.getSizeScaleFactor(), b.getEntityListName()));
                                 }
@@ -448,7 +448,13 @@ public class ProcessGameState extends Thread {
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
                                         // TODO add enemychange
                                         enemies.remove(enemyID);
-                                        tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
+
+                                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyBeingChecked);
+                                        for (int[] enemyTileCords : enemyTilesOn) {
+                                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                                        }
+
+                                        Player.changeScore(currentProjectile.getTeam(), enemyBeingChecked.getScoreOnKill());
 
                                         LinkedHashSet<Drop> drops = enemyBeingChecked.getDrops();
                                         for (Drop d : drops) {

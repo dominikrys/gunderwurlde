@@ -3,6 +3,7 @@ package data.entity.projectile;
 import data.Pose;
 import data.entity.Entity;
 import data.entity.EntityList;
+import data.entity.player.Teams;
 
 public abstract class Projectile extends Entity {
     protected int speed;
@@ -10,13 +11,19 @@ public abstract class Projectile extends Entity {
     protected EntityList entityListName;
     protected int max_range;
     protected int dist_travelled;
+    protected Teams team;
 
-    Projectile(int speed, int damage, EntityList entityListName, Pose pose, int size, int max_range) {
+    Projectile(int speed, int damage, EntityList entityListName, Pose pose, int size, int max_range, Teams team) {
         super(pose, size, entityListName);
         this.speed = speed;
         this.damage = damage;
         this.max_range = max_range;
         this.dist_travelled = 0;
+        this.team = team;
+    }
+
+    public Teams getTeam() {
+        return team;
     }
 
     public boolean maxRangeReached(int distance) {
