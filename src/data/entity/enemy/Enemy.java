@@ -3,43 +3,40 @@ package data.entity.enemy;
 import data.HasHealth;
 import data.IsMovable;
 import data.entity.Entity;
+import data.entity.EntityList;
 import data.entity.HasID;
-import data.entity.enemy.EnemyList;
 
 import java.util.LinkedHashSet;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;
-
-    private int id;
-
     protected final LinkedHashSet<Drop> drops;
-
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
-    protected EnemyList enemyName;
+    protected EntityList entityListName;
+    private int id;
 
-    Enemy(int maxHealth, int moveSpeed, EnemyList enemyName, int size, LinkedHashSet<Drop> drops) {
-        super(size);
+    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int sizeScaleFactor, LinkedHashSet<Drop> drops) {
+        super(sizeScaleFactor, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.moveSpeed = moveSpeed;
         this.drops = drops;
-        this.enemyName = enemyName;
+        this.entityListName = entityListName;
         this.id = nextID++;
     }
 
-    Enemy(int maxHealth, int moveSpeed, EnemyList enemyName, int size) {
-        this(maxHealth, moveSpeed, enemyName, size, new LinkedHashSet<Drop>());
+    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size) {
+        this(maxHealth, moveSpeed, entityListName, size, new LinkedHashSet<Drop>());
     }
 
     public LinkedHashSet<Drop> getDrops() {
         return drops;
     }
 
-    public EnemyList getEnemyName() {
-        return enemyName;
+    public EntityList getEntityListName() {
+        return entityListName;
     }
 
     @Override

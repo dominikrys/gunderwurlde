@@ -2,8 +2,8 @@ package client.data;
 
 import java.io.Serializable;
 
-import data.entity.item.ItemList;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.ItemList;
+import data.item.weapon.gun.AmmoList;
 
 public class ItemView implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,7 +28,7 @@ public class ItemView implements Serializable {
         }
     }
 
-    public ItemList getName() {
+    public ItemList getItemListName() {
         return name;
     }
 

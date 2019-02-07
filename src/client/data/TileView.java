@@ -1,6 +1,7 @@
 package client.data;
 
 import data.Constants;
+import data.entity.EntityList;
 import data.map.tile.TileState;
 import data.map.tile.TileTypes;
 
@@ -13,12 +14,12 @@ public class TileView {
     // State of tile, e.g. solid or passable
     protected TileState tileState;
 
-    protected String pathToGraphic;
+    protected EntityList entityName;
 
     public TileView(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
         this.tileState = tileState;
-        this.pathToGraphic = Constants.DEFAULT_GRAPHIC_PATH;
+        this.entityName = EntityList.DEFAULT;
     }
 
     public TileTypes getTileType() {
@@ -29,15 +30,5 @@ public class TileView {
         return tileState;
     }
 
-    public String getPathToGraphic() {
-        switch (tileType) {
-        case GRASS:
-            return "file:assets/img/tiles/grass.png";
-        case WOOD:
-            return "file:assets/img/tiles/wood.png";
-        default:
-            return pathToGraphic;
-        }
-    }
 
 }

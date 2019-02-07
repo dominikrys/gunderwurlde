@@ -2,7 +2,7 @@ package data.entity.enemy;
 
 import java.util.Random;
 
-import data.entity.item.Item;
+import data.item.Item;
 
 public class Drop {
     private static int MAX_DROP_CHANCE = 10000;

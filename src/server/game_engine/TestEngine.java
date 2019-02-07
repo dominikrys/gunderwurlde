@@ -1,23 +1,22 @@
 package server.game_engine;
 
-import java.util.Random;
-
 import client.GameRenderer;
-import client.data.GameView;
+import client.data.entity.GameView;
 import data.entity.player.Teams;
 import data.map.MapList;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import server.request.ClientRequests;
 
+import java.util.Random;
+
 public class TestEngine extends Application implements HasEngine {
+    private static final int LOOPS = 1000;
     private ProcessGameState engine;
     private GameRenderer rend;
     private GameView view;
     private ClientRequests requests;
     private boolean firstRender;
-
-    private static final int LOOPS = 1000;
 
     public static void main(String[] args) throws Exception {
         launch(args);

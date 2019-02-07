@@ -1,4 +1,6 @@
-package client.data;
+package client.data.entity;
+
+import client.data.TileView;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -14,7 +16,7 @@ public class GameView implements Serializable {
     protected int yDim;
 
     public GameView(LinkedHashSet<PlayerView> players, LinkedHashSet<EnemyView> enemies, LinkedHashSet<ProjectileView> projectiles,
-            LinkedHashSet<ItemDropView> itemDrops, TileView[][] tileMap) {
+                    LinkedHashSet<ItemDropView> itemDrops, TileView[][] tileMap) {
         this.players = players;
         this.enemies = enemies;
         this.projectiles = projectiles;

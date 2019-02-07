@@ -1,12 +1,12 @@
 package client;
 
-import client.data.GameView;
+import client.data.entity.GameView;
 import client.data.ItemView;
-import client.data.PlayerView;
+import client.data.entity.PlayerView;
 import client.data.TileView;
 import data.Pose;
-import data.entity.item.ItemList;
-import data.entity.item.weapon.gun.AmmoList;
+import data.item.ItemList;
+import data.item.weapon.gun.AmmoList;
 import data.map.GameMap;
 import data.map.Meadow;
 import data.map.tile.Tile;

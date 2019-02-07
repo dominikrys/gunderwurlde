@@ -1,8 +1,10 @@
 package client;
 
-import client.data.*;
+import client.data.ItemView;
+import client.data.entity.*;
 import data.Constants;
-import data.entity.item.weapon.gun.AmmoList;
+import data.entity.EntityList;
+import data.item.weapon.gun.AmmoList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -25,35 +27,36 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameRenderer implements Runnable {
+    // HashMap to store all graphics
+    Map<EntityList, Image> loadedSprites;
     // Reusable variables used in rendering gameview
-    private Font fontManaspace28;
-    private Font fontManaspace18;
-    private PlayerView currentPlayer;
-    private FlowPane heldItems;
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
+    // Fonts
+    private Font fontManaspace28;
+    private Font fontManaspace18;
+    // HUD items
     private Label playerScoreNumber;
+    private FlowPane heldItems;
     private FlowPane heartBox;
     private HBox ammoBox;
-    private Image defaultGraphic;
-
+    // Current player info
+    private PlayerView currentPlayer;
+    private int playerID;
     // GameView object which is to be updated
     private GameView gameView;
-
     // Stage to render to
     private Stage stage;
 
-    // PlayerID of current client
-    private int playerID;
-
+    // Constructor
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
         // Initialise gameView, stage and playerID
         this.gameView = gameView;
-
         this.stage = stage;
-
         this.playerID = playerID;
 
         // Load fonts
@@ -66,10 +69,20 @@ public class GameRenderer implements Runnable {
             fontManaspace18 = new Font("Consolas", 18);
         }
 
-        // Load the default graphic
-        defaultGraphic = new Image(Constants.DEFAULT_GRAPHIC_PATH);
-        if (!checkImageLoaded(defaultGraphic, Constants.DEFAULT_GRAPHIC_PATH)) {
-            System.out.println("Default texture couldn't be loaded! There could be potential issues with the game!");
+        // Iterate over sprites array and load all sprites used in the game
+        loadedSprites = new HashMap<>();
+
+        for (EntityList entity : EntityList.values()) {
+            // Load image
+            Image tempImage = new Image(entity.getPath());
+
+            // Check if loaded properly, and if loaded properly then store in the loaded sprites hashmap
+            if (tempImage.isError()) {
+                System.out.println("Error when loading image: " + entity.name() + " from directory: " + entity.getPath());
+                loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
+            } else {
+                loadedSprites.put(entity, tempImage);
+            }
         }
 
         // Initialize HUD elements
@@ -80,12 +93,13 @@ public class GameRenderer implements Runnable {
         ammoBox = null;
     }
 
+    // Run the thread - set up window and update game on a timer
     @Override
     public void run() {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: tweak this
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: see if this causes issues
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -93,45 +107,82 @@ public class GameRenderer implements Runnable {
             }
         }.start();
 
-        //        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.play();
+        /*
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+        */
     }
 
-    // Method for updating the gameview
+    // Update stored gameView
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
     }
 
-    // Method for rendering the gameview
+    // Render gameView
     public void renderGameView() {
         // Render map
         renderMap(gameView, mapGC);
 
-        // Render players
-        for (PlayerView currentPlayer : gameView.getPlayers()) {
-            renderEntity(currentPlayer, mapGC, currentPlayer.getPathToGraphic());
-        }
-
-        // Render enemies
-        for (EnemyView currentEnemy : gameView.getEnemies()) {
-            renderEntity(currentEnemy, mapGC, currentEnemy.getPathToGraphic());
-        }
-
-        // Render projectiles
-        for (ProjectileView currentProjectile : gameView.getProjectiles()) {
-            renderEntity(currentProjectile, mapGC, currentProjectile.getPathToGraphic());
-        }
-
-        // Render items
-        for (ItemDropView currentItem : gameView.getItemDrops()) {
-            renderEntity(currentItem, mapGC, currentItem.getPathToGraphic());
-        }
+        // Render entities onto canvas
+        renderEntitiesFromGameViewToCanvas();
 
         // Update HUD
         updateHUD();
     }
 
+    // Render entities to the map canvas
+    private void renderEntitiesFromGameViewToCanvas() {
+        // Render players
+        for (PlayerView currentPlayer : gameView.getPlayers()) {
+            // Get the correct sprite according to playerID, otherwise load the default player graphic
+            Image spriteToRender;
+            switch (currentPlayer.getID()) {
+                case 1:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_1);
+                    break;
+                case 2:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_2);
+                    break;
+                case 3:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_3);
+                    break;
+                case 4:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_4);
+                    break;
+                default:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                    break;
+            }
+
+            renderEntity(currentPlayer, mapGC, spriteToRender);
+        }
+
+        // Render enemies
+        for (EnemyView currentEnemy : gameView.getEnemies()) {
+            renderEntityView(currentEnemy);
+        }
+
+        // Render projectiles
+        for (ProjectileView currentProjectile : gameView.getProjectiles()) {
+            renderEntityView(currentProjectile);
+        }
+
+        // Render items
+        for (ItemDropView currentItem : gameView.getItemDrops()) {
+            renderEntityView(currentItem);
+        }
+    }
+
+    private void renderEntityView(EntityView entityView) {
+        // Get image from loaded sprites
+        Image imageToRender = loadedSprites.get(entityView.getEntityListName());
+
+        // Render image
+        renderEntity(entityView, mapGC, imageToRender);
+    }
+
+    // Update all HUD elements
     private void updateHUD() {
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
@@ -140,19 +191,19 @@ public class GameRenderer implements Runnable {
         heartBox.getChildren().clear();
         int halfHearts = currentPlayer.getHealth() % 2;
         int wholeHearts = currentPlayer.getHealth() / 2;
-        int missingHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
+        int lostHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
 
         // Populate heart box in GUI
         for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/heart.png")));
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_FULL)));
         }
         // Populate half heart
         for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/half_heart.png")));
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_HALF)));
         }
-        // Populate lost life
-        for (int i = 0; i < missingHearts; i++) {
-            heartBox.getChildren().add(new ImageView(new Image("file:assets/img/other/lost_heart.png")));
+        // Populate lost hearts
+        for (int i = 0; i < lostHearts; i++) {
+            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_LOST)));
         }
 
         // Update held items
@@ -162,17 +213,17 @@ public class GameRenderer implements Runnable {
 
         for (ItemView currentItem : currentPlayer.getItems()) {
             // Make image view out of graphic
-            ImageView imageView = new ImageView(new Image(currentItem.getPathToGraphic()));
+            ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
 
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
                 DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
                 dropShadow.setSpread(0.75);
-                imageView.setEffect(dropShadow);
+                itemImageView.setEffect(dropShadow);
             }
 
             // Add item to list
-            heldItems.getChildren().add(imageView);
+            heldItems.getChildren().add(itemImageView);
 
             // Increment current item index
             currentItemIndex++;
@@ -188,7 +239,7 @@ public class GameRenderer implements Runnable {
         if (currentItem.getAmmoType() != AmmoList.NONE) {
             // Make label for current ammo in item
             Label currentAmmo = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(new Image("file:assets/img/other/ammo_clip.png")));
+                    new ImageView(loadedSprites.get(EntityList.AMMO_CLIP)));
             currentAmmo.setFont(fontManaspace28);
             currentAmmo.setTextFill(Color.BLACK);
 
@@ -210,6 +261,7 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
         // Create canvas according to dimensions of the map
         mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
@@ -238,22 +290,17 @@ public class GameRenderer implements Runnable {
         updateStageWithScene(stage, scene);
     }
 
-    private void renderMap(GameView inputGameState, GraphicsContext mapGC) {
+    // Render map from tiles
+    private void renderMap(GameView inputGameView, GraphicsContext mapGC) {
         // Get map X and Y dimensions
-        int mapX = inputGameState.getXDim();
-        int mapY = inputGameState.getYDim();
+        int mapX = inputGameView.getXDim();
+        int mapY = inputGameView.getYDim();
 
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = new Image(inputGameState.getTileMap()[x][y].getPathToGraphic());
-
-                // Check if tile graphic loaded properly and of the right dimensions, if not then print error and load default
-                if (!(checkImageLoaded(tileImage, inputGameState.getTileMap()[x][y].getPathToGraphic()))
-                        || tileImage.getWidth() != Constants.TILE_SIZE || tileImage.getHeight() != Constants.TILE_SIZE) {
-                    tileImage = defaultGraphic;
-                }
+                Image tileImage = loadedSprites.get(inputGameView.getTileMap()[x][y].getTileType().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
@@ -262,6 +309,7 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Create HUD and initialise all elements
     private VBox createHUD(GameView inputGameView, int playerID) {
         // Make HUD
         VBox HUDBox = new VBox();
@@ -311,33 +359,38 @@ public class GameRenderer implements Runnable {
         return HUDBox;
     }
 
-    // Method for rendering entity onto map
-    private void renderEntity(EntityView entity, GraphicsContext gc, String imagePath) {
-        // Get image to render from path
-        Image imageToRender = new Image(imagePath);
-
-        // If image not loaded properly, print error and load default graphic
-        if (!checkImageLoaded(imageToRender, imagePath)) {
-            imageToRender = defaultGraphic;
+    // Render entity onto the map canas
+    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
+        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
+        if (entity.getSizeScaleFactor() != 1) {
+            image = resampleImage(image, entity.getSizeScaleFactor());
         }
 
-        // If entity's size isn't zero, enlarge the graphic
-        if (entity.getSize() != 1) {
-            imageToRender = resampleImage(imageToRender, entity.getSize());
-        }
-
-        // Render entity to specified location on graphicscontext
-        drawRotatedImage(gc, imageToRender, entity.getPose().getDirection(), entity.getPose().getX(),
+        // Render entity to specified location on canvas
+        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
                 entity.getPose().getY());
     }
 
-    // Method for setting transform for the GraphicsContext to rotate around a pivot point.
+    // Set transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
     }
 
-    // Method for drawing the rotated image
+    // Get image from the HashMap of loaded images according to the entity name
+    private Image getImageFromEntity(EntityList entityName) {
+        // Try to get the correct sprite, if not found then return default
+        Image image = loadedSprites.get(entityName);
+
+        if (image != null && !image.isError()) {
+            return image;
+        } else {
+            System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
+            return loadedSprites.get(EntityList.DEFAULT);
+        }
+    }
+
+    // Draw rotated image
     private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
         gc.save(); // Saves the current state on stack, including the current transform for later
         rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
@@ -345,24 +398,14 @@ public class GameRenderer implements Runnable {
         gc.restore(); // Back to original state (before rotation)
     }
 
-    // Method for creating an image from a specified colour
+    // Create an Image object from specified colour
     private Image createImageFromColor(Color color) {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
     }
 
-    // Method for checking if an image has loaded in correctly
-    private boolean checkImageLoaded(Image inputImage, String imageDirectory) {
-        if (inputImage.isError()) {
-            System.out.println("Image not loaded properly from: " + imageDirectory);
-            return false;
-        }
-
-        return true;
-    }
-
-    // Method for scaling image by integer value by resampling - useful for large enemies/powerups
+    // Scale image by integer value through resampling - useful for large enemies/powerups
     private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
@@ -389,6 +432,7 @@ public class GameRenderer implements Runnable {
         return outputImage;
     }
 
+    // Update stage with scene - only called when game first made
     private void updateStageWithScene(Stage stage, Scene scene) {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
         if (Platform.isFxApplicationThread()) {
