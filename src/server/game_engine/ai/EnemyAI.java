@@ -15,7 +15,15 @@ public abstract class EnemyAI {
     private Tile [][] tileMap;
     private int maxDistanceMoved;
 
-    protected EnemyAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
+    protected EnemyAI() {
+//        this.pose = pose;
+//        this.size = size;
+//        this.playerPoses = playerPoses;
+//        this.tileMap = tileMap;
+//        this.maxDistanceMoved = maxDistanceMoved;
+    }
+
+    public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved){
         this.pose = pose;
         this.size = size;
         this.playerPoses = playerPoses;
@@ -37,7 +45,7 @@ public abstract class EnemyAI {
         return 0;
     }
 
-    public Location getNewLocation() {
+    public Pose getNewLocation() {
         // TODO Auto-generated method stub
         return null;
     } 

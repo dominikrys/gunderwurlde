@@ -8,14 +8,12 @@ import data.map.tile.Tile;
 
 public class ZombieAI extends EnemyAI {
 
-    public ZombieAI(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved) {
-        super(pose,size,playerPoses,tileMap,maxDistanceMoved);
-        System.out.println("A Zombie is created");
+    public ZombieAI() {
+        super();
     }
 
     @Override
     public AIAction getAction() {
-
         return AIAction.WAIT;
     }
 
@@ -32,7 +30,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    public Location getNewLocation() {
+    public Pose getNewLocation() {
         // TODO Auto-generated method stub
         return null;
     }

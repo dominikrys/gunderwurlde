@@ -31,11 +31,7 @@ import data.item.Item;
 import data.item.ItemType;
 import data.item.weapon.gun.AmmoList;
 import data.item.weapon.gun.Gun;
-import data.map.GameMap;
-import data.map.MapList;
-import data.map.Meadow;
-import data.map.Round;
-import data.map.Wave;
+import data.map.*;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import server.game_engine.ai.AIAction;
@@ -64,6 +60,9 @@ public class ProcessGameState extends Thread {
         case MEADOW:
             this.gameState = new GameState(new Meadow(), players);
             break;
+            case MEADOWTEST:
+                this.gameState = new GameState(new data.map.MeadowTest(), players);
+                break;
         }
         this.handlerClosing = false;
 
