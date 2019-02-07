@@ -14,6 +14,7 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     private Tile [][] tileMap;
     private int maxDistanceMoved;
+    private boolean isProcessing = false;
 
     protected EnemyAI() {
 //        this.pose = pose;
@@ -29,6 +30,10 @@ public abstract class EnemyAI {
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.maxDistanceMoved = maxDistanceMoved;
+    }
+
+    public boolean isProcessing(){
+        return isProcessing;
     }
 
     public AIAction getAction() {
