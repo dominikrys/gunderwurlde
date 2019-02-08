@@ -2,6 +2,8 @@ package client;
 
 import client.data.ItemView;
 import client.data.entity.*;
+import client.inputhandler.KeyboardHandler;
+import client.inputhandler.MouseHandler;
 import data.Constants;
 import data.entity.EntityList;
 import data.item.weapon.gun.AmmoList;
@@ -51,6 +53,9 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    private KeyboardHandler kbHandler;
+    private MouseHandler mHandler;
+    ClientSender sender;
 
     // Constructor
     public GameRenderer(Stage stage, GameView gameView, int playerID) {
@@ -91,6 +96,9 @@ public class GameRenderer implements Runnable {
         currentPlayer = null;
         heldItems = null;
         ammoBox = null;
+        
+        kbHandler = new KeyboardHandler();
+        mHandler = new MouseHandler();
     }
 
     // Run the thread - set up window and update game on a timer
@@ -117,6 +125,8 @@ public class GameRenderer implements Runnable {
     // Update stored gameView
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
+        this.kbHandler.setGameView(gameView);
+        this.mHandler.setGameView(gameView);
     }
 
     // Render gameView
@@ -295,6 +305,14 @@ public class GameRenderer implements Runnable {
 
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        
+        kbHandler.setGameView(inputGameView);
+        kbHandler.setScene(scene);
+        kbHandler.activate();
+        mHandler.setCanvas(mapCanvas);
+        mHandler.setGameView(inputGameView);
+        mHandler.setScene(scene);
+        mHandler.activate();
 
         // Update stage
         updateStageWithScene(stage, scene);
@@ -460,4 +478,8 @@ public class GameRenderer implements Runnable {
             });
         }
     }
+
+	public void setClientSender(ClientSender sender) {
+		this.sender = sender;
+	}
 }

@@ -1,10 +1,11 @@
 package client;
 
-import client.data.GameView;
 
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
+
+import client.data.entity.GameView;
 
 // Gets messages from other clients via the server (by the
 // serverclientthreads.ServerSender thread).

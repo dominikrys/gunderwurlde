@@ -1,6 +1,5 @@
 package client;
 
-import client.data.GameView;
 import data.Pose;
 
 import java.io.*;

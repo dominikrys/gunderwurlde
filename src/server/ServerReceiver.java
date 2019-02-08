@@ -1,6 +1,5 @@
 package server;
 
-import client.data.GameView;
 import data.Pose;
 import data.entity.player.Teams;
 import data.map.MapList;

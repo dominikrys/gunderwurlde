@@ -1,33 +1,5 @@
 package client;
 
-<<<<<<< HEAD
-import client.data.EnemyView;
-import client.data.GameView;
-import client.data.ItemDropView;
-import client.data.PlayerView;
-import client.data.ProjectileView;
-import client.data.TileView;
-import client.data.ItemView;
-import data.Pose;
-=======
->>>>>>> e18ab9d2d89b8046c1d208386966a73918338e0c
-import data.Constants;
-import data.SystemState;
-import data.entity.enemy.EnemyList;
-import data.entity.item.ItemList;
-import data.entity.item.weapon.gun.AmmoList;
-import data.entity.projectile.ProjectileList;
-import data.map.Meadow;
-import data.map.tile.Tile;
-import javafx.application.Platform;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-<<<<<<< HEAD
-import server.Server;
-=======
-import server.serverclientthreads.ClientOnline;
-import server.serverclientthreads.Server;
->>>>>>> e18ab9d2d89b8046c1d208386966a73918338e0c
 
 import static data.SystemState.MENUS;
 
@@ -35,31 +7,42 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import client.data.ItemView;
+import client.data.TileView;
+import client.data.entity.EnemyView;
+import client.data.entity.GameView;
+import client.data.entity.ItemDropView;
+import client.data.entity.PlayerView;
+import client.data.entity.ProjectileView;
+import data.Constants;
+import data.Pose;
+import data.SystemState;
+import data.entity.EntityList;
+import data.entity.player.Teams;
+import data.item.ItemList;
+import data.item.weapon.gun.AmmoList;
+import data.map.MapList;
+import data.map.Meadow;
+import data.map.tile.Tile;
+import javafx.application.Platform;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import server.Server;
+
 public class ClientHandler extends Thread {
     GameRenderer gameRenderer;
     private Stage stage;
     private boolean running;
-<<<<<<< HEAD
     private boolean inGame;
     private boolean serverStarted;
     private Server server;
     private Client client;
-=======
-    private Server server;
-    private ClientOnline clientOnline;
-    private boolean gameRunning;
->>>>>>> e18ab9d2d89b8046c1d208386966a73918338e0c
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
         running = true;
-<<<<<<< HEAD
         inGame = false;
         serverStarted = false;
-=======
-        gameRunning = false;
-        gameRenderer = null;
->>>>>>> e18ab9d2d89b8046c1d208386966a73918338e0c
     }
 
     public void run() {
@@ -75,13 +58,12 @@ public class ClientHandler extends Thread {
             switch (systemState) {
                 case MENUS:
                     // Render menu
-                    gameRunning = false;
+                    running = false;
                     menuController.renderMenu();
                     systemState = menuController.getSystemState();
                     break;
                 case GAME:
                     // Render game state
-<<<<<<< HEAD
                 	//inGame = true;
                 	/*
                 	LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
@@ -113,66 +95,63 @@ public class ClientHandler extends Thread {
                     */
                     //systemState = renderer.getSystemState();
                     break;
-                case SINGLE_PLAYER:
+                case SINGLE_PLAYER_CONNECTION:
                     // CODE FOR ESTABLISHING LOCAL SERVER
                     // Starts the server
                     // TODO pass the text from the box into the server and client
                 	if(!serverStarted) {
-	                    server = new Server("Host");
+	                    server = new Server(MapList.MEADOW, "Host");
 	                    //server.start();
-	                    client = new Client(renderer, "Host", 0);
+	                    
+	                    LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
+	                	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
+	                	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
+	                	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
+	                	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
+	                	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
+	                	examplePlayers.add(examplePlayer);
+	                	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
+	                	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
+	                	exampleEnemies.add(exampleEnemy);
+	                	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
+	                	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, EntityList.BASIC_BULLET);
+	                	exampleProjectiles.add(exampleProjectile);
+	                	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
+	                	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, EntityList.PISTOL);
+	                	exampleItemDrops.add(exampleItemDrop);
+	                	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
+	                	Tile[][] tile = Meadow.generateTileMap();
+	                	for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
+	            			for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
+	            				TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
+	            				exampleTile[i][j] = tileView;
+	            			}
+	            		}
+	                    
+	                    GameView view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
+	                    
+	                    gameRenderer = new GameRenderer(stage, view, 0);
+	                    client = new Client(gameRenderer, "Host", 0);
 	                    client.start();
 	                    serverStarted = true;
 	                    systemState = SystemState.GAME; // REMOVE THIS
                 	}
-=======
-
-                    // MAKE SURE GAMEVIEW IS SEND TO GAMERENDERER AT A TIMER/TIMELINE!!!
-
-                    /*
-                    if (!gameRunning) {
-                        gameRenderer = new GameRenderer(stage, gameView, 0);
-                        gameRenderer.setDaemon(true);
-                        gameRenderer.run();
-                        gameRunning = true;
-                    }
-
-                    gameRenderer.updateGameView(gameView);
-                    */
-                    //systemState = menuController.getSystemState(); TODO: change this to update state from game/controller
-                    break;
-                case SINGLE_PLAYER_CONNECTION:
-                    // Start local server and run it
-                    server = new Server();
-                    server.start();
-                    clientOnline = new ClientOnline();
-                    clientOnline.run();
-
-                    // Set appropriate systemstates
-                    systemState = SystemState.GAME;
-                    menuController.setSystemState(SystemState.GAME);
->>>>>>> e18ab9d2d89b8046c1d208386966a73918338e0c
                     break;
                 case MULTI_PLAYER_CONNECTION:
-                    // Start server and run it
-                    server = new Server();
-                    server.start();
-                    clientOnline = new ClientOnline();
-                    clientOnline.run();
-
-                    // Set appropriate systemstates
-                    systemState = SystemState.GAME;
-                    menuController.setSystemState(SystemState.GAME);
+                    // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
                     break;
                 case QUIT:
                     // Quit program
                     running = false;
-
-                    Platform.runLater(() -> {
-                        // Close stage
-                        stage.close();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Close stage
+                            stage.close();
+                        }
                     });
                     break;
+
             }
         }
     }

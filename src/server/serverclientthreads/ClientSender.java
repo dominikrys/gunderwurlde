@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.Enumeration;
 import java.util.Scanner;
 
+import data.Pose;
+
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
     InetAddress senderAddress;
@@ -49,6 +51,43 @@ public class ClientSender extends Thread {
             }
         } catch (IOException e1) {
 
+        }
+    }
+    
+    public void send(Pose pose) {
+        try {
+            // Turn the received GameView into a byte array
+            // Output Stream for the byteArray. Will grow as data is added
+            // Allows the object to be written to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            // Output stream that will hold the object
+            ObjectOutputStream out = null;
+            try {
+                // OOutputStream to read the GameView into the byteArray
+                out = new ObjectOutputStream(bos);
+                // Writes the view object into the BAOutputStream
+                out.writeObject(pose);
+                //flushes anything in the OOutputStream
+                out.flush();
+                // Writes the info in the BOutputStream to a byte array to be transmitted
+                byte[] buffer = bos.toByteArray();
+                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                senderSocket.send(packet);
+
+            } finally {
+                try {
+                    bos.close();
+                    System.out.println("SENT");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            // TODO Will be set on a loop to send every ______ seconds
+
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

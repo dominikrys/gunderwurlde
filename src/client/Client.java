@@ -9,12 +9,13 @@ import client.data.entity.ProjectileView;
 import client.data.TileView;
 import data.Pose;
 import data.entity.EntityList;
+import data.entity.player.Teams;
 import data.item.ItemList;
 import data.item.weapon.gun.AmmoList;
 import data.map.Meadow;
 import data.map.tile.Tile;
-import inputhandler.KeyboardHandler;
-import inputhandler.Movement;
+import client.inputhandler.KeyboardHandler;
+import client.inputhandler.Movement;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -34,7 +35,7 @@ public class Client extends Thread {
     static final int LISTENPORT = 4444;
     static final int SENDPORT = 4445;
     GameView view;
-    Renderer renderer;
+    GameRenderer renderer;
     String playerName;
     int playerID;
     Boolean running;
@@ -44,24 +45,24 @@ public class Client extends Thread {
 
 
 
-    public Client(Renderer renderer, String playerName, int playerID){
+    public Client(GameRenderer renderer, String playerName, int playerID){
         this.renderer = renderer;
-        
+        /*
         LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
     	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
     	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
     	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
     	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-    	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 0);
+    	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
     	examplePlayers.add(examplePlayer);
     	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
     	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
     	exampleEnemies.add(exampleEnemy);
     	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
-    	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, EntityList.SMALLBULLET);
+    	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, EntityList.BASIC_BULLET);
     	exampleProjectiles.add(exampleProjectile);
     	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
-    	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
+    	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, EntityList.PISTOL);
     	exampleItemDrops.add(exampleItemDrop);
     	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
     	Tile[][] tile = Meadow.generateTileMap();
@@ -73,6 +74,7 @@ public class Client extends Thread {
 		}
         
         this.view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
+        */
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
@@ -94,9 +96,11 @@ public class Client extends Thread {
             renderer.setClientSender(sender);
 
             while(running){
-                if(view != null)
+                if(view != null) {
                 	System.out.println("here");
-                    renderer.renderGameView(view, 0);
+                	renderer.updateGameView(view);
+                    renderer.renderGameView();
+                }
             }
 
 

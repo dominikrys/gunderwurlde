@@ -19,10 +19,12 @@ public class PickItem extends Action{
 	}
 	
 	public void checkPick() {
-		ItemDropView nearestItemDrop = findNearestItemDrop(itemDropView);
-		System.out.println("nearestItemDrop x:" + nearestItemDrop.getPose().getX());
-		System.out.println("nearestItemDrop y:" + nearestItemDrop.getPose().getY());
-		System.out.println("nearestItemDrop name:" + nearestItemDrop.getEntityListName().toString());
+		if(!itemDropView.isEmpty()) {
+			ItemDropView nearestItemDrop = findNearestItemDrop(itemDropView);
+			System.out.println("nearestItemDrop x:" + nearestItemDrop.getPose().getX());
+			System.out.println("nearestItemDrop y:" + nearestItemDrop.getPose().getY());
+			System.out.println("nearestItemDrop name:" + nearestItemDrop.getEntityListName().toString());
+		}
 	}
 	
 	public ItemDropView findNearestItemDrop(LinkedHashSet<ItemDropView> itemDropView) {

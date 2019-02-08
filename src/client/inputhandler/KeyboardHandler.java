@@ -237,12 +237,12 @@ public class KeyboardHandler extends UserInteraction{
 		super.setGameView(gameView);
 		
 		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
+            if(p.getName() == "Bob") {
             	this.playerView = p;
             	break;
             }
         }
-		this.pImage = new Image(playerView.getEntityListName().getPath());
+		this.pImage = new Image(EntityList.PLAYER.getPath());
 		this.movement = new Movement(sender, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
 		this.reload = new Reload(playerView);
 		this.dropItem = new DropItem(playerView);

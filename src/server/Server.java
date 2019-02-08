@@ -84,6 +84,11 @@ public class Server extends Thread implements HasEngine {
     public void requestClientRequests() {
         if (clientRequests != null) engine.setClientRequests(clientRequests);
     }
+    
+    public void sendClientRequest(ClientRequests request) {
+        engine.setClientRequests(request);
+    }
+
 
 	public void close() {
 		sender.running = false;

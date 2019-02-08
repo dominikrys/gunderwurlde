@@ -2,7 +2,6 @@ package server.serverclientthreads;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Scanner;
 
 public class ClientOnline {
     // Socket to listen to the server
@@ -13,6 +12,8 @@ public class ClientOnline {
     InetAddress senderAddress;
     static final int LISTENPORT = 4444;
     static final int SENDPORT = 4445;
+    ClientSender sender;
+    ClientReceiver receiver;
 
     public ClientOnline(){
         // To assign the objects to be integrated
@@ -29,8 +30,8 @@ public class ClientOnline {
             System.out.println("ClientOnline calls server");
 
             // Start the sender and receiver threads for the client
-            ClientSender sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
-            ClientReceiver receiver = new ClientReceiver(listenAddress, listenSocket);
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
+            receiver = new ClientReceiver(listenAddress, listenSocket);
 
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
@@ -48,5 +49,9 @@ public class ClientOnline {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public ClientSender getSender() {
+    	return this.sender;
     }
 }

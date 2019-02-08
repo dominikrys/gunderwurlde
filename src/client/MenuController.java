@@ -64,6 +64,7 @@ public class MenuController {
                     currentMenuController = new SettingsMenuController();
                     break;
                 case PLAY:
+                	System.out.println("here");
                     currentMenuController = new PlayMenuController();
                     break;
                 case MAP_SELECTION:

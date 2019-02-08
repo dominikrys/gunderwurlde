@@ -39,7 +39,7 @@ public class MouseHandler extends UserInteraction{
 		this.gameView = gameView;
 		// TODO: get name of client here
 		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
+            if(p.getName() == "Bob") {
             	this.playerView = p;
             	break;
             }
@@ -167,7 +167,7 @@ public class MouseHandler extends UserInteraction{
 		super.setGameView(gameView);
 		
 		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
+            if(p.getName() == "Bob") {
             	this.playerView = p;
             	break;
             }
