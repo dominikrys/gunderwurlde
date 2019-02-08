@@ -1,8 +1,8 @@
 package server.game_engine.ai;
 
-import data.entity.EntityList;
-
 import java.util.Optional;
+
+import data.entity.EntityList;
 
 public class Attack {
     protected int attackDirection;

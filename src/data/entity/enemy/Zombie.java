@@ -7,6 +7,7 @@ import data.entity.EntityList;
 import data.item.weapon.gun.Ammo;
 import data.item.weapon.gun.AmmoList;
 import data.map.tile.Tile;
+import server.game_engine.ai.ZombieAI;
 
 public class Zombie extends Enemy implements HasContactDamage {
     public static final int DEFAULT_HEALTH = 2;
@@ -26,7 +27,7 @@ public class Zombie extends Enemy implements HasContactDamage {
     }
 
     Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill) {
-        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill);
+        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, new ZombieAI());
     }
 
     @Override

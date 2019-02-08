@@ -44,13 +44,10 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOW, "Bob");
-        stage.setResizable(false);
+        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob");
+        stage.setResizable(true);
         engine.start();
-        engine.addPlayer("Bob2", Teams.RED);
-        engine.addPlayer("Bob3", Teams.BLUE);
-        engine.addPlayer("Bob4", Teams.GREEN);
-        requests = new ClientRequests(4);
+        requests = new ClientRequests(1);
         loopDeDoop(stage);
         while (firstRender) {
             if (view != null) {
