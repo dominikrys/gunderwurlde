@@ -14,7 +14,7 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     private Tile [][] tileMap;
     private int maxDistanceMoved;
-    protected boolean isProcessing = true;
+    protected boolean isProcessing = false;
     protected ArrayList<Pair<Integer, Integer>> path;
 
     protected EnemyAI() {
@@ -41,7 +41,6 @@ public abstract class EnemyAI {
     }
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved){
-        System.out.println("setInfo");
         this.pose = pose;
         this.size = size;
         this.playerPoses = playerPoses;
@@ -62,7 +61,7 @@ public abstract class EnemyAI {
             System.out.println(pair);
         }
 
-        this.isProcessing = false;
+        //this.isProcessing = false;
     }
 
 }

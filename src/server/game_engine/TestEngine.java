@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import server.request.ClientRequests;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class TestEngine extends Application implements HasEngine {
     private static final int LOOPS = 1000;
@@ -57,7 +58,8 @@ public class TestEngine extends Application implements HasEngine {
                 rend.run();
                 System.out.println("Renderer started");
             } else {
-                System.out.println("View is null");
+                //System.out.println("View is null");
+                TimeUnit.SECONDS.sleep(1);
             }
         }
     }

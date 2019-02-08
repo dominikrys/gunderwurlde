@@ -5,6 +5,7 @@ import data.map.tile.Tile;
 import data.map.tile.TileState;
 import javafx.util.Pair;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -35,13 +36,16 @@ public class AStar extends Thread{
 
     public void run() {
         System.out.println("run");
-        Pair<Integer, Integer> playerLoc = new Pair<>(endPose.getY(), endPose.getX()); //y and x
+
+        Pair<Integer, Integer> playerLoc = PoseToPairOfTileCoords(endPose);
         Pair<Integer, Integer> enemLoc = new Pair<>(startPose.getY(), startPose.getX());
 
-        for (Pair<Integer, Integer> coord : aStar(enemLoc, playerLoc)) {
-            System.out.println(coord);
-        }
         myEnemy.setPath(aStar(enemLoc, playerLoc));
+    }
+
+    private Pair<Integer, Integer> PoseToPairOfTileCoords(Pose Pose) {
+        int[] tileCoords = Tile.locationToTile(Pose);
+        return new Pair<>(tileCoords[1], tileCoords[0]); //y and x
     }
 
     private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> paths){
@@ -91,10 +95,20 @@ public class AStar extends Thread{
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
-//        System.out.println("init nodes");
-//        for (Node node : opened) {
-//            System.out.println(node);
-//        }
+        System.out.println("Start coords: " + startCoords);
+        System.out.println("End coords: " + endCoords);
+
+
+        System.out.println("init nodes");
+        for (Node node : opened) {
+            System.out.println(node);
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // You cannot expand start node
         closed.add(startCoords);
@@ -120,6 +134,7 @@ public class AStar extends Thread{
             //printOut(opened);
         } catch (NullPointerException e) {
             System.out.println("Nowhere to go for the enemy!");
+            e.printStackTrace();
         }
 
         // Shorten the path by finding shortcuts
