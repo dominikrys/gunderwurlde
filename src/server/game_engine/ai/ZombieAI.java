@@ -12,15 +12,6 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    public AIAction getAction() {
-        if (newPoseExists) {
-            return AIAction.MOVE;
-        } else {
-            return AIAction.WAIT;
-        }
-    }
-
-    @Override
     public Attack getAttack() {
         // TODO Auto-generated method stub
         return null;

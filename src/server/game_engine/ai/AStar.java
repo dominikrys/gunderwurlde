@@ -35,12 +35,10 @@ public class AStar extends Thread{
 //    }
 
     public void run() {
-        System.out.println("run");
-
         Pair<Integer, Integer> enemTile = PoseToPairOfTileCoords(startPose);
         Pair<Integer, Integer> playerTile = PoseToPairOfTileCoords(endPose);
 
-        myEnemy.setPath(aStar(enemTile, playerTile));
+        myEnemy.generatePosePath(aStar(enemTile, playerTile));
     }
 
     private Pair<Integer, Integer> PoseToPairOfTileCoords(Pose Pose) {
@@ -112,7 +110,7 @@ public class AStar extends Thread{
 
         //TODO do I need this?
         // You cannot expand start node
-        //closed.add(startCoords);
+        closed.add(startCoords);
 
         // A* finishes only when the end node is expanded
         while(!closed.contains(endCoords)) try {
