@@ -7,6 +7,7 @@ import data.IsMovable;
 import data.entity.Entity;
 import data.entity.EntityList;
 import data.entity.HasID;
+import server.game_engine.ai.EnemyAI;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;
@@ -16,9 +17,10 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     protected int maxHealth;
     protected int moveSpeed;
     protected EntityList entityListName;
+    protected EnemyAI ai;
     private int id;
 
-    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill) {
+    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
         super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -27,6 +29,15 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.entityListName = entityListName;
         this.id = nextID++;
         this.scoreOnKill = scoreOnKill;
+        this.ai =ai;
+    }
+    
+    public EnemyAI getAI() {
+        return ai;
+    }
+    
+    public void setAI(EnemyAI ai) {
+        this.ai = ai;
     }
 
     public int getScoreOnKill() {
