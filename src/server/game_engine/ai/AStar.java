@@ -30,29 +30,32 @@ public class AStar {
 
         // Find a node that has the biggest distance to the final end node.
         // At this point realDist array still have values for the last A* search
-        for (Pair<Integer, Integer> coord : path) {
-            if(realDist[biggestDist.getKey()][biggestDist.getValue()] < realDist[coord.getKey()][coord.getValue()]){
-                biggestDist = coord;
-            }
-        }
 
-        // If the path is not straight to the end node, try to find shortcuts for it
-        if(biggestDist != path.get(0)){
-            ArrayList<Pair<Integer, Integer>> shortCut = aStar(path.get(0), biggestDist);
-
-            ArrayList<Pair<Integer, Integer>> shorterPath = new ArrayList<>();
-
-            // Add the starting "shortcut" node and the rest of the path
-            shorterPath.addAll(shortCut);
-            shorterPath.addAll(path.subList(path.indexOf(biggestDist) + 1, path.size()));
-
-            return shorterPath;
-        }
+        //TODO fix this
+//        for (Pair<Integer, Integer> coord : path) {
+//            if(realDist[biggestDist.getKey()][biggestDist.getValue()] < realDist[coord.getKey()][coord.getValue()]){
+//                biggestDist = coord;
+//            }
+//        }
+//
+//        // If the path is not straight to the end node, try to find shortcuts for it
+//        if(biggestDist != path.get(0)){
+//            ArrayList<Pair<Integer, Integer>> shortCut = aStar(path.get(0), biggestDist);
+//
+//            ArrayList<Pair<Integer, Integer>> shorterPath = new ArrayList<>();
+//
+//            // Add the starting "shortcut" node and the rest of the path
+//            shorterPath.addAll(shortCut);
+//            shorterPath.addAll(path.subList(path.indexOf(biggestDist) + 1, path.size()));
+//
+//            return shorterPath;
+//        }
 
         // If unable to find shortcuts, return the original path
         return (ArrayList<Pair<Integer, Integer>>) path;
     }
     // Coordinates are y x
+    //TODO maybe use LinkedHashSet?
     protected ArrayList<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);
@@ -63,30 +66,33 @@ public class AStar {
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
-        System.out.println("init nodes");
-        for (Node node : opened) {
-            System.out.println(node);
-        }
+//        System.out.println("init nodes");
+//        for (Node node : opened) {
+//            System.out.println(node);
+//        }
+
         // You cannot expand start node
         closed.add(startCoords);
 
         // A* finishes only when the end node is expanded
         while(!closed.contains(endCoords)) try {
-            System.out.println("\nNode to expand: " + opened.peek() + "\n");
+
+           // System.out.println("\nNode to expand: " + opened.peek() + "\n");
+
             newNodes = openNodes(opened.peek().getCoordinates(), opened.peek().getCostToGo());
             // Add the coordinates of expanded node to the closed list and remove it from the opened queue
             closed.add(opened.poll().getCoordinates());
 
-            System.out.println("\nNewly added nodes");
+            //System.out.println("\nNewly added nodes");
             for (Node n : newNodes) {
                 // Only add nodes to the open queue if they are not already there and the have not been expanded yet
                 if ((!closed.contains(n.getCoordinates())) && (!opened.contains(n))) {
                     opened.add(n);
-                    System.out.println(n);
+                    //System.out.println(n);
                 }
             }
 
-            printOut(opened);
+            //printOut(opened);
         } catch (NullPointerException e) {
             System.out.println("Nowhere to go for the enemy!");
         }
@@ -134,7 +140,6 @@ public class AStar {
             for (int j = leftNodes; j < leftNodes + 3; j++) {
                 try {
                     if (tiles[i][j].getState() != TileState.SOLID && (!((i == nodeLoc.getKey()) && (j == nodeLoc.getValue())))) {
-                        System.out.println("true");
                         initNodes.add(new Node(new Pair<>(i, j), costToGo + COST_OF_TRAVEL, realDist[i][j]));
                     }
                 } catch (Exception e) {

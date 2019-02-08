@@ -24,10 +24,14 @@ public class AStarTest {
         Pair<Integer, Integer> playerLoc = new Pair<>(playerPose.getY(), playerPose.getX()); //y and x
         Pair<Integer, Integer> enemLoc = new Pair<>(enemPose.getY(), enemPose.getX());
         AStar aStarForMeadow = new AStar(COST_OF_TRAVEL, meadow);
-
-        System.out.println(enemLoc);
+        
+        long startTime = System.nanoTime();
 
         ArrayList<Pair<Integer, Integer>> path = aStarForMeadow.aStar(enemLoc, playerLoc);
+
+        long runTime = System.nanoTime() - startTime;
+        double runTimeInSecs = runTime / 1000000000d;
+        System.out.println("Run time: " + runTimeInSecs);
 
         for (Pair<Integer, Integer> pair : path) {
             System.out.println(pair);

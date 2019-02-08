@@ -70,15 +70,15 @@ public class TestEngine extends Application implements HasEngine {
                     requests.playerRequestFacing(0, rand.nextInt(360));
                     requests.playerRequestMovement(0, rand.nextInt(360));
                     requests.playerRequestShoot(0);
-                    requests.playerRequestFacing(1, rand.nextInt(360));
-                    requests.playerRequestMovement(1, rand.nextInt(360));
-                    requests.playerRequestShoot(1);
-                    requests.playerRequestFacing(2, rand.nextInt(360));
-                    requests.playerRequestMovement(2, rand.nextInt(360));
-                    requests.playerRequestShoot(2);
-                    requests.playerRequestFacing(3, rand.nextInt(360));
-                    requests.playerRequestMovement(3, rand.nextInt(360));
-                    requests.playerRequestShoot(3);
+//                    requests.playerRequestFacing(1, rand.nextInt(360));
+//                    requests.playerRequestMovement(1, rand.nextInt(360));
+//                    requests.playerRequestShoot(1);
+//                    requests.playerRequestFacing(2, rand.nextInt(360));
+//                    requests.playerRequestMovement(2, rand.nextInt(360));
+//                    requests.playerRequestShoot(2);
+//                    requests.playerRequestFacing(3, rand.nextInt(360));
+//                    requests.playerRequestMovement(3, rand.nextInt(360));
+//                    requests.playerRequestShoot(3);
                     try {
                         Thread.sleep(17);
                     } catch (InterruptedException e) {
