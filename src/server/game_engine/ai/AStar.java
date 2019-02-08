@@ -37,10 +37,10 @@ public class AStar extends Thread{
     public void run() {
         System.out.println("run");
 
-        Pair<Integer, Integer> playerLoc = PoseToPairOfTileCoords(endPose);
-        Pair<Integer, Integer> enemLoc = new Pair<>(startPose.getY(), startPose.getX());
+        Pair<Integer, Integer> enemTile = PoseToPairOfTileCoords(startPose);
+        Pair<Integer, Integer> playerTile = PoseToPairOfTileCoords(endPose);
 
-        myEnemy.setPath(aStar(enemLoc, playerLoc));
+        myEnemy.setPath(aStar(enemTile, playerTile));
     }
 
     private Pair<Integer, Integer> PoseToPairOfTileCoords(Pose Pose) {
@@ -95,23 +95,24 @@ public class AStar extends Thread{
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
-        System.out.println("Start coords: " + startCoords);
-        System.out.println("End coords: " + endCoords);
+//        System.out.println("Start coords: " + startCoords);
+//        System.out.println("End coords: " + endCoords);
+//
+//
+//        System.out.println("init nodes");
+//        for (Node node : opened) {
+//            System.out.println(node);
+//        }
+//
+//        try {
+//            TimeUnit.SECONDS.sleep(100);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-
-        System.out.println("init nodes");
-        for (Node node : opened) {
-            System.out.println(node);
-        }
-
-        try {
-            TimeUnit.SECONDS.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        //TODO do I need this?
         // You cannot expand start node
-        closed.add(startCoords);
+        //closed.add(startCoords);
 
         // A* finishes only when the end node is expanded
         while(!closed.contains(endCoords)) try {
@@ -170,7 +171,6 @@ public class AStar extends Thread{
     private PriorityQueue<Node> openNodes(Pair<Integer, Integer> nodeLoc, double costToGo) {
         // Nodes in the PriorityQueue are ordered by costLeft + costToGo
         PriorityQueue<Node> initNodes = new PriorityQueue<>(8);
-
 
         int topNodes = nodeLoc.getKey() - 1;
         int leftNodes = nodeLoc.getValue() - 1;
