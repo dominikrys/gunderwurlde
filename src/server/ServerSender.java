@@ -16,7 +16,6 @@ public class ServerSender extends Thread {
     DatagramPacket packet;
     int port;
     byte[] buffer;
-    Scanner scan;
 
     public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
@@ -53,9 +52,10 @@ public class ServerSender extends Thread {
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
-                byte[] yourBytes = bos.toByteArray();
+                buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
+                System.out.println("Packet sent from serversender");
 
             } finally {
                 try {

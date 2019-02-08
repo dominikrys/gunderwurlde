@@ -1,30 +1,13 @@
 package client;
 
-import client.data.entity.EnemyView;
 import client.data.entity.GameView;
-import client.data.entity.ItemDropView;
-import client.data.ItemView;
-import client.data.entity.PlayerView;
-import client.data.entity.ProjectileView;
-import client.data.TileView;
-import data.Pose;
-import data.entity.EntityList;
-import data.entity.player.Teams;
-import data.item.ItemList;
-import data.item.weapon.gun.AmmoList;
-import data.map.Meadow;
-import data.map.tile.Tile;
 import client.inputhandler.KeyboardHandler;
-import client.inputhandler.Movement;
-
+import client.inputhandler.MouseHandler;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
 public class Client extends Thread {
     MulticastSocket listenSocket;
@@ -39,45 +22,18 @@ public class Client extends Thread {
     String playerName;
     int playerID;
     Boolean running;
-    Movement movement;
     ClientSender sender;
     ClientReceiver receiver;
-
+    private KeyboardHandler kbHandler;
+    private MouseHandler mHandler;
 
 
     public Client(GameRenderer renderer, String playerName, int playerID){
         this.renderer = renderer;
-        /*
-        LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
-    	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
-    	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
-    	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
-    	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-    	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
-    	examplePlayers.add(examplePlayer);
-    	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
-    	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
-    	exampleEnemies.add(exampleEnemy);
-    	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
-    	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, EntityList.BASIC_BULLET);
-    	exampleProjectiles.add(exampleProjectile);
-    	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
-    	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, EntityList.PISTOL);
-    	exampleItemDrops.add(exampleItemDrop);
-    	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
-    	Tile[][] tile = Meadow.generateTileMap();
-    	for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
-			for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
-				TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
-				exampleTile[i][j] = tileView;
-			}
-		}
-        
-        this.view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
-        */
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
+        this.view = renderer.getView();
     }
 
     public void run(){
@@ -87,28 +43,21 @@ public class Client extends Thread {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            System.out.println("Client calls server");
 
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
-            receiver = new ClientReceiver(listenAddress, listenSocket, this);
-            
-            renderer.setClientSender(sender);
-            this.view = renderer.getView();
+            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
+            renderer.getKeyboardHandler().setClientSender(sender);
+            renderer.updateGameView(view);
             renderer.run();
 
             while(running){
                 if(view != null) {
-                	System.out.println("done");
-                	renderer.updateGameView(view);
-                	renderer.getKeyboardHandler().setGameView(view);
-                	renderer.getMouseHandler().setGameView(view);
-                    renderer.renderGameView();
+                	renderer.renderGameView();
+                    Thread.sleep(50);
                 }
             }
 
-
-            System.out.println("here");
             // How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
@@ -131,7 +80,7 @@ public class Client extends Thread {
     public void setGameView(GameView view){
         this.view = view;
     }
-    
+
     public void close() {
     	this.running = false;
     	sender.running = false;

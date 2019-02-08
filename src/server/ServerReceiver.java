@@ -15,7 +15,7 @@ import java.util.Enumeration;
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
-public class ServerReceiver extends Thread{
+public class ServerReceiver extends Thread {
     MulticastSocket listenSocket;
     InetAddress listenAddress;
     ServerSender sender;
@@ -70,8 +70,9 @@ public class ServerReceiver extends Thread{
                 // packet to receive incoming messages
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
-                listenSocket.setSoTimeout(10000);
                 listenSocket.receive(packet);
+
+                System.out.println("Packet recieved by ServerReceiver");
 
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
@@ -79,7 +80,10 @@ public class ServerReceiver extends Thread{
                 ObjectInputStream in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    Pose pose = (Pose) in.readObject();
+
+                    Object received =  in.readObject();
+                    Pose pose = new Pose();
+                    pose.setDirection((int)received);
                     int direction = pose.getDirection();
                     requests = new ClientRequests(numOfPlayers);
                     requests.playerRequestMovement(0, direction);
@@ -96,25 +100,16 @@ public class ServerReceiver extends Thread{
                         ex.printStackTrace();
                     }
                 }
-
-                // Need some sort of exit sequence for the server
-                if (true) {
-
-                    // Waits for the sender to finish its processes before ending itself
-                    sender.join();
-                    // Running = false so the Thread ends gracefully
-                    running = false;
-                    System.out.println("Ending server receiver");
-                }
             }
-        } catch (SocketTimeoutException e) {
-        	System.out.println("Timeout");
-        	e.printStackTrace();
-        }
-          catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            // Waits for the sender to finish its processes before ending itself
+            sender.join();
+            // Running = false so the Thread ends gracefully
+            running = false;
+            System.out.println("Ending server receiver");
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 }

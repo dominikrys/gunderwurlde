@@ -48,7 +48,7 @@ public class KeyboardHandler extends UserInteraction{
 		this.sender = sender;
 		this.scene = scene;
 		this.gameView = gameView;
-		/*
+/*
 		// TODO: get player here
 		for (PlayerView p : gameView.getPlayers()) {
             if(p.getName() == "Player 1") {
@@ -56,11 +56,12 @@ public class KeyboardHandler extends UserInteraction{
             	break;
             }
         }
-		this.pImage = new Image(playerView.getPathToGraphic());
-		this.movement = new Movement(playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
+
+		this.pImage = new Image(EntityList.PLAYER.getPath());
+		this.movement = new Movement(sender, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
 		this.reload = new Reload(playerView);
 		this.dropItem = new DropItem(playerView);
-		
+		/*
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -292,7 +293,7 @@ public class KeyboardHandler extends UserInteraction{
 	public boolean isActivated() {
 		return super.isActivated();
 	}
-	
+
 	public void setClientSender(ClientSender sender) {
 		this.sender = sender;
 	}

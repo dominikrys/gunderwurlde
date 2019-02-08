@@ -1,6 +1,8 @@
 package data;
 
-public class Pose extends Location {
+import java.io.Serializable;
+
+public class Pose extends Location implements Serializable {
     protected int direction;
     
     public Pose() { //workaround for template enemies

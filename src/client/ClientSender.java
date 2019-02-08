@@ -33,29 +33,24 @@ public class ClientSender extends Thread {
 
     public void send(Pose pose) {
         try {
-            // Turn the received GameView into a byte array
-            // Output Stream for the byteArray. Will grow as data is added
-            // Allows the object to be written to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            // Output stream that will hold the object
             ObjectOutputStream out = null;
-            try {
-                // OOutputStream to read the GameView into the byteArray
+               try {
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
-                out.writeObject(pose);
+                out.writeObject(pose.getDirection());
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
-                byte[] buffer = bos.toByteArray();
+                buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-
+                System.out.println("Packet sent from clientSender");
             } finally {
                 try {
                     bos.close();
-                    System.out.println("SENT");
-                } catch (IOException ex) {
+                }
+                catch(IOException ex){
                     ex.printStackTrace();
                 }
             }
@@ -72,7 +67,6 @@ public class ClientSender extends Thread {
         InetAddress addr = null;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
             NetworkInterface iface = null;
             if (interfaces.hasMoreElements()) {
                 iface = interfaces.nextElement();

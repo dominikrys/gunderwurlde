@@ -13,7 +13,6 @@ public class Movement extends Action{
 	
 	ClientSender sender;
 	private PlayerView playerView;
-	private Image pImage;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
 	private PickItem pickItem;

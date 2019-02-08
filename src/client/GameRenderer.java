@@ -96,7 +96,7 @@ public class GameRenderer implements Runnable {
         currentPlayer = null;
         heldItems = null;
         ammoBox = null;
-        
+
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
     }
@@ -305,9 +305,10 @@ public class GameRenderer implements Runnable {
 
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        
+
         kbHandler.setGameView(inputGameView);
         kbHandler.setScene(scene);
+
         kbHandler.activate();
         mHandler.setCanvas(mapCanvas);
         mHandler.setGameView(inputGameView);
@@ -486,11 +487,11 @@ public class GameRenderer implements Runnable {
 	public GameView getView() {
 		return this.gameView;
 	}
-	
+
 	public KeyboardHandler getKeyboardHandler() {
 		return this.kbHandler;
 	}
-	
+
 	public MouseHandler getMouseHandler() {
 		return this.mHandler;
 	}

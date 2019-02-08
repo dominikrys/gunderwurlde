@@ -17,12 +17,14 @@ public class ClientReceiver extends Thread {
     DatagramPacket packet;
     byte[] buffer;
     Client client;
+    GameRenderer renderer;
 
-    ClientReceiver(InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
+    ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
         this.listenSocket = listenSocket;
         this.listenAddress = listenAddress;
         this.client = client;
-        buffer = new byte[255];
+        this.renderer = renderer;
+        buffer = new byte[1024];
         running = true;
         setInterfaces(listenSocket);
         this.start();
@@ -62,19 +64,23 @@ public class ClientReceiver extends Thread {
                 // creates a packet and waits to receive a message from the server
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
-                listenSocket.setSoTimeout(10000);
                 listenSocket.receive(packet);
+                System.out.println("Packet received by clientreceiver");
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    GameView view = (GameView) in.readObject();
+                    GameView view = (GameView)in.readObject();
                     client.setGameView(view);
+                    renderer.updateGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                } finally {
+                } catch (EOFException ex) {
+                    ex.printStackTrace();
+                    }
+                    finally {
                     try {
                         if (in != null) {
                             in.close();
@@ -87,9 +93,6 @@ public class ClientReceiver extends Thread {
                 // TODO how do threads exit?
             }
             System.out.println("Ending client receiver");
-        } catch (SocketTimeoutException e) {
-        	System.out.println("Timeout");
-        	e.printStackTrace();
         }
           catch (SocketException e) {
             System.out.println("Socket closed unexpectedly");
