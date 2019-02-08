@@ -58,7 +58,6 @@ public class ClientHandler extends Thread {
             switch (systemState) {
                 case MENUS:
                     // Render menu
-                    running = false;
                     menuController.renderMenu();
                     systemState = menuController.getSystemState();
                     break;
@@ -131,7 +130,7 @@ public class ClientHandler extends Thread {
 	                    GameView view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
 	                    
 	                    gameRenderer = new GameRenderer(stage, view, 0);
-	                    client = new Client(gameRenderer, "Host", 0);
+	                    client = new Client(gameRenderer, "Player 1", 0);
 	                    client.start();
 	                    serverStarted = true;
 	                    systemState = SystemState.GAME; // REMOVE THIS

@@ -237,7 +237,7 @@ public class KeyboardHandler extends UserInteraction{
 		super.setGameView(gameView);
 		
 		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Bob") {
+            if(p.getName() == "Player 1") {
             	this.playerView = p;
             	break;
             }

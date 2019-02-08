@@ -482,4 +482,16 @@ public class GameRenderer implements Runnable {
 	public void setClientSender(ClientSender sender) {
 		this.sender = sender;
 	}
+	
+	public GameView getView() {
+		return this.gameView;
+	}
+	
+	public KeyboardHandler getKeyboardHandler() {
+		return this.kbHandler;
+	}
+	
+	public MouseHandler getMouseHandler() {
+		return this.mHandler;
+	}
 }

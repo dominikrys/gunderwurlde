@@ -87,24 +87,28 @@ public class Client extends Thread {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            System.out.println("ClientOnline calls server");
+            System.out.println("Client calls server");
 
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(listenAddress, listenSocket, this);
             
             renderer.setClientSender(sender);
+            this.view = renderer.getView();
+            renderer.run();
 
             while(running){
                 if(view != null) {
-                	System.out.println("here");
+                	System.out.println("done");
                 	renderer.updateGameView(view);
+                	renderer.getKeyboardHandler().setGameView(view);
+                	renderer.getMouseHandler().setGameView(view);
                     renderer.renderGameView();
                 }
             }
 
 
-
+            System.out.println("here");
             // How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
