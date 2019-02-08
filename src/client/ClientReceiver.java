@@ -24,7 +24,7 @@ public class ClientReceiver extends Thread {
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;
-        buffer = new byte[1024];
+        buffer = new byte[2048];
         running = true;
         setInterfaces(listenSocket);
         this.start();
@@ -61,6 +61,7 @@ public class ClientReceiver extends Thread {
         try {
             listenSocket.joinGroup(listenAddress);
             while (running) {
+
                 // creates a packet and waits to receive a message from the server
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
@@ -70,9 +71,10 @@ public class ClientReceiver extends Thread {
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
+                GameView view = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    GameView view = (GameView)in.readObject();
+                    view = (GameView)in.readObject();
                     client.setGameView(view);
                     renderer.updateGameView(view);
                 } catch (ClassNotFoundException e) {
