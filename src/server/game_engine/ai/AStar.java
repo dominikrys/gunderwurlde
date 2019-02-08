@@ -1,5 +1,6 @@
 package server.game_engine.ai;
 
+import data.Pose;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import javafx.util.Pair;
@@ -8,15 +9,39 @@ import java.util.stream.Collectors;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-public class AStar {
+public class AStar extends Thread{
 
     private final double COST_OF_TRAVEL;
     private double[][] realDist;
     private final Tile[][] tiles;
+    private final Pose endPose;
+    private final Pose startPose;
+    private final EnemyAI myEnemy;
 
-    public AStar(double cost_of_travel, Tile[][] tiles){
+    protected AStar(EnemyAI myEnemy, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose){
         COST_OF_TRAVEL = cost_of_travel;
         this.tiles = tiles;
+        this.startPose = startPose;
+        this.endPose = endPose;
+        this.myEnemy = myEnemy;
+    }
+
+//    protected AStar(double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose){
+//        COST_OF_TRAVEL = cost_of_travel;
+//        this.tiles = tiles;
+//        this.startPose = startPose;
+//        this.endPose = endPose;
+//    }
+
+    public void run() {
+        System.out.println("run");
+        Pair<Integer, Integer> playerLoc = new Pair<>(endPose.getY(), endPose.getX()); //y and x
+        Pair<Integer, Integer> enemLoc = new Pair<>(startPose.getY(), startPose.getX());
+
+        for (Pair<Integer, Integer> coord : aStar(enemLoc, playerLoc)) {
+            System.out.println(coord);
+        }
+        myEnemy.setPath(aStar(enemLoc, playerLoc));
     }
 
     private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> paths){

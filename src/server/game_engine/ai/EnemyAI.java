@@ -1,9 +1,11 @@
 package server.game_engine.ai;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import data.Pose;
 import data.map.tile.Tile;
+import javafx.util.Pair;
 
 public abstract class EnemyAI {
 
@@ -12,40 +14,55 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     private Tile [][] tileMap;
     private int maxDistanceMoved;
-    private boolean isProcessing = false;
+    protected boolean isProcessing = true;
+    protected ArrayList<Pair<Integer, Integer>> path;
 
     protected EnemyAI() {
-//        this.pose = pose;
-//        this.size = size;
-//        this.playerPoses = playerPoses;
-//        this.tileMap = tileMap;
-//        this.maxDistanceMoved = maxDistanceMoved;
+    }
+
+    public abstract AIAction getAction();
+
+    public abstract Attack getAttack();
+
+    public abstract Pose getNewPose();
+
+    protected abstract void getPath();
+
+    protected Tile[][] getTileMap(){
+        return tileMap;
+    }
+
+    protected Pose getEnemPose(){
+        return pose;
+    }
+
+    protected HashSet<Pose> getPlayerPoses(){
+        return playerPoses;
     }
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap, int maxDistanceMoved){
+        System.out.println("setInfo");
         this.pose = pose;
         this.size = size;
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.maxDistanceMoved = maxDistanceMoved;
+        isProcessing = true;
+        getPath();
     }
 
     public boolean isProcessing(){
         return isProcessing;
     }
 
-    public AIAction getAction() {
-        return AIAction.WAIT;
-    }
+    protected void setPath(ArrayList<Pair<Integer, Integer>> path){
+        this.path = path;
 
-    public Attack getAttack() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        for (Pair<Integer, Integer> pair : path) {
+            System.out.println(pair);
+        }
 
-    public Pose getNewPose() {
-        // TODO Auto-generated method stub
-        return null;
-    } 
+        this.isProcessing = false;
+    }
 
 }

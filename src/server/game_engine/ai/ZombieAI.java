@@ -6,6 +6,7 @@ public class ZombieAI extends EnemyAI {
 
     public ZombieAI() {
         super();
+        System.out.println("A zombie is created");
     }
 
     @Override
@@ -24,5 +25,12 @@ public class ZombieAI extends EnemyAI {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    protected void getPath() {
+        System.out.println("getPath");
+        new AStar(this, 1, getTileMap(), getPlayerPoses().iterator().next(), getEnemPose()).start();
+    }
+
 
 }
