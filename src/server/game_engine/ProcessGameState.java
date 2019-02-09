@@ -166,8 +166,13 @@ public class ProcessGameState extends Thread {
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
                 Player currentPlayer = players.get(playerID);
+
+                if (currentPlayer == null) {
+                    System.out.println("WARNING: Request from non-existent player. Was the player added/removed properly in handler?");
+                    continue;
+                }
+
                 Request request = playerRequest.getValue();
-                Pose playerPose = currentPlayer.getPose();
 
                 if (request.getLeave()) {
                     players.remove(playerID);
@@ -175,7 +180,13 @@ public class ProcessGameState extends Thread {
                     continue;
                 }
 
+                if (currentPlayer.getHealth() <= 0) {
+                    continue; // TODO proper way of dealing with player death
+                }
+
+                Pose playerPose = currentPlayer.getPose();
                 Item currentItem = currentPlayer.getCurrentItem();
+
                 if (currentItem instanceof Gun) {
                     Gun currentGun = ((Gun) currentItem);
                     if (currentGun.isReloading()) {
@@ -476,8 +487,24 @@ public class ProcessGameState extends Thread {
                                     break; // bullet was removed no need to check other enemies
                                 }
                             }
-                            if (removed)
+
+                            if (removed) {
                                 break; // Projectile is already gone.
+                            } else {
+                                HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+
+                                for (Integer playerID : playersOnTile) {
+                                    Player playerBeingChecked = players.get(playerID);
+
+                                    if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
+                                        removed = true;
+                                        // TODO damage player
+                                        break; // bullet was removed no need to check other players
+                                    }
+                                }
+
+                            }
+
                         }
                     }
 

@@ -16,7 +16,7 @@ public class Tile {
     
     protected HashSet<Integer> itemDropsOnTile;
     protected HashSet<Integer> enemiesOnTile;
-    // TODO maybe players ontile needed?
+    protected HashSet<Integer> playersOnTile;
 
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
@@ -28,6 +28,19 @@ public class Tile {
     public void clearOnTile() {
         this.itemDropsOnTile = new HashSet<>();
         this.enemiesOnTile = new HashSet<>();
+        this.playersOnTile = new HashSet<>();
+    }
+
+    public HashSet<Integer> getPlayersOnTile() {
+        return playersOnTile;
+    }
+
+    public void addPlayer(int playerID) {
+        playersOnTile.add(playerID);
+    }
+
+    public boolean removePlayer(int playerID) {
+        return playersOnTile.remove(playerID);
     }
 
     public HashSet<Integer> getItemDropsOnTile() {
