@@ -22,7 +22,8 @@ public class Tile {
         this.tileType = tileType;
         this.tileState = tileState;
         this.itemDropsOnTile = new HashSet<>();
-        this.enemiesOnTile = new HashSet<>();      
+        this.enemiesOnTile = new HashSet<>();
+        this.playersOnTile = new HashSet<>();
     }
     
     public void clearOnTile() {

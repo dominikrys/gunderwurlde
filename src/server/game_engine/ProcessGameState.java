@@ -499,9 +499,7 @@ public class ProcessGameState extends Thread {
                                 }
                             }
 
-                            if (removed) {
-                                break; // Projectile is already gone.
-                            } else {
+                            if (!removed) {
                                 HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
@@ -523,6 +521,8 @@ public class ProcessGameState extends Thread {
 
                             }
 
+                            if (removed)
+                                break; // Projectile is already gone.
                         }
                     }
 
