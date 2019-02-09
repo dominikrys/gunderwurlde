@@ -53,7 +53,7 @@ public class Client extends Thread {
 
             while(running){
                 if(view != null) {
-                	renderer.renderGameView();
+                	//renderer.updateGameView(new GameView());
                     Thread.sleep(50);
                 }
             }
