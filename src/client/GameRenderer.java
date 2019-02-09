@@ -120,7 +120,7 @@ public class GameRenderer implements Runnable {
     }
 
     // Render gameView
-    public void renderGameView() {
+    private void renderGameView() {
         // Render map
         renderMap(gameView, mapGC);
 
