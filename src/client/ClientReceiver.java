@@ -24,7 +24,7 @@ public class ClientReceiver extends Thread {
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;
-        buffer = new byte[2048];
+        buffer = new byte[20000];
         running = true;
         setInterfaces(listenSocket);
         this.start();
@@ -67,6 +67,7 @@ public class ClientReceiver extends Thread {
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
                 System.out.println("Packet received by clientreceiver");
+                System.out.println("Size of received packet" + packet.getData().length);
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.

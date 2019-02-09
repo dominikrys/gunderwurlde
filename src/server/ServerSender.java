@@ -53,6 +53,7 @@ public class ServerSender extends Thread {
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
                 buffer = bos.toByteArray();
+                System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
                 System.out.println("Packet sent from serversender");
