@@ -129,8 +129,8 @@ public class GameRenderer implements Runnable {
         this.mHandler.setGameView(gameView);
     }
 
-    // Render gameView
-    public void renderGameView() {
+    // Render gameView - KEEP PRIVATE
+    private void renderGameView() {
         // Render map
         renderMap(gameView, mapGC);
 
@@ -483,7 +483,7 @@ public class GameRenderer implements Runnable {
 	public void setClientSender(ClientSender sender) {
 		this.sender = sender;
 	}
-	
+
 	public GameView getView() {
 		return this.gameView;
 	}
