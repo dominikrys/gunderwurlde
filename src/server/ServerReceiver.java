@@ -103,8 +103,6 @@ public class ServerReceiver extends Thread {
             }
             // Waits for the sender to finish its processes before ending itself
             sender.join();
-            // Running = false so the Thread ends gracefully
-            running = false;
             System.out.println("Ending server receiver");
         } catch (InterruptedException e1) {
             e1.printStackTrace();

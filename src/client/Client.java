@@ -1,6 +1,7 @@
 package client;
 
 import client.data.entity.GameView;
+import client.data.entity.PlayerView;
 import client.inputhandler.KeyboardHandler;
 import client.inputhandler.MouseHandler;
 import java.io.IOException;
@@ -24,8 +25,6 @@ public class Client extends Thread {
     Boolean running;
     ClientSender sender;
     ClientReceiver receiver;
-    private KeyboardHandler kbHandler;
-    private MouseHandler mHandler;
 
 
     public Client(GameRenderer renderer, String playerName, int playerID){
@@ -33,7 +32,8 @@ public class Client extends Thread {
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
-        this.view = renderer.getView();
+        setGameView(renderer.getView());
+
     }
 
     public void run(){
@@ -46,15 +46,20 @@ public class Client extends Thread {
 
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
-            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
+            receiver = new ClientReceiver(listenAddress, listenSocket, this);
             renderer.getKeyboardHandler().setClientSender(sender);
-            renderer.updateGameView(view);
             renderer.run();
 
             while(running){
                 if(view != null) {
+                    for(PlayerView view:view.getPlayers()){
+                        System.out.println(view.getPose().getX());
+                        System.out.println(view.getPose().getY());
+                    }
+
+                    System.out.println("Updating renderer gameView");
                 	renderer.updateGameView(view);
-                    Thread.sleep(50);
+                	Thread.sleep(100);
                 }
             }
 
