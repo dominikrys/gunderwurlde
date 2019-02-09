@@ -32,7 +32,7 @@ public class ServerReceiver extends Thread {
         this.listenAddress = address;
         this.sender = sender;
         this.handler = handler;
-        buffer = new byte[255];
+        buffer = new byte[10000];
         running = true;
         setInterfaces(listenSocket);
         this.start();
@@ -71,6 +71,8 @@ public class ServerReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
+                System.out.println("Packet received length" + packet.getLength());
+                System.out.println("Packet data length" + packet.getData().length);
 
                 System.out.println("Packet recieved by ServerReceiver");
 
@@ -85,6 +87,7 @@ public class ServerReceiver extends Thread {
                     Pose pose = new Pose();
                     pose.setDirection((int)received);
                     int direction = pose.getDirection();
+                    System.out.println("Direction from server" + direction);
                     requests = new ClientRequests(numOfPlayers);
                     requests.playerRequestMovement(0, direction);
                     // Send the request to the Engine

@@ -39,10 +39,12 @@ public class ClientSender extends Thread {
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
                 out.writeObject(pose.getDirection());
+                   System.out.println("Direction from client" + pose.getDirection());
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
                 buffer = bos.toByteArray();
+                   System.out.println(buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
                 System.out.println("Packet sent from clientSender");

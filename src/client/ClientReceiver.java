@@ -71,12 +71,13 @@ public class ClientReceiver extends Thread {
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
-                GameView view = null;
+                GameView view;
                 try {
                     in = new ObjectInputStream(bis);
                     view = (GameView)in.readObject();
                     System.out.println("Updating gameview");
-                    client.setGameView(view);
+                    if(view != null)
+                        client.setGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (EOFException ex) {

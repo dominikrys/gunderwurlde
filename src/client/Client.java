@@ -33,7 +33,6 @@ public class Client extends Thread {
         this.playerID = playerID;
         this.running = true;
         setGameView(renderer.getView());
-
     }
 
     public void run(){
@@ -53,6 +52,7 @@ public class Client extends Thread {
             while(running){
                 if(view != null) {
                     for(PlayerView view:view.getPlayers()){
+                        System.out.println("Client GameView");
                         System.out.println(view.getPose().getX());
                         System.out.println(view.getPose().getY());
                     }
