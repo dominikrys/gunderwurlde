@@ -58,9 +58,9 @@ public class GameRenderer implements Runnable {
     ClientSender sender;
 
     // Constructor
-    public GameRenderer(Stage stage, GameView gameView, int playerID) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
         // Initialise gameView, stage and playerID
-        this.gameView = gameView;
+        this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
 
