@@ -17,14 +17,12 @@ public class ClientReceiver extends Thread {
     DatagramPacket packet;
     byte[] buffer;
     Client client;
-    GameRenderer renderer;
 
-    ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
+    ClientReceiver(InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
         this.listenSocket = listenSocket;
         this.listenAddress = listenAddress;
         this.client = client;
-        this.renderer = renderer;
-        buffer = new byte[2048];
+        buffer = new byte[20000];
         running = true;
         setInterfaces(listenSocket);
         this.start();
@@ -67,16 +65,19 @@ public class ClientReceiver extends Thread {
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
                 System.out.println("Packet received by clientreceiver");
+                System.out.println("Size of received packet" + packet.getData().length);
+                System.out.println("Packet length " + packet.getLength());
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
-                GameView view = null;
+                GameView view;
                 try {
                     in = new ObjectInputStream(bis);
                     view = (GameView)in.readObject();
-                    client.setGameView(view);
-                    renderer.updateGameView(view);
+                    System.out.println("Updating gameview");
+                    if(view != null)
+                        client.setGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (EOFException ex) {
