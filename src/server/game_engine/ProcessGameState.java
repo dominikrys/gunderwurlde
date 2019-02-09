@@ -264,10 +264,16 @@ public class ProcessGameState extends Thread {
                     if (request.movementExists()) {
                         int distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());
                         newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
+
+                        LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].removePlayer(playerID);
+                        }
+
                         currentPlayer.setLocation(newLocation);
                         boolean pushedBack = false;
 
-                        LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
+                        tilesOn = tilesOn(currentPlayer);
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                             if (tileOn.getState() == TileState.SOLID) {
@@ -329,6 +335,11 @@ public class ProcessGameState extends Thread {
                                 }
                             }
                         }
+                        tilesOn = tilesOn(currentPlayer);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
+                        }
+
                     }
 
                     // TODO player changed data
@@ -498,7 +509,14 @@ public class ProcessGameState extends Thread {
 
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
                                         removed = true;
-                                        // TODO damage player
+                                        if (playerBeingChecked.damage(currentProjectile.getDamage())) {
+                                            // TODO check how player death needs to be handled
+
+                                            LinkedHashSet<int[]> playerTilesOn = tilesOn(playerBeingChecked);
+                                            for (int[] playerTileCords : playerTilesOn) {
+                                                tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
+                                            }
+                                        }
                                         break; // bullet was removed no need to check other players
                                     }
                                 }
