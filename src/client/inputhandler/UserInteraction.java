@@ -1,30 +1,24 @@
 package client.inputhandler;
 
-import client.ClientSender;
+import client.ClientHandler;
 import client.data.entity.GameView;
-import data.GameState;
 import javafx.scene.Scene;
 
 public abstract class UserInteraction {
-	ClientSender sender;
+	protected ClientHandler handler;
 	protected Scene scene;
 	protected GameView gameView;
 	protected boolean activated;
 	
 	public UserInteraction() {
-		this.sender = null;
+		this.handler = null;
 		this.scene = null;
 		this.gameView = null;
 		this.activated = false;
 	}
 	
-	public UserInteraction(Scene scene, GameView gameView) {
-		this.scene = scene;
-		this.gameView = gameView;
-	}
-	
-	public void setClientSender(ClientSender sender) {
-		this.sender = sender;
+	public void setClientHandler(ClientHandler handler) {
+		this.handler = handler;
 	}
 	
 	public void setScene(Scene scene) {

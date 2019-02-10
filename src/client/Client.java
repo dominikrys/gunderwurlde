@@ -47,8 +47,6 @@ public class Client extends Thread {
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
-            renderer.getKeyboardHandler().setClientSender(sender);
-            renderer.getMouseHandler().setClientSender(sender);
             renderer.updateGameView(view);
             renderer.run();
 
@@ -80,6 +78,10 @@ public class Client extends Thread {
 
     public void setGameView(GameView view){
         this.view = view;
+    }
+    
+    public ClientSender getClientSender() {
+    	return this.sender;
     }
 
     public void close() {

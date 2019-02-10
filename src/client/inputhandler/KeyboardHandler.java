@@ -2,6 +2,7 @@ package client.inputhandler;
 
 import java.util.ArrayList;
 
+import client.ClientHandler;
 import client.ClientSender;
 import client.data.entity.EntityView;
 import client.data.entity.GameView;
@@ -17,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 
 public class KeyboardHandler extends UserInteraction{
 	
+	private ClientHandler handler;
 	private Scene scene;
 	private GameView gameView;
 	private PlayerView playerView;
@@ -36,26 +38,15 @@ public class KeyboardHandler extends UserInteraction{
 	private boolean interactPressed = false;
 	private AnimationTimer t;
 	private boolean activated;
-	ClientSender sender;
 	
 	public KeyboardHandler() {
 		super();
 		this.t = null;
 	}
 	
-	// NOT USED
-	public static Pose center(Pose target, Image image) {
-		double width = image.getWidth();
-		double height = image.getHeight();
-		double centerX = target.getX() - width/2;
-		double centerY = target.getY() - height/2;
-		Pose center = new Pose((int)centerX, (int)centerY);
-		return center;
-	}
-	
 	@Override
-	public void setClientSender(ClientSender sender) {
-		this.sender = sender;
+	public void setClientHandler(ClientHandler handler) {
+		this.handler = handler;
 	}
 	
 	@Override
@@ -137,9 +128,9 @@ public class KeyboardHandler extends UserInteraction{
             }
         }
 		this.pImage = new Image(EntityList.PLAYER.getPath());
-		this.movement = new Movement(sender, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
-		this.reload = new Reload(playerView);
-		this.dropItem = new DropItem(playerView);
+		this.movement = new Movement(handler, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
+		this.reload = new Reload(handler, playerView);
+		this.dropItem = new DropItem(handler, playerView);
 	}
 	
 	
@@ -186,5 +177,15 @@ public class KeyboardHandler extends UserInteraction{
 	public boolean isActivated() {
 		return super.isActivated();
 	}
+	
+	// NOT USED
+		public static Pose center(Pose target, Image image) {
+			double width = image.getWidth();
+			double height = image.getHeight();
+			double centerX = target.getX() - width/2;
+			double centerY = target.getY() - height/2;
+			Pose center = new Pose((int)centerX, (int)centerY);
+			return center;
+		}
 
 }
