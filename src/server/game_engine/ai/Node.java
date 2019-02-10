@@ -1,17 +1,22 @@
 package server.game_engine.ai;
 
+import data.Pose;
+import data.map.MeadowTest;
+import data.map.tile.Tile;
 import javafx.util.Pair;
 
+import java.net.InetAddress;
+import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
 
 public class Node implements Comparable<Node> {
-    private Pair<Integer, Integer> coordinates; // y x
+    private Pose pose;
     private double costToGo = 0;
     private double costLeft;
     private double sum;
 
-    public Node(Pair<Integer, Integer> coordinates, double costToGo, double costLeft) {
-        this.coordinates = coordinates;
+    public Node(Pose pose, double costToGo, double costLeft) {
+        this.pose = pose;
         this.costToGo += costToGo;
         this.costLeft = costLeft;
         sum = costLeft + costToGo;
@@ -22,17 +27,21 @@ public class Node implements Comparable<Node> {
     }
 
     public Pair<Integer, Integer> getCoordinates() {
-        return coordinates;
+        return new Pair<Integer, Integer>(pose.getY(), pose.getX());
     }
 
     public double getCostToGo() {
         return costToGo;
     }
 
+    protected Pose getPose(){
+        return pose;
+    }
+
 
     @Override
     public String toString() {
-        return "Coords: " + coordinates.getKey() + " " + coordinates.getValue()
+        return "Coords: " + pose.getY() + " " + pose.getX()
                 + "\nSum: " + String.format("%.3f", costToGo) + " + " + String.format("%.3f", costLeft) + " = " + String.format("%.3f", sum);
     }
 
@@ -53,7 +62,7 @@ public class Node implements Comparable<Node> {
         Node c = (Node) o;
 
         // Compare the data members and return accordingly
-        return (this.sum == c.getSum() && this.coordinates.equals(c.getCoordinates()) && this.costToGo == c.getCostToGo());
+        return (this.sum == c.getSum() && this.pose.equals(c.getPose()) && this.costToGo == c.getCostToGo());
     }
 
     @Override
@@ -69,36 +78,52 @@ public class Node implements Comparable<Node> {
 //class Main {
 //
 //    public static void main(String[] args) {
-//        Node c1 = new Node(new Pair<>(3,4), 1,1);
-//        Node c2 = new Node(new Pair<>(3,4), 1,1);
 //
-//        Pair<Integer, Integer> p1 = new Pair<>(4,5);
-//        Pair<Integer, Integer> p2 = new Pair<>(4,5);
+//        //new AStar(this, 1, getTileMap(), getEnemPose(), getPlayerPoses().iterator().next()).start();
+////        Node c1 = new Node(new Pose(3,4), 1,1);
+////        Node c2 = new Node(new Pose(3,4), 1,1);
+////
+////        if (c1.equals(c2)) {
+////            System.out.println("Equal c");
+////        } else {
+////            System.out.println("Not Equal c");
+////        }
+////
+////
+////        PriorityQueue<Node> test = new PriorityQueue<>(8);
+////
+////        Node testNode = new Node(new Pose(3,4), 1,1);
+////        System.out.println(test.offer(testNode));
+////        testNode = new Node(new Pose(3,4), 1,4);
+////        System.out.println(test.offer(testNode));
+////        testNode = new Node(new Pose(3,4), 1,7);
+////        System.out.println(test.offer(testNode));
+////
+////        if(test.contains(new Node(new Pose(3,4), 1,4))){
+////            System.out.println("veikia PQ<Node>");
+////        }
 //
-//        if (c1.equals(c2)) {
-//            System.out.println("Equal c");
-//        } else {
-//            System.out.println("Not Equal c");
+//        LinkedHashSet<Pose> testP = new LinkedHashSet<>(8);
+//
+//        Pose testPose = new Pose(3,4, 45);
+//        System.out.println(testP.add(testPose));
+//        testPose = new Pose(3,5);
+//        System.out.println(testP.add(testPose));
+//        testPose = new Pose(8,4);
+//        System.out.println(testP.add(testPose));
+//
+//        if(testP.contains(new Pose(3,5))){
+//            System.out.println("veikia LHS<Pose>" + testP.size());
 //        }
 //
-//        if (p1 == p2) {
-//            System.out.println("Equal p");
-//        } else {
-//            System.out.println("Not Equal p");
-//        }
-//
-//
-//        PriorityQueue<Node> test = new PriorityQueue<>(8);
-//
-//        Node testNode = new Node(new Pair<>(3,4), 1,1);
-//        System.out.println(test.offer(testNode));
-//        testNode = new Node(new Pair<>(3,4), 1,4);
-//        System.out.println(test.offer(testNode));
-//        testNode = new Node(new Pair<>(3,4), 1,7);
-//        System.out.println(test.offer(testNode));
-//
-//        if(test.contains(new Node(new Pair<>(3,4), 1,4))){
-//            System.out.println("veikia");
-//        }
+////        Pose testPose1 = new Pose(3,4, 45);
+////        Pose testPose2 = new Pose(3,4, 45);
+////        if(testPose2.equals(testPose2)){
+////            System.out.println("equals");
+////        }
+////
+////        for (Pose pose : testP) {
+////            System.out.println(pose.getX() + " " + pose.getY());
+////        }
 //    }
 //}
