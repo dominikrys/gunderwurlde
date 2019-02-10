@@ -55,7 +55,7 @@ public class KeyboardHandler extends UserInteraction{
 	
 	@Override
 	public void setClientSender(ClientSender sender) {
-		super.setClientSender(sender);
+		this.sender = sender;
 	}
 	
 	@Override
@@ -129,7 +129,6 @@ public class KeyboardHandler extends UserInteraction{
 	public void setGameView(GameView gameView) {
 		super.setGameView(gameView);
 		
-		System.out.print("KKKKKKKKKKKKKKKKKKK" + gameView.getPlayers().size());
 		for (PlayerView p : gameView.getPlayers()) {
 			System.out.print(p.getID() + " " + p.getName());
             if(p.getName() == "Player 1") {

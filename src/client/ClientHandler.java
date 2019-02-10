@@ -97,7 +97,7 @@ public class ClientHandler extends Thread {
                 case SINGLE_PLAYER_CONNECTION:
                     // CODE FOR ESTABLISHING LOCAL SERVER
                 	if(!serverStarted) {
-	                    server = new Server(MapList.MEADOW, "Host");
+	                    server = new Server(MapList.MEADOW, "Player 1");
 	                    serverStarted = true;
 
                         GameView initialView = createGameView();

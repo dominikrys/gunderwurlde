@@ -1,6 +1,7 @@
 package server;
 
 import client.data.entity.GameView;
+import client.data.entity.PlayerView;
 import server.game_engine.ProcessGameState;
 
 import java.io.*;
@@ -37,6 +38,12 @@ public class ServerSender extends Thread {
     // sends a confirmation back to the client that the message has been received
     // in future will be used to send the continuous game state to the user/users
     public void send(GameView view) {
+        System.out.println("Server received new GameView");
+        for(PlayerView pview:view.getPlayers()){
+            System.out.println("Server gameView");
+            System.out.println(pview.getPose().getX());
+            System.out.println(pview.getPose().getY());
+        }
         try {
             // Turn the received GameView into a byte array
             // Output Stream for the byteArray. Will grow as data is added
