@@ -5,6 +5,7 @@ import data.Constants;
 import data.SystemState;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class MenuController {
