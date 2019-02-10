@@ -114,24 +114,37 @@ public class ClientHandler extends Thread {
                     break;
                 case QUIT:
                     // Quit program
-                    running = false;
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Close stage
-                            stage.close();
-                        }
-                    });
+                    end();
                     break;
-
             }
         }
     }
 
     public void end() {
         this.running = false;
-        this.server.close();
-        this.client.close();
+
+        // End server if running/exists
+        if (server != null) {
+            if (server.isAlive()) {
+                server.close();
+            }
+        }
+
+        // End client if running/exists
+        if (client != null) {
+            if (client.isAlive()) {
+                this.client.close();
+            }
+        }
+
+        // Close stage
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Close stage
+                stage.close();
+            }
+        });
     }
 
     public GameView createGameView(){

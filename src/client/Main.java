@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -19,13 +20,13 @@ public class Main extends Application {
         primaryStage.setTitle("Gunderwurlde");
 
         // Create clienthandler thread
-        ClientHandler handler = new ClientHandler(primaryStage);
-        handler.start();
+        ClientHandler clientHandler = new ClientHandler(primaryStage);
+        clientHandler.start();
 
         // Set stage to close and to kill handler when the window is closed
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                handler.end();
+                clientHandler.end();
                 primaryStage.close();
             }
         });
