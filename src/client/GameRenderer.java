@@ -308,7 +308,6 @@ public class GameRenderer implements Runnable {
 
         kbHandler.setGameView(inputGameView);
         kbHandler.setScene(scene);
-
         kbHandler.activate();
         mHandler.setCanvas(mapCanvas);
         mHandler.setGameView(inputGameView);

@@ -93,5 +93,9 @@ public class Server extends Thread implements HasEngine {
 		sender.running = false;
 		receiver.running = false;
 	}
+	
+	public void setClientRequests(ClientRequests clientRequests) {
+		this.clientRequests = clientRequests;
+	}
 
 }

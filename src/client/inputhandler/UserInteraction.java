@@ -1,15 +1,18 @@
 package client.inputhandler;
 
+import client.ClientSender;
 import client.data.entity.GameView;
 import data.GameState;
 import javafx.scene.Scene;
 
 public abstract class UserInteraction {
+	ClientSender sender;
 	protected Scene scene;
 	protected GameView gameView;
 	protected boolean activated;
 	
 	public UserInteraction() {
+		this.sender = null;
 		this.scene = null;
 		this.gameView = null;
 		this.activated = false;
@@ -18,6 +21,10 @@ public abstract class UserInteraction {
 	public UserInteraction(Scene scene, GameView gameView) {
 		this.scene = scene;
 		this.gameView = gameView;
+	}
+	
+	public void setClientSender(ClientSender sender) {
+		this.sender = sender;
 	}
 	
 	public void setScene(Scene scene) {

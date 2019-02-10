@@ -65,6 +65,7 @@ public class ServerReceiver extends Thread {
     public void run() {
         try {
             listenSocket.joinGroup(listenAddress);
+            requests = new ClientRequests(1);
 
             while (running) {
                 // packet to receive incoming messages
@@ -82,13 +83,17 @@ public class ServerReceiver extends Thread {
                     in = new ObjectInputStream(bis);
 
                     Object received =  in.readObject();
-                    Pose pose = new Pose();
-                    pose.setDirection((int)received);
-                    int direction = pose.getDirection();
-                    requests = new ClientRequests(numOfPlayers);
-                    requests.playerRequestMovement(0, direction);
+                    //Pose pose = (Pose)received;
+                    
+                    //Pose pose = new Pose();
+                    //pose.setDirection((int)received);
+                    //int direction = pose.getDirection();
+                    //requests = new ClientRequests(1);
+                    requests.playerRequestMovement(0, (int)received);
                     // Send the request to the Engine
-                    handler.sendClientRequest(requests);
+                    //handler.sendClientRequest(requests);
+                    handler.setClientRequests(requests);
+                    
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {

@@ -48,6 +48,7 @@ public class Client extends Thread {
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
             renderer.getKeyboardHandler().setClientSender(sender);
+            renderer.getMouseHandler().setClientSender(sender);
             renderer.updateGameView(view);
             renderer.run();
 

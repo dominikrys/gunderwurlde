@@ -78,6 +78,7 @@ public class ClientReceiver extends Thread {
                     view = (GameView)in.readObject();
                     client.setGameView(view);
                     renderer.updateGameView(view);
+                    renderer.getKeyboardHandler().setGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (EOFException ex) {

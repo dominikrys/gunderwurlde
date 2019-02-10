@@ -31,14 +31,14 @@ public class ClientSender extends Thread {
         }
     }
 
-    public void send(Pose pose) {
+    public void send(int direction) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out = null;
                try {
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
-                out.writeObject(pose.getDirection());
+                out.writeObject(direction);
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted

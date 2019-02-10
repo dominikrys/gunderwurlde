@@ -1,5 +1,6 @@
 package client.inputhandler;
 
+import client.ClientSender;
 import client.data.entity.GameView;
 import client.data.entity.PlayerView;
 import javafx.animation.AnimationTimer;
@@ -26,56 +27,11 @@ public class MouseHandler extends UserInteraction{
 	private double toRotate;
 	private AnimationTimer t;
 	private boolean activated;
+	ClientSender sender;
 	
 	public MouseHandler() {
 		super();
 		this.t = null;
-	}
-	
-	public MouseHandler(Scene scene, Canvas mapCanvas, GameView gameView) {
-		super(scene,gameView);
-		this.scene = scene;
-		this.mapCanvas = mapCanvas;
-		this.gameView = gameView;
-		// TODO: get name of client here
-		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
-            	this.playerView = p;
-            	break;
-            }
-        }
-		this.attack = new Attack(playerView);
-		
-		/*
-		scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-			mouseMovement(e);
-		});
-		
-		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			if(e.isPrimaryButtonDown()) {
-				mouseMovement(e);
-				attack.attack();
-			}
-			else {
-				mouseMovement(e);
-			}
-		});
-		
-		scene.setOnScroll(new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if(event.getDeltaY() > 0) {
-					changeItem.previousItem();
-				}
-				else if(event.getDeltaY() < 0) {
-					changeItem.nextItem();
-				}
-				System.out.println(playerView.getCurrentItemIndex());
-				// TODO: send changes(item change) to server
-			}
-		});
-		*/
-		
 	}
 	
 	private static int quarter(double playerX, double playerY, double destinationX, double destinationY) {
@@ -123,6 +79,12 @@ public class MouseHandler extends UserInteraction{
 		playerDegree = mouseDegree;
 		System.out.println("playerDegree: " + playerDegree);
 		// TODO: send changes(playerDegree) to server
+		
+	}
+	
+	@Override
+	public void setClientSender(ClientSender sender) {
+		super.setClientSender(sender);
 	}
 	
 	@Override

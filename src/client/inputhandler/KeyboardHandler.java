@@ -43,119 +43,6 @@ public class KeyboardHandler extends UserInteraction{
 		this.t = null;
 	}
 	
-	public KeyboardHandler(ClientSender sender, Scene scene, GameView gameView) {
-		super(scene, gameView);
-		this.sender = sender;
-		this.scene = scene;
-		this.gameView = gameView;
-/*
-		// TODO: get player here
-		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
-            	this.playerView = p;
-            	break;
-            }
-        }
-
-		this.pImage = new Image(EntityList.PLAYER.getPath());
-		this.movement = new Movement(sender, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
-		this.reload = new Reload(playerView);
-		this.dropItem = new DropItem(playerView);
-		/*
-		
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				String pressed = event.getCode().toString();
-				if (!input.contains(pressed)) {
-					input.add(pressed);
-					System.out.println(input.toString());
-					if (kbSettings.getKey("up").equals(pressed)) {
-						upPressed = true;
-					}
-					if (kbSettings.getKey("left").equals(pressed)) {
-						leftPressed = true;
-					}
-					if (kbSettings.getKey("down").equals(pressed)) {
-						downPressed = true;
-					}
-					if (kbSettings.getKey("right").equals(pressed)) {
-						rightPressed = true;
-					}
-					if (kbSettings.getKey("reload").equals(pressed)) {
-						reloadPressed = true;
-					}
-					if (kbSettings.getKey("drop").equals(pressed)) {
-						dropPressed = true;
-					}
-					if (kbSettings.getKey("interact").equals(pressed)) {
-						interactPressed = true;
-					}
-				}
-			}
-		});
-		
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				String released = event.getCode().toString();
-				input.remove(released);
-				System.out.println(input.toString());
-				if (kbSettings.getKey("up").equals(released)) {
-					upPressed = false;
-				}
-				if (kbSettings.getKey("left").equals(released)) {
-					leftPressed = false;
-				}
-				if (kbSettings.getKey("down").equals(released)) {
-					downPressed = false;
-				}
-				if (kbSettings.getKey("right").equals(released)) {
-					rightPressed = false;
-				}
-				if (kbSettings.getKey("reload").equals(released)) {
-					reloadPressed = false;
-				}
-				if (kbSettings.getKey("drop").equals(released)) {
-					dropPressed = false;
-				}
-				if (kbSettings.getKey("interact").equals(released)) {
-					interactPressed = false;
-				}
-			}
-		});
-		*/
-		
-		AnimationTimer t = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				if(upPressed || leftPressed || downPressed || rightPressed) {
-					for(int i = 0 ; i < input.size() ; i++) {
-						String key = input.get(i);
-						if(key.equals(kbSettings.getKey("up")) ||
-								key.equals(kbSettings.getKey("left")) ||
-								key.equals(kbSettings.getKey("down")) ||
-								key.equals(kbSettings.getKey("right"))) {
-							movement.move(key);
-						}
-					}
-				}
-				if(reloadPressed) {
-					reload.reload();
-				}
-				if(dropPressed) {
-					dropItem.drop();
-				}
-				if(interactPressed) {
-					
-				}
-			}
-		};
-		
-		t.start();
-		
-	}
-	
 	// NOT USED
 	public static Pose center(Pose target, Image image) {
 		double width = image.getWidth();
@@ -164,6 +51,11 @@ public class KeyboardHandler extends UserInteraction{
 		double centerY = target.getY() - height/2;
 		Pose center = new Pose((int)centerX, (int)centerY);
 		return center;
+	}
+	
+	@Override
+	public void setClientSender(ClientSender sender) {
+		super.setClientSender(sender);
 	}
 	
 	@Override
@@ -237,7 +129,9 @@ public class KeyboardHandler extends UserInteraction{
 	public void setGameView(GameView gameView) {
 		super.setGameView(gameView);
 		
+		System.out.print("KKKKKKKKKKKKKKKKKKK" + gameView.getPlayers().size());
 		for (PlayerView p : gameView.getPlayers()) {
+			System.out.print(p.getID() + " " + p.getName());
             if(p.getName() == "Player 1") {
             	this.playerView = p;
             	break;
@@ -292,10 +186,6 @@ public class KeyboardHandler extends UserInteraction{
 	@Override
 	public boolean isActivated() {
 		return super.isActivated();
-	}
-
-	public void setClientSender(ClientSender sender) {
-		this.sender = sender;
 	}
 
 }
