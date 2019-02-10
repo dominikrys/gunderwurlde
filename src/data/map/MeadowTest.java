@@ -45,7 +45,7 @@ public class MeadowTest extends GameMap {
 
     private static LinkedHashSet<Location> generateEnemySpawns() {
         LinkedHashSet<Location> enemySpawns = new LinkedHashSet<Location>();
-        enemySpawns.add(Tile.tileToLocation(20, 14));
+        enemySpawns.add(Tile.tileToLocation(5, 5));
         return enemySpawns;
     }
 
