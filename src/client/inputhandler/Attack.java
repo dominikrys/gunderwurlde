@@ -1,15 +1,18 @@
 package client.inputhandler;
 
+import client.ClientHandler;
 import client.data.ItemView;
 import client.data.entity.PlayerView;
 import data.item.weapon.gun.AmmoList;
 
 public class Attack extends Action{
 	
+	private ClientHandler handler;
 	private PlayerView playerView;
 
-	public Attack(PlayerView playerView) {
-		super(playerView);
+	public Attack(ClientHandler handler, PlayerView playerView) {
+		super(handler, playerView);
+		this.handler = handler;
 		this.playerView = playerView;
 	}
 	
@@ -25,6 +28,7 @@ public class Attack extends Action{
 	public void shoot(ItemView itemView) {
 		if(itemView.getAmmoInClip() != 0) {
 			// TODO: send shooting request
+			handler.send(ActionList.ATTACK);
 		}
 		else {
 			System.out.println("No ammo");

@@ -1,6 +1,6 @@
 package client.inputhandler;
 
-import client.ClientSender;
+import client.ClientHandler;
 import client.data.entity.GameView;
 import client.data.entity.PlayerView;
 import javafx.animation.AnimationTimer;
@@ -27,7 +27,6 @@ public class MouseHandler extends UserInteraction{
 	private double toRotate;
 	private AnimationTimer t;
 	private boolean activated;
-	ClientSender sender;
 	
 	public MouseHandler() {
 		super();
@@ -79,12 +78,13 @@ public class MouseHandler extends UserInteraction{
 		playerDegree = mouseDegree;
 		System.out.println("playerDegree: " + playerDegree);
 		// TODO: send changes(playerDegree) to server
+		handler.send(ActionList.TURN, (int)playerDegree);
 		
 	}
 	
 	@Override
-	public void setClientSender(ClientSender sender) {
-		super.setClientSender(sender);
+	public void setClientHandler(ClientHandler handler) {
+		this.handler = handler;
 	}
 	
 	@Override
@@ -134,7 +134,7 @@ public class MouseHandler extends UserInteraction{
             	break;
             }
         }
-		this.attack = new Attack(playerView);
+		this.attack = new Attack(handler, playerView);
 	}
 
 	@Override

@@ -4,16 +4,19 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import client.data.entity.ItemDropView;
+import client.ClientHandler;
 import client.data.ItemView;
 import client.data.entity.PlayerView;
 
 public class PickItem extends Action{
 	
+	private ClientHandler handler;
 	private PlayerView playerView;
 	private LinkedHashSet<ItemDropView> itemDropView;
 
-	public PickItem(PlayerView playerView, LinkedHashSet<ItemDropView> itemDropView) {
-		super(playerView);
+	public PickItem(ClientHandler handler, PlayerView playerView, LinkedHashSet<ItemDropView> itemDropView) {
+		super(handler, playerView);
+		this.handler = handler;
 		this.playerView = playerView;
 		this.itemDropView = itemDropView;
 	}

@@ -7,6 +7,8 @@ import java.net.*;
 import java.util.Enumeration;
 import java.util.Scanner;
 
+import client.inputhandler.ActionList;
+
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
     InetAddress senderAddress;
@@ -31,14 +33,14 @@ public class ClientSender extends Thread {
         }
     }
 
-    public void send(int direction) {
+    public void send(Integer[] action) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out = null;
                try {
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
-                out.writeObject(direction);
+                out.writeObject(action);
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted

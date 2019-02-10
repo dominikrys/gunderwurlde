@@ -2,7 +2,7 @@ package client.inputhandler;
 
 import java.util.LinkedHashSet;
 
-import client.ClientSender;
+import client.ClientHandler;
 import client.data.entity.ItemDropView;
 import client.data.entity.PlayerView;
 import client.data.TileView;
@@ -11,19 +11,19 @@ import javafx.scene.image.Image;
 
 public class Movement extends Action{
 	
-	ClientSender sender;
+	private ClientHandler handler;
 	private PlayerView playerView;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
 	private PickItem pickItem;
 
-	public Movement(ClientSender sender, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
-		super(playerView);
-		this.sender = sender;
+	public Movement(ClientHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
+		super(handler, playerView);
+		this.handler = handler;
 		this.playerView = playerView;
 		this.kbSettings = kbSettings;
 		this.collision = new Collision(tileMap, pImage);
-		this.pickItem = new PickItem(playerView, itemDropView);
+		this.pickItem = new PickItem(handler, playerView, itemDropView);
 	}
 	
 	public void move(String key) {
@@ -38,25 +38,25 @@ public class Movement extends Action{
 			case "up" :
 				pose.setY(pose.getY() - playerView.getMoveSpeed());
 				direction = 0;
-				this.sender.send(direction);
+				this.handler.send(ActionList.MOVEMENT, direction);
 				System.out.println("up");
 				break;
 			case "left" :
 				pose.setX(pose.getX() - playerView.getMoveSpeed());
 				direction = 270;
-				this.sender.send(direction);
+				this.handler.send(ActionList.MOVEMENT, direction);
 				System.out.println("left");
 				break;
 			case "down" :
 				pose.setY(pose.getY() + playerView.getMoveSpeed());
 				direction = 180;
-				this.sender.send(direction);
+				this.handler.send(ActionList.MOVEMENT, direction);
 				System.out.println("down");
 				break;
 			case "right" :
 				pose.setX(pose.getX() + playerView.getMoveSpeed());
 				direction = 90;
-				this.sender.send(direction);
+				this.handler.send(ActionList.MOVEMENT, direction);
 				System.out.println("right");
 				break;
 		}

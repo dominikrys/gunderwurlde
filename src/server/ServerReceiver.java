@@ -82,16 +82,27 @@ public class ServerReceiver extends Thread {
                 try {
                     in = new ObjectInputStream(bis);
 
-                    Object received =  in.readObject();
-                    //Pose pose = (Pose)received;
-                    
-                    //Pose pose = new Pose();
-                    //pose.setDirection((int)received);
-                    //int direction = pose.getDirection();
-                    //requests = new ClientRequests(1);
-                    requests.playerRequestMovement(0, (int)received);
+                    Integer[] received =  (Integer[]) in.readObject();
+                    switch(received[0]) {
+                    	case 0 : // ATTACK
+                    		requests.playerRequestShoot(0);
+                    		break;
+                    	case 1 : // DROPITEM
+                    		requests.playerRequestRemove(0);
+                    		break;
+                    	case 2 : // RELOAD
+                    		requests.playerRequestReload(0);
+                    		break;
+                    	case 3 : // CHANGEITEM
+                    		requests.playerRequestSelectItem(0, 0);
+                    		break;
+                    	case 4 : // MOVEMENT
+                    		requests.playerRequestMovement(0, received[1]);
+                    		break;
+                    	case 5 : // TURN
+                    		requests.playerRequestFacing(0, received[1]);
+                    }
                     // Send the request to the Engine
-                    //handler.sendClientRequest(requests);
                     handler.setClientRequests(requests);
                     
                 } catch (ClassNotFoundException e) {

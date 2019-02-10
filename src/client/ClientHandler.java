@@ -14,6 +14,7 @@ import client.data.entity.GameView;
 import client.data.entity.ItemDropView;
 import client.data.entity.PlayerView;
 import client.data.entity.ProjectileView;
+import client.inputhandler.ActionList;
 import data.Constants;
 import data.Pose;
 import data.SystemState;
@@ -100,6 +101,8 @@ public class ClientHandler extends Thread {
                         GameView initialView = createGameView();
 	                    
 	                    gameRenderer = new GameRenderer(stage, initialView, 0);
+	                    gameRenderer.getKeyboardHandler().setClientHandler(this);
+	                    gameRenderer.getMouseHandler().setClientHandler(this);
 	                    client = new Client(gameRenderer, "Player 1", 0);
 	                    client.start();
 	                    serverStarted = true;
@@ -172,6 +175,32 @@ public class ClientHandler extends Thread {
         }
         GameView view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
         return view;
+    }
+    
+    public void send(ActionList action) {
+    	switch(action.toString()) {
+    		case "ATTACK" : // 0
+    			client.getClientSender().send(new Integer[] {0});
+    			break;
+    		case "DROPITEM" : // 1
+    			client.getClientSender().send(new Integer[] {1});
+    			break;
+    		case "RELOAD" : // 2
+    			client.getClientSender().send(new Integer[] {2});
+    			break;
+    	}
+    }
+    
+    public void send(ActionList action,int direction) {
+    	switch(action.toString()) {
+    		case "CHANGEITEM" : // 3
+    			break;
+    		case "MOVEMENT" : // 4
+    			client.getClientSender().send(new Integer[] {4, direction});
+    			break;
+    		case "TURN" : //5
+    			client.getClientSender().send(new Integer[] {5, direction});
+    	}
     }
 }
 
