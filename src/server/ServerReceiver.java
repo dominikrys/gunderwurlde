@@ -81,31 +81,31 @@ public class ServerReceiver extends Thread {
                     in = new ObjectInputStream(bis);
 
                     Integer[] received =  (Integer[]) in.readObject();
-                    Request request = new Request();
+                    //Request request = new Request();
                     switch(received[0]) {
                     	case 0 : // ATTACK
-                    		request.requestShoot();
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.requestShoot();
+                    		handler.getClientRequests().playerRequestShoot(0);
                     		break;
                     	case 1 : // DROPITEM
-                    		request.requestDrop();
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.requestDrop();
+                    		handler.getClientRequests().playerRequestDrop(0);
                     		break;
                     	case 2 : // RELOAD
-                    		request.requestReload();
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.requestReload();
+                    		handler.getClientRequests().playerRequestReload(0);
                     		break;
                     	case 3 : // CHANGEITEM
-                    		request.setSelectItem(received[1]);
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.setSelectItem(received[1]);
+                    		handler.getClientRequests().playerRequestSelectItem(0, received[1]);
                     		break;
                     	case 4 : // MOVEMENT
-                    		request.setMovementDirection(received[1]);
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.setMovementDirection(received[1]);
+                    		handler.getClientRequests().playerRequestMovement(0, received[1]);
                     		break;
                     	case 5 : // TURN
-                    		request.setFacing(received[1]);
-                    		handler.getClientRequests().updateRequest(0, request);
+                    		//request.setFacing(received[1]);
+                    		handler.getClientRequests().playerRequestFacing(0, received[1]);
                     }
                     
                     /*

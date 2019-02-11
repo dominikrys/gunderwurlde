@@ -94,4 +94,12 @@ public class ClientRequests {
         } else
             return false;
     }
+    
+    public boolean playerRequestDrop(int playerID) {
+        if (playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestDrop();
+            return true;
+        } else
+            return false;
+    }
 }

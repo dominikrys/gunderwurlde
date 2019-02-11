@@ -78,8 +78,7 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void updateGameView(GameView view) {
-        sender.send(view);
-        this.clearClientRequests(1);
+        sender.send(view);     
     }
 
     @Override
@@ -88,7 +87,10 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void requestClientRequests() {
-        if (clientRequests != null) engine.setClientRequests(clientRequests);
+        if (clientRequests != null) {
+        	engine.setClientRequests(clientRequests);
+        	 this.clearClientRequests(1);
+        }
     }
     
 	public ClientRequests getClientRequests() {
@@ -98,11 +100,6 @@ public class Server extends Thread implements HasEngine {
 	public void clearClientRequests(int numOfPlayers) {
 		this.clientRequests = new ClientRequests(numOfPlayers);
 	}
-    
-    public void sendClientRequest(ClientRequests request) {
-        engine.setClientRequests(request);
-    }
-
 
 	public void close() {
 		sender.running = false;
