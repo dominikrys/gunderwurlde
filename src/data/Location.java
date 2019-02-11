@@ -41,23 +41,8 @@ public class Location {
         double x_dist = (double) distance * Math.sin(directionInRadians);
         double y_dist = (double) -distance * Math.cos(directionInRadians);
 
-        if (Math.abs(x_dist % 1) < 0.01) {
-            x_dist = (int) (x_dist / 1);
-        }
-
-        if (Math.abs(y_dist % 1) < 0.01) {
-            y_dist = (int) (y_dist / 1);
-        }
-
-        if (x_dist < 0)
-            x_dist = Math.floor(x_dist);
-        else
-            x_dist = Math.ceil(x_dist);
-
-        if (y_dist < 0)
-            y_dist = Math.floor(y_dist);
-        else
-            y_dist = Math.ceil(y_dist);
+        x_dist = Math.round(x_dist);
+        y_dist = Math.round(y_dist);
 
         int x = l.getX() + (int) x_dist;
         int y = l.getY() + (int) y_dist;
