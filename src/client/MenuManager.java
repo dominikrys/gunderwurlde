@@ -8,7 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class MenuController {
+import java.util.Observable;
+
+public class MenuManager extends Observable {
     AbstractMenuController currentMenuController;
     private Stage stage;
     private SystemState systemState;
@@ -16,7 +18,7 @@ public class MenuController {
     private boolean stageChanged;
 
     // Constructor
-    public MenuController(Stage inputStage) {
+    public MenuManager(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
 

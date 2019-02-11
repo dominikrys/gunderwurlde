@@ -1,21 +1,10 @@
 package client;
 
 
-import static data.SystemState.MENUS;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
 import client.data.ItemView;
 import client.data.TileView;
-import client.data.entity.EnemyView;
-import client.data.entity.GameView;
-import client.data.entity.ItemDropView;
-import client.data.entity.PlayerView;
-import client.data.entity.ProjectileView;
+import client.data.entity.*;
 import client.inputhandler.ActionList;
-import data.Constants;
 import data.Pose;
 import data.SystemState;
 import data.entity.EntityList;
@@ -26,11 +15,14 @@ import data.map.MapList;
 import data.map.Meadow;
 import data.map.tile.Tile;
 import javafx.application.Platform;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import server.Server;
 
-public class ClientHandler extends Thread {
+import java.util.*;
+
+import static data.SystemState.MENUS;
+
+public class ClientHandler extends Thread implements Observer {
     GameRenderer gameRenderer;
     private Stage stage;
     private boolean running;
@@ -47,7 +39,7 @@ public class ClientHandler extends Thread {
     }
 
     public void run() {
-        MenuController menuController = new MenuController(stage);
+        MenuManager menuManager = new MenuManager(stage);
 
         // Example game state to render
         SystemState systemState = MENUS;
@@ -56,12 +48,12 @@ public class ClientHandler extends Thread {
             switch (systemState) {
                 case MENUS:
                     // Render menu
-                    menuController.renderMenu();
-                    systemState = menuController.getSystemState();
+                    menuManager.renderMenu();
+                    systemState = menuManager.getSystemState();
                     break;
                 case GAME:
                     // Render game state
-                	//inGame = true;
+                    //inGame = true;
                 	/*
                 	LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
                 	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
@@ -94,20 +86,20 @@ public class ClientHandler extends Thread {
                     break;
                 case SINGLE_PLAYER_CONNECTION:
                     // CODE FOR ESTABLISHING LOCAL SERVER
-                	if(!serverStarted) {
-	                    server = new Server(MapList.MEADOW, "Player 1");
-	                    serverStarted = true;
+                    if (!serverStarted) {
+                        server = new Server(MapList.MEADOW, "Player 1");
+                        serverStarted = true;
 
                         GameView initialView = createGameView();
-	                    
-	                    gameRenderer = new GameRenderer(stage, initialView, 0);
-	                    gameRenderer.getKeyboardHandler().setClientHandler(this);
-	                    gameRenderer.getMouseHandler().setClientHandler(this);
-	                    client = new Client(gameRenderer, "Player 1", 0);
-	                    client.start();
-	                    serverStarted = true;
-	                    systemState = SystemState.GAME; // REMOVE THIS
-                	}
+
+                        gameRenderer = new GameRenderer(stage, initialView, 0);
+                        gameRenderer.getKeyboardHandler().setClientHandler(this);
+                        gameRenderer.getMouseHandler().setClientHandler(this);
+                        client = new Client(gameRenderer, "Player 1", 0);
+                        client.start();
+                        serverStarted = true;
+                        systemState = SystemState.GAME; // REMOVE THIS
+                    }
                     break;
                 case MULTI_PLAYER_CONNECTION:
                     // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
@@ -147,7 +139,7 @@ public class ClientHandler extends Thread {
         });
     }
 
-    public GameView createGameView(){
+    public GameView createGameView() {
         // Creates an initial GameView
         LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
         ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
@@ -167,8 +159,8 @@ public class ClientHandler extends Thread {
         exampleItemDrops.add(exampleItemDrop);
         TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
         Tile[][] tile = Meadow.generateTileMap();
-        for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
-            for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
+        for (int i = 0; i < Meadow.DEFAULT_X_DIM; i++) {
+            for (int j = 0; j < Meadow.DEFAULT_Y_DIM; j++) {
                 TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
                 exampleTile[i][j] = tileView;
             }
@@ -176,31 +168,36 @@ public class ClientHandler extends Thread {
         GameView view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
         return view;
     }
-    
+
     public void send(ActionList action) {
-    	switch(action.toString()) {
-    		case "ATTACK" : // 0
-    			client.getClientSender().send(new Integer[] {0});
-    			break;
-    		case "DROPITEM" : // 1
-    			client.getClientSender().send(new Integer[] {1});
-    			break;
-    		case "RELOAD" : // 2
-    			client.getClientSender().send(new Integer[] {2});
-    			break;
-    	}
+        switch (action.toString()) {
+            case "ATTACK": // 0
+                client.getClientSender().send(new Integer[]{0});
+                break;
+            case "DROPITEM": // 1
+                client.getClientSender().send(new Integer[]{1});
+                break;
+            case "RELOAD": // 2
+                client.getClientSender().send(new Integer[]{2});
+                break;
+        }
     }
-    
-    public void send(ActionList action,int direction) {
-    	switch(action.toString()) {
-    		case "CHANGEITEM" : // 3
-    			break;
-    		case "MOVEMENT" : // 4
-    			client.getClientSender().send(new Integer[] {4, direction});
-    			break;
-    		case "TURN" : //5
-    			client.getClientSender().send(new Integer[] {5, direction});
-    	}
+
+    public void send(ActionList action, int direction) {
+        switch (action.toString()) {
+            case "CHANGEITEM": // 3
+                break;
+            case "MOVEMENT": // 4
+                client.getClientSender().send(new Integer[]{4, direction});
+                break;
+            case "TURN": //5
+                client.getClientSender().send(new Integer[]{5, direction});
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }
 
