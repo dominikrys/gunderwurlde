@@ -72,20 +72,12 @@ public class Request implements Serializable {
         this.shoot = true;
     }
 
-    public void setShoot(boolean shoot) {
-        this.shoot = shoot;
-    }
-
     public boolean getShoot() {
         return shoot;
     }
 
     public void requestReload() {
         this.reload = true;
-    }
-
-    public void setReload(boolean reload) {
-        this.reload = reload;
     }
 
     public boolean getReload() {
