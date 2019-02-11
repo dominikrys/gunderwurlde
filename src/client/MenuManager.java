@@ -100,7 +100,9 @@ public class MenuManager extends Observable {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
+            stage.centerOnScreen();
             scene.getRoot().requestFocus();
+            stage.show();
         } else {
             // runLater because not JavaFX thread
             Platform.runLater(() -> {
