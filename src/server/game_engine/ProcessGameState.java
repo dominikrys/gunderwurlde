@@ -389,17 +389,17 @@ public class ProcessGameState extends Thread {
 
                 ai = currentEnemy.getAI();
                 if (!ai.isProcessing())
-                    ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap, maxDistanceMoved);
+                    ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
                     Attack enemyAttack = ai.getAttack();
-                    currentEnemy.setPose(ai.getNewPose());
+                    currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
                     // TODO attack processing here once ai is completed.
                     break;
                 case MOVE:
-                    currentEnemy.setPose(ai.getNewPose());
+                    currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
                 case WAIT:
