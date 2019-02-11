@@ -133,6 +133,11 @@ public class GameRenderer implements Runnable {
 
     // Render entities to the map canvas
     private void renderEntitiesFromGameViewToCanvas() {
+        // Render items
+        for (ItemDropView currentItem : gameView.getItemDrops()) {
+            renderEntityView(currentItem);
+        }
+        
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Get the correct sprite according to playerID, otherwise load the default player graphic
@@ -166,11 +171,6 @@ public class GameRenderer implements Runnable {
         // Render projectiles
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntityView(currentProjectile);
-        }
-
-        // Render items
-        for (ItemDropView currentItem : gameView.getItemDrops()) {
-            renderEntityView(currentItem);
         }
     }
 
