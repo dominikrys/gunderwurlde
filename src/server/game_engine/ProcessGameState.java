@@ -83,8 +83,7 @@ public class ProcessGameState extends Thread {
             }
         }
         // Players are regenerated each time for now so it can be empty here.
-        view = new GameView(new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
-        handler.updateGameView(view);
+        view = new GameView(new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);        
     }
 
     public void setClientRequests(ClientRequests clientRequests) {
@@ -102,6 +101,7 @@ public class ProcessGameState extends Thread {
 
     @Override
     public void run() {
+        handler.updateGameView(view);
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
 
