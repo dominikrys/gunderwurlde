@@ -74,6 +74,7 @@ public class ClientReceiver extends Thread {
                 ObjectInputStream in = null;
                 GameView view = null;
                 try {
+                	System.out.println("Client received new gameview");
                     in = new ObjectInputStream(bis);
                     view = (GameView)in.readObject();
                     client.setGameView(view);
