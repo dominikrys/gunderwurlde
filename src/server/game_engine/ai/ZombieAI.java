@@ -20,7 +20,8 @@ public class ZombieAI extends EnemyAI {
     @Override
     protected void generatePath() {
         //System.out.println("Size of playerPoses: " + getPlayerPoses().size());
-        new AStar(this, 0.8, getTileMap(), getEnemPose(), getPlayerPoses().iterator().next()).start();
+        System.out.println(" genPath called");
+        new AStar(this, 0.8, getTileMap(), getEnemPose(), getPlayerPoses().iterator().next()).run();
     }
 
 

@@ -69,9 +69,9 @@ public class TestEngine extends Application implements HasEngine {
         new Thread() {
             public void run() {
                 for (int i = 0; i < LOOPS; i++) {
-                  //  requests.playerRequestFacing(0, rand.nextInt(360));
-                 //   requests.playerRequestMovement(0, rand.nextInt(360));
-                 //   requests.playerRequestShoot(0);
+//                    requests.playerRequestFacing(0, rand.nextInt(360));
+//                    requests.playerRequestMovement(0, rand.nextInt(360));
+//                    requests.playerRequestShoot(0);
 //                    requests.playerRequestFacing(1, rand.nextInt(360));
 //                    requests.playerRequestMovement(1, rand.nextInt(360));
 //                    requests.playerRequestShoot(1);

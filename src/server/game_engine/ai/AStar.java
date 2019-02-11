@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-public class AStar extends Thread {
+public class AStar {
 
     private final double COST_OF_TRAVEL;
     private final int MAX_OPENED_NODES = 31;

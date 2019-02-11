@@ -7,7 +7,6 @@ import data.map.tile.Tile;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.concurrent.TimeUnit;
 
 public abstract class EnemyAI {
 
@@ -15,11 +14,10 @@ public abstract class EnemyAI {
     private int size;
     private HashSet<Pose> playerPoses;
     private Tile[][] tileMap;
-    private boolean isProcessing = false;
-    private LinkedHashSet<Pose> oldPath;
     private LinkedHashSet<Pose> newPath;
     private AIAction aiAction = AIAction.WAIT;
-    private boolean pathUpdated = false;
+    private boolean isProcessing = false;
+    private int callCounter = 49;
 
     protected EnemyAI() {
     }
@@ -29,16 +27,11 @@ public abstract class EnemyAI {
     protected abstract void generatePath();
 
     public synchronized Pose getNewPose(int maxDistanceMoved) {
-        if(pathUpdated){
-            oldPath = setStartPose(pose, newPath);
-            pathUpdated = false;
-        }
-
         Pose next = pose;
-        Iterator<Pose> i = oldPath.iterator();
+        Iterator<Pose> i = newPath.iterator();
 
         for (int j = 0; j < maxDistanceMoved; j++) {
-            if((i.hasNext()) && (oldPath.size() > Constants.TILE_SIZE)) {
+            if((i.hasNext()) && (newPath.size() > Constants.TILE_SIZE)) {
                 next = i.next();
                 next.setDirection(calcDirection(pose, next));
                 i.remove();
@@ -47,10 +40,6 @@ public abstract class EnemyAI {
 
         this.pose = next;
         return next;
-    }
-
-    private LinkedHashSet<Pose> setStartPose(Pose pose, LinkedHashSet<Pose> newPath) {
-        
     }
 
 
@@ -71,13 +60,18 @@ public abstract class EnemyAI {
     }
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
+//        System.out.println("setInfo called");
+        callCounter++;
         this.pose = pose;
         this.size = size;
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
-        isProcessing = true;
-        pathUpdated = true;
-        generatePath();
+        if(callCounter == 50) {
+            System.out.println("IF");
+            isProcessing = true;
+            generatePath();
+            callCounter = 0;
+        }
     }
 
     public synchronized boolean isProcessing() {
@@ -111,7 +105,7 @@ public abstract class EnemyAI {
         return 5555;
     }
 
-    protected synchronized void setPosePath(LinkedHashSet<Pose> posePath) {
+    protected void setPosePath(LinkedHashSet<Pose> posePath) {
         this.newPath = posePath;
         isProcessing = false;
 //        for (Pose pose : posePath) {
