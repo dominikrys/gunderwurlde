@@ -39,13 +39,13 @@ public class MeadowTest extends GameMap {
 
     private static LinkedHashSet<Location> generatePlayerSpawns() {
         LinkedHashSet<Location> playerSpawns = new LinkedHashSet<Location>();
-        playerSpawns.add(Tile.tileToLocation(15, 15));
+        playerSpawns.add(Tile.tileToLocation(5, 15));
         return playerSpawns;
     }
 
     private static LinkedHashSet<Location> generateEnemySpawns() {
         LinkedHashSet<Location> enemySpawns = new LinkedHashSet<Location>();
-        enemySpawns.add(Tile.tileToLocation(5, 5));
+        enemySpawns.add(Tile.tileToLocation(15, 20));
         return enemySpawns;
     }
 

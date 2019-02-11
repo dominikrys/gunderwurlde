@@ -377,7 +377,7 @@ public class GameRenderer implements Runnable {
         }
 
         // Render entity to specified location on canvas
-        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
+        drawRotatedImage(gc, image, entity.getPose().getDirection() - 90, entity.getPose().getX(),
                 entity.getPose().getY());
     }
 
