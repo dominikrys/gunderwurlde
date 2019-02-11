@@ -31,7 +31,6 @@ public class Server extends Thread implements HasEngine {
 
     public Server(MapList mapName, String hostName) {
     	this.engine = new ProcessGameState(this, mapName, hostName);
-        engine.start();
         this.hostName = hostName;
         // TODO: set num of player
         this.clientRequests = null;
@@ -47,10 +46,10 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Server starting");
             // Create the initial GameView to be sent to the clients
 
-
             // Create the threads that will run as sender and receiver
             sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
+            engine.start();
             System.out.println("Threads up");
             
             // TODO: num of player setting
