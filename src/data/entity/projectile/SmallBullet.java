@@ -6,7 +6,7 @@ import data.entity.player.Teams;
 import data.map.tile.Tile;
 
 public class SmallBullet extends Projectile {
-    public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 3;
+    public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 6;
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = 1;
     public static final int DEFAULT_RANGE = 0;
