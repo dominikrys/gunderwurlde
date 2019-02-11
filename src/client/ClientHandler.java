@@ -52,9 +52,6 @@ public class ClientHandler extends Thread {
         // Example game state to render
         SystemState systemState = MENUS;
 
-        // Load font
-        Font.loadFont(getClass().getResourceAsStream(Constants.MANASPACE_FONT_PATH), 36);
-
         while (running) {
             switch (systemState) {
                 case MENUS:

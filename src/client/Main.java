@@ -15,7 +15,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Create renderer and pass primary stage to it
-        primaryStage.setResizable(false); // Disable resizing of the window
+        primaryStage.setResizable(false); // Disable resizing of the window TODO: check how this behaves on linux!
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Gunderwurlde");
 
