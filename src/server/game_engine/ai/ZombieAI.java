@@ -1,6 +1,7 @@
 package server.game_engine.ai;
 
 import data.Pose;
+import data.map.Meadow;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 
@@ -18,6 +19,15 @@ public class ZombieAI extends EnemyAI {
     @Override
     protected Pose generateNextPose(int maxDistanceMoved) {
         Pose playerPose = getPlayerPoses().iterator().next();
+        int[] tile = Tile.locationToTile(pose);
+        if(tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
+            return new Pose(pose.getX() + 1, pose.getY());
+        }
+
+        if(tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
+            return new Pose(pose.getX() - 1, pose.getY());
+        }
+
         for (int i = 0; i < maxDistanceMoved; i++) {
             pose = newPose(playerPose, pose);
         }
@@ -26,6 +36,8 @@ public class ZombieAI extends EnemyAI {
     }
 
     private Pose newPose(Pose player, Pose enemy) {
+
+
         double angle = getAngle(enemy, player);
 
         if (angle > 337.5 || angle <= 22.5) {
