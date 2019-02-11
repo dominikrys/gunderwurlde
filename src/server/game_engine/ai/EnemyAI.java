@@ -4,10 +4,10 @@ import data.Constants;
 import data.Pose;
 import data.map.tile.Tile;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.concurrent.TimeUnit;
 
 public abstract class EnemyAI {
 
@@ -16,10 +16,10 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     private Tile[][] tileMap;
     private boolean isProcessing = false;
-    //private ArrayList<Pair<Integer, Integer>> path = null;
-    private LinkedHashSet<Pose> posePath;
-    //private Pose nextPose;
+    private LinkedHashSet<Pose> oldPath;
+    private LinkedHashSet<Pose> newPath;
     private AIAction aiAction = AIAction.WAIT;
+    private boolean pathUpdated = false;
 
     protected EnemyAI() {
     }
@@ -29,11 +29,16 @@ public abstract class EnemyAI {
     protected abstract void generatePath();
 
     public synchronized Pose getNewPose(int maxDistanceMoved) {
+        if(pathUpdated){
+            oldPath = setStartPose(pose, newPath);
+            pathUpdated = false;
+        }
+
         Pose next = pose;
-        Iterator<Pose> i = posePath.iterator();
+        Iterator<Pose> i = oldPath.iterator();
 
         for (int j = 0; j < maxDistanceMoved; j++) {
-            if((i.hasNext()) && (posePath.size() > Constants.TILE_SIZE)) {
+            if((i.hasNext()) && (oldPath.size() > Constants.TILE_SIZE)) {
                 next = i.next();
                 next.setDirection(calcDirection(pose, next));
                 i.remove();
@@ -42,6 +47,10 @@ public abstract class EnemyAI {
 
         this.pose = next;
         return next;
+    }
+
+    private LinkedHashSet<Pose> setStartPose(Pose pose, LinkedHashSet<Pose> newPath) {
+        
     }
 
 
@@ -67,6 +76,7 @@ public abstract class EnemyAI {
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         isProcessing = true;
+        pathUpdated = true;
         generatePath();
     }
 
@@ -102,10 +112,15 @@ public abstract class EnemyAI {
     }
 
     protected synchronized void setPosePath(LinkedHashSet<Pose> posePath) {
-        this.posePath = posePath;
+        this.newPath = posePath;
         isProcessing = false;
 //        for (Pose pose : posePath) {
 //            System.out.println(pose.getX() + " " + pose.getY());
+//        }
+//        try {
+//            TimeUnit.SECONDS.sleep(5);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
 //        }
         aiAction = AIAction.MOVE;
     }

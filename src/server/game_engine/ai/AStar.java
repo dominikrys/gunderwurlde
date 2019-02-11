@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -16,7 +17,7 @@ import static java.lang.Math.sqrt;
 public class AStar extends Thread {
 
     private final double COST_OF_TRAVEL;
-    private final int MAX_OPENED_NODES = 30;
+    private final int MAX_OPENED_NODES = 31;
     private final Tile[][] tiles;
     private final Pose endPose;
     private final Pose startPose;
@@ -53,19 +54,19 @@ public class AStar extends Thread {
         PriorityQueue<Node> newNodes;
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startingPose, 0d);
-//
-//        System.out.println("Start coords: " + startingPose.getX() + " - " + startingPose.getY());
-//        System.out.println("End coords: " + endingPose.getX() + " - " + endingPose.getY());
-//
-//
+
+        System.out.println("Start coords: " + startingPose);
+        System.out.println("End coords: " + endingPose);
+
+
 //        System.out.println("init nodes");
 //        printOut(opened);
 
-//        try {
-//            TimeUnit.SECONDS.sleep(1);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //TODO do I need this?
         // You cannot expand start node
@@ -124,7 +125,7 @@ public class AStar extends Thread {
 
     private PriorityQueue<Node> cutQueue(PriorityQueue<Node> opened) {
         List l = new ArrayList(opened);
-        List<Node> cutArray = new ArrayList<>(l.subList(0, 31));
+        List<Node> cutArray = new ArrayList<>(l.subList(0, MAX_OPENED_NODES));
 
         return new PriorityQueue(cutArray);
     }
