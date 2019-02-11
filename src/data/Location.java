@@ -37,9 +37,17 @@ public class Location {
     }
 
     public static Location calculateNewLocation(Location l, int direction, int distance) {
-        double directionInRadians = (direction/180.0) * Math.PI;
+        double directionInRadians = Math.toRadians(direction);
         double x_dist = (double) distance * Math.sin(directionInRadians);
         double y_dist = (double) -distance * Math.cos(directionInRadians);
+
+        if (Math.abs(x_dist % 1) < 0.01) {
+            x_dist = (int) (x_dist / 1);
+        }
+
+        if (Math.abs(y_dist % 1) < 0.01) {
+            y_dist = (int) (y_dist / 1);
+        }
 
         if (x_dist < 0)
             x_dist = Math.floor(x_dist);
