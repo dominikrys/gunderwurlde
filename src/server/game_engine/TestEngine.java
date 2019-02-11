@@ -8,6 +8,7 @@ import data.map.MapList;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import server.request.ClientRequests;
+import java.util.concurrent.TimeUnit;
 
 public class TestEngine extends Application implements HasEngine {
     private static final int LOOPS = 1000;
@@ -56,7 +57,8 @@ public class TestEngine extends Application implements HasEngine {
                 rend.run();
                 System.out.println("Renderer started");
             } else {
-                System.out.println("View is null");
+                //System.out.println("View is null");
+                TimeUnit.SECONDS.sleep(1);
             }
         }
     }
@@ -69,15 +71,15 @@ public class TestEngine extends Application implements HasEngine {
                     requests.playerRequestFacing(0, rand.nextInt(360));
                     requests.playerRequestMovement(0, rand.nextInt(360));
                     requests.playerRequestShoot(0);
-                    requests.playerRequestFacing(1, rand.nextInt(360));
-                    requests.playerRequestMovement(1, rand.nextInt(360));
-                    requests.playerRequestShoot(1);
-                    requests.playerRequestFacing(2, rand.nextInt(360));
-                    requests.playerRequestMovement(2, rand.nextInt(360));
-                    requests.playerRequestShoot(2);
-                    requests.playerRequestFacing(3, rand.nextInt(360));
-                    requests.playerRequestMovement(3, rand.nextInt(360));
-                    requests.playerRequestShoot(3);
+//                    requests.playerRequestFacing(1, rand.nextInt(360));
+//                    requests.playerRequestMovement(1, rand.nextInt(360));
+//                    requests.playerRequestShoot(1);
+//                    requests.playerRequestFacing(2, rand.nextInt(360));
+//                    requests.playerRequestMovement(2, rand.nextInt(360));
+//                    requests.playerRequestShoot(2);
+//                    requests.playerRequestFacing(3, rand.nextInt(360));
+//                    requests.playerRequestMovement(3, rand.nextInt(360));
+//                    requests.playerRequestShoot(3);
                     try {
                         Thread.sleep(17);
                     } catch (InterruptedException e) {

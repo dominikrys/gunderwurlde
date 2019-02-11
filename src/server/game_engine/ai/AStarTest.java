@@ -2,6 +2,7 @@ package server.game_engine.ai;
 
 import data.Pose;
 import data.map.Meadow;
+import data.map.MeadowTest;
 import data.map.tile.Tile;
 import data.map.tile.TileState;
 import data.map.tile.TileTypes;
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 public class AStarTest {
     public static void main(String[] args) {
 
-        Meadow map = new Meadow();
-        final Tile[][] meadow = map.getTileMap();
+        MeadowTest meadowTest = new MeadowTest();
+        final Tile[][] map = meadowTest.getTileMap();
 
         final double COST_OF_TRAVEL = 0.8;
 
@@ -23,15 +24,20 @@ public class AStarTest {
 
         Pair<Integer, Integer> playerLoc = new Pair<>(playerPose.getY(), playerPose.getX()); //y and x
         Pair<Integer, Integer> enemLoc = new Pair<>(enemPose.getY(), enemPose.getX());
-        AStar aStarForMeadow = new AStar(COST_OF_TRAVEL, meadow);
+        //AStar aStarForMeadow = new AStar(COST_OF_TRAVEL, meadow);
 
-        System.out.println(enemLoc);
+        long startTime = System.nanoTime();
 
-        ArrayList<Pair<Integer, Integer>> path = aStarForMeadow.aStar(enemLoc, playerLoc);
+        //ArrayList<Pair<Integer, Integer>> path = aStarForMeadow.aStar(enemLoc, playerLoc);
+        //new AStar(1, map, playerPose, enemPose).start();
 
-        for (Pair<Integer, Integer> pair : path) {
-            System.out.println(pair);
-        }
+        long runTime = System.nanoTime() - startTime;
+        double runTimeInSecs = runTime / 1000000000d;
+        System.out.println("Run time: " + runTimeInSecs);
+
+//        for (Pair<Integer, Integer> pair : path) {
+//            System.out.println(pair);
+//        }
 //        TileTypes tileType = TileTypes.GRASS;
 //        TileState tileState = TileState.PASSABLE;
 
