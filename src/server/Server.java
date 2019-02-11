@@ -32,7 +32,6 @@ public class Server extends Thread implements HasEngine {
     public Server(MapList mapName, String hostName) {
     	this.engine = new ProcessGameState(this, mapName, hostName);
         engine.start();
-        engine.addPlayer(hostName, Teams.RED);
         this.hostName = hostName;
         // TODO: set num of player
         this.clientRequests = null;
