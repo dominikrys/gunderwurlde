@@ -84,6 +84,7 @@ public class ProcessGameState extends Thread {
         }
         // Players are regenerated each time for now so it can be empty here.
         view = new GameView(new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
+        handler.updateGameView(view);
     }
 
     public void setClientRequests(ClientRequests clientRequests) {
@@ -276,6 +277,7 @@ public class ProcessGameState extends Thread {
                         tilesOn = tilesOn(currentPlayer);
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                            System.out.println("on tile" + tileCords[0] + " " + tileCords[1]);
                             if (tileOn.getState() == TileState.SOLID) {
                                 currentPlayer.setLocation(playerPose);
                                 pushedBack = true;
