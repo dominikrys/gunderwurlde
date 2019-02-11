@@ -1,10 +1,15 @@
-package server.serverclientthreads;
+package client;
 
+import client.data.entity.GameView;
+import client.inputhandler.KeyboardHandler;
+import client.inputhandler.MouseHandler;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
-public class ClientOnline {
-    // Socket to listen to the server
+public class Client extends Thread {
     MulticastSocket listenSocket;
     // Socket to send requests to the server
     MulticastSocket sendSocket;
@@ -12,27 +17,47 @@ public class ClientOnline {
     InetAddress senderAddress;
     static final int LISTENPORT = 4444;
     static final int SENDPORT = 4445;
+    GameView view;
+    GameRenderer renderer;
+    String playerName;
+    int playerID;
+    Boolean running;
     ClientSender sender;
     ClientReceiver receiver;
+    private KeyboardHandler kbHandler;
+    private MouseHandler mHandler;
 
-    public ClientOnline(){
-        // To assign the objects to be integrated
+
+    public Client(GameRenderer renderer, String playerName, int playerID){
+        this.renderer = renderer;
+        this.playerName = playerName;
+        this.playerID = playerID;
+        this.running = true;
+        this.view = renderer.getView();
     }
 
     public void run(){
         try{
-
             listenSocket = new MulticastSocket(LISTENPORT);
             sendSocket = new MulticastSocket();
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            System.out.println("ClientOnline calls server");
 
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
-            receiver = new ClientReceiver(listenAddress, listenSocket);
+            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
+            renderer.updateGameView(view);
+            renderer.run();
 
+            while(running){
+                if(view != null) {
+                	renderer.updateGameView(view);
+                    Thread.sleep(50);
+                }
+            }
+
+            // How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
@@ -50,8 +75,19 @@ public class ClientOnline {
             e.printStackTrace();
         }
     }
+
+    public void setGameView(GameView view){
+        this.view = view;
+    }
     
-    public ClientSender getSender() {
+    public ClientSender getClientSender() {
     	return this.sender;
     }
+
+    public void close() {
+    	this.running = false;
+    	sender.running = false;
+    	receiver.running = false;
+    }
+
 }

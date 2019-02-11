@@ -1,6 +1,8 @@
 package data;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     protected int x;
     protected int y;
 

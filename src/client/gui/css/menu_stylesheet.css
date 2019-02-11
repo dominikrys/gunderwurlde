@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'Manaspace';
+    src: url('file:assets/fonts/manaspc.ttf');
+	font-
+}
+
+.gameTitle {
+	-fx-font-size: 88px;
+}
+
+.manaspaceFont {
+    -fx-font-family: 'Manaspace', Consolas;
+	-fx-text-fill: black;
+}
+
+.menuButton {
+	-fx-font-size: 28px;
+}

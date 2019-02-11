@@ -2,6 +2,8 @@ package client;
 
 import client.data.ItemView;
 import client.data.entity.*;
+import client.inputhandler.KeyboardHandler;
+import client.inputhandler.MouseHandler;
 import data.Constants;
 import data.entity.EntityList;
 import data.item.weapon.gun.AmmoList;
@@ -51,11 +53,14 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    private KeyboardHandler kbHandler;
+    private MouseHandler mHandler;
+    ClientSender sender;
 
     // Constructor
-    public GameRenderer(Stage stage, GameView gameView, int playerID) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
         // Initialise gameView, stage and playerID
-        this.gameView = gameView;
+        this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
 
@@ -91,6 +96,9 @@ public class GameRenderer implements Runnable {
         currentPlayer = null;
         heldItems = null;
         ammoBox = null;
+
+        kbHandler = new KeyboardHandler();
+        mHandler = new MouseHandler();
     }
 
     // Run the thread - set up window and update game on a timer
@@ -117,9 +125,11 @@ public class GameRenderer implements Runnable {
     // Update stored gameView
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
+        this.kbHandler.setGameView(gameView);
+        this.mHandler.setGameView(gameView);
     }
 
-    // Render gameView
+    // Render gameView - KEEP PRIVATE
     private void renderGameView() {
         // Render map
         renderMap(gameView, mapGC);
@@ -296,6 +306,14 @@ public class GameRenderer implements Runnable {
         // Create the main scene
         Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
+        kbHandler.setGameView(inputGameView);
+        kbHandler.setScene(scene);
+        kbHandler.activate();
+        mHandler.setCanvas(mapCanvas);
+        mHandler.setGameView(inputGameView);
+        mHandler.setScene(scene);
+        mHandler.activate();
+
         // Update stage
         updateStageWithScene(stage, scene);
     }
@@ -377,7 +395,7 @@ public class GameRenderer implements Runnable {
         }
 
         // Render entity to specified location on canvas
-        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
+        drawRotatedImage(gc, image, entity.getPose().getDirection() - 90, entity.getPose().getX(),
                 entity.getPose().getY());
     }
 
@@ -460,4 +478,20 @@ public class GameRenderer implements Runnable {
             });
         }
     }
+
+	public void setClientSender(ClientSender sender) {
+		this.sender = sender;
+	}
+
+	public GameView getView() {
+		return this.gameView;
+	}
+
+	public KeyboardHandler getKeyboardHandler() {
+		return this.kbHandler;
+	}
+
+	public MouseHandler getMouseHandler() {
+		return this.mHandler;
+	}
 }

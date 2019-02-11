@@ -5,9 +5,12 @@ import data.Constants;
 import data.SystemState;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class MenuController {
+import java.util.Observable;
+
+public class MenuManager {
     AbstractMenuController currentMenuController;
     private Stage stage;
     private SystemState systemState;
@@ -15,7 +18,7 @@ public class MenuController {
     private boolean stageChanged;
 
     // Constructor
-    public MenuController(Stage inputStage) {
+    public MenuManager(Stage inputStage) {
         // Set stage
         this.stage = inputStage;
 
@@ -97,7 +100,9 @@ public class MenuController {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
+            stage.centerOnScreen();
             scene.getRoot().requestFocus();
+            stage.show();
         } else {
             // runLater because not JavaFX thread
             Platform.runLater(() -> {

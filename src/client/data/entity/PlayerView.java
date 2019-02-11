@@ -3,6 +3,7 @@ package client.data.entity;
 import client.data.ItemView;
 import data.Pose;
 import data.entity.EntityList;
+import data.entity.player.Player;
 import data.entity.player.Teams;
 import data.item.weapon.gun.AmmoList;
 
@@ -21,6 +22,7 @@ public class PlayerView extends EntityView implements Serializable {
     protected String name;
     protected LinkedHashMap<AmmoList, Integer> ammo;
     protected Teams team;
+    protected int moveSpeed = Player.DEFAULT_MOVESPEED;
 
     public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
                       String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team) {
@@ -74,6 +76,10 @@ public class PlayerView extends EntityView implements Serializable {
 
     public Teams getTeam() {
         return team;
+    }
+    
+    public int getMoveSpeed() {
+    	return moveSpeed;
     }
 
 }

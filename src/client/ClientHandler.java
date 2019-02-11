@@ -1,94 +1,112 @@
 package client;
 
-import data.Constants;
+
+import client.data.ItemView;
+import client.data.TileView;
+import client.data.entity.*;
+import client.inputhandler.ActionList;
+import data.Pose;
 import data.SystemState;
+import data.entity.EntityList;
+import data.entity.player.Teams;
+import data.item.ItemList;
+import data.item.weapon.gun.AmmoList;
+import data.map.MapList;
+import data.map.Meadow;
+import data.map.tile.Tile;
 import javafx.application.Platform;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import server.serverclientthreads.ClientOnline;
-import server.serverclientthreads.Server;
+import server.Server;
+
+import java.util.*;
 
 import static data.SystemState.MENUS;
 
-public class ClientHandler extends Thread {
+public class ClientHandler extends Thread{
     GameRenderer gameRenderer;
     private Stage stage;
     private boolean running;
+    private boolean inGame;
+    private boolean serverStarted;
     private Server server;
-    private ClientOnline clientOnline;
-    private boolean gameRunning;
+    private Client client;
 
     public ClientHandler(Stage stage) {
         this.stage = stage;
         running = true;
-        gameRunning = false;
-        gameRenderer = null;
+        inGame = false;
+        serverStarted = false;
     }
 
     public void run() {
-        MenuController menuController = new MenuController(stage);
+        MenuManager menuManager = new MenuManager(stage);
 
         // Example game state to render
         SystemState systemState = MENUS;
-
-        // Load font
-        Font.loadFont(getClass().getResourceAsStream(Constants.MANASPACE_FONT_PATH), 36);
 
         while (running) {
             switch (systemState) {
                 case MENUS:
                     // Render menu
-                    gameRunning = false;
-                    menuController.renderMenu();
-                    systemState = menuController.getSystemState();
+                    menuManager.renderMenu();
+                    systemState = menuManager.getSystemState();
                     break;
                 case GAME:
                     // Render game state
-
-                    // MAKE SURE GAMEVIEW IS SEND TO GAMERENDERER AT A TIMER/TIMELINE!!!
-
-                    /*
-                    if (!gameRunning) {
-                        gameRenderer = new GameRenderer(stage, gameView, 0);
-                        gameRenderer.setDaemon(true);
-                        gameRenderer.run();
-                        gameRunning = true;
-                    }
-
-                    gameRenderer.updateGameView(gameView);
+                    //inGame = true;
+                	/*
+                	LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
+                	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
+                	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
+                	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
+                	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
+                	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 1);
+                	examplePlayers.add(examplePlayer);
+                	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
+                	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EnemyList.ZOMBIE);
+                	exampleEnemies.add(exampleEnemy);
+                	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
+                	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, ProjectileList.SMALLBULLET);
+                	exampleProjectiles.add(exampleProjectile);
+                	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
+                	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
+                	exampleItemDrops.add(exampleItemDrop);
+                	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
+                	Tile[][] tile = Meadow.generateTileMap();
+                	for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
+        				for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
+        					TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
+        					exampleTile[i][j] = tileView;
+        				}
+        			}
+                	
+                    renderer.renderGameView(new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile), 1);
                     */
-                    //systemState = menuController.getSystemState(); TODO: change this to update state from game/controller
+                    //systemState = renderer.getSystemState();
                     break;
                 case SINGLE_PLAYER_CONNECTION:
-                    // Start local server and run it
-                    server = new Server();
-                    server.start();
-                    clientOnline = new ClientOnline();
-                    clientOnline.run();
+                    // CODE FOR ESTABLISHING LOCAL SERVER
+                    if (!serverStarted) {
+                        server = new Server(MapList.MEADOW, "Player 1");
+                        serverStarted = true;
 
-                    // Set appropriate systemstates
-                    systemState = SystemState.GAME;
-                    menuController.setSystemState(SystemState.GAME);
+                        GameView initialView = createGameView();
+
+                        gameRenderer = new GameRenderer(stage, initialView, 0);
+                        gameRenderer.getKeyboardHandler().setClientHandler(this);
+                        gameRenderer.getMouseHandler().setClientHandler(this);
+                        client = new Client(gameRenderer, "Player 1", 0);
+                        client.start();
+                        serverStarted = true;
+                        systemState = SystemState.GAME; // REMOVE THIS
+                    }
                     break;
                 case MULTI_PLAYER_CONNECTION:
-                    // Start server and run it
-                    server = new Server();
-                    server.start();
-                    clientOnline = new ClientOnline();
-                    clientOnline.run();
-
-                    // Set appropriate systemstates
-                    systemState = SystemState.GAME;
-                    menuController.setSystemState(SystemState.GAME);
+                    // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
                     break;
                 case QUIT:
                     // Quit program
-                    running = false;
-
-                    Platform.runLater(() -> {
-                        // Close stage
-                        stage.close();
-                    });
+                    end();
                     break;
             }
         }
@@ -96,6 +114,86 @@ public class ClientHandler extends Thread {
 
     public void end() {
         this.running = false;
+
+        // End server if running/exists
+        if (server != null) {
+            if (server.isAlive()) {
+                server.close();
+            }
+        }
+
+        // End client if running/exists
+        if (client != null) {
+            if (client.isAlive()) {
+                this.client.close();
+            }
+        }
+
+        // Close stage
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Close stage
+                stage.close();
+            }
+        });
+    }
+
+    public GameView createGameView() {
+        // Creates an initial GameView
+        LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
+        ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
+        exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
+        LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
+        exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
+        PlayerView examplePlayer = new PlayerView(new Pose(32, 32, 0), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
+        examplePlayers.add(examplePlayer);
+        LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
+        EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
+        exampleEnemies.add(exampleEnemy);
+        LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
+        ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, EntityList.BASIC_BULLET);
+        exampleProjectiles.add(exampleProjectile);
+        LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
+        ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, EntityList.PISTOL);
+        exampleItemDrops.add(exampleItemDrop);
+        TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
+        Tile[][] tile = Meadow.generateTileMap();
+        for (int i = 0; i < Meadow.DEFAULT_X_DIM; i++) {
+            for (int j = 0; j < Meadow.DEFAULT_Y_DIM; j++) {
+                TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
+                exampleTile[i][j] = tileView;
+            }
+        }
+        GameView view = new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile);
+        return view;
+    }
+
+    public void send(ActionList action) {
+        switch (action.toString()) {
+            case "ATTACK": // 0
+                client.getClientSender().send(new Integer[]{0});
+                break;
+            case "DROPITEM": // 1
+                client.getClientSender().send(new Integer[]{1});
+                break;
+            case "RELOAD": // 2
+                client.getClientSender().send(new Integer[]{2});
+                break;
+        }
+    }
+    
+    public void send(ActionList action,int parameter) {
+    	switch(action.toString()) {
+    		case "CHANGEITEM" : // 3
+    			client.getClientSender().send(new Integer[] {3, parameter});
+    			break;
+    		case "MOVEMENT" : // 4
+    			client.getClientSender().send(new Integer[] {4, parameter});
+    			break;
+    		case "TURN" : //5
+    			client.getClientSender().send(new Integer[] {5, parameter});
+    	}
     }
 }
 
