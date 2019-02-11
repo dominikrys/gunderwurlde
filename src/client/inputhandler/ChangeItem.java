@@ -14,12 +14,39 @@ public class ChangeItem extends Action{
 		this.playerView = playerView;
 	}
 	
+	public boolean checkItemIndex(int oldItemIndex, int newItemIndex) {
+		if(newItemIndex == -1) {
+			newItemIndex = playerView.getItems().size() - 1;
+		}
+		if(oldItemIndex == newItemIndex) {
+			return false;
+		}
+		else
+			return true;
+	}
+	
 	public void previousItem() {
-		// TODO: request to swap to previous item
+		int oldItemIndex = playerView.getCurrentItemIndex();
+		int newItemIndex = oldItemIndex - 1;
+		if(newItemIndex == -1) {
+			newItemIndex = playerView.getItems().size() - 1;
+		}
+		if(oldItemIndex != newItemIndex) {
+			handler.send(ActionList.CHANGEITEM, newItemIndex);
+		}
+		// no item to switch to
 	}
 	
 	public void nextItem() {
-		// TODO: request to swap to next item
+		int oldItemIndex = playerView.getCurrentItemIndex();
+		int newItemIndex = oldItemIndex + 1;
+		if(newItemIndex == playerView.getItems().size()) {
+			newItemIndex = 0;
+		}
+		if(oldItemIndex != newItemIndex) {
+			handler.send(ActionList.CHANGEITEM, newItemIndex);
+		}
+		// no item to switch to
 	}
 
 }

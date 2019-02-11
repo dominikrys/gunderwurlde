@@ -17,6 +17,35 @@ public class ClientRequests {
         return playerRequests;
     }
 
+    public boolean updateRequest(int playerID, Request request) {
+        if (playerRequests.containsKey(playerID)) {
+            Request updatedRequest = playerRequests.get(playerID);
+
+            if (request.getLeave()) {
+                updatedRequest.requestLeave();
+            } else {
+                if (request.facingExists())
+                    updatedRequest.setFacing(request.getFacing());
+                if (request.movementExists())
+                    updatedRequest.setMovementDirection(request.getMovementDirection());
+                if (request.selectItemAtExists())
+                    updatedRequest.setSelectItem(request.getSelectItemAt());
+                if (request.getReload())
+                    updatedRequest.requestReload();
+                if (request.getDrop())
+                    updatedRequest.requestDrop();
+                if (request.getShoot())
+                    updatedRequest.requestShoot();
+            }
+
+            playerRequests.put(playerID, updatedRequest);
+            return true;
+        } else
+            return false;
+    }
+
+    // TODO remove individual methods below if requests are sent by client
+
     public boolean playerRequestMovement(int playerID, int direction) {
         if (playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).setMovementDirection(direction);
@@ -55,14 +84,6 @@ public class ClientRequests {
             playerRequests.get(playerID).requestReload();
             return true;
         } else
-            return false;
-    }
-
-    // use once player leave has been processed
-    public boolean playerRequestRemove(int playerID) {
-        if (playerRequests.remove(playerID) != null)
-            return true;
-        else
             return false;
     }
 

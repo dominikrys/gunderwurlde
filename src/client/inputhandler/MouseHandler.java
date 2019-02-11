@@ -129,7 +129,7 @@ public class MouseHandler extends UserInteraction{
 		super.setGameView(gameView);
 		
 		for (PlayerView p : gameView.getPlayers()) {
-            if(p.getName() == "Player 1") {
+            if(p.getID() == 0) {
             	this.playerView = p;
             	break;
             }

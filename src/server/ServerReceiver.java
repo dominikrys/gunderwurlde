@@ -22,7 +22,6 @@ public class ServerReceiver extends Thread {
     Boolean running;
     DatagramPacket packet;
     byte[] buffer;
-    ClientRequests requests;
     int numOfPlayers;
     Server handler;
 
@@ -65,7 +64,6 @@ public class ServerReceiver extends Thread {
     public void run() {
         try {
             listenSocket.joinGroup(listenAddress);
-            requests = new ClientRequests(1);
 
             while (running) {
                 // packet to receive incoming messages
@@ -83,27 +81,39 @@ public class ServerReceiver extends Thread {
                     in = new ObjectInputStream(bis);
 
                     Integer[] received =  (Integer[]) in.readObject();
+                    Request request = new Request();
                     switch(received[0]) {
                     	case 0 : // ATTACK
-                    		requests.playerRequestShoot(0);
+                    		request.requestShoot();
+                    		handler.getClientRequests().updateRequest(0, request);
                     		break;
                     	case 1 : // DROPITEM
-                    		requests.playerRequestRemove(0);
+                    		request.requestDrop();
+                    		handler.getClientRequests().updateRequest(0, request);
                     		break;
                     	case 2 : // RELOAD
-                    		requests.playerRequestReload(0);
+                    		request.requestReload();
+                    		handler.getClientRequests().updateRequest(0, request);
                     		break;
                     	case 3 : // CHANGEITEM
-                    		requests.playerRequestSelectItem(0, 0);
+                    		request.setSelectItem(received[1]);
+                    		handler.getClientRequests().updateRequest(0, request);
                     		break;
                     	case 4 : // MOVEMENT
-                    		requests.playerRequestMovement(0, received[1]);
+                    		request.setMovementDirection(received[1]);
+                    		handler.getClientRequests().updateRequest(0, request);
                     		break;
                     	case 5 : // TURN
-                    		requests.playerRequestFacing(0, received[1]);
+                    		request.setFacing(received[1]);
+                    		handler.getClientRequests().updateRequest(0, request);
                     }
+                    
+                    /*
                     // Send the request to the Engine
                     handler.setClientRequests(requests);
+                    
+                    handler.setClientRequests(null);
+                    */
                     
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

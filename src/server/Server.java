@@ -34,6 +34,8 @@ public class Server extends Thread implements HasEngine {
         engine.start();
         engine.addPlayer(hostName, Teams.RED);
         this.hostName = hostName;
+        // TODO: set num of player
+        this.clientRequests = null;
         this.start();
     }
 
@@ -51,6 +53,10 @@ public class Server extends Thread implements HasEngine {
             sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
             System.out.println("Threads up");
+            
+            // TODO: num of player setting
+            this.clientRequests = new ClientRequests(1);
+            
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
             sender.join();
@@ -92,6 +98,10 @@ public class Server extends Thread implements HasEngine {
 	public void close() {
 		sender.running = false;
 		receiver.running = false;
+	}
+	
+	public ClientRequests getClientRequests() {
+		return this.clientRequests;
 	}
 	
 	public void setClientRequests(ClientRequests clientRequests) {

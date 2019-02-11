@@ -157,7 +157,7 @@ public class ClientHandler extends Thread {
         exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
         LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
         exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-        PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
+        PlayerView examplePlayer = new PlayerView(new Pose(32, 32, 0), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
         examplePlayers.add(examplePlayer);
         LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
         EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
@@ -194,15 +194,16 @@ public class ClientHandler extends Thread {
     	}
     }
     
-    public void send(ActionList action,int direction) {
+    public void send(ActionList action,int parameter) {
     	switch(action.toString()) {
     		case "CHANGEITEM" : // 3
+    			client.getClientSender().send(new Integer[] {3, parameter});
     			break;
     		case "MOVEMENT" : // 4
-    			client.getClientSender().send(new Integer[] {4, direction});
+    			client.getClientSender().send(new Integer[] {4, parameter});
     			break;
     		case "TURN" : //5
-    			client.getClientSender().send(new Integer[] {5, direction});
+    			client.getClientSender().send(new Integer[] {5, parameter});
     	}
     }
 }
