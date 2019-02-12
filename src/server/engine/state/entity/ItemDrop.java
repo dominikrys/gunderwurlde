@@ -1,6 +1,7 @@
 package server.engine.state.entity;
 
 import server.engine.state.item.Item;
+import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
@@ -20,7 +21,7 @@ public class ItemDrop extends Entity implements HasID {
     protected long dropTime;
 
     public ItemDrop(Item item, Location location, int quantity) {
-        super(new Pose(location), 1, item.getItemListName().getEntityList());
+        super(new Pose(location), Tile.TILE_SIZE, item.getItemListName().getEntityList());
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;

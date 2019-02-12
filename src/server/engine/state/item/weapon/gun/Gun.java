@@ -33,6 +33,7 @@ public abstract class Gun extends Weapon implements Limited {
         this.ammoType = ammoType;
         this.shootCoolDown = coolDown;
         this.lastShootTime = 0;
+        this.spread = spread;
     }
 
 

@@ -2,7 +2,8 @@ package shared.lists;
 
 public enum ItemList {
     PISTOL(EntityList.PISTOL),
-    BASIC_AMMO(EntityList.AMMO_CLIP);
+    BASIC_AMMO(EntityList.AMMO_CLIP), 
+    SHOTGUN(EntityList.PISTOL);
 
     private String spritePath;
     private EntityList entityListName;

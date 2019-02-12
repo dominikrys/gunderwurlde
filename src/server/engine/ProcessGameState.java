@@ -13,6 +13,8 @@ import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
+import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
@@ -290,7 +292,7 @@ public class ProcessGameState extends Thread {
                                 // TODO include knock-back of player/enemies depending on some factor e.g. size.
 
                                 HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
-                                ArrayList<Item> playerItems = currentPlayer.getItems();
+                                LinkedList<Integer> dropsToRemove = new LinkedList<>();
 
                                 for (Integer itemDropID : itemsOnTile) {
                                     ItemDrop currentItemDrop = items.get(itemDropID);
@@ -298,6 +300,7 @@ public class ProcessGameState extends Thread {
                                     if (haveCollided(currentPlayer, currentItemDrop)) {
                                         boolean removed = false;
                                         int dropQuantity = currentItemDrop.getQuantity();
+                                        ArrayList<Item> playerItems = currentPlayer.getItems();
 
                                         switch (currentItemDrop.getItemType()) {
                                         case AMMO:
@@ -325,14 +328,20 @@ public class ProcessGameState extends Thread {
                                         }
 
                                         if (removed) {
-                                            items.remove(itemDropID);
-                                            LinkedHashSet<int[]> itemTilesOn = tilesOn(currentItemDrop);
-                                            for (int[] itemTileCords : itemTilesOn) {
-                                                tileMap[itemTileCords[0]][itemTileCords[1]].removeItemDrop(itemDropID);
-                                            }
+                                            dropsToRemove.add(itemDropID);
                                         }
                                     }
                                 }
+
+                                for (Integer dropID : dropsToRemove) {
+                                    ItemDrop dropToRemove = items.get(dropID);
+                                    LinkedHashSet<int[]> itemTilesOn = tilesOn(dropToRemove);
+                                    for (int[] itemTileCords : itemTilesOn) {
+                                        tileMap[itemTileCords[0]][itemTileCords[1]].removeItemDrop(dropID);
+                                    }
+                                    items.remove(dropID);
+                                }
+
                             }
                         }
                         tilesOn = tilesOn(currentPlayer);
@@ -393,7 +402,32 @@ public class ProcessGameState extends Thread {
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
-                    currentEnemy.addAttack(ai.getAttack());
+                    LinkedHashSet<Attack> attacks = ai.getAttacks();
+
+                    for (Attack a : attacks) {
+                        switch (a.getAttackType()) {
+                        case AOE:
+                            AoeAttack attack = (AoeAttack) a;
+                            LinkedHashSet<int[]> tilesOn = tilesOn(attack);
+
+                            for (int[] tileCords : tilesOn) {
+                                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                                HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+
+                                for (Integer playerID : playersOnTile) {
+                                    Player playerBeingChecked = players.get(playerID);
+                                    if (haveCollided(attack, playerBeingChecked)) {
+                                        playerBeingChecked.damage(attack.getDamage());
+                                        players.put(playerID, playerBeingChecked);
+                                    }
+                                }
+                            }
+                            break;
+                        case PROJECTILE:
+                            break;
+                        }
+                    }
+
                     break;
                 case MOVE:
                     LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
@@ -476,7 +510,7 @@ public class ProcessGameState extends Thread {
                                             if (dropAmount != 0) {
                                                 Item itemToDrop = d.getItem();
                                                 // TODO have itemdrops of the same type stack
-                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
+                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO item change here
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName()));

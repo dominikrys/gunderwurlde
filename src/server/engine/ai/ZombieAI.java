@@ -1,19 +1,36 @@
 package server.engine.ai;
 
+import java.util.LinkedHashSet;
+
+import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.AttackType;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.TileState;
 
 public class ZombieAI extends EnemyAI {
+    public static long DEFAULT_DELAY = 800;
+
+    protected long attackDelay;
+    protected long lastAttackTime;
 
     public ZombieAI() {
         super();
+        this.lastAttackTime = System.currentTimeMillis();
+        this.attackDelay = DEFAULT_DELAY;
     }
 
     @Override
-    public Attack getAttack() {
-        return new Attack(pose.getDirection(), 3, AttackType.MELEE);
+    public LinkedHashSet<Attack> getAttacks() {
+        LinkedHashSet<Attack> attacks = new LinkedHashSet<>();
+        long now = System.currentTimeMillis();
+        if ((now - lastAttackTime) >= attackDelay) {
+            attacks.add(new AoeAttack(pose, 16, AttackType.AOE, 1)); // TODO sort out to be infront of zombie
+            lastAttackTime = now;
+        }
+        return attacks;
     }
 
     @Override

@@ -85,11 +85,7 @@ public class MouseHandler extends UserInteraction {
     public void setScene(Scene scene) {
         super.setScene(scene);
 
-        scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-            mouseMovement(e);
-        });
-
-        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+        scene.addEventFilter(MouseEvent.ANY, e -> {
             if (e.isPrimaryButtonDown()) {
                 mouseMovement(e);
                 attack.attack();
