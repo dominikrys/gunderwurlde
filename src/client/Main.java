@@ -29,7 +29,7 @@ public class Main extends Application {
         });
 
         // Create the main menu and show it
-        (new MainMenuController(stage)).display();
+        (new MainMenuController(stage)).show();
 
     }
 }

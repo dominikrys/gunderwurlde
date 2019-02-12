@@ -11,8 +11,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PlayMenuController extends VBox {
+public class PlayMenuController extends VBox implements MenuController{
     Stage stage;
+
     @FXML
     private TextField nameField;
     @FXML
@@ -39,33 +40,13 @@ public class PlayMenuController extends VBox {
         }
     }
 
-    public void display() {
-        // Create the main scene
+    public void show() {
         this.stage.getScene().setRoot(this);
-//        Scene scene = new Scene(this, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-//
-//        // TODO: REMOVE THIS!!!
-//        // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
-//        if (Platform.isFxApplicationThread()) {
-//            stage.setScene(scene);
-//            stage.centerOnScreen();
-//            scene.getRoot().requestFocus();
-//            stage.show();
-//        } else {
-//            // runLater because not JavaFX thread
-//            Platform.runLater(() -> {
-//                // Add scene to stage, request focus and show the stage
-//                stage.setScene(scene);
-//                stage.centerOnScreen();
-//                scene.getRoot().requestFocus();
-//                stage.show();
-//            });
-//        }
     }
 
     @FXML
     void backButtonPress(ActionEvent event) {
-        (new MainMenuController(stage)).display();
+        (new MainMenuController(stage)).show();
     }
 
     @FXML
@@ -94,9 +75,5 @@ public class PlayMenuController extends VBox {
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
 
-    }
-
-    public void show() {
-        this.stage.getScene().setRoot(this);
     }
 }

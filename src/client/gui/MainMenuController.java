@@ -12,7 +12,7 @@ import shared.Constants;
 
 import java.io.IOException;
 
-public class MainMenuController extends VBox {
+public class MainMenuController extends VBox implements MenuController {
     Stage stage;
 
     @FXML
@@ -42,19 +42,17 @@ public class MainMenuController extends VBox {
         }
     }
 
-    public void display() {
-        // Create the main scene
+    public void show() {
         if (stage.getScene() == null) {
-            WindowControl.setRootToStage(stage, this);
+            MenuController.setRootToStage(stage, this);
         } else {
-
+            this.stage.getScene().setRoot(this);
         }
-        this.stage.getScene().setRoot(this);
     }
 
     @FXML
     void playButtonPress(ActionEvent event) {
-        (new PlayMenuController(stage)).display();
+        (new PlayMenuController(stage)).show();
     }
 
     @FXML

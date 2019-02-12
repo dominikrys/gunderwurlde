@@ -6,7 +6,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import shared.Constants;
 
-public class WindowControl {
+public interface MenuController {
+    Stage stage = null;
+
     public static void setSceneToStage (Stage stage, Scene scene)  {
         // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
         if (Platform.isFxApplicationThread()) {
@@ -29,4 +31,6 @@ public class WindowControl {
     public static void setRootToStage(Stage stage, Parent root) {
         setSceneToStage(stage, new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
     }
+
+    public void show();
 }
