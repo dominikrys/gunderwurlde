@@ -402,7 +402,32 @@ public class ProcessGameState extends Thread {
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
-                    currentEnemy.addAttack(ai.getAttack());
+                    LinkedHashSet<Attack> attacks = ai.getAttacks();
+
+                    for (Attack a : attacks) {
+                        switch (a.getAttackType()) {
+                        case AOE:
+                            AoeAttack attack = (AoeAttack) a;
+                            LinkedHashSet<int[]> tilesOn = tilesOn(attack);
+
+                            for (int[] tileCords : tilesOn) {
+                                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                                HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+
+                                for (Integer playerID : playersOnTile) {
+                                    Player playerBeingChecked = players.get(playerID);
+                                    if (haveCollided(attack, playerBeingChecked)) {
+                                        playerBeingChecked.damage(attack.getDamage());
+                                        players.put(playerID, playerBeingChecked);
+                                    }
+                                }
+                            }
+                            break;
+                        case PROJECTILE:
+                            break;
+                        }
+                    }
+
                     break;
                 case MOVE:
                     LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
@@ -424,32 +449,6 @@ public class ProcessGameState extends Thread {
                 default:
                     System.out.println("Action " + enemyAction.toString() + " not known!");
                     break;
-                }
-
-                LinkedList<Attack> attacks = currentEnemy.getReadyAttacks();
-
-                for (Attack a : attacks) {
-                    switch (a.getAttackType()) {
-                    case AOE:
-                        AoeAttack attack = (AoeAttack) a;
-                        LinkedHashSet<int[]> tilesOn = tilesOn(attack);
-
-                        for (int[] tileCords : tilesOn) {
-                            Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                            HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
-
-                            for (Integer playerID : playersOnTile) {
-                                Player playerBeingChecked = players.get(playerID);
-                                if (haveCollided(attack, playerBeingChecked)) {
-                                    playerBeingChecked.damage(attack.getDamage());
-                                    players.put(playerID, playerBeingChecked);
-                                }
-                            }
-                        }
-                        break;
-                    case PROJECTILE:
-                        break;
-                    }
                 }
 
                 enemies.put(enemyID, currentEnemy);

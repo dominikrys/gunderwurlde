@@ -4,6 +4,7 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.map.tile.Tile;
@@ -22,7 +23,7 @@ public abstract class EnemyAI {
     protected EnemyAI() {
     }
 
-    public abstract Attack getAttack();
+    public abstract LinkedHashSet<Attack> getAttacks();
 
     protected abstract Pose generateNextPose(double maxDistanceMoved);
 
@@ -39,7 +40,7 @@ public abstract class EnemyAI {
         if(getDistToPlayer(getPlayerPoses().iterator().next()) >= Constants.TILE_SIZE){
             return AIAction.MOVE;
         }else if (getDistToPlayer(getPlayerPoses().iterator().next()) < Constants.TILE_SIZE){
-            return AIAction.WAIT;
+            return AIAction.ATTACK;
         }
         return AIAction.WAIT;
     }
