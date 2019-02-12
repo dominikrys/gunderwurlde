@@ -25,4 +25,58 @@ public class Settings {
         musicMute = false;
         fullScreen = false;
     }
+
+    public int getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(int soundVolume) {
+        // Check that the sound volume is within allowed values
+        if (soundVolume < MIN_VOLUME) {
+            this.soundVolume = MIN_VOLUME;
+        } else if (soundVolume > MAX_VOLUME) {
+            this.soundVolume = MAX_VOLUME;
+        } else {
+            this.soundVolume = soundVolume;
+        }
+    }
+
+    public int getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(int musicVolume) {
+        // Check that the music is within allowed values
+        if (musicVolume < MIN_VOLUME) {
+            this.musicVolume = MIN_VOLUME;
+        } else if (musicVolume > MAX_VOLUME) {
+            this.musicVolume = MAX_VOLUME;
+        } else {
+            this.musicVolume = musicVolume;
+        }
+    }
+
+    public boolean isSoundMute() {
+        return soundMute;
+    }
+
+    public void setSoundMute(boolean soundMute) {
+        this.soundMute = soundMute;
+    }
+
+    public boolean isMusicMute() {
+        return musicMute;
+    }
+
+    public void setMusicMute(boolean musicMute) {
+        this.musicMute = musicMute;
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
+    }
 }

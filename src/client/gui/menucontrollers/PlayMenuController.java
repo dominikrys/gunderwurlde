@@ -79,13 +79,13 @@ public class PlayMenuController extends VBox implements MenuController{
     void multiPlayerButtonPress(ActionEvent event) {
         // Clear the screen and start gamehandler as multiplayer
         this.getChildren().clear();
-        (new GameHandler(stage, ConnectionType.MULTI_PLAYER)).start();
+        (new GameHandler(stage, ConnectionType.MULTI_PLAYER, settings)).start();
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
         // Clear the screen and start gamehandler as single player
         this.getChildren().clear();
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER)).start();
+        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings)).start();
     }
 }

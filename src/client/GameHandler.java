@@ -1,6 +1,7 @@
 package client;
 
 import client.data.ConnectionType;
+import client.gui.Settings;
 import client.input.ActionList;
 import client.render.GameRenderer;
 import javafx.application.Platform;
@@ -23,16 +24,24 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class GameHandler extends Thread {
+    // Server variables
     private ConnectionType connectionType;
-    private GameRenderer gameRenderer;
-    private Stage stage;
-    private boolean serverStarted;
     private Server server;
     private Client client;
+    private boolean serverStarted;
 
-    public GameHandler(Stage stage, ConnectionType connectionType) {
+    // Renderer variables
+    private GameRenderer gameRenderer;
+    private Stage stage;
+
+    // Misc
+    private Settings settings;
+
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings) {
         this.stage = stage;
         this.connectionType = connectionType;
+        this.settings = settings;
+
     }
 
     public void run() {
