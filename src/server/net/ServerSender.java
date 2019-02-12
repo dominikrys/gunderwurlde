@@ -11,7 +11,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import shared.view.GameView;
-import shared.view.entity.PlayerView;
 
 
 public class ServerSender extends Thread {
@@ -50,12 +49,7 @@ public class ServerSender extends Thread {
     // sends a confirmation back to the client that the message has been received
     // in future will be used to send the continuous game state to the user/users
     public void send(GameView view) {
-        System.out.println("Server received new GameView");
-        for(PlayerView pview:view.getPlayers()){
-            System.out.println("Server gameView");
-            System.out.println(pview.getPose().getX());
-            System.out.println(pview.getPose().getY());
-        }
+        // System.out.println("Server received new GameView");
         try {
             // Turn the received GameView into a byte array
             // Output Stream for the byteArray. Will grow as data is added
@@ -72,10 +66,10 @@ public class ServerSender extends Thread {
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
                 buffer = bos.toByteArray();
-                System.out.println("Size of packet to be sent " + buffer.length);
+                // System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                System.out.println("Packet sent from serversender");
+                // System.out.println("Packet sent from serversender");
 
             } finally {
                 try {

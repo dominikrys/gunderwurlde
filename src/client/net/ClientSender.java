@@ -57,7 +57,7 @@ public class ClientSender extends Thread {
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                System.out.println("Packet sent from clientSender");
+                // System.out.println("Packet sent from clientSender");
             } finally {
                 try {
                     bos.close();

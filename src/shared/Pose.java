@@ -14,16 +14,16 @@ public class Pose extends Location implements Serializable {
         this(location, 0);
     }
 
-    public Pose(int x, int y) {
-        this(x, y, 0);
+    public Pose(double d, double e) {
+        this(d, e, 0);
     }
 
     public Pose(Location location, int direction) {
         this(location.getX(), location.getY(), direction);
     }
 
-    public Pose(int x, int y, int direction) {
-        super(x, y);
+    public Pose(double d, double e, int direction) {
+        super(d, e);
         setDirection(direction);
     }
 
@@ -45,7 +45,7 @@ public class Pose extends Location implements Serializable {
 
     @Override
     public int hashCode() {
-        return x * y * (direction + 7);
+        return (int) (x * y * (direction + 7));
     }
 
     @Override

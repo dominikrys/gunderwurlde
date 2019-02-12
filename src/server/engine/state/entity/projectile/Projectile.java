@@ -26,8 +26,8 @@ public abstract class Projectile extends Entity {
         return team;
     }
 
-    public boolean maxRangeReached(int distance) {
-        this.dist_travelled += distance;
+    public boolean maxRangeReached(double distanceMoved) {
+        this.dist_travelled += distanceMoved;
         if (this.max_range == 0 || this.dist_travelled < max_range) return false;
         else return true;
     }

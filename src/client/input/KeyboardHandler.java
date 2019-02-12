@@ -1,5 +1,7 @@
 package client.input;
 
+import java.util.ArrayList;
+
 import client.GameHandler;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -10,8 +12,6 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
-
-import java.util.ArrayList;
 
 public class KeyboardHandler extends UserInteraction {
 
@@ -66,7 +66,7 @@ public class KeyboardHandler extends UserInteraction {
                 String pressed = event.getCode().toString();
                 if (!input.contains(pressed)) {
                     input.add(pressed);
-                    System.out.println(input.toString());
+                    // System.out.println(input.toString());
                     if (kbSettings.getKey("up").equals(pressed)) {
                         upPressed = true;
                     }
@@ -97,7 +97,7 @@ public class KeyboardHandler extends UserInteraction {
             public void handle(KeyEvent event) {
                 String released = event.getCode().toString();
                 input.remove(released);
-                System.out.println(input.toString());
+                // System.out.println(input.toString());
                 if (kbSettings.getKey("up").equals(released)) {
                     upPressed = false;
                 }
