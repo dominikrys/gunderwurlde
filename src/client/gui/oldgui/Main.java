@@ -1,12 +1,13 @@
-package client;
+package client.gui.oldgui;
 
-import client.gui.MainMenuController;
+import client.ClientHandler;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class MenuTest extends Application {
+public class Main extends Application {
     // Main method
     public static void main(String args[]) {
         launch(args);
@@ -19,11 +20,14 @@ public class MenuTest extends Application {
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Gunderwurlde");
 
-        (new MainMenuController(primaryStage)).display();
+        // Create clienthandler thread
+        ClientHandler clientHandler = new ClientHandler(primaryStage);
+        clientHandler.start();
 
         // Set stage to close and to kill handler when the window is closed
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
+                clientHandler.end();
                 primaryStage.close();
             }
         });
