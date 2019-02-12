@@ -1,16 +1,15 @@
 package shared.view.entity;
 
-import shared.Pose;
-import shared.lists.AmmoList;
-import shared.lists.EntityList;
-import shared.lists.Teams;
-import shared.view.ItemView;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import server.engine.state.entity.player.Player;
+import shared.Pose;
+import shared.lists.AmmoList;
+import shared.lists.EntityList;
+import shared.lists.Teams;
+import shared.view.ItemView;
 
 public class PlayerView extends EntityView implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -29,7 +28,7 @@ public class PlayerView extends EntityView implements Serializable {
                       String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team) {
         super(pose, sizeScaleFactor, EntityList.PLAYER);
         this.health = health;
-        this.maxHealth = health;
+        this.maxHealth = maxHealth;
         this.items = items;
         this.currentItemIndex = currentItemIndex;
         this.score = score;
