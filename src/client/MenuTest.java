@@ -1,7 +1,7 @@
 package client;
 
+import client.gui.MainMenuController;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -19,7 +19,7 @@ public class MenuTest extends Application {
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Gunderwurlde");
 
-        (new NewMainMenuController(primaryStage)).display();
+        (new MainMenuController(primaryStage)).display();
 
         // Set stage to close and to kill handler when the window is closed
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

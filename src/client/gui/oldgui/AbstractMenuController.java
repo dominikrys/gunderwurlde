@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.oldgui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;

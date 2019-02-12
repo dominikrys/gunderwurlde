@@ -2,7 +2,7 @@ package client;
 
 
 import client.data.SystemState;
-import client.gui.MenuManager;
+import client.gui.oldgui.MenuManager;
 import client.input.ActionList;
 import client.render.GameRenderer;
 import javafx.application.Platform;

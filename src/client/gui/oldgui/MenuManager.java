@@ -1,14 +1,10 @@
-package client.gui;
+package client.gui.oldgui;
 
 import client.data.SystemState;
-import client.gui.*;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.Constants;
-
-import java.util.Observable;
 
 public class MenuManager {
     AbstractMenuController currentMenuController;
