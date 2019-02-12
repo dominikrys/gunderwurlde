@@ -44,28 +44,11 @@ public class MainMenuController extends VBox {
 
     public void display() {
         // Create the main scene
-        Scene scene = new Scene(this, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-
-        // TODO: REMOVE THIS!!!
-        // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
-        if (Platform.isFxApplicationThread()) {
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            scene.getRoot().requestFocus();
-            stage.show();
+        if (stage.getScene() == null) {
+            WindowControl.setRootToStage(stage, this);
         } else {
-            // runLater because not JavaFX thread
-            Platform.runLater(() -> {
-                // Add scene to stage, request focus and show the stage
-                stage.setScene(scene);
-                stage.centerOnScreen();
-                scene.getRoot().requestFocus();
-                stage.show();
-            });
-        }
-    }
 
-    public void show() {
+        }
         this.stage.getScene().setRoot(this);
     }
 

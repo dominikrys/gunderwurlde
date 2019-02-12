@@ -65,7 +65,7 @@ public class PlayMenuController extends VBox {
 
     @FXML
     void backButtonPress(ActionEvent event) {
-        (new MainMenuController(stage)).show();
+        (new MainMenuController(stage)).display();
     }
 
     @FXML
@@ -94,5 +94,9 @@ public class PlayMenuController extends VBox {
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
 
+    }
+
+    public void show() {
+        this.stage.getScene().setRoot(this);
     }
 }
