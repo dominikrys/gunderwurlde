@@ -49,7 +49,6 @@ public class GameRenderer implements Runnable {
     private FlowPane heartBox;
     private VBox ammoBox;
     // Current player info
-    private PlayerView currentPlayer;
     private int playerID;
     // GameView object which is to be updated
     private GameView gameView;
@@ -95,7 +94,6 @@ public class GameRenderer implements Runnable {
         // Initialize HUD elements
         playerScoreNumber = null;
         heartBox = null;
-        currentPlayer = null;
         heldItems = null;
         ammoBox = null;
 
@@ -196,6 +194,15 @@ public class GameRenderer implements Runnable {
 
     // Update all HUD elements
     private void updateHUD() {
+        // Get the player from gameview
+        PlayerView currentPlayer = null;
+        for (PlayerView playerView : gameView.getPlayers()) {
+            if (playerView.getID() == playerID) {
+                currentPlayer = playerView;
+                break;
+            }
+        }
+
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
@@ -346,9 +353,11 @@ public class GameRenderer implements Runnable {
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
+        PlayerView currentPlayer = null;
         for (PlayerView player : inputGameView.getPlayers()) {
             if (player.getID() == playerID) {
                 currentPlayer = player;
+                break;
             }
         }
 
