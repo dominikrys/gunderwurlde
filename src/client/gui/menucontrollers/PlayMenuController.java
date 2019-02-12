@@ -1,5 +1,7 @@
 package client.gui.menucontrollers;
 
+import client.GameHandler;
+import client.data.ConnectionType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,11 +71,11 @@ public class PlayMenuController extends VBox implements MenuController{
 
     @FXML
     void multiPlayerButtonPress(ActionEvent event) {
-
+        (new GameHandler(stage, ConnectionType.MULTI_PLAYER)).start();
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
-
+        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER)).start();
     }
 }

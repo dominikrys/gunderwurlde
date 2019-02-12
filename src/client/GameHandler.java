@@ -23,11 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class GameHandler extends Thread {
-    ConnectionType connectionType;
+    private ConnectionType connectionType;
     private GameRenderer gameRenderer;
     private Stage stage;
-    private boolean running;
-    private boolean inGame;
     private boolean serverStarted;
     private Server server;
     private Client client;
