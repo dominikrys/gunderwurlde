@@ -2,6 +2,7 @@ package client;
 
 import client.gui.menucontrollers.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -25,6 +26,9 @@ public class Main extends Application {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 stage.close();
+
+                // TODO: remove this, this is purely for debugging and the program shouldn't be getting ended like this
+                System.exit(0);
             }
         });
 

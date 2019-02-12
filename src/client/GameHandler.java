@@ -58,37 +58,8 @@ public class GameHandler extends Thread {
                 break;
         }
 
-        //CODE FOR RUNNING THE GAME
-
-        /*
-        LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
-        ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
-        exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
-        LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
-        exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-        PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 1);
-        examplePlayers.add(examplePlayer);
-        LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
-        EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EnemyList.ZOMBIE);
-        exampleEnemies.add(exampleEnemy);
-        LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
-        ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, ProjectileList.SMALLBULLET);
-        exampleProjectiles.add(exampleProjectile);
-        LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
-        ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
-        exampleItemDrops.add(exampleItemDrop);
-        TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
-        Tile[][] tile = Meadow.generateTileMap();
-        for (int i = 0; i < Meadow.DEFAULT_X_DIM; i++) {
-            for (int j = 0; j < Meadow.DEFAULT_Y_DIM; j++) {
-                TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
-                exampleTile[i][j] = tileView;
-            }
-        }
-
-        renderer.renderGameView(new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile), 1);
-        */
-
+        //CODE FOR RUNNING THE GAME???
+        
         // TODO: handle the game closing
     }
 
@@ -124,7 +95,7 @@ public class GameHandler extends Thread {
         exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
         LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
         exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-        PlayerView examplePlayer = new PlayerView(new Pose(32, 32, 0), 1, 100, 100, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
+        PlayerView examplePlayer = new PlayerView(new Pose(32, 32, 0), 1, 20, 20, exampleItems, 0, 0, "Player 1", exampleAmmo, 0, Teams.BLUE);
         examplePlayers.add(examplePlayer);
         LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
         EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EntityList.ZOMBIE);
