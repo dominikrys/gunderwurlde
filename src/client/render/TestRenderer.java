@@ -1,6 +1,9 @@
 package client.render;
 
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.Meadow;
@@ -26,6 +29,7 @@ public class TestRenderer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(new VBox()));
         primaryStage.show();
         GameMap map = new Meadow();
         int xDim = map.getXDim();

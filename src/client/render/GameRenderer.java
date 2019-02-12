@@ -134,7 +134,7 @@ public class GameRenderer implements Runnable {
     // Render gameView - KEEP PRIVATE
     private void renderGameView() {
         // Render map
-        renderMap(gameView, mapGC);
+        renderMap();
 
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
@@ -319,16 +319,16 @@ public class GameRenderer implements Runnable {
     }
 
     // Render map from tiles
-    private void renderMap(GameView inputGameView, GraphicsContext mapGC) {
+    private void renderMap() {
         // Get map X and Y dimensions
-        int mapX = inputGameView.getXDim();
-        int mapY = inputGameView.getYDim();
+        int mapX = gameView.getXDim();
+        int mapY = gameView.getYDim();
 
         // Iterate through the map, rending each tile on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = loadedSprites.get(inputGameView.getTileMap()[x][y].getTileType().getEntityListName());
+                Image tileImage = loadedSprites.get(gameView.getTileMap()[x][y].getTileType().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
