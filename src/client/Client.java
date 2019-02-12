@@ -57,11 +57,11 @@ public class Client extends Thread {
             while(running){
                 if(view != null) {
                 	renderer.updateGameView(view);
-                    Thread.sleep(50);
+                    //Thread.sleep(50); TODO: see if this is necessary, can be replaced with something more sophisticated
                 }
             }
 
-            // How will these threads close if the client is constantly rendering
+            // TODO: How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
