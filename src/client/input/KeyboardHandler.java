@@ -3,6 +3,7 @@ package client.input;
 import java.util.ArrayList;
 
 import client.ClientHandler;
+import client.GameHandler;
 import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -18,7 +19,7 @@ import shared.view.entity.PlayerView;
 
 public class KeyboardHandler extends UserInteraction{
 	
-	private ClientHandler handler;
+	private GameHandler handler;
 	private Scene scene;
 	private GameView gameView;
 	private PlayerView playerView;
@@ -45,7 +46,7 @@ public class KeyboardHandler extends UserInteraction{
 	}
 	
 	@Override
-	public void setClientHandler(ClientHandler handler) {
+	public void setGameHandler(GameHandler handler) {
 		this.handler = handler;
 	}
 	

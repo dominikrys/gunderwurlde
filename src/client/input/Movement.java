@@ -2,7 +2,7 @@ package client.input;
 
 import java.util.LinkedHashSet;
 
-import client.ClientHandler;
+import client.GameHandler;
 import javafx.scene.image.Image;
 import shared.Pose;
 import shared.view.TileView;
@@ -11,13 +11,13 @@ import shared.view.entity.PlayerView;
 
 public class Movement extends Action{
 	
-	private ClientHandler handler;
+	private GameHandler handler;
 	private PlayerView playerView;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
 	private PickItem pickItem;
 
-	public Movement(ClientHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
+	public Movement(GameHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
 		super(handler, playerView);
 		this.handler = handler;
 		this.playerView = playerView;

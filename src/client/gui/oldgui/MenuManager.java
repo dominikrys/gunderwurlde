@@ -1,6 +1,6 @@
 package client.gui.oldgui;
 
-import client.data.SystemState;
+import client.data.ConnectionType;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -9,7 +9,7 @@ import shared.Constants;
 public class MenuManager {
     AbstractMenuController currentMenuController;
     private Stage stage;
-    private SystemState systemState;
+    private ConnectionType systemState;
     private Menus currentMenu;
     private boolean stageChanged;
 
@@ -19,7 +19,7 @@ public class MenuManager {
         this.stage = inputStage;
 
         // Set system states
-        systemState = SystemState.MENUS;
+        systemState = ConnectionType.MENUS;
         currentMenu = Menus.MAIN_MENU;
 
         // Flag for changing stages
@@ -32,11 +32,11 @@ public class MenuManager {
         stage.setTitle("Gunderwurlde");
     }
 
-    public SystemState getSystemState() {
+    public ConnectionType getSystemState() {
         return systemState;
     }
 
-    public void setSystemState(SystemState systemState) {
+    public void setSystemState(ConnectionType systemState) {
         this.systemState = systemState;
     }
 
@@ -72,13 +72,13 @@ public class MenuManager {
                     currentMenuController = new HelpMenuController();
                     break;
                 case SINGLE_PLAYER:
-                    systemState = SystemState.SINGLE_PLAYER_CONNECTION;
+                    systemState = ConnectionType.SINGLE_PLAYER_CONNECTION;
                     return;
                 case MULTI_PLAYER:
-                    systemState = SystemState.MULTI_PLAYER_CONNECTION;
+                    systemState = ConnectionType.MULTI_PLAYER_CONNECTION;
                     return;
                 case QUIT:
-                    systemState = SystemState.QUIT;
+                    systemState = ConnectionType.QUIT;
                     return;
             }
 

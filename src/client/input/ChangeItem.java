@@ -1,14 +1,14 @@
 package client.input;
 
-import client.ClientHandler;
+import client.GameHandler;
 import shared.view.entity.PlayerView;
 
 public class ChangeItem extends Action{
 
-	private ClientHandler handler;
+	private GameHandler handler;
 	private PlayerView playerView;
 	
-	public ChangeItem(ClientHandler handler, PlayerView playerView) {
+	public ChangeItem(GameHandler handler, PlayerView playerView) {
 		super(handler, playerView);
 		this.handler = handler;
 		this.playerView = playerView;

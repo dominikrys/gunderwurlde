@@ -1,11 +1,11 @@
 package client.input;
 
-import client.ClientHandler;
+import client.GameHandler;
 import javafx.scene.Scene;
 import shared.view.GameView;
 
 public abstract class UserInteraction {
-	protected ClientHandler handler;
+	protected GameHandler handler;
 	protected Scene scene;
 	protected GameView gameView;
 	protected boolean activated;
@@ -17,7 +17,7 @@ public abstract class UserInteraction {
 		this.activated = false;
 	}
 	
-	public void setClientHandler(ClientHandler handler) {
+	public void setGameHandler(GameHandler handler) {
 		this.handler = handler;
 	}
 	
