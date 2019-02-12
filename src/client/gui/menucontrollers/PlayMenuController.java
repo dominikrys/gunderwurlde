@@ -49,6 +49,7 @@ public class PlayMenuController extends VBox implements MenuController{
     @FXML
     void backButtonPress(ActionEvent event) {
         (new MainMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @FXML
@@ -71,11 +72,13 @@ public class PlayMenuController extends VBox implements MenuController{
 
     @FXML
     void multiPlayerButtonPress(ActionEvent event) {
+        this.getChildren().clear();
         (new GameHandler(stage, ConnectionType.MULTI_PLAYER)).start();
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
+        this.getChildren().clear();
         (new GameHandler(stage, ConnectionType.SINGLE_PLAYER)).start();
     }
 }

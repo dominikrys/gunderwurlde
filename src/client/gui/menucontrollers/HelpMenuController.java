@@ -33,10 +33,12 @@ public class HelpMenuController extends VBox implements MenuController {
     @FXML
     void backButtonPress(ActionEvent event) {
         (new MainMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
+        this.getChildren().clear();
     }
 }

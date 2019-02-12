@@ -64,6 +64,7 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     void backButtonPress(ActionEvent event) {
         (new MainMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @FXML

@@ -50,16 +50,19 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     void playButtonPress(ActionEvent event) {
         (new PlayMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @FXML
     void settingsButtonPress(ActionEvent event) {
         (new SettingsMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @FXML
     void helpButtonPress(ActionEvent event) {
         (new HelpMenuController(stage)).show();
+        this.getChildren().clear();
     }
 
     @FXML
