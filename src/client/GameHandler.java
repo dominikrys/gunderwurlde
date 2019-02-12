@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class GameHandler extends Thread {
+    ConnectionType connectionType;
     private GameRenderer gameRenderer;
     private Stage stage;
     private boolean running;
@@ -30,7 +31,6 @@ public class GameHandler extends Thread {
     private boolean serverStarted;
     private Server server;
     private Client client;
-    ConnectionType connectionType;
 
     public GameHandler(Stage stage, ConnectionType connectionType) {
         this.stage = stage;
@@ -56,60 +56,45 @@ public class GameHandler extends Thread {
                 }
                 break;
             case MULTI_PLAYER:
+                // CODE FOR ESTABLISHING CONNECTION WITH REMOTE SERVER
                 break;
         }
 
-        switch (systemState) {
-            case GAME:
-                // Render game state
-                //inGame = true;
-                	/*
-                	LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
-                	ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
-                	exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
-                	LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
-                	exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
-                	PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 1);
-                	examplePlayers.add(examplePlayer);
-                	LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
-                	EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EnemyList.ZOMBIE);
-                	exampleEnemies.add(exampleEnemy);
-                	LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
-                	ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, ProjectileList.SMALLBULLET);
-                	exampleProjectiles.add(exampleProjectile);
-                	LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
-                	ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
-                	exampleItemDrops.add(exampleItemDrop);
-                	TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
-                	Tile[][] tile = Meadow.generateTileMap();
-                	for(int i = 0; i < Meadow.DEFAULT_X_DIM ; i++) {
-        				for(int j = 0; j < Meadow.DEFAULT_Y_DIM ; j++) {
-        					TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
-        					exampleTile[i][j] = tileView;
-        				}
-        			}
+        //CODE FOR RUNNING THE GAME
 
-                    renderer.renderGameView(new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile), 1);
-                    */
-                //systemState = renderer.getSystemState();
-                break;
-            case SINGLE_PLAYER_CONNECTION:
-
-            case MULTI_PLAYER_CONNECTION:
-                // CODE FOR ESTABLISHING CONNECTION WITH REMOVE SERVER
-                break;
-            case QUIT:
-                // Quit program
-                end();
-                break;
+        /*
+        LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();
+        ArrayList<ItemView> exampleItems = new ArrayList<ItemView>();
+        exampleItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 0, 0));
+        LinkedHashMap<AmmoList, Integer> exampleAmmo = new LinkedHashMap<AmmoList, Integer>();
+        exampleAmmo.put(AmmoList.BASIC_AMMO, 0);
+        PlayerView examplePlayer = new PlayerView(new Pose(48, 48, 45), 1, 100, 100, 1, exampleItems, 0, 0, "Player 1", exampleAmmo, 1);
+        examplePlayers.add(examplePlayer);
+        LinkedHashSet<EnemyView> exampleEnemies = new LinkedHashSet<EnemyView>();
+        EnemyView exampleEnemy = new EnemyView(new Pose(120, 120, 45), 1, EnemyList.ZOMBIE);
+        exampleEnemies.add(exampleEnemy);
+        LinkedHashSet<ProjectileView> exampleProjectiles = new LinkedHashSet<ProjectileView>();
+        ProjectileView exampleProjectile = new ProjectileView(new Pose(400, 300, 70), 1, ProjectileList.SMALLBULLET);
+        exampleProjectiles.add(exampleProjectile);
+        LinkedHashSet<ItemDropView> exampleItemDrops = new LinkedHashSet<ItemDropView>();
+        ItemDropView exampleItemDrop = new ItemDropView(new Pose(50, 250), 1, ItemList.PISTOL);
+        exampleItemDrops.add(exampleItemDrop);
+        TileView[][] exampleTile = new TileView[Meadow.DEFAULT_X_DIM][Meadow.DEFAULT_Y_DIM];
+        Tile[][] tile = Meadow.generateTileMap();
+        for (int i = 0; i < Meadow.DEFAULT_X_DIM; i++) {
+            for (int j = 0; j < Meadow.DEFAULT_Y_DIM; j++) {
+                TileView tileView = new TileView(tile[i][j].getType(), tile[i][j].getState());
+                exampleTile[i][j] = tileView;
+            }
         }
+
+        renderer.renderGameView(new GameView(examplePlayers, exampleEnemies, exampleProjectiles, exampleItemDrops, exampleTile), 1);
+        */
+
+        // TODO: handle the game closing
     }
 
-}
-
     public void end() {
-        this.running = false;
-
         // End server if running/exists
         if (server != null) {
             if (server.isAlive()) {
