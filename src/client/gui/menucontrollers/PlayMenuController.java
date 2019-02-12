@@ -30,6 +30,7 @@ public class PlayMenuController extends VBox implements MenuController{
     public PlayMenuController(Stage stage) {
         this.stage = stage;
 
+        // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/play_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -48,6 +49,7 @@ public class PlayMenuController extends VBox implements MenuController{
 
     @FXML
     void backButtonPress(ActionEvent event) {
+        // Switch to main menu and clear this object
         (new MainMenuController(stage)).show();
         this.getChildren().clear();
     }
@@ -72,12 +74,14 @@ public class PlayMenuController extends VBox implements MenuController{
 
     @FXML
     void multiPlayerButtonPress(ActionEvent event) {
+        // Clear the screen and start gamehandler as multiplayer
         this.getChildren().clear();
         (new GameHandler(stage, ConnectionType.MULTI_PLAYER)).start();
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
+        // Clear the screen and start gamehandler as single player
         this.getChildren().clear();
         (new GameHandler(stage, ConnectionType.SINGLE_PLAYER)).start();
     }

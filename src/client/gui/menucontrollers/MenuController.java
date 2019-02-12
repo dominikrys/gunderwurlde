@@ -9,8 +9,9 @@ import shared.Constants;
 public interface MenuController {
     Stage stage = null;
 
+    // Set scene of stage to input scene
     public static void setSceneToStage (Stage stage, Scene scene)  {
-        // Check if JavaFX thread and update stage accordingly TODO: see if this causes issues
+        // Check if JavaFX thread and update stage accordingly
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
             stage.centerOnScreen();
@@ -28,9 +29,11 @@ public interface MenuController {
         }
     }
 
+    // setSceneToStage but for Parent inputs
     public static void setRootToStage(Stage stage, Parent root) {
         setSceneToStage(stage, new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
     }
 
+    // Show menu to screen
     public void show();
 }

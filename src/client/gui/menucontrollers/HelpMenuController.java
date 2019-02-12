@@ -18,6 +18,7 @@ public class HelpMenuController extends VBox implements MenuController {
     public HelpMenuController(Stage stage) {
         this.stage = stage;
 
+        // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/help_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -32,6 +33,7 @@ public class HelpMenuController extends VBox implements MenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
+        // Switch to main menu and clear this screen
         (new MainMenuController(stage)).show();
         this.getChildren().clear();
     }

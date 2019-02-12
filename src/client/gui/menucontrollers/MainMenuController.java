@@ -27,6 +27,7 @@ public class MainMenuController extends VBox implements MenuController {
     public MainMenuController(Stage stage) {
         this.stage = stage;
 
+        // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/main_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -49,18 +50,21 @@ public class MainMenuController extends VBox implements MenuController {
 
     @FXML
     void playButtonPress(ActionEvent event) {
+        // Switch to play menu and clear this object
         (new PlayMenuController(stage)).show();
         this.getChildren().clear();
     }
 
     @FXML
     void settingsButtonPress(ActionEvent event) {
+        // Switch to settings menu and clear this object
         (new SettingsMenuController(stage)).show();
         this.getChildren().clear();
     }
 
     @FXML
     void helpButtonPress(ActionEvent event) {
+        // Switch to help menu and clear this object
         (new HelpMenuController(stage)).show();
         this.getChildren().clear();
     }
