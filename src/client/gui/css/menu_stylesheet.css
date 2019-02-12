@@ -16,9 +16,17 @@
 	-fx-text-fill: black;
 }
 
+.manaSpaceFontNoColour {
+	-fx-font-family: 'Manaspace', Consolas;
+}
+
 .manaspaceFontRed {
 	-fx-font-family: 'Manaspace', Consolas;
 	-fx-text-fill: red;
+}
+
+.button {
+	-fx-background-radius: 0px;
 }
 
 .menuButton {

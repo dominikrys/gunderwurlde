@@ -25,7 +25,7 @@
             <Font name="Consolas" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;">
+      <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;" styleClass="manaSpaceFontNoColour">
          <font>
             <Font name="Consolas" size="26.0" />
          </font>

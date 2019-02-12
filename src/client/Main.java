@@ -1,5 +1,6 @@
 package client;
 
+import client.gui.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -14,6 +15,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        //Settings
+        Settings settings = new Settings();
         // Set up stage
         stage.setResizable(false); // Disable resizing of the window TODO: check how this behaves on linux!
         stage.setFullScreen(false);
@@ -32,7 +35,7 @@ public class Main extends Application {
         });
 
         // Create the main menu and show it
-        (new MainMenuController(stage)).show();
+        (new MainMenuController(stage, settings)).show();
 
     }
 }

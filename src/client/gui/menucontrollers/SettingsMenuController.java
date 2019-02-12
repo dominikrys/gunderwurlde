@@ -58,6 +58,35 @@ public class SettingsMenuController extends VBox implements MenuController {
                 IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // Set up window according to settings object
+        soundVolumeSlider.setValue(settings.getSoundVolume());
+        musicVolumeSlider.setValue(settings.getMusicVolume());
+
+        if (settings.isMusicMute()) {
+            musicOffButton.setDefaultButton(true);
+            musicOnButton.setDefaultButton(false);
+        } else {
+            musicOffButton.setDefaultButton(true);
+            musicOnButton.setDefaultButton(false);
+        }
+
+        if (settings.isSoundMute()) {
+            soundOffButton.setDefaultButton(true);
+            soundOnButton.setDefaultButton(false);
+        } else {
+            soundOffButton.setDefaultButton(false);
+            soundOnButton.setDefaultButton(true);
+        }
+
+        if (settings.isFullScreen()) {
+            displayFullscreenButton.setDefaultButton(true);
+            displayWindowedButton.setDefaultButton(false);
+        } else {
+            displayFullscreenButton.setDefaultButton(false);
+            displayWindowedButton.setDefaultButton(true);
+        }
+
     }
 
     @Override
@@ -74,41 +103,54 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void displayFullscreenButtonPress(ActionEvent event) {
-
+        //TODO: Make this work, perhaps add an "apply" button
+        settings.setFullScreen(true);
+        displayFullscreenButton.setDefaultButton(true);
+        displayWindowedButton.setDefaultButton(false);
     }
 
     @FXML
     void displayWindowedButtonPress(ActionEvent event) {
-
+        settings.setFullScreen(true);
+        displayFullscreenButton.setDefaultButton(true);
+        displayWindowedButton.setDefaultButton(false);
     }
 
     @FXML
     void musicOffButtonPress(ActionEvent event) {
-
+        settings.setMusicMute(true);
+        musicOffButton.setDefaultButton(true);
+        musicOnButton.setDefaultButton(false);
     }
 
     @FXML
     void musicOnButtonPress(ActionEvent event) {
-
-    }
-
-    @FXML
-    void musicVolumeSliderDragged(MouseEvent event) {
-
+        settings.setMusicMute(false);
+        musicOffButton.setDefaultButton(false);
+        musicOnButton.setDefaultButton(true);
     }
 
     @FXML
     void soundOffButtonPress(ActionEvent event) {
-
+        settings.setSoundMute(true);
+        soundOffButton.setDefaultButton(true);
+        soundOnButton.setDefaultButton(false);
     }
 
     @FXML
     void soundOnButtonPress(ActionEvent event) {
+        settings.setSoundMute(false);
+        soundOffButton.setDefaultButton(false);
+        soundOnButton.setDefaultButton(true);
+    }
 
+    @FXML
+    void musicVolumeSliderDragged(MouseEvent event) {
+        settings.setMusicVolume((int) musicVolumeSlider.getValue());
     }
 
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
-
+        settings.setSoundVolume((int) soundVolumeSlider.getValue());
     }
 }

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 15px;" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label style="-fx-padding: 10px;" text="Settings">
          <font>
@@ -29,7 +29,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider fx:id="soundVolumeSlider" onDragDetected="#soundVolumeSliderDragged" style="-fx-padding: 5px;" value="70.0">
+            <Slider fx:id="soundVolumeSlider" minorTickCount="1" onDragDetected="#soundVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -61,7 +61,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider fx:id="musicVolumeSlider" onDragDetected="#musicVolumeSliderDragged" style="-fx-padding: 5px;" value="70.0">
+            <Slider fx:id="musicVolumeSlider" minorTickCount="1" onDragDetected="#musicVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
