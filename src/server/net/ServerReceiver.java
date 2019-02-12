@@ -79,7 +79,7 @@ public class ServerReceiver extends Thread {
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
 
-                System.out.println("Packet recieved by ServerReceiver");
+                // System.out.println("Packet recieved by ServerReceiver");
 
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());

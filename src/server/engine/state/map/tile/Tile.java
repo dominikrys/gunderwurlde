@@ -84,7 +84,7 @@ public class Tile {
     }
 
     public static int[] locationToTile(Location location) {
-        int[] i = { ((location.getX() - 1) / TILE_SIZE), ((location.getY() - 1) / TILE_SIZE) };
+        int[] i = { ((int) (location.getX() - 1) / TILE_SIZE), ((int) (location.getY() - 1) / TILE_SIZE) };
         return i;
     }
 

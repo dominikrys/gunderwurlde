@@ -1,14 +1,9 @@
 package server.engine.ai;
 
 import javafx.util.Pair;
-import server.engine.state.map.Meadow;
 import server.engine.state.map.MeadowTest;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.TileState;
-import shared.lists.TileTypes;
-
-import java.util.ArrayList;
 
 public class AStarTest {
     public static void main(String[] args) {
@@ -22,8 +17,8 @@ public class AStarTest {
         Pose enemPose = new Pose(15,25);
 
 
-        Pair<Integer, Integer> playerLoc = new Pair<>(playerPose.getY(), playerPose.getX()); //y and x
-        Pair<Integer, Integer> enemLoc = new Pair<>(enemPose.getY(), enemPose.getX());
+        Pair<Double, Double> playerLoc = new Pair<>(playerPose.getY(), playerPose.getX()); // y and x
+        Pair<Double, Double> enemLoc = new Pair<>(enemPose.getY(), enemPose.getX());
         //AStar aStarForMeadow = new AStar(COST_OF_TRAVEL, meadow);
 
         long startTime = System.nanoTime();

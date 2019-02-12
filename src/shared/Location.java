@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
 
-    public Location(int x, int y) {
+    public Location(double x, double y) {
         assert (x >= 0 && y >= 0);
         this.x = x;
         this.y = y;
     }
 
-    public boolean setX(int x) {
+    public boolean setX(double x) {
         if (x < 0)
             return false;
         else {
@@ -22,7 +22,7 @@ public class Location implements Serializable {
         }
     }
 
-    public boolean setY(int y) {
+    public boolean setY(double y) {
         if (y < 0)
             return false;
         else {
@@ -31,24 +31,24 @@ public class Location implements Serializable {
         }
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public static Location calculateNewLocation(Location l, int direction, int distance) {
+    public static Location calculateNewLocation(Location l, int direction, double distanceMoved) {
         double directionInRadians = Math.toRadians(direction);
-        double x_dist = (double) distance * Math.sin(directionInRadians);
-        double y_dist = (double) -distance * Math.cos(directionInRadians);
+        double x_dist = (double) distanceMoved * Math.sin(directionInRadians);
+        double y_dist = (double) -distanceMoved * Math.cos(directionInRadians);
 
-        x_dist = Math.round(x_dist);
-        y_dist = Math.round(y_dist);
+        // x_dist = Math.round(x_dist);
+        // y_dist = Math.round(y_dist);
 
-        int x = l.getX() + (int) x_dist;
-        int y = l.getY() + (int) y_dist;
+        double x = l.getX() + x_dist;
+        double y = l.getY() + y_dist;
 
         if (x < 0) x = 0;
         if (y < 0) y = 0;

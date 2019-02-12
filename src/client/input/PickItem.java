@@ -1,10 +1,10 @@
 package client.input;
 
+import java.util.LinkedHashSet;
+
 import client.GameHandler;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
-
-import java.util.LinkedHashSet;
 
 public class PickItem extends Action {
 
@@ -22,9 +22,10 @@ public class PickItem extends Action {
     public void checkPick() {
         if (!itemDropView.isEmpty()) {
             ItemDropView nearestItemDrop = findNearestItemDrop(itemDropView);
-            System.out.println("nearestItemDrop x:" + nearestItemDrop.getPose().getX());
-            System.out.println("nearestItemDrop y:" + nearestItemDrop.getPose().getY());
-            System.out.println("nearestItemDrop name:" + nearestItemDrop.getEntityListName().toString());
+            // System.out.println("nearestItemDrop x:" + nearestItemDrop.getPose().getX());
+            // System.out.println("nearestItemDrop y:" + nearestItemDrop.getPose().getY());
+            // System.out.println("nearestItemDrop name:" +
+            // nearestItemDrop.getEntityListName().toString());
         }
     }
 

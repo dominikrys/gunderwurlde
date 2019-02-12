@@ -261,7 +261,8 @@ public class ProcessGameState extends Thread {
                     }
 
                     if (request.movementExists()) {
-                        int distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());
+                        double distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());
+                        // System.out.println("playerdist: " + distanceMoved);
                         newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
 
                         LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
@@ -275,7 +276,6 @@ public class ProcessGameState extends Thread {
                         tilesOn = tilesOn(currentPlayer);
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                            System.out.println("on tile" + tileCords[0] + " " + tileCords[1]);
                             if (tileOn.getState() == TileState.SOLID) {
                                 currentPlayer.setLocation(playerPose);
                                 pushedBack = true;
@@ -383,7 +383,7 @@ public class ProcessGameState extends Thread {
                 Enemy currentEnemy = e;
                 int enemyID = currentEnemy.getID();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
-                int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
                 // System.out.println("maxdist:" + maxDistanceMoved);
                 EnemyAI ai = currentEnemy.getAI();
 
@@ -429,7 +429,7 @@ public class ProcessGameState extends Thread {
             for (Projectile p : projectiles) {
                 boolean removed = false;
                 Projectile currentProjectile = p;
-                int distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
+                double distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
 
                 if (currentProjectile.maxRangeReached(distanceMoved)) {
                     removed = true;
@@ -608,20 +608,20 @@ public class ProcessGameState extends Thread {
         System.out.println("EnemyCount: " + gameState.getEnemies().size());
     }
 
-    private static int getDistanceMoved(long timeDiff, int speed) {
-        return (int) Math.ceil((timeDiff / 1000.0) * speed); // time in millis
+    private static double getDistanceMoved(long timeDiff, int speed) {
+        return (timeDiff / 1000.0) * speed; // time in millis
     }
 
     private static boolean haveCollided(Entity e1, Entity e2) {
         Location e1_loc = e1.getLocation();
         int e1_radius = e1.getSize() / 2;
-        int e1_x = e1_loc.getX();
-        int e1_y = e1_loc.getY();
+        double e1_x = e1_loc.getX();
+        double e1_y = e1_loc.getY();
 
         Location e2_loc = e2.getLocation();
         int e2_radius = e2.getSize() / 2;
-        int e2_x = e2_loc.getX();
-        int e2_y = e2_loc.getY();
+        double e2_x = e2_loc.getX();
+        double e2_y = e2_loc.getY();
 
         return ((e1_x - e1_radius) <= (e2_x + e2_radius) && (e1_x + e1_radius) >= (e2_x - e2_radius) && (e1_y - e1_radius) <= (e2_y + e2_radius)
                 && (e1_y + e1_radius) >= (e2_y - e2_radius));
@@ -631,17 +631,17 @@ public class ProcessGameState extends Thread {
         Location loc = e.getLocation();
         int size = e.getSize();
         int radius = size / 2;
-        int x = loc.getX();
-        int max_x = x + radius;
-        int min_x = x - radius;
-        int y = loc.getY();
-        int max_y = y + radius;
-        int min_y = y - radius;
+        double x = loc.getX();
+        double max_x = x + radius;
+        double min_x = x - radius;
+        double y = loc.getY();
+        double max_y = y + radius;
+        double min_y = y - radius;
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
-        int check_x = min_x;
-        int check_y = min_y;
+        double check_x = min_x;
+        double check_y = min_y;
         while (check_x < max_x) {
             while (check_y < max_y) {
                 tilesOn.add(Tile.locationToTile(new Location(check_x, check_y)));

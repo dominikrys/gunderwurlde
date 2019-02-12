@@ -1,7 +1,5 @@
 package client.input;
 
-import java.util.Arrays;
-
 import javafx.scene.image.Image;
 import server.engine.state.map.tile.Tile;
 import shared.view.TileView;
@@ -38,15 +36,15 @@ public class Collision {
 	*/
 	
 	public boolean checkBoundary(int toGoX, int toGoY) {
-		System.out.println("toGoX: " + toGoX + " " + "toGoY: " + toGoY);
+        // System.out.println("toGoX: " + toGoX + " " + "toGoY: " + toGoY);
 		int[] topLeft = checkTile(toGoX - pWidth/2, toGoY - pHeight/2);
-		System.out.println("topLeft: " + Arrays.toString(topLeft));
+        // System.out.println("topLeft: " + Arrays.toString(topLeft));
 		int[] topRight = checkTile(toGoX + pWidth/2, toGoY - pHeight/2);
-		System.out.println("topRight: " + Arrays.toString(topRight));
+        // System.out.println("topRight: " + Arrays.toString(topRight));
 		int[] downLeft = checkTile(toGoX - pWidth/2, toGoY + pHeight/2);
-		System.out.println("downLeft: " + Arrays.toString(downLeft));
+        // System.out.println("downLeft: " + Arrays.toString(downLeft));
 		int[] downRight = checkTile(toGoX + pWidth/2, toGoY + pHeight/2);
-		System.out.println("downRight: " + Arrays.toString(downRight));
+        // System.out.println("downRight: " + Arrays.toString(downRight));
 		if(tileMap[topLeft[0]][topLeft[1]].getTileState().toString().equals("SOLID") ||
 				tileMap[topRight[0]][topRight[1]].getTileState().toString().equals("SOLID") ||
 				tileMap[downLeft[0]][downLeft[1]].getTileState().toString().equals("SOLID") ||

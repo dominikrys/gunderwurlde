@@ -50,10 +50,10 @@ public class MouseHandler extends UserInteraction {
         mouseY = e.getSceneY();
         playerX = mapCanvas.getLayoutX() + playerView.getPose().getX() + 16;
         playerY = mapCanvas.getLayoutY() + playerView.getPose().getY() + 16;
-        System.out.println("mouseX: " + mouseX);
-        System.out.println("mouseY: " + mouseY);
-        System.out.println("playerX: " + playerX);
-        System.out.println("playerY: " + playerY);
+        // System.out.println("mouseX: " + mouseX);
+        // System.out.println("mouseY: " + mouseY);
+        // System.out.println("playerX: " + playerX);
+        // System.out.println("playerY: " + playerY);
 
         toRotate = Math.toDegrees(Math.atan((mouseX - playerX) / (mouseY - playerY)));
         int quarter = quarter(playerX, playerY, mouseX, mouseY);
@@ -70,7 +70,7 @@ public class MouseHandler extends UserInteraction {
             mouseDegree = 0;
         }
         playerDegree = mouseDegree;
-        System.out.println("playerDegree: " + playerDegree);
+        // System.out.println("playerDegree: " + playerDegree);
         // TODO: send changes(playerDegree) to server
         handler.send(ActionList.TURN, (int) playerDegree);
 
@@ -106,7 +106,7 @@ public class MouseHandler extends UserInteraction {
                 } else if (event.getDeltaY() < 0) {
                     changeItem.nextItem();
                 }
-                System.out.println(playerView.getCurrentItemIndex());
+                // System.out.println(playerView.getCurrentItemIndex());
                 // TODO: send changes(item change) to server
             }
         });

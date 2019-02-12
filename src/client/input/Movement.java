@@ -28,9 +28,9 @@ public class Movement extends Action{
 	
 	public void move(String key) {
 		Pose pose = new Pose(playerView.getPose().getX(), playerView.getPose().getY(), playerView.getPose().getDirection());
-		System.out.println(pose.getX());
-		System.out.println(pose.getY());
-		System.out.println(pose.getDirection());
+        // System.out.println(pose.getX());
+        // System.out.println(pose.getY());
+        // System.out.println(pose.getDirection());
 		pickItem.checkPick();
 		String action = kbSettings.getAction(key);
 		int direction = -1;
@@ -39,25 +39,25 @@ public class Movement extends Action{
 				pose.setY(pose.getY() - playerView.getMoveSpeed());
 				direction = 0;
 				this.handler.send(ActionList.MOVEMENT, direction);
-				System.out.println("up");
+            // System.out.println("up");
 				break;
 			case "left" :
 				pose.setX(pose.getX() - playerView.getMoveSpeed());
 				direction = 270;
 				this.handler.send(ActionList.MOVEMENT, direction);
-				System.out.println("left");
+            // System.out.println("left");
 				break;
 			case "down" :
 				pose.setY(pose.getY() + playerView.getMoveSpeed());
 				direction = 180;
 				this.handler.send(ActionList.MOVEMENT, direction);
-				System.out.println("down");
+            // System.out.println("down");
 				break;
 			case "right" :
 				pose.setX(pose.getX() + playerView.getMoveSpeed());
 				direction = 90;
 				this.handler.send(ActionList.MOVEMENT, direction);
-				System.out.println("right");
+            // System.out.println("right");
 				break;
 		}
 		/*

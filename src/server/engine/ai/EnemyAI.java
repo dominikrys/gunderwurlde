@@ -1,13 +1,13 @@
 package server.engine.ai;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import java.util.HashSet;
 
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.Pose;
-
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 
 public abstract class EnemyAI {
 
@@ -23,9 +23,9 @@ public abstract class EnemyAI {
 
     public abstract Attack getAttack();
 
-    protected abstract Pose generateNextPose(int maxDistanceMoved);
+    protected abstract Pose generateNextPose(double maxDistanceMoved);
 
-    public synchronized Pose getNewPose(int maxDistanceMoved) {
+    public synchronized Pose getNewPose(double maxDistanceMoved) {
         return generateNextPose(maxDistanceMoved);
     }
 
