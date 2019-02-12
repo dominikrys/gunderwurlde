@@ -1,5 +1,6 @@
 package client.gui.menucontrollers;
 
+import client.gui.Settings;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

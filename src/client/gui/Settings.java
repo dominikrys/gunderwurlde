@@ -14,4 +14,15 @@ public class Settings {
 
     // Screen variables
     private boolean fullScreen;
+
+    public Settings() {
+        // TODO: have these get loaded from a file
+
+        // Initialise settings
+        soundVolume = 70;
+        musicVolume = 70;
+        soundMute = false;
+        musicMute = false;
+        fullScreen = false;
+    }
 }

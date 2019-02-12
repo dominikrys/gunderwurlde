@@ -1,5 +1,6 @@
 package client.gui.menucontrollers;
 
+import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +12,14 @@ import java.io.IOException;
 
 public class HelpMenuController extends VBox implements MenuController {
     private Stage stage;
+    private Settings settings;
 
     @FXML
     private Button backButton;
 
-    public HelpMenuController(Stage stage) {
+    public HelpMenuController(Stage stage, Settings settings) {
         this.stage = stage;
+        this.settings = settings;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/help_menu.fxml"));
@@ -34,7 +37,7 @@ public class HelpMenuController extends VBox implements MenuController {
     @FXML
     void backButtonPress(ActionEvent event) {
         // Switch to main menu and clear this screen
-        (new MainMenuController(stage)).show();
+        (new MainMenuController(stage, settings)).show();
         this.getChildren().clear();
     }
 
