@@ -1,7 +1,10 @@
 @font-face {
     font-family: 'Manaspace';
     src: url('file:assets/fonts/manaspc.ttf');
-	font-
+}
+
+.menuTitle {
+	-fx-font-size: 80px;
 }
 
 .gameTitle {
@@ -15,4 +18,5 @@
 
 .menuButton {
 	-fx-font-size: 28px;
+	-fx-background-radius: 0px;
 }

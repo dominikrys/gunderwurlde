@@ -39,6 +39,5 @@ public class HelpMenuController extends VBox implements MenuController {
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
-        this.getChildren().clear();
     }
 }
