@@ -1,24 +1,18 @@
-package server.engine.ai;
+package server.engine.state.entity.attack;
 
-public class Attack {
-    protected int attackDirection;
-    protected int attackSize;
+import server.engine.state.entity.Entity;
+import shared.Location;
+import shared.lists.EntityList;
+
+public class Attack extends Entity {
     protected AttackType attackType;
     protected long timeToCarryOut;
     protected long startTime;
 
-    public Attack(int attackDirection, int attackSize, AttackType attackType){
-        this.attackDirection = attackDirection;
-        this.attackSize = attackSize;
+    public Attack(Location attackLocation, int attackSize, AttackType attackType, int delay) {
+        super(attackLocation, attackSize, EntityList.DEFAULT);
         this.attackType = attackType;
-    }
-
-    public int getAttackDirection() {
-        return attackDirection;
-    }
-
-    public int getAttackSize() {
-        return attackSize;
+        this.timeToCarryOut = delay;
     }
 
     public AttackType getAttackType() {

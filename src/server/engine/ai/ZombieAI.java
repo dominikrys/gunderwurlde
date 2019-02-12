@@ -1,5 +1,7 @@
 package server.engine.ai;
 
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.AttackType;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
@@ -13,7 +15,7 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     public Attack getAttack() {
-        return new Attack(pose.getDirection(), 3, AttackType.MELEE);
+        return new Attack(pose, 6, AttackType.AOE, 400); // TODO sort out to be infront of zombie
     }
 
     @Override

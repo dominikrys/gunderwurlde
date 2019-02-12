@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
-import server.engine.ai.Attack;
 import server.engine.ai.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
+import server.engine.state.entity.attack.Attack;
 import shared.lists.EntityList;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
@@ -39,6 +39,7 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     
     public void addAttack(Attack attack) {
         attack.start();
+        // TODO freeze enemy based on time to carryout
         this.attacksToDo.add(attack);
     }
 

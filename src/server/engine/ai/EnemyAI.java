@@ -5,6 +5,7 @@ import static java.lang.Math.sqrt;
 
 import java.util.HashSet;
 
+import server.engine.state.entity.attack.Attack;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.Pose;

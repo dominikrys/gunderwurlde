@@ -13,6 +13,8 @@ import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
+import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
@@ -422,6 +424,32 @@ public class ProcessGameState extends Thread {
                 default:
                     System.out.println("Action " + enemyAction.toString() + " not known!");
                     break;
+                }
+
+                LinkedList<Attack> attacks = currentEnemy.getReadyAttacks();
+
+                for (Attack a : attacks) {
+                    switch (a.getAttackType()) {
+                    case AOE:
+                        AoeAttack attack = (AoeAttack) a;
+                        LinkedHashSet<int[]> tilesOn = tilesOn(attack);
+
+                        for (int[] tileCords : tilesOn) {
+                            Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                            HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+
+                            for (Integer playerID : playersOnTile) {
+                                Player playerBeingChecked = players.get(playerID);
+                                if (haveCollided(attack, playerBeingChecked)) {
+                                    playerBeingChecked.damage(attack.getDamage());
+                                    players.put(playerID, playerBeingChecked);
+                                }
+                            }
+                        }
+                        break;
+                    case PROJECTILE:
+                        break;
+                    }
                 }
 
                 enemies.put(enemyID, currentEnemy);
