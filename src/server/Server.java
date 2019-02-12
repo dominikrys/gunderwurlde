@@ -5,12 +5,13 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 
-import client.data.entity.GameView;
-import data.entity.player.Teams;
-import data.map.MapList;
-import server.game_engine.HasEngine;
-import server.game_engine.ProcessGameState;
-import server.request.ClientRequests;
+import server.engine.HasEngine;
+import server.engine.ProcessGameState;
+import server.net.ServerReceiver;
+import server.net.ServerSender;
+import shared.lists.MapList;
+import shared.request.ClientRequests;
+import shared.view.GameView;
 
 public class Server extends Thread implements HasEngine {
 	protected ClientRequests clientRequests;
@@ -91,18 +92,18 @@ public class Server extends Thread implements HasEngine {
         }
     }
     
-	public ClientRequests getClientRequests() {
-		return this.clientRequests;
-	}
-	
-	public void clearClientRequests(int numOfPlayers) {
-		this.clientRequests = new ClientRequests(numOfPlayers);
-	}
+    public ClientRequests getClientRequests() {
+        return this.clientRequests;
+    }
 
-	public void close() {
-		sender.running = false;
-		receiver.running = false;
-	}
+    public void clearClientRequests(int numOfPlayers) {
+        this.clientRequests = new ClientRequests(numOfPlayers);
+    }
+
+    public void close() {
+        sender.stopRunning();
+        receiver.stopRunning();
+    }
 	
 	/*
 	public void setClientRequests(ClientRequests clientRequests) {

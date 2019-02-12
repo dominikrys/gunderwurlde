@@ -1,13 +1,17 @@
 package client;
 
-import client.data.entity.GameView;
-import client.inputhandler.KeyboardHandler;
-import client.inputhandler.MouseHandler;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+
+import client.input.KeyboardHandler;
+import client.input.MouseHandler;
+import client.net.ClientReceiver;
+import client.net.ClientSender;
+import client.render.GameRenderer;
+import shared.view.GameView;
 
 public class Client extends Thread {
     MulticastSocket listenSocket;
@@ -86,8 +90,8 @@ public class Client extends Thread {
 
     public void close() {
     	this.running = false;
-    	sender.running = false;
-    	receiver.running = false;
+        sender.stopRunning();
+        receiver.stopRunning();
     }
 
 }

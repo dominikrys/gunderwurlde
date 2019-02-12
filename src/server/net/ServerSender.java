@@ -1,22 +1,28 @@
-package server.serverclientthreads;
+package server.net;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
-import java.util.Scanner;
 
-import shared.Pose;
+import shared.view.GameView;
+import shared.view.entity.PlayerView;
 
-public class ClientSender extends Thread {
+
+public class ServerSender extends Thread {
     MulticastSocket senderSocket;
     InetAddress senderAddress;
     Boolean running;
     DatagramPacket packet;
     int port;
     byte[] buffer;
-    Scanner scan;
 
-    ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
@@ -25,36 +31,31 @@ public class ClientSender extends Thread {
         this.start();
     }
 
+    public boolean getRunning() {
+        return running;
+    }
+
+    public void stopRunning() {
+        this.running = false;
+    }
+
     public void run() {
-        scan = new Scanner(System.in);
-        try {
-            while (running) {
-                // Asks for user input
-                System.out.print(">> ");
-                String userInput = scan.nextLine();
-
-                // Creates and sends the packet to the server
-                buffer = userInput.getBytes();
-                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-
-                // Each time we send a packet we need to ensure the interfaces match up
-
-
-                senderSocket.send(packet);
-
-
-                // If the messages is exit then the Thread should terminate
-                if (userInput.equals("exit")) {
-                    running = false;
-                }
-                Thread.yield();
-            }
-        } catch (IOException e1) {
+        while (running) {
+            Thread.yield();
 
         }
+        System.out.println("Ending server sender");
     }
-    
-    public void send(Pose pose) {
+
+    // sends a confirmation back to the client that the message has been received
+    // in future will be used to send the continuous game state to the user/users
+    public void send(GameView view) {
+        System.out.println("Server received new GameView");
+        for(PlayerView pview:view.getPlayers()){
+            System.out.println("Server gameView");
+            System.out.println(pview.getPose().getX());
+            System.out.println(pview.getPose().getY());
+        }
         try {
             // Turn the received GameView into a byte array
             // Output Stream for the byteArray. Will grow as data is added
@@ -66,18 +67,19 @@ public class ClientSender extends Thread {
                 // OOutputStream to read the GameView into the byteArray
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
-                out.writeObject(pose);
+                out.writeObject(view);
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
-                byte[] buffer = bos.toByteArray();
+                buffer = bos.toByteArray();
+                System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
+                System.out.println("Packet sent from serversender");
 
             } finally {
                 try {
                     bos.close();
-                    System.out.println("SENT");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -113,3 +115,4 @@ public class ClientSender extends Thread {
         return addr;
     }
 }
+

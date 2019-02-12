@@ -1,22 +1,26 @@
-package server.serverclientthreads;
+package client.net;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Scanner;
-
-import shared.Pose;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
     InetAddress senderAddress;
     Boolean running;
-    DatagramPacket packet;
+    DatagramPacket packet = null;
     int port;
     byte[] buffer;
     Scanner scan;
 
-    ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
@@ -25,60 +29,40 @@ public class ClientSender extends Thread {
         this.start();
     }
 
+    public boolean getRunning() {
+        return running;
+    }
+
+    public void stopRunning() {
+        this.running = false;
+    }
+
     public void run() {
-        scan = new Scanner(System.in);
-        try {
-            while (running) {
-                // Asks for user input
-                System.out.print(">> ");
-                String userInput = scan.nextLine();
-
-                // Creates and sends the packet to the server
-                buffer = userInput.getBytes();
-                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-
-                // Each time we send a packet we need to ensure the interfaces match up
-
-
-                senderSocket.send(packet);
-
-
-                // If the messages is exit then the Thread should terminate
-                if (userInput.equals("exit")) {
-                    running = false;
-                }
-                Thread.yield();
-            }
-        } catch (IOException e1) {
-
+        while (running) {
+            Thread.yield();
         }
     }
-    
-    public void send(Pose pose) {
+
+    public void send(Integer[] action) {
         try {
-            // Turn the received GameView into a byte array
-            // Output Stream for the byteArray. Will grow as data is added
-            // Allows the object to be written to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            // Output stream that will hold the object
             ObjectOutputStream out = null;
-            try {
-                // OOutputStream to read the GameView into the byteArray
+               try {
                 out = new ObjectOutputStream(bos);
                 // Writes the view object into the BAOutputStream
-                out.writeObject(pose);
+                out.writeObject(action);
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
-                byte[] buffer = bos.toByteArray();
+                buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-
+                System.out.println("Packet sent from clientSender");
             } finally {
                 try {
                     bos.close();
-                    System.out.println("SENT");
-                } catch (IOException ex) {
+                }
+                catch(IOException ex){
                     ex.printStackTrace();
                 }
             }
@@ -95,7 +79,6 @@ public class ClientSender extends Thread {
         InetAddress addr = null;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
             NetworkInterface iface = null;
             if (interfaces.hasMoreElements()) {
                 iface = interfaces.nextElement();
