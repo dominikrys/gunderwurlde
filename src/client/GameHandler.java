@@ -50,7 +50,6 @@ public class GameHandler extends Thread {
                     gameRenderer.getMouseHandler().setGameHandler(this);
                     client = new Client(gameRenderer, "Player 1", 0);
                     client.start();
-                    serverStarted = true;
                 }
                 break;
             case MULTI_PLAYER:
