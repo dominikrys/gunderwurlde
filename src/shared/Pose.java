@@ -3,6 +3,7 @@ package shared;
 import java.io.Serializable;
 
 public class Pose extends Location implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected int direction;
     
     public Pose() { //workaround for template enemies

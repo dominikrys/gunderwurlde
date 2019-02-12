@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import server.engine.ai.AIAction;
-import server.engine.ai.Attack;
 import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
@@ -30,7 +29,6 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.AmmoList;
-import shared.lists.EntityList;
 import shared.lists.ItemType;
 import shared.lists.MapList;
 import shared.lists.Teams;
@@ -359,9 +357,10 @@ public class ProcessGameState extends Thread {
 
             // process item drops
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
+            LinkedList<Integer> itemsToRemove = new LinkedList<>();
             for (ItemDrop i : items.values()) {
                 if ((lastProcessTime - i.getDropTime()) > ItemDrop.DECAY_LENGTH) {
-                    items.remove(i.getID());
+                    itemsToRemove.add(i.getID());
                     LinkedHashSet<int[]> tilesOn = tilesOn(i);
                     for (int[] tileCords : tilesOn) {
                         tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
@@ -371,7 +370,8 @@ public class ProcessGameState extends Thread {
                     itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName()));
                 }
             }
-
+            itemsToRemove.stream().forEach((i) -> items.remove(i));
+            itemsToRemove = new LinkedList<>();
             // process enemies
             LinkedHashMap<Integer, Enemy> enemies = gameState.getEnemies();
             LinkedHashSet<EnemyView> enemiesView = new LinkedHashSet<>();
@@ -381,25 +381,33 @@ public class ProcessGameState extends Thread {
 
             for (Enemy e : enemies.values()) {
                 Enemy currentEnemy = e;
-                EnemyAI ai;
-                EntityList enemyName = currentEnemy.getEntityListName();
+                int enemyID = currentEnemy.getID();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
-                int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                // System.out.println("maxdist:" + maxDistanceMoved);
+                EnemyAI ai = currentEnemy.getAI();
 
-                ai = currentEnemy.getAI();
                 if (!ai.isProcessing())
                     ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
-                    Attack enemyAttack = ai.getAttack();
-                    currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
-                    // TODO attack processing here once ai is completed.
+                    currentEnemy.addAttack(ai.getAttack());
                     break;
                 case MOVE:
+                    LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
+
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
+                    }
+
                     currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
+
+                    tilesOn = tilesOn(currentEnemy);
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                    }
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
                 case WAIT:
@@ -407,19 +415,6 @@ public class ProcessGameState extends Thread {
                 default:
                     System.out.println("Action " + enemyAction.toString() + " not known!");
                     break;
-                }
-
-                int enemyID = currentEnemy.getID();
-                LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
-
-                for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
-                }
-
-
-                tilesOn = tilesOn(currentEnemy);
-                for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
                 }
 
                 enemies.put(enemyID, currentEnemy);
