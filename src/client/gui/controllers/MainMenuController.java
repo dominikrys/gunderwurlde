@@ -1,19 +1,16 @@
-package client.gui;
+package client.gui.controllers;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import shared.Constants;
 
 import java.io.IOException;
 
 public class MainMenuController extends VBox implements MenuController {
-    Stage stage;
+    private Stage stage;
 
     @FXML
     private Button playButton;
@@ -62,7 +59,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     @FXML
     void helpButtonPress(ActionEvent event) {
-
+        (new HelpMenuController(stage)).show();
     }
 
     @FXML

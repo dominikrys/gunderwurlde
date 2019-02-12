@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class PlayMenuController extends VBox implements MenuController{
-    Stage stage;
+    private Stage stage;
 
     @FXML
     private TextField nameField;
