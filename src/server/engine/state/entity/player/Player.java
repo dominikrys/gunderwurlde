@@ -1,6 +1,5 @@
 package server.engine.state.entity.player;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 

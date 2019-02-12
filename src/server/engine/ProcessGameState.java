@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import server.engine.ai.AIAction;
-import server.engine.ai.Attack;
 import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
@@ -30,7 +29,6 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.AmmoList;
-import shared.lists.EntityList;
 import shared.lists.ItemType;
 import shared.lists.MapList;
 import shared.lists.Teams;
@@ -381,22 +379,17 @@ public class ProcessGameState extends Thread {
 
             for (Enemy e : enemies.values()) {
                 Enemy currentEnemy = e;
-                EnemyAI ai;
-                EntityList enemyName = currentEnemy.getEntityListName();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
-                int direction = enemyPose.getDirection();
                 int maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                EnemyAI ai = currentEnemy.getAI();
 
-                ai = currentEnemy.getAI();
                 if (!ai.isProcessing())
                     ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
-                    Attack enemyAttack = ai.getAttack();
-                    currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
-                    // TODO attack processing here once ai is completed.
+                    currentEnemy.addAttack(ai.getAttack());
                     break;
                 case MOVE:
                     currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));

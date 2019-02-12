@@ -1,7 +1,10 @@
 package server.engine.state.entity.enemy;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
+import server.engine.ai.Attack;
 import server.engine.ai.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
@@ -19,6 +22,7 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     protected EntityList entityListName;
     protected EnemyAI ai;
     private int id;
+    protected LinkedList<Attack> attacksToDo;
 
     Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
         super(size, entityListName);
@@ -30,8 +34,29 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.id = nextID++;
         this.scoreOnKill = scoreOnKill;
         this.ai =ai;
+        this.attacksToDo = new LinkedList<>();
     }
     
+    public void addAttack(Attack attack) {
+        attack.start();
+        this.attacksToDo.add(attack);
+    }
+
+    public LinkedList<Attack> getReadyAttacks() {
+        LinkedList<Attack> readyAttacks = new LinkedList<>();
+        long now = System.currentTimeMillis();
+
+        for (Iterator<Attack> i = attacksToDo.iterator(); i.hasNext();) {
+            Attack a = i.next();
+            if ((a.getTimeToCarryOut() - (now - a.getStartTime())) <= 0) {
+                readyAttacks.add(a);
+                i.remove();
+            }
+        }
+
+        return readyAttacks;
+    }
+
     public EnemyAI getAI() {
         return ai;
     }
