@@ -1,26 +1,29 @@
 package client;
 
 
-import client.data.ItemView;
-import client.data.TileView;
-import client.data.entity.*;
-import client.inputhandler.ActionList;
-import data.Pose;
-import data.SystemState;
-import data.entity.EntityList;
-import data.entity.player.Teams;
-import data.item.ItemList;
-import data.item.weapon.gun.AmmoList;
-import data.map.MapList;
-import data.map.Meadow;
-import data.map.tile.Tile;
+import client.data.SystemState;
+import client.gui.MenuManager;
+import client.input.ActionList;
+import client.render.GameRenderer;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import server.Server;
+import server.engine.state.map.Meadow;
+import server.engine.state.map.tile.Tile;
+import shared.Pose;
+import shared.lists.AmmoList;
+import shared.lists.EntityList;
+import shared.lists.ItemList;
+import shared.lists.MapList;
+import shared.lists.Teams;
+import shared.view.GameView;
+import shared.view.ItemView;
+import shared.view.TileView;
+import shared.view.entity.*;
+
+import static client.data.SystemState.MENUS;
 
 import java.util.*;
-
-import static data.SystemState.MENUS;
 
 public class ClientHandler extends Thread{
     GameRenderer gameRenderer;
