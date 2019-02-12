@@ -67,8 +67,8 @@ public class SettingsMenuController extends VBox implements MenuController {
             musicOffButton.setDefaultButton(true);
             musicOnButton.setDefaultButton(false);
         } else {
-            musicOffButton.setDefaultButton(true);
-            musicOnButton.setDefaultButton(false);
+            musicOffButton.setDefaultButton(false);
+            musicOnButton.setDefaultButton(true);
         }
 
         if (settings.isSoundMute()) {
@@ -111,9 +111,9 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void displayWindowedButtonPress(ActionEvent event) {
-        settings.setFullScreen(true);
-        displayFullscreenButton.setDefaultButton(true);
-        displayWindowedButton.setDefaultButton(false);
+        settings.setFullScreen(false);
+        displayFullscreenButton.setDefaultButton(false);
+        displayWindowedButton.setDefaultButton(true);
     }
 
     @FXML

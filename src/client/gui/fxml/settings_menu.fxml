@@ -29,7 +29,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider fx:id="soundVolumeSlider" minorTickCount="1" onDragDetected="#soundVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
+            <Slider fx:id="soundVolumeSlider" minorTickCount="1" onMouseReleased="#soundVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -61,7 +61,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <Slider fx:id="musicVolumeSlider" minorTickCount="1" onDragDetected="#musicVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
+            <Slider fx:id="musicVolumeSlider" minorTickCount="1" onMouseReleased="#musicVolumeSliderDragged" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-padding: 5px;" styleClass="manaSpaceFontNoColour" value="70.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

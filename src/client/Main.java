@@ -15,8 +15,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        //Settings
+        // Settings object
         Settings settings = new Settings();
+
         // Set up stage
         stage.setResizable(false); // Disable resizing of the window TODO: check how this behaves on linux!
         stage.setFullScreen(false);
