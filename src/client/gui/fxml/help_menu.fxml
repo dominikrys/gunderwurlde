@@ -27,8 +27,8 @@
             <Font name="Manaspace" size="22.0" />
          </font>
          <styleClass>
-            <String fx:value="menuButton" />
             <String fx:value="manaspaceFont" />
+            <String fx:value="backButton" />
          </styleClass>
       </Button>
    </children>
