@@ -4,10 +4,8 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -37,6 +35,8 @@ import java.util.Map;
 public class GameRenderer implements Runnable {
     // HashMap to store all graphics
     Map<EntityList, Image> loadedSprites;
+    // Client
+    ClientSender sender;
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
@@ -55,9 +55,9 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    // Input variables
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
-    ClientSender sender;
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
@@ -149,7 +149,7 @@ public class GameRenderer implements Runnable {
         for (ItemDropView currentItem : gameView.getItemDrops()) {
             renderEntityView(currentItem);
         }
-        
+
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Get the correct sprite according to playerID, otherwise load the default player graphic
@@ -305,19 +305,17 @@ public class GameRenderer implements Runnable {
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(mainHBox, HUDBox);
 
-        // Create the main scene
-        Scene scene = new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        // Set stage root to game renderer
+        stage.getScene().setRoot(root);
 
+        // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
-        kbHandler.setScene(scene);
+        kbHandler.setScene(stage.getScene());
         kbHandler.activate();
         mHandler.setCanvas(mapCanvas);
         mHandler.setGameView(inputGameView);
-        mHandler.setScene(scene);
+        mHandler.setScene(stage.getScene());
         mHandler.activate();
-
-        // Update stage
-        updateStageWithScene(stage, scene);
     }
 
     // Render map from tiles
@@ -462,38 +460,19 @@ public class GameRenderer implements Runnable {
         return outputImage;
     }
 
-    // Update stage with scene - only called when game first made
-    private void updateStageWithScene(Stage stage, Scene scene) {
-        // Check if JavaFX thread and update stage accordingly TODO: see if this causes isses
-        if (Platform.isFxApplicationThread()) {
-            stage.setScene(scene);
-
-            scene.getRoot().requestFocus();
-        } else {
-            // runLater because not JavaFX thread
-            Platform.runLater(() -> {
-                // Add scene to stage, request focus and show the stage
-                stage.setScene(scene);
-                scene.getRoot().requestFocus();
-                stage.centerOnScreen();
-                stage.show();
-            });
-        }
+    public void setClientSender(ClientSender sender) {
+        this.sender = sender;
     }
 
-	public void setClientSender(ClientSender sender) {
-		this.sender = sender;
-	}
+    public GameView getView() {
+        return this.gameView;
+    }
 
-	public GameView getView() {
-		return this.gameView;
-	}
+    public KeyboardHandler getKeyboardHandler() {
+        return this.kbHandler;
+    }
 
-	public KeyboardHandler getKeyboardHandler() {
-		return this.kbHandler;
-	}
-
-	public MouseHandler getMouseHandler() {
-		return this.mHandler;
-	}
+    public MouseHandler getMouseHandler() {
+        return this.mHandler;
+    }
 }
