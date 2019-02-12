@@ -1,4 +1,4 @@
-package client.gui.controllers;
+package client.gui.menucontrollers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +54,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     @FXML
     void settingsButtonPress(ActionEvent event) {
-
+        (new SettingsMenuController(stage)).show();
     }
 
     @FXML
@@ -64,6 +64,6 @@ public class MainMenuController extends VBox implements MenuController {
 
     @FXML
     void quitButtonPress(ActionEvent event) {
-
+        stage.close();
     }
 }

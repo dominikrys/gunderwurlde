@@ -1,4 +1,4 @@
-package client.gui.controllers;
+package client.gui.menucontrollers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

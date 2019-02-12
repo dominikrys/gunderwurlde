@@ -1,6 +1,6 @@
 package client;
 
-import client.gui.controllers.MainMenuController;
+import client.gui.menucontrollers.MainMenuController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;

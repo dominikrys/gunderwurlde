@@ -1,4 +1,4 @@
-package client.gui.controllers;
+package client.gui.menucontrollers;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
