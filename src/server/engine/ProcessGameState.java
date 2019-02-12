@@ -290,7 +290,7 @@ public class ProcessGameState extends Thread {
                                 // TODO include knock-back of player/enemies depending on some factor e.g. size.
 
                                 HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
-                                ArrayList<Item> playerItems = currentPlayer.getItems();
+                                LinkedList<Integer> dropsToRemove = new LinkedList<>();
 
                                 for (Integer itemDropID : itemsOnTile) {
                                     ItemDrop currentItemDrop = items.get(itemDropID);
@@ -298,6 +298,7 @@ public class ProcessGameState extends Thread {
                                     if (haveCollided(currentPlayer, currentItemDrop)) {
                                         boolean removed = false;
                                         int dropQuantity = currentItemDrop.getQuantity();
+                                        ArrayList<Item> playerItems = currentPlayer.getItems();
 
                                         switch (currentItemDrop.getItemType()) {
                                         case AMMO:
@@ -325,14 +326,20 @@ public class ProcessGameState extends Thread {
                                         }
 
                                         if (removed) {
-                                            items.remove(itemDropID);
-                                            LinkedHashSet<int[]> itemTilesOn = tilesOn(currentItemDrop);
-                                            for (int[] itemTileCords : itemTilesOn) {
-                                                tileMap[itemTileCords[0]][itemTileCords[1]].removeItemDrop(itemDropID);
-                                            }
+                                            dropsToRemove.add(itemDropID);
                                         }
                                     }
                                 }
+
+                                for (Integer dropID : dropsToRemove) {
+                                    ItemDrop dropToRemove = items.get(dropID);
+                                    LinkedHashSet<int[]> itemTilesOn = tilesOn(dropToRemove);
+                                    for (int[] itemTileCords : itemTilesOn) {
+                                        tileMap[itemTileCords[0]][itemTileCords[1]].removeItemDrop(dropID);
+                                    }
+                                    items.remove(dropID);
+                                }
+
                             }
                         }
                         tilesOn = tilesOn(currentPlayer);
@@ -476,7 +483,7 @@ public class ProcessGameState extends Thread {
                                             if (dropAmount != 0) {
                                                 Item itemToDrop = d.getItem();
                                                 // TODO have itemdrops of the same type stack
-                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation);
+                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO item change here
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName()));
