@@ -1,7 +1,7 @@
 package shared.lists;
 
 public enum AmmoList implements IsItem {
-    BASIC_AMMO, NONE/* Use none for items with infinite ammo*/;
+    BASIC_AMMO, NONE/* Use none for items with infinite ammo */, SHOTGUN_ROUND;
 
     @Override
     public ItemType getItemType() {

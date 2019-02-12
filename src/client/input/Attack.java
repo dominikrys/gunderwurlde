@@ -18,10 +18,7 @@ public class Attack extends Action {
     public void attack() {
         ItemView itemView = playerView.getCurrentItem();
         String itemName = itemView.getItemListName().toString();
-        switch (itemName) {
-            case "PISTOL":
-                shoot(itemView);
-        }
+        shoot(itemView);
     }
 
     public void shoot(ItemView itemView) {

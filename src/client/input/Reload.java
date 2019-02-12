@@ -18,12 +18,7 @@ public class Reload extends Action {
 
     public void reload() {
         ItemView itemView = playerView.getCurrentItem();
-        String itemName = itemView.getItemListName().toString();
-        switch (itemName) {
-            case "PISTOL":
-                gunReload(itemView, AmmoList.BASIC_AMMO);
-                break;
-        }
+        gunReload(itemView, itemView.getAmmoType());
     }
 
     public void gunReload(ItemView itemView, AmmoList ammo) {

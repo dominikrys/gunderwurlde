@@ -9,6 +9,7 @@ import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Pistol;
+import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
@@ -43,6 +44,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.moveSpeed = DEFAULT_MOVESPEED;
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
+        items.add(new Shotgun()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
@@ -50,6 +52,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.name = name;
         this.ammo = new LinkedHashMap<>();
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
+        this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.playerID = nextPlayerID++;
     }
 
