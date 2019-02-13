@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -42,6 +43,12 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private ComboBox<?> resolutionComboBox;
+
+    @FXML
+    private Button applyButton;
 
     public SettingsMenuController(Stage stage, Settings settings) {
         this.stage = stage;
@@ -152,5 +159,15 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
         settings.setSoundVolume((int) soundVolumeSlider.getValue());
+    }
+
+    @FXML
+    void resolutionComboBoxChanged(ActionEvent event) {
+
+    }
+
+    @FXML
+    void applyButtonPress(ActionEvent event) {
+
     }
 }
