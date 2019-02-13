@@ -3,7 +3,6 @@ package client.render;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,14 +16,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import server.engine.state.entity.player.Player;
 import shared.Constants;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.entity.*;
-import sun.plugin.javascript.navig.Anchor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,10 +34,10 @@ public class GameRenderer implements Runnable {
     Map<EntityList, Image> loadedSprites;
     // Client
     ClientSender sender;
+    AnchorPane mapBox; // Pane for map canvas
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
-    AnchorPane mapBox; // Pane for map canvas
     // Whether the camera is centered on the player or not
     private boolean cameraCentered;
     // Fonts
@@ -65,6 +62,7 @@ public class GameRenderer implements Runnable {
     public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
         this(stage, initialGameView, playerID, true);
     }
+
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered) {
         // Initialise gameView, stage and playerID
@@ -193,17 +191,16 @@ public class GameRenderer implements Runnable {
         updateHUD();
     }
 
-    private void centerCamera(){
+    private void centerCamera() {
+        // Get player location on map
         PlayerView currentPlayer = getCurrentPlayer();
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
-        AnchorPane.setTopAnchor(mapCanvas, (double) Constants.SCREEN_HEIGHT/2 - playerY - 16);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) Constants.SCREEN_WIDTH/2 - playerX - 16);
-
-
+        // Center player
+        AnchorPane.setTopAnchor(mapCanvas, (double) Constants.SCREEN_HEIGHT / 2 - playerY - 16);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) Constants.SCREEN_WIDTH / 2 - playerX - 16);
     }
-
 
     // Render entities to the map canvas
     private void renderEntitiesFromGameViewToCanvas() {
