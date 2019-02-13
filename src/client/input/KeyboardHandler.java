@@ -143,7 +143,7 @@ public class KeyboardHandler extends UserInteraction {
     @Override
     public void activate() {
         super.activate();
-        AnimationTimer t = new AnimationTimer() {
+        this.t = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (upPressed || leftPressed || downPressed || rightPressed) {
@@ -169,13 +169,13 @@ public class KeyboardHandler extends UserInteraction {
             }
         };
 
-        t.start();
+        this.t.start();
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
-        t.stop();
+        this.t.stop();
     }
 
     @Override

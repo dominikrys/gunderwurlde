@@ -2,11 +2,13 @@ package client.input;
 
 import client.GameHandler;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.util.Duration;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
@@ -27,10 +29,12 @@ public class MouseHandler extends UserInteraction {
     private double toRotate;
     private AnimationTimer t;
     private boolean activated;
+    private boolean hold;
 
     public MouseHandler() {
         super();
         this.t = null;
+        this.hold = false;
     }
 
     private static int quarter(double playerX, double playerY, double destinationX, double destinationY) {
@@ -77,35 +81,48 @@ public class MouseHandler extends UserInteraction {
     }
 
     @Override
-    public void setGameHandler(GameHandler handler) {
-        this.handler = handler;
-    }
-
-    @Override
     public void setScene(Scene scene) {
         super.setScene(scene);
 
-        scene.addEventFilter(MouseEvent.ANY, e -> {
-            if (e.isPrimaryButtonDown()) {
-                mouseMovement(e);
-                attack.attack();
-            } else {
-                mouseMovement(e);
-            }
-        });
-
-        scene.setOnScroll(new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if (event.getDeltaY() > 0) {
-                    changeItem.previousItem();
-                } else if (event.getDeltaY() < 0) {
-                    changeItem.nextItem();
-                }
-                // System.out.println(playerView.getCurrentItemIndex());
-                // TODO: send changes(item change) to server
-            }
-        });
+        scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
+			mouseMovement(e);
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+			if(e.isPrimaryButtonDown()) {
+				mouseMovement(e);
+				this.hold = true;
+			}
+			else {
+				mouseMovement(e);
+			}
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+			if(e.isPrimaryButtonDown()) {
+				this.hold = true;
+			}
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+			if(e.getButton().toString().equals("PRIMARY")) {
+				this.hold = false;
+			}
+		});
+		
+		scene.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				if(event.getDeltaY() > 0) {
+					changeItem.previousItem();
+				}
+				else if(event.getDeltaY() < 0) {
+					changeItem.nextItem();
+				}
+				System.out.println(playerView.getCurrentItemIndex());
+				// TODO: send changes(item change) to server
+			}
+		});
     }
 
     public void setCanvas(Canvas mapCanvas) {
@@ -123,16 +140,27 @@ public class MouseHandler extends UserInteraction {
             }
         }
         this.attack = new Attack(handler, playerView);
+        this.changeItem = new ChangeItem(handler, playerView);
     }
 
     @Override
     public void activate() {
         super.activate();
+        this.t = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if(hold == true) {
+					attack.attack();
+				}
+			}
+		};
+		this.t.start();
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
+        this.t.stop();
     }
 
     @Override
