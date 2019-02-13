@@ -20,9 +20,10 @@ public abstract class Gun extends Weapon implements Limited {
     protected ItemList gunName;
     protected int shootCoolDown; //effectively fire rate
     protected long lastShootTime;
+    protected int projectilesPerShot;
 
     Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, EntityList projectileType,
-        AmmoList ammoType, int spread, int coolDown) {
+            AmmoList ammoType, int spread, int coolDown, int projectilesPerShot) {
         super(gunName);
         this.gunName = gunName;
         this.clipSize = clipSize;
@@ -34,6 +35,7 @@ public abstract class Gun extends Weapon implements Limited {
         this.shootCoolDown = coolDown;
         this.lastShootTime = 0;
         this.spread = spread;
+        this.projectilesPerShot = projectilesPerShot;
     }
 
 
@@ -48,7 +50,13 @@ public abstract class Gun extends Weapon implements Limited {
     }
 
     public int getProjectilesPerShot() {
-        return ammoPerShot;
+        return projectilesPerShot;
+    }
+
+    public void setProjectilesPerShot(int amount) {
+        if (amount < 0)
+            amount = 0;
+        this.projectilesPerShot = amount;
     }
 
     public ItemList getGunName() {

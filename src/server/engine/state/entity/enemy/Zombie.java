@@ -17,7 +17,7 @@ public class Zombie extends Enemy {
 
     static {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 4000, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 1000, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 500, 2, 1));
     }
 
     public Zombie() {
