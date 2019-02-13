@@ -476,7 +476,14 @@ public class ProcessGameState extends Thread {
                     currentProjectile.setLocation(newLocation);
                     LinkedHashSet<int[]> tilesOn = tilesOn(currentProjectile);
                     for (int[] tileCords : tilesOn) {
-                        Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                        Tile tileOn = null;
+                        try {
+                            tileOn = tileMap[tileCords[0]][tileCords[1]];
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            removed = true;
+                            System.out.println("WARNING: Projectile went out of bounds. Is the map complete?");
+                            break;
+                        }
                         if (tileOn.getState() == TileState.SOLID) {
                             removed = true;
                             // TODO add data to tile object to store the bullet collision (used for audio
