@@ -82,8 +82,11 @@ public class ProcessGameState extends Thread {
                 tileMapView[x][y] = new TileView(tile.getType(), tile.getState());
             }
         }
-        // Players are regenerated each time for now so it can be empty here.
-        view = new GameView(new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);        
+
+        LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
+        playerViews.add(toPlayerView(hostPlayer));
+
+        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
     }
 
     public void setClientRequests(ClientRequests clientRequests) {
@@ -616,17 +619,7 @@ public class ProcessGameState extends Thread {
             // turn players to player view
             LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
             for (Player p : players.values()) {
-                ArrayList<ItemView> playerItems = new ArrayList<>();
-                for (Item i : p.getItems()) {
-                    if (i instanceof Gun) {
-                        Gun g = (Gun) i;
-                        playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip()));
-                    } else {
-                        playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0));
-                    }
-                }
-                playersView.add(new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(),
-                        p.getName(), p.getAmmoList(), p.getID(), p.getTeam()));
+                playersView.add(toPlayerView(p));
             }
 
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
@@ -687,6 +680,20 @@ public class ProcessGameState extends Thread {
         tilesOn.add(Tile.locationToTile(new Location(max_x, max_y)));
 
         return tilesOn;
+    }
+
+    private static PlayerView toPlayerView(Player p) {
+        ArrayList<ItemView> playerItems = new ArrayList<>();
+        for (Item i : p.getItems()) {
+            if (i instanceof Gun) {
+                Gun g = (Gun) i;
+                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip()));
+            } else {
+                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0));
+            }
+        }
+        return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
+                p.getAmmoList(), p.getID(), p.getTeam());
     }
 
 }

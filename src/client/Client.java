@@ -6,11 +6,10 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import client.input.KeyboardHandler;
-import client.input.MouseHandler;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
+import javafx.stage.Stage;
 import shared.view.GameView;
 
 public class Client extends Thread {
@@ -28,16 +27,18 @@ public class Client extends Thread {
     Boolean running;
     ClientSender sender;
     ClientReceiver receiver;
-    private KeyboardHandler kbHandler;
-    private MouseHandler mHandler;
+    Stage stage;
+    boolean firstView;
+    GameHandler handler;
 
 
-    public Client(GameRenderer renderer, String playerName, int playerID){
-        this.renderer = renderer;
+    public Client(Stage stage, String playerName, int playerID, GameHandler handler) {
+        this.stage = stage;
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
-        this.view = renderer.getView();
+        this.handler = handler;
+        firstView = true;
     }
 
     public void run(){
@@ -51,15 +52,6 @@ public class Client extends Thread {
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
-            renderer.updateGameView(view);
-            renderer.run();
-
-            while(running){
-                if(view != null) {
-                	renderer.updateGameView(view);
-                    //Thread.sleep(50); TODO: see if this is necessary, can be replaced with something more sophisticated
-                }
-            }
 
             // TODO: How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
@@ -82,6 +74,15 @@ public class Client extends Thread {
 
     public void setGameView(GameView view){
         this.view = view;
+        if (firstView) {
+            firstView = false;
+            renderer = new GameRenderer(stage, this.view, playerID);
+            renderer.getKeyboardHandler().setGameHandler(handler);
+            renderer.getMouseHandler().setGameHandler(handler);
+            renderer.run();
+        } else {
+            renderer.updateGameView(this.view);
+        }
     }
     
     public ClientSender getClientSender() {

@@ -94,9 +94,9 @@ public class ClientReceiver extends Thread {
                     in = new ObjectInputStream(bis);
                     view = (GameView)in.readObject();
                     client.setGameView(view);
-                    renderer.updateGameView(view);
-                    renderer.getKeyboardHandler().setGameView(view);
-                    renderer.getMouseHandler().setGameView(view);
+                    // renderer.updateGameView(view);
+                    // renderer.getKeyboardHandler().setGameView(view);
+                    // renderer.getMouseHandler().setGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (EOFException ex) {

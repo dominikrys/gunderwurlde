@@ -1,16 +1,23 @@
 package client;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+
 import client.data.ConnectionType;
 import client.gui.Settings;
 import client.input.ActionList;
-import client.render.GameRenderer;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import server.Server;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.*;
+import shared.lists.AmmoList;
+import shared.lists.EntityList;
+import shared.lists.ItemList;
+import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.TileView;
@@ -18,10 +25,6 @@ import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
 public class GameHandler extends Thread {
     // Server variables
@@ -31,17 +34,17 @@ public class GameHandler extends Thread {
     private boolean serverStarted;
 
     // Renderer variables
-    private GameRenderer gameRenderer;
     private Stage stage;
 
     // Misc
     private Settings settings;
+    private String playerName;
 
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings) {
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
-
+        this.playerName = name;
     }
 
     public void run() {
@@ -49,15 +52,9 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // CODE FOR ESTABLISHING LOCAL SERVER
                 if (!serverStarted) {
-                    server = new Server(MapList.MEADOW, "Player 1");
+                    server = new Server(MapList.MEADOW, playerName);
                     serverStarted = true;
-
-                    GameView initialView = createGameView();
-
-                    gameRenderer = new GameRenderer(stage, initialView, 0);
-                    gameRenderer.getKeyboardHandler().setGameHandler(this);
-                    gameRenderer.getMouseHandler().setGameHandler(this);
-                    client = new Client(gameRenderer, "Player 1", 0);
+                    client = new Client(stage, playerName, 0, this);
                     client.start();
                 }
                 break;
@@ -96,6 +93,7 @@ public class GameHandler extends Thread {
         });
     }
 
+    // TODO Remove if no longer needed for testing
     public GameView createGameView() {
         // Creates an initial GameView
         LinkedHashSet<PlayerView> examplePlayers = new LinkedHashSet<PlayerView>();

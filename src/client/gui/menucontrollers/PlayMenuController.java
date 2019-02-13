@@ -1,5 +1,7 @@
 package client.gui.menucontrollers;
 
+import java.io.IOException;
+
 import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
@@ -11,8 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class PlayMenuController extends VBox implements MenuController{
     private Stage stage;
@@ -79,13 +79,13 @@ public class PlayMenuController extends VBox implements MenuController{
     void multiPlayerButtonPress(ActionEvent event) {
         // Clear the screen and start gamehandler as multiplayer
         this.getChildren().clear();
-        (new GameHandler(stage, ConnectionType.MULTI_PLAYER, settings)).start();
+        (new GameHandler(stage, ConnectionType.MULTI_PLAYER, settings, nameField.getText())).start();
     }
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
         // Clear the screen and start gamehandler as single player
         this.getChildren().clear();
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings)).start();
+        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
     }
 }
