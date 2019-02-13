@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PlayMenuController extends VBox implements MenuController{
@@ -82,8 +83,15 @@ public class PlayMenuController extends VBox implements MenuController{
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
-        // Clear the screen and start gamehandler as single player
+        // Clear the screen
         this.getChildren().clear();
+
+        //TODO: remove this with a nicer loading screen
+        Label loadingLabel = new Label("Creating game...");
+        loadingLabel.setFont(new Font("Consolas", 40));
+        this.getChildren().add(loadingLabel);
+
+        // Start gamehandler as single player
         (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
     }
 
