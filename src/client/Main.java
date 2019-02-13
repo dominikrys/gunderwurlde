@@ -3,6 +3,7 @@ package client;
 import client.gui.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -21,6 +22,7 @@ public class Main extends Application {
         stage.setFullScreen(false);
         stage.setFullScreenExitHint("");
         stage.centerOnScreen();
+        stage.getIcons().add(new Image("file:assets/img/entity/item/pistol.png"));
         stage.setTitle("Gunderwurlde");
 
         // Set stage to close and to kill handler when the window is closed
