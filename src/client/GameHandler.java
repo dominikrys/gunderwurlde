@@ -41,9 +41,16 @@ public class GameHandler extends Thread {
                 }
                 break;
             case MULTI_PLAYER_HOST:
+                if(!serverStarted) {
+                    server = new Server(MapList.MEADOW, playerName);
+                    serverStarted = true;
+                    client = new Client(stage, playerName, 0, this);
+                }
                 // Code for setting up server, joining it, and waiting for players
                 break;
             case MULTI_PLAYER_JOIN:
+                // TODO: Potential menu for choosing host address and port number?
+                client = new Client(stage, playerName, 1, this);
                 // Code for joining some server
                 break;
         }

@@ -6,10 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Enumeration;
-import java.util.Scanner;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
@@ -18,14 +15,13 @@ public class ClientSender extends Thread {
     DatagramPacket packet = null;
     int port;
     byte[] buffer;
-    Scanner scan;
 
     public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
         running = true;
-        senderSocket.setInterface(findInetAddress());
+        senderSocket.setInterface(Addressing.findInetAddress());
         this.start();
     }
 
@@ -49,15 +45,11 @@ public class ClientSender extends Thread {
             ObjectOutputStream out = null;
                try {
                 out = new ObjectOutputStream(bos);
-                // Writes the view object into the BAOutputStream
                 out.writeObject(action);
-                //flushes anything in the OOutputStream
                 out.flush();
-                // Writes the info in the BOutputStream to a byte array to be transmitted
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                // System.out.println("Packet sent from clientSender");
             } finally {
                 try {
                     bos.close();
@@ -75,24 +67,5 @@ public class ClientSender extends Thread {
         }
     }
 
-    private InetAddress findInetAddress() {
-        InetAddress addr = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
 
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    addr = addresses.nextElement();
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-        return addr;
-    }
 }

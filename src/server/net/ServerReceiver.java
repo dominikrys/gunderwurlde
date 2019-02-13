@@ -10,6 +10,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import client.net.Addressing;
 import server.Server;
 
 // Gets messages from client and puts them in a queue, for another
@@ -33,7 +34,7 @@ public class ServerReceiver extends Thread {
         this.handler = handler;
         buffer = new byte[255];
         running = true;
-        setInterfaces(listenSocket);
+        Addressing.setInterfaces(listenSocket);
         this.start();
     }
 
@@ -45,29 +46,6 @@ public class ServerReceiver extends Thread {
         this.running = false;
     }
 
-    public void setInterfaces(MulticastSocket listenSocket) {
-        Enumeration<NetworkInterface> interfaces;
-        // attempt to set the sockets interface to all the addresses of the machine
-        try {
-            // for all interfaces that are not loopback or up get the addresses associated with thos
-            // interfaces and set the sockets interface to that address
-            interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    listenSocket.setInterface(addr);
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-    }
 
     public void run() {
         try {

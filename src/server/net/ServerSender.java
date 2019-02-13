@@ -10,6 +10,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import client.net.Addressing;
 import shared.view.GameView;
 
 
@@ -26,7 +27,7 @@ public class ServerSender extends Thread {
         this.senderSocket = socket;
         this.port = port;
         running = true;
-        senderSocket.setInterface(findInetAddress());
+        senderSocket.setInterface(Addressing.findInetAddress());
         this.start();
     }
 
@@ -85,28 +86,6 @@ public class ServerSender extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private InetAddress findInetAddress() {
-        InetAddress addr = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    addr = addresses.nextElement();
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-        return addr;
     }
 }
 
