@@ -4,6 +4,7 @@ package shared.lists;
 public enum EntityList {
     // Item
     PISTOL("file:assets/img/entity/item/pistol.png"),
+    SHOTGUN("file:assets/img/entity/item/pistol.png"), // TODO get shotgun img
 
     // Player
     PLAYER("file:assets/img/entity/player/player_1.png"),
