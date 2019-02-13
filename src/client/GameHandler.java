@@ -32,7 +32,7 @@ public class GameHandler extends Thread {
     public void run() {
         switch (connectionType) {
             case SINGLE_PLAYER:
-                // CODE FOR ESTABLISHING LOCAL SERVER
+                // Code for establishing local server
                 if (!serverStarted) {
                     server = new Server(MapList.MEADOW, playerName);
                     serverStarted = true;
@@ -40,8 +40,11 @@ public class GameHandler extends Thread {
                     client.start();
                 }
                 break;
-            case MULTI_PLAYER:
-                // CODE FOR ESTABLISHING CONNECTION WITH REMOTE SERVER
+            case MULTI_PLAYER_HOST:
+                // Code for setting up server, joining it, and waiting for players
+                break;
+            case MULTI_PLAYER_JOIN:
+                // Code for joining some server
                 break;
         }
 
