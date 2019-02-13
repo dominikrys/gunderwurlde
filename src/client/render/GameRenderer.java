@@ -11,10 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
@@ -25,6 +22,7 @@ import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.entity.*;
+import sun.plugin.javascript.navig.Anchor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +38,8 @@ public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
+    // Whether the camera is centered on the player or not
+    private boolean cameraCentered;
     // Fonts
     private Font fontManaspace28;
     private Font fontManaspace18;
@@ -58,12 +58,17 @@ public class GameRenderer implements Runnable {
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
 
-    // Constructor
+    //TODO: REMOVE THIS, PURELY FOR TEST
     public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
+        this(stage, initialGameView, playerID, true);
+    }
+    // Constructor
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
+        this.cameraCentered = cameraCentered;
 
         // Load fonts
         try {
@@ -292,16 +297,20 @@ public class GameRenderer implements Runnable {
 
     // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
-        // Create canvas according to dimensions of the map
-        mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                inputGameView.getYDim() * Constants.TILE_SIZE);
-        mapGC = mapCanvas.getGraphicsContext2D();
+        // Create hbox for map canvas
+        AnchorPane mapBox = new AnchorPane();
 
-        // Create hbox to centre map canvas in and add map canvas to it
-        HBox mainHBox = new HBox();
-        mainHBox.setAlignment(Pos.CENTER_RIGHT);
-        mainHBox.setPadding(new Insets(0, 15, 0, 0));
-        mainHBox.getChildren().addAll(mapCanvas);
+        if (cameraCentered) {
+            mapCanvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        } else {
+            // Create canvas according to dimensions of the map
+            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                    inputGameView.getYDim() * Constants.TILE_SIZE);
+            AnchorPane.setRightAnchor(mapCanvas, 15.0);
+            AnchorPane.setTopAnchor(mapCanvas, 15.0);
+        }
+        mapGC = mapCanvas.getGraphicsContext2D();
+        mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
@@ -310,7 +319,7 @@ public class GameRenderer implements Runnable {
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mainHBox, HUDBox);
+        root.getChildren().addAll(mapBox, HUDBox);
 
         // Set stage root to game renderer
         stage.getScene().setRoot(root);
