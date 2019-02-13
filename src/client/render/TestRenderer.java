@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
+import shared.Constants;
 import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
@@ -29,7 +30,7 @@ public class TestRenderer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(new VBox()));
+        primaryStage.setScene(new Scene(new VBox(), Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
         primaryStage.show();
         GameMap map = new Meadow();
         int xDim = map.getXDim();

@@ -5,6 +5,9 @@ import java.util.concurrent.TimeUnit;
 
 import client.render.GameRenderer;
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import shared.lists.MapList;
 import shared.request.ClientRequests;
@@ -46,6 +49,7 @@ public class TestEngine extends Application implements HasEngine {
         firstRender = true;
         this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob");
         stage.setResizable(true);
+        stage.setScene(new Scene(new VBox()));
         engine.start();
         requests = new ClientRequests(1);
         loopDeDoop(stage);
