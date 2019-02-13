@@ -41,11 +41,11 @@ public class ZombieAI extends EnemyAI {
         int[] tile = Tile.locationToTile(pose);
 
         if(tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
-            return new Pose(pose.getX() + 0.1, pose.getY());
+            return new Pose(pose.getX() + 0.1, pose.getY(), 90);
         }
 
         if(tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
-            return new Pose(pose.getX() - 0.1, pose.getY());
+            return new Pose(pose.getX() - 0.1, pose.getY(), 270);
         }
 
         for (double i = 0.1; i < maxDistanceMoved; i += 0.1) {
