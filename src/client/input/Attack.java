@@ -26,7 +26,7 @@ public class Attack extends Action {
             // TODO: send shooting request
             handler.send(ActionList.ATTACK);
         } else {
-            System.out.println("No ammo");
+            //System.out.println("No ammo");
             // TODO: shooting fail stuff here (sound...)
         }
     }

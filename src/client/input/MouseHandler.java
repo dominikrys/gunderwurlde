@@ -76,7 +76,7 @@ public class MouseHandler extends UserInteraction {
         playerDegree = mouseDegree;
         // System.out.println("playerDegree: " + playerDegree);
         // TODO: send changes(playerDegree) to server
-        handler.send(ActionList.TURN, (int) playerDegree);
+        handler.send(ActionList.TURN, (int) playerDegree - 90);
 
     }
 
@@ -119,7 +119,7 @@ public class MouseHandler extends UserInteraction {
 				else if(event.getDeltaY() < 0) {
 					changeItem.nextItem();
 				}
-				System.out.println(playerView.getCurrentItemIndex());
+				//System.out.println(playerView.getCurrentItemIndex());
 				// TODO: send changes(item change) to server
 			}
 		});

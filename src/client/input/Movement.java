@@ -15,7 +15,7 @@ public class Movement extends Action{
 	private PlayerView playerView;
 	private KeyboardSettings kbSettings;
 	private Collision collision;
-	private PickItem pickItem;
+	//private PickItem pickItem;
 
 	public Movement(GameHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
 		super(handler, playerView);
@@ -23,43 +23,56 @@ public class Movement extends Action{
 		this.playerView = playerView;
 		this.kbSettings = kbSettings;
 		this.collision = new Collision(tileMap, pImage);
-		this.pickItem = new PickItem(handler, playerView, itemDropView);
+		//this.pickItem = new PickItem(handler, playerView, itemDropView);
 	}
 	
-	public void move(String key) {
+	public void move(String direction) {
 		Pose pose = new Pose(playerView.getPose().getX(), playerView.getPose().getY(), playerView.getPose().getDirection());
         // System.out.println(pose.getX());
         // System.out.println(pose.getY());
         // System.out.println(pose.getDirection());
-		pickItem.checkPick();
-		String action = kbSettings.getAction(key);
-		int direction = -1;
-		switch (action) {
+		//pickItem.checkPick();
+		//String action = kbSettings.getAction(key);
+		int angle = -1;
+		switch (direction) {
 			case "up" :
-				pose.setY(pose.getY() - playerView.getMoveSpeed());
-				direction = 0;
-				this.handler.send(ActionList.MOVEMENT, direction);
+				//pose.setY(pose.getY() - playerView.getMoveSpeed());
+				angle = 0;
+				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("up");
 				break;
 			case "left" :
-				pose.setX(pose.getX() - playerView.getMoveSpeed());
-				direction = 270;
-				this.handler.send(ActionList.MOVEMENT, direction);
+				//pose.setX(pose.getX() - playerView.getMoveSpeed());
+				angle = 270;
+				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("left");
 				break;
 			case "down" :
-				pose.setY(pose.getY() + playerView.getMoveSpeed());
-				direction = 180;
-				this.handler.send(ActionList.MOVEMENT, direction);
+				//pose.setY(pose.getY() + playerView.getMoveSpeed());
+				angle = 180;
+				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("down");
 				break;
 			case "right" :
-				pose.setX(pose.getX() + playerView.getMoveSpeed());
-				direction = 90;
-				this.handler.send(ActionList.MOVEMENT, direction);
+				//pose.setX(pose.getX() + playerView.getMoveSpeed());
+				angle = 90;
+				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("right");
 				break;
+			case "upLeft" :
+				angle = 315;
+				break;
+			case "upRight" :
+				angle = 45;
+				break;
+			case "downLeft" :
+				angle = 225;
+				break;
+			case "downRight" :
+				angle = 135;
+				break;
 		}
+		this.handler.send(ActionList.MOVEMENT, angle);
 		/*
 		if(collision.checkBoundary(pose.getX(), pose.getY())) {
 			//playerView.setPose(pose);
