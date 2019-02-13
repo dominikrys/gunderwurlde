@@ -37,39 +37,39 @@ public class Movement extends Action{
 		switch (direction) {
 			case "up" :
 				//pose.setY(pose.getY() - playerView.getMoveSpeed());
-            angle = 270;
+			        angle = 270;
 				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("up");
 				break;
 			case "left" :
 				//pose.setX(pose.getX() - playerView.getMoveSpeed());
-            angle = 180;
+			        angle = 180;
 				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("left");
 				break;
 			case "down" :
 				//pose.setY(pose.getY() + playerView.getMoveSpeed());
-            angle = 90;
+			        angle = 90;
 				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("down");
 				break;
 			case "right" :
 				//pose.setX(pose.getX() + playerView.getMoveSpeed());
-            angle = 0;
+			        angle = 0;
 				//this.handler.send(ActionList.MOVEMENT, direction);
             // System.out.println("right");
 				break;
 			case "upLeft" :
-            angle = 225;
+			        angle = 225;
 				break;
 			case "upRight" :
-            angle = 315;
+			        angle = 315;
 				break;
 			case "downLeft" :
-            angle = 135;
+			        angle = 135;
 				break;
 			case "downRight" :
-            angle = 45;
+			        angle = 45;
 				break;
 		}
 		this.handler.send(ActionList.MOVEMENT, angle);
