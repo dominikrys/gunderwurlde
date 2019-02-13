@@ -1,5 +1,6 @@
 package server.engine.ai;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import server.engine.state.entity.attack.AoeAttack;
@@ -13,8 +14,8 @@ import shared.lists.TileState;
 public class ZombieAI extends EnemyAI {
     public static long DEFAULT_DELAY = 800;
 
-    protected long attackDelay;
-    protected long lastAttackTime;
+    private long attackDelay;
+    private long lastAttackTime;
 
     public ZombieAI() {
         super();
@@ -26,17 +27,19 @@ public class ZombieAI extends EnemyAI {
     public LinkedHashSet<Attack> getAttacks() {
         LinkedHashSet<Attack> attacks = new LinkedHashSet<>();
         long now = System.currentTimeMillis();
+
         if ((now - lastAttackTime) >= attackDelay) {
             attacks.add(new AoeAttack(pose, 16, AttackType.AOE, 1)); // TODO sort out to be infront of zombie
             lastAttackTime = now;
         }
+
         return attacks;
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceMoved) {
-        Pose playerPose = getPlayerPoses().iterator().next();
+    protected Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer) {
         int[] tile = Tile.locationToTile(pose);
+
         if(tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
             return new Pose(pose.getX() + 0.1, pose.getY());
         }
@@ -46,7 +49,7 @@ public class ZombieAI extends EnemyAI {
         }
 
         for (double i = 0.1; i < maxDistanceMoved; i += 0.1) {
-            pose = newPose(playerPose, pose);
+            pose = newPose(closestPlayer, pose);
         }
 
         return pose;

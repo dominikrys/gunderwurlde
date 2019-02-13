@@ -15,38 +15,37 @@ public abstract class EnemyAI {
 
     protected Pose pose;
     private int size;
-    protected HashSet<Pose> playerPoses;
+    private HashSet<Pose> playerPoses;
+    private Pose closestPlayer;
     protected Tile[][] tileMap;
     private boolean isProcessing = false;
-    private AIAction aiAction = AIAction.WAIT;
 
     protected EnemyAI() {
     }
 
     public abstract LinkedHashSet<Attack> getAttacks();
 
-    protected abstract Pose generateNextPose(double maxDistanceMoved);
-
-    public synchronized Pose getNewPose(double maxDistanceMoved) {
-        return generateNextPose(maxDistanceMoved);
+    protected HashSet<Pose> getPlayerPoses() {
+        return playerPoses;
     }
 
-    private int getDistToPlayer(Pose player) {
+    protected abstract Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer);
+
+    public synchronized Pose getNewPose(double maxDistanceMoved) {
+        return generateNextPose(maxDistanceMoved, closestPlayer);
+    }
+
+    protected int getDistToPlayer(Pose player) {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-
     public AIAction getAction() {
-        if(getDistToPlayer(getPlayerPoses().iterator().next()) >= Constants.TILE_SIZE){
+        if(getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE){
             return AIAction.MOVE;
-        }else if (getDistToPlayer(getPlayerPoses().iterator().next()) < Constants.TILE_SIZE){
+        }else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE){
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
-    }
-
-    protected HashSet<Pose> getPlayerPoses() {
-        return playerPoses;
     }
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
@@ -54,10 +53,26 @@ public abstract class EnemyAI {
         this.size = size;
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
+        this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
     public boolean isProcessing() {
         return isProcessing;
+    }
+
+    protected Pose findClosestPlayer(HashSet<Pose> playerPoses) {
+        Pose closestPlayer = playerPoses.iterator().next();
+        int distToClosest = Integer.MAX_VALUE;
+
+        for (Pose playerPose : playerPoses) {
+            int distToPlayer = getDistToPlayer(playerPose);
+            if(distToPlayer < distToClosest){
+                distToClosest = distToPlayer;
+                closestPlayer = playerPose;
+            }
+        }
+
+        return closestPlayer;
     }
 
 }
