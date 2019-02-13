@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -40,7 +42,7 @@
       </Label>
       <HBox alignment="CENTER" prefHeight="59.0" prefWidth="600.0" style="-fx-spacing: 10px;">
          <children>
-            <Button fx:id="singlePlayerButton" disable="true" mnemonicParsing="false" onAction="#singlePlayerButtonPress" text="Single Player">
+            <Button fx:id="singlePlayerButton" disable="true" graphicTextGap="10.0" mnemonicParsing="false" onAction="#singlePlayerButtonPress" text="Single Player">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -48,12 +50,19 @@
                   <String fx:value="manaspaceFont" />
                   <String fx:value="menuButton" />
                </styleClass>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/gui/person.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 25px;">
          <children>
-            <Button fx:id="multiCreateGameButton" disable="true" mnemonicParsing="false" onAction="#multiCreateGameButtonPress" text="Online: Create New Game">
+            <Button fx:id="multiCreateGameButton" disable="true" graphicTextGap="10.0" mnemonicParsing="false" onAction="#multiCreateGameButtonPress" text="Create Online Game">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -61,8 +70,15 @@
                   <String fx:value="manaspaceFont" />
                   <String fx:value="menuButton" />
                </styleClass>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/gui/globe.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="multiJoinGameButton" disable="true" mnemonicParsing="false" onAction="#multiJoinGameButtonPress" text="Online: Join Game">
+            <Button fx:id="multiJoinGameButton" disable="true" graphicTextGap="10.0" mnemonicParsing="false" onAction="#multiJoinGameButtonPress" text="Join Game">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -70,6 +86,13 @@
                   <String fx:value="manaspaceFont" />
                   <String fx:value="menuButton" />
                </styleClass>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/gui/globe.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
          </children>
       </HBox>
