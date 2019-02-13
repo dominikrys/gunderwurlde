@@ -16,13 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import server.engine.state.entity.player.Player;
 import shared.Constants;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.entity.*;
-import sun.plugin.javascript.navig.Anchor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -237,16 +237,21 @@ public class GameRenderer implements Runnable {
         renderEntity(entityView, mapGC, imageToRender);
     }
 
+    // Method for getting the current player
+    private PlayerView getCurrentPlayer() {
+        for (PlayerView playerView : gameView.getPlayers()) {
+            if (playerView.getID() == playerID) {
+                return playerView;
+            }
+        }
+
+        return null;
+    }
+
     // Update all HUD elements
     private void updateHUD() {
         // Get the player from gameview
-        PlayerView currentPlayer = null;
-        for (PlayerView playerView : gameView.getPlayers()) {
-            if (playerView.getID() == playerID) {
-                currentPlayer = playerView;
-                break;
-            }
-        }
+        PlayerView currentPlayer = getCurrentPlayer();
 
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
@@ -363,13 +368,7 @@ public class GameRenderer implements Runnable {
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
-        PlayerView currentPlayer = null;
-        for (PlayerView player : inputGameView.getPlayers()) {
-            if (player.getID() == playerID) {
-                currentPlayer = player;
-                break;
-            }
-        }
+        PlayerView currentPlayer = getCurrentPlayer();
 
         // If for some reason the player hasn't been found, return an empty HUD
         if (currentPlayer == null) {
