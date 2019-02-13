@@ -3,6 +3,7 @@ package client.render;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +24,7 @@ import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.entity.*;
+import sun.plugin.javascript.navig.Anchor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -182,9 +184,26 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
 
+        // Center camera on player if needed
+        if (cameraCentered) {
+            centerCamera();
+        }
+
         // Update HUD
         updateHUD();
     }
+
+    private void centerCamera(){
+        PlayerView currentPlayer = getCurrentPlayer();
+        double playerX = currentPlayer.getPose().getX();
+        double playerY = currentPlayer.getPose().getY();
+
+        AnchorPane.setTopAnchor(mapCanvas, (double) Constants.SCREEN_HEIGHT/2 - playerY - 16);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) Constants.SCREEN_WIDTH/2 - playerX - 16);
+
+
+    }
+
 
     // Render entities to the map canvas
     private void renderEntitiesFromGameViewToCanvas() {
