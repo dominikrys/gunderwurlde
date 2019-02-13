@@ -11,10 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
@@ -37,9 +34,12 @@ public class GameRenderer implements Runnable {
     Map<EntityList, Image> loadedSprites;
     // Client
     ClientSender sender;
+    AnchorPane mapBox; // Pane for map canvas
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
+    // Whether the camera is centered on the player or not
+    private boolean cameraCentered;
     // Fonts
     private Font fontManaspace28;
     private Font fontManaspace18;
@@ -58,12 +58,18 @@ public class GameRenderer implements Runnable {
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
 
-    // Constructor
+    //TODO: REMOVE THIS, PURELY FOR TEST
     public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
+        this(stage, initialGameView, playerID, true);
+    }
+
+    // Constructor
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
+        this.cameraCentered = cameraCentered;
 
         // Load fonts
         try {
@@ -97,6 +103,7 @@ public class GameRenderer implements Runnable {
         heldItems = null;
         ammoBox = null;
 
+        // Initialise input variables
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
     }
@@ -122,6 +129,44 @@ public class GameRenderer implements Runnable {
         */
     }
 
+    // Set up the window for tha game
+    private void setUpGameView(GameView inputGameView, int playerID) {
+        mapBox = new AnchorPane();
+
+        if (cameraCentered) {
+            mapCanvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        } else {
+            // Create canvas according to dimensions of the map
+            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                    inputGameView.getYDim() * Constants.TILE_SIZE);
+            AnchorPane.setRightAnchor(mapCanvas, 15.0);
+            AnchorPane.setTopAnchor(mapCanvas, 15.0);
+        }
+        mapGC = mapCanvas.getGraphicsContext2D();
+        mapBox.getChildren().addAll(mapCanvas);
+
+        // Create HUD
+        VBox HUDBox = createHUD(inputGameView, playerID);
+        HUDBox.setAlignment(Pos.TOP_LEFT);
+
+        // Create root stackpane and add elements to be rendered to it
+        StackPane root = new StackPane();
+        root.setAlignment(Pos.TOP_LEFT);
+        root.getChildren().addAll(mapBox, HUDBox);
+
+        // Set stage root to game renderer
+        stage.getScene().setRoot(root);
+
+        // Initialise input handler methods
+        kbHandler.setGameView(inputGameView);
+        kbHandler.setScene(stage.getScene());
+        kbHandler.activate();
+        mHandler.setCanvas(mapCanvas);
+        mHandler.setGameView(inputGameView);
+        mHandler.setScene(stage.getScene());
+        mHandler.activate();
+    }
+
     // Update stored gameView
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
@@ -137,8 +182,24 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
 
+        // Center camera on player if needed
+        if (cameraCentered) {
+            centerCamera();
+        }
+
         // Update HUD
         updateHUD();
+    }
+
+    private void centerCamera() {
+        // Get player location on map
+        PlayerView currentPlayer = getCurrentPlayer();
+        double playerX = currentPlayer.getPose().getX();
+        double playerY = currentPlayer.getPose().getY();
+
+        // Center player
+        AnchorPane.setTopAnchor(mapCanvas, (double) Constants.SCREEN_HEIGHT / 2 - playerY - 16);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) Constants.SCREEN_WIDTH / 2 - playerX - 16);
     }
 
     // Render entities to the map canvas
@@ -192,16 +253,21 @@ public class GameRenderer implements Runnable {
         renderEntity(entityView, mapGC, imageToRender);
     }
 
+    // Method for getting the current player
+    private PlayerView getCurrentPlayer() {
+        for (PlayerView playerView : gameView.getPlayers()) {
+            if (playerView.getID() == playerID) {
+                return playerView;
+            }
+        }
+
+        return null;
+    }
+
     // Update all HUD elements
     private void updateHUD() {
         // Get the player from gameview
-        PlayerView currentPlayer = null;
-        for (PlayerView playerView : gameView.getPlayers()) {
-            if (playerView.getID() == playerID) {
-                currentPlayer = playerView;
-                break;
-            }
-        }
+        PlayerView currentPlayer = getCurrentPlayer();
 
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
@@ -290,41 +356,6 @@ public class GameRenderer implements Runnable {
         }
     }
 
-    // Set up the window for tha game
-    private void setUpGameView(GameView inputGameView, int playerID) {
-        // Create canvas according to dimensions of the map
-        mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                inputGameView.getYDim() * Constants.TILE_SIZE);
-        mapGC = mapCanvas.getGraphicsContext2D();
-
-        // Create hbox to centre map canvas in and add map canvas to it
-        HBox mainHBox = new HBox();
-        mainHBox.setAlignment(Pos.CENTER_RIGHT);
-        mainHBox.setPadding(new Insets(0, 15, 0, 0));
-        mainHBox.getChildren().addAll(mapCanvas);
-
-        // Create HUD
-        VBox HUDBox = createHUD(inputGameView, playerID);
-        HUDBox.setAlignment(Pos.TOP_LEFT);
-
-        // Create root stackpane and add elements to be rendered to it
-        StackPane root = new StackPane();
-        root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mainHBox, HUDBox);
-
-        // Set stage root to game renderer
-        stage.getScene().setRoot(root);
-
-        // Initialise input handler methods
-        kbHandler.setGameView(inputGameView);
-        kbHandler.setScene(stage.getScene());
-        kbHandler.activate();
-        mHandler.setCanvas(mapCanvas);
-        mHandler.setGameView(inputGameView);
-        mHandler.setScene(stage.getScene());
-        mHandler.activate();
-    }
-
     // Render map from tiles
     private void renderMap() {
         // Get map X and Y dimensions
@@ -353,13 +384,7 @@ public class GameRenderer implements Runnable {
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
-        PlayerView currentPlayer = null;
-        for (PlayerView player : inputGameView.getPlayers()) {
-            if (player.getID() == playerID) {
-                currentPlayer = player;
-                break;
-            }
-        }
+        PlayerView currentPlayer = getCurrentPlayer();
 
         // If for some reason the player hasn't been found, return an empty HUD
         if (currentPlayer == null) {
