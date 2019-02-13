@@ -20,12 +20,12 @@
             <String fx:value="manaspaceFont" />
          </styleClass>
       </Label>
-      <Label styleClass="manaspaceFont" text="Enter Name and Press Enter:">
+      <Label styleClass="manaspaceFont" text="Type Player Name and Press 'ENTER':">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;" styleClass="manaSpaceFontNoColour">
+      <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;" styleClass="nameInputBox">
          <font>
             <Font name="Consolas" size="26.0" />
          </font>
@@ -33,7 +33,7 @@
             <Insets />
          </opaqueInsets>
       </TextField>
-      <Label fx:id="characterErrorText" alignment="CENTER" prefHeight="32.0" prefWidth="523.0" styleClass="manaspaceFontRed" text="Name has to be up to 11 characters!" textAlignment="CENTER" textFill="#e50b0b" visible="false">
+      <Label fx:id="characterErrorText" alignment="CENTER" prefHeight="32.0" prefWidth="523.0" styleClass="nameTooLong" text="Name has to be up to 11 characters!" textAlignment="CENTER" textFill="#e50b0b" visible="false">
          <font>
             <Font name="Consolas" size="22.0" />
          </font>
@@ -49,7 +49,20 @@
                   <String fx:value="menuButton" />
                </styleClass>
             </Button>
-            <Button fx:id="multiPlayerButton" disable="true" mnemonicParsing="false" onAction="#multiPlayerButtonPress" text="Multiplayer">
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 25px;">
+         <children>
+            <Button fx:id="multiCreateGameButton" disable="true" mnemonicParsing="false" onAction="#multiCreateGameButtonPress" text="Online: Create New Game">
+               <font>
+                  <Font name="Consolas" size="22.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="manaspaceFont" />
+                  <String fx:value="menuButton" />
+               </styleClass>
+            </Button>
+            <Button fx:id="multiJoinGameButton" disable="true" mnemonicParsing="false" onAction="#multiJoinGameButtonPress" text="Online: Join Game">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>

@@ -16,13 +16,20 @@
 	-fx-text-fill: black;
 }
 
-.manaSpaceFontNoColour {
+.nameInputBox {
 	-fx-font-family: 'Manaspace', Consolas;
+	-fx-font-size: 28px;
 }
 
-.manaspaceFontRed {
+.nameTooLong {
 	-fx-font-family: 'Manaspace', Consolas;
 	-fx-text-fill: red;
+	-fx-font-size: 20px;
+}
+
+.playButton {
+	-fx-font-size: 38px;
+	-fx-background-radius: 0px;
 }
 
 .button {

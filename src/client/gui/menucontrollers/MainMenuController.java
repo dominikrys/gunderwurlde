@@ -27,6 +27,9 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     private Button quitButton;
 
+    @FXML
+    private Button highScoreButton;
+
     public MainMenuController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
@@ -71,6 +74,11 @@ public class MainMenuController extends VBox implements MenuController {
         // Switch to help menu and clear this object
         (new HelpMenuController(stage, settings)).show();
         this.getChildren().clear();
+    }
+
+    @FXML
+    void highScoreButtonPress(ActionEvent event) {
+
     }
 
     @FXML

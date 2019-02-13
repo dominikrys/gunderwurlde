@@ -23,7 +23,9 @@ public class PlayMenuController extends VBox implements MenuController{
     @FXML
     private Button singlePlayerButton;
     @FXML
-    private Button multiPlayerButton;
+    private Button multiCreateGameButton;
+    @FXML
+    private Button multiJoinGameButton;
     @FXML
     private Button backButton;
     @FXML
@@ -62,24 +64,20 @@ public class PlayMenuController extends VBox implements MenuController{
         // Only allow going into single or multi player if a name has been entered
         if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
             singlePlayerButton.setDisable(false);
-            multiPlayerButton.setDisable(false);
+            multiJoinGameButton.setDisable(false);
+            multiCreateGameButton.setDisable(false);
             characterErrorText.setVisible(false);
         } else if (nameField.getCharacters().length() == 0) {
             singlePlayerButton.setDisable(true);
-            multiPlayerButton.setDisable(true);
+            multiJoinGameButton.setDisable(true);
+            multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(false);
         } else {
             singlePlayerButton.setDisable(true);
-            multiPlayerButton.setDisable(true);
+            multiJoinGameButton.setDisable(true);
+            multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(true);
         }
-    }
-
-    @FXML
-    void multiPlayerButtonPress(ActionEvent event) {
-        // Clear the screen and start gamehandler as multiplayer
-        this.getChildren().clear();
-        (new GameHandler(stage, ConnectionType.MULTI_PLAYER, settings, nameField.getText())).start();
     }
 
     @FXML
@@ -87,5 +85,15 @@ public class PlayMenuController extends VBox implements MenuController{
         // Clear the screen and start gamehandler as single player
         this.getChildren().clear();
         (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
+    }
+
+    @FXML
+    void multiCreateGameButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void multiJoinGameButtonPress(ActionEvent event) {
+
     }
 }

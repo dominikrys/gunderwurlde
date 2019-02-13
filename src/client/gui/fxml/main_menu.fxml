@@ -17,14 +17,23 @@
             <String fx:value="gameTitle" />
          </styleClass>
       </Label>
-      <Button fx:id="playButton" mnemonicParsing="false" onAction="#playButtonPress" text="Play">
+      <Button fx:id="playButton" mnemonicParsing="false" onAction="#playButtonPress" text="PLAY">
+         <font>
+            <Font name="Manaspace" size="34.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFont" />
+            <String fx:value="playButton" />
+         </styleClass></Button>
+      <Button fx:id="highScoreButton" mnemonicParsing="false" onAction="#highScoreButtonPress" text="High Scores">
          <font>
             <Font name="Manaspace" size="34.0" />
          </font>
          <styleClass>
             <String fx:value="manaspaceFont" />
             <String fx:value="menuButton" />
-         </styleClass></Button>
+         </styleClass>
+      </Button>
       <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#settingsButtonPress" text="Settings">
          <font>
             <Font name="Manaspace" size="22.0" />
