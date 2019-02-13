@@ -38,6 +38,7 @@ public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
+    AnchorPane mapBox; // Pane for map canvas
     // Whether the camera is centered on the player or not
     private boolean cameraCentered;
     // Fonts
@@ -102,6 +103,7 @@ public class GameRenderer implements Runnable {
         heldItems = null;
         ammoBox = null;
 
+        // Initialise input variables
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
     }
@@ -125,6 +127,44 @@ public class GameRenderer implements Runnable {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
         */
+    }
+
+    // Set up the window for tha game
+    private void setUpGameView(GameView inputGameView, int playerID) {
+        mapBox = new AnchorPane();
+
+        if (cameraCentered) {
+            mapCanvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        } else {
+            // Create canvas according to dimensions of the map
+            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                    inputGameView.getYDim() * Constants.TILE_SIZE);
+            AnchorPane.setRightAnchor(mapCanvas, 15.0);
+            AnchorPane.setTopAnchor(mapCanvas, 15.0);
+        }
+        mapGC = mapCanvas.getGraphicsContext2D();
+        mapBox.getChildren().addAll(mapCanvas);
+
+        // Create HUD
+        VBox HUDBox = createHUD(inputGameView, playerID);
+        HUDBox.setAlignment(Pos.TOP_LEFT);
+
+        // Create root stackpane and add elements to be rendered to it
+        StackPane root = new StackPane();
+        root.setAlignment(Pos.TOP_LEFT);
+        root.getChildren().addAll(mapBox, HUDBox);
+
+        // Set stage root to game renderer
+        stage.getScene().setRoot(root);
+
+        // Initialise input handler methods
+        kbHandler.setGameView(inputGameView);
+        kbHandler.setScene(stage.getScene());
+        kbHandler.activate();
+        mHandler.setCanvas(mapCanvas);
+        mHandler.setGameView(inputGameView);
+        mHandler.setScene(stage.getScene());
+        mHandler.activate();
     }
 
     // Update stored gameView
@@ -293,45 +333,6 @@ public class GameRenderer implements Runnable {
             currentGunInfo.getChildren().addAll(currentAmmo);
             ammoBox.getChildren().add(currentGunInfo);
         }
-    }
-
-    // Set up the window for tha game
-    private void setUpGameView(GameView inputGameView, int playerID) {
-        // Create hbox for map canvas
-        AnchorPane mapBox = new AnchorPane();
-
-        if (cameraCentered) {
-            mapCanvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        } else {
-            // Create canvas according to dimensions of the map
-            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                    inputGameView.getYDim() * Constants.TILE_SIZE);
-            AnchorPane.setRightAnchor(mapCanvas, 15.0);
-            AnchorPane.setTopAnchor(mapCanvas, 15.0);
-        }
-        mapGC = mapCanvas.getGraphicsContext2D();
-        mapBox.getChildren().addAll(mapCanvas);
-
-        // Create HUD
-        VBox HUDBox = createHUD(inputGameView, playerID);
-        HUDBox.setAlignment(Pos.TOP_LEFT);
-
-        // Create root stackpane and add elements to be rendered to it
-        StackPane root = new StackPane();
-        root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mapBox, HUDBox);
-
-        // Set stage root to game renderer
-        stage.getScene().setRoot(root);
-
-        // Initialise input handler methods
-        kbHandler.setGameView(inputGameView);
-        kbHandler.setScene(stage.getScene());
-        kbHandler.activate();
-        mHandler.setCanvas(mapCanvas);
-        mHandler.setGameView(inputGameView);
-        mHandler.setScene(stage.getScene());
-        mHandler.activate();
     }
 
     // Render map from tiles
