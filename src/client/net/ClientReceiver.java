@@ -10,6 +10,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import client.Client;
@@ -33,7 +35,7 @@ public class ClientReceiver extends Thread {
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;
-        buffer = new byte[25000];
+        buffer = new byte[17000];
         running = true;
         Addressing.setInterfaces(listenSocket);
         this.start();
@@ -59,36 +61,44 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
-                // System.out.println("Size of received packet" + packet.getData().length);
-                // Creates a bytearrayinputstream from the received packets data
-                ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
-                //ObjectinputStream to turn the bytes back into an object.
-                ObjectInputStream in = null;
-                GameView view = null;
-                try {
-                    // System.out.println("Client received new gameview");
-                    in = new ObjectInputStream(bis);
-                    view = (GameView)in.readObject();
-                    client.setGameView(view);
-                    // renderer.updateGameView(view);
-                    // renderer.getKeyboardHandler().setGameView(view);
-                    // renderer.getMouseHandler().setGameView(view);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (EOFException ex) {
-                    ex.printStackTrace();
-                    }
-                    finally {
+                System.out.println("Receiver packet size is:" + packet.getLength());
+                if(packet.getLength() == 4){
+                    System.out.println("Updating buffer size");
+                    ByteBuffer wrapped = ByteBuffer.wrap(packet.getData());
+                    int bufferSize = wrapped.getInt();
+                    buffer = new byte[bufferSize];
+                    continue;
+                }
+                else {
+
+                    // System.out.println("Size of received packet" + packet.getData().length);
+                    // Creates a bytearrayinputstream from the received packets data
+                    ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
+                    //ObjectinputStream to turn the bytes back into an object.
+                    ObjectInputStream in = null;
+                    GameView view = null;
                     try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
+                        // System.out.println("Client received new gameview");
+                        in = new ObjectInputStream(bis);
+                        view = (GameView) in.readObject();
+                        client.setGameView(view);
+                        // renderer.updateGameView(view);
+                        // renderer.getKeyboardHandler().setGameView(view);
+                        // renderer.getMouseHandler().setGameView(view);
+                    } catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
+                    } catch (EOFException ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        try {
+                            if (in != null) {
+                                in.close();
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-
-                // TODO how do threads exit?
             }
             System.out.println("Ending client receiver");
         }

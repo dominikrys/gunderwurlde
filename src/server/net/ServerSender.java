@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.util.Enumeration;
 
 import client.net.Addressing;
@@ -21,6 +22,7 @@ public class ServerSender extends Thread {
     DatagramPacket packet;
     int port;
     byte[] buffer;
+    int maxBufferSize;
 
     public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
@@ -50,6 +52,8 @@ public class ServerSender extends Thread {
     // sends a confirmation back to the client that the message has been received
     // in future will be used to send the continuous game state to the user/users
     public void send(GameView view) {
+
+
         // System.out.println("Server received new GameView");
         try {
             // Turn the received GameView into a byte array
@@ -66,6 +70,18 @@ public class ServerSender extends Thread {
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
+
+                int buffersize = bos.toByteArray().length;
+                if(buffersize > maxBufferSize){
+                    buffer = ByteBuffer.allocate(4).putInt(buffersize).array();
+                    maxBufferSize = buffersize;
+                    packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                    System.out.println("Sender packet data size is:" + packet.getData().length);
+                    System.out.println("Sender packet size is:" + packet.getLength());
+                    senderSocket.send(packet);
+                }
+
+
                 buffer = bos.toByteArray();
                 // System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
