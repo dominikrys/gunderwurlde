@@ -1,7 +1,6 @@
 package client.gui.menucontrollers;
 
 import client.gui.Settings;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

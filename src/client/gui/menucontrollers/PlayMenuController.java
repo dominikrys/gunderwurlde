@@ -1,7 +1,5 @@
 package client.gui.menucontrollers;
 
-import java.io.IOException;
-
 import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
@@ -15,7 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class PlayMenuController extends VBox implements MenuController{
+import java.io.IOException;
+
+public class PlayMenuController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
 
@@ -93,15 +93,17 @@ public class PlayMenuController extends VBox implements MenuController{
 
         // Start gamehandler as single player
         (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
+
+        //TODO: Go into map selection
     }
 
     @FXML
     void multiCreateGameButtonPress(ActionEvent event) {
-
+        // TODO: Go into map selection, and then choose team, and then start server
     }
 
     @FXML
     void multiJoinGameButtonPress(ActionEvent event) {
-
+        // TODO: enter IP screen, choose team
     }
 }
