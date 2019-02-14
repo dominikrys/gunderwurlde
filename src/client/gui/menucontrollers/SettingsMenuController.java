@@ -4,13 +4,11 @@ import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -98,7 +96,8 @@ public class SettingsMenuController extends VBox implements MenuController {
 
         // Disable apply button
         applyButton.setDisable(true);
-            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        // Populate resolution box with resolutions
     }
 
     @Override
