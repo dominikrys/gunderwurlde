@@ -3,6 +3,7 @@ package server.engine;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import client.gui.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -56,7 +57,7 @@ public class TestEngine extends Application implements HasEngine {
         while (firstRender) {
             if (view != null) {
                 stage.show();
-                rend = new GameRenderer(stage, view, 0);
+                rend = new GameRenderer(stage, view, 0, new Settings());
                 firstRender = false;
                 rend.run();
                 System.out.println("Renderer started");

@@ -6,6 +6,7 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import client.gui.Settings;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
@@ -76,7 +77,7 @@ public class Client extends Thread {
         this.view = view;
         if (firstView) {
             firstView = false;
-            renderer = new GameRenderer(stage, this.view, playerID);
+            renderer = new GameRenderer(stage, this.view, playerID, new Settings());
             renderer.getKeyboardHandler().setGameHandler(handler);
             renderer.getMouseHandler().setGameHandler(handler);
             renderer.run();
