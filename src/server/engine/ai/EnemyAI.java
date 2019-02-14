@@ -4,7 +4,7 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.map.tile.Tile;
@@ -23,7 +23,7 @@ public abstract class EnemyAI {
     protected EnemyAI() {
     }
 
-    public abstract LinkedHashSet<Attack> getAttacks();
+    public abstract LinkedList<Attack> getAttacks();
 
     protected HashSet<Pose> getPlayerPoses() {
         return playerPoses;

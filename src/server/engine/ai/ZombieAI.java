@@ -8,7 +8,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.TileState;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 public class ZombieAI extends EnemyAI {
     private static long DEFAULT_DELAY = 800;
@@ -23,8 +23,8 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    public LinkedHashSet<Attack> getAttacks() {
-        LinkedHashSet<Attack> attacks = new LinkedHashSet<>();
+    public LinkedList<Attack> getAttacks() {
+        LinkedList<Attack> attacks = new LinkedList<>();
         long now = System.currentTimeMillis();
 
         if ((now - lastAttackTime) >= attackDelay) {
@@ -54,7 +54,7 @@ public class ZombieAI extends EnemyAI {
         return pose;
     }
 
-    public Pose poseByAngle(double angle, Pose enemy) {
+    private Pose poseByAngle(double angle, Pose enemy) {
 
         if (angle > 337.5 || angle <= 22.5) {
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() + 1, enemy.getY()));
