@@ -315,11 +315,11 @@ public class GameRenderer implements Runnable {
                 dropShadow.setSpread(0.75);
                 itemImageView.setEffect(dropShadow);
                 itemPane.setBorder(new Border(new BorderStroke(Color.CORNFLOWERBLUE,
-                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
             } else {
                 // Not selected item, add black border
                 itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
             }
 
             // Add imageview to pane
@@ -337,7 +337,7 @@ public class GameRenderer implements Runnable {
             HBox itemPane = new HBox();
             itemPane.setMinWidth(Constants.TILE_SIZE * 1.3);
             itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+                    BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
 
             // Add box to item list
             heldItems.getChildren().add(itemPane);
