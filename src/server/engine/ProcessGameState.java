@@ -694,9 +694,9 @@ public class ProcessGameState extends Thread {
         for (Item i : p.getItems()) {
             if (i instanceof Gun) {
                 Gun g = (Gun) i;
-                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip()));
+                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire()));
             } else {
-                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0));
+                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0, false));
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),

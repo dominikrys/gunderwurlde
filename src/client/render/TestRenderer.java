@@ -1,15 +1,20 @@
 package client.render;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import client.gui.Settings;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
-import shared.Constants;
 import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
@@ -18,9 +23,6 @@ import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRenderer extends Application {
 
@@ -47,7 +49,7 @@ public class TestRenderer extends Application {
         }
         LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
         ArrayList<ItemView> playerItems = new ArrayList<>();
-        playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12));
+        playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true));
         LinkedHashMap<AmmoList, Integer> playerAmmo = new LinkedHashMap<AmmoList, Integer>();
         playerAmmo.put(AmmoList.BASIC_AMMO, 36);
         PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED);
