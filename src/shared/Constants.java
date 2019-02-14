@@ -6,8 +6,9 @@ public final class Constants {
     public static final String MANASPACE_FONT_PATH = "assets/fonts/manaspc.ttf";
     public static final int MAX_PLAYERS = 4;
 
-    // Most common screen resolutions as of the Steam Harware survey January 2019 + 800x600 for compatibility's sake
-    public static final String[] SCREEN_RESOLUTIONS = new String[]{"800x600", "1024x768", "1280x1024", "1280x720", "1280x800", "1360x768",
-            "1440x900", "1536x864", "1600x900", "1680x1050", "1920x1200", "1920x1080", "2560x1080", "3440x1440",
-            "3840x2160"};
+    // Most common screen resolutions as of the Steam Hardware survey January 2019 + 800x600 for compatibility's sake
+    public static final int[][] SCREEN_RESOLUTIONS = new int[][]{{800, 600}, {1024, 768}, {1280, 1024}, {1280, 800},
+            {1280, 800}, {1360, 768}, {1440, 900}, {1536, 864}, {1600, 900}, {1680, 1050}, {1920, 1200}, {1920, 1080},
+            {2560, 1080}, {2560, 1080}, {3440, 1440}, {3840, 2160}
+    };
 }

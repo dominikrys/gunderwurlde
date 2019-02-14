@@ -13,7 +13,8 @@ public class Settings {
     // Screen variables
     private boolean fullScreen;
     // Current screen resolution
-    private Resolution screenResolution;
+    private int screenWidth;
+    private int screenHeight;
 
     public Settings() {
         // TODO: have these get loaded from a file
@@ -24,7 +25,9 @@ public class Settings {
         soundMute = false;
         musicMute = false;
         fullScreen = false;
-        screenResolution = new Resolution("1280x720");
+
+        screenWidth = 1280;
+        screenHeight = 720;
     }
 
     public int getSoundVolume() {
@@ -82,46 +85,22 @@ public class Settings {
     }
 
     public String getScreenResolutionString() {
-        return screenResolution.toString();
+        return screenWidth + "x" + screenHeight;
     }
 
     public int getScreenHeight() {
-        return screenResolution.getScreenHeight();
+        return screenHeight;
     }
 
     public int getScreenWidth() {
-        return screenResolution.getScreenWidth();
+        return screenWidth;
     }
 
-    public void setScreenResolution(String resolution) {
-        screenResolution.setResolution(resolution);
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
     }
 
-    // Screen resolutions
-    private class Resolution {
-        private int screenWidth;
-        private int screenHeight;
-
-        private Resolution(String resolution) {
-            setResolution(resolution);
-        }
-
-        private void setResolution(String resolution) {
-            this.screenWidth = Integer.parseInt(resolution.substring(0, resolution.indexOf('x')));
-            this.screenHeight = Integer.parseInt(resolution.substring(resolution.indexOf('x') + 1));
-        }
-
-        @Override
-        public String toString() {
-            return screenWidth + "x" + screenHeight;
-        }
-
-        private int getScreenWidth(){
-            return screenWidth;
-        }
-
-        private int getScreenHeight() {
-            return screenHeight;
-        }
+    public void setScreenHeight (int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 }

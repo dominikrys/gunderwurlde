@@ -99,8 +99,8 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(true);
 
         // Populate resolution box with resolutions
-        for (String resolution : Constants.SCREEN_RESOLUTIONS) {
-            resolutionComboBox.getItems().add(resolution);
+        for (int[] resolution : Constants.SCREEN_RESOLUTIONS) {
+            resolutionComboBox.getItems().add(resolution[0] + "x" + resolution[1]);
         }
 
         // Add current resolution to resolutioncombobox
