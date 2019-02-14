@@ -21,9 +21,10 @@ public abstract class Gun extends Weapon implements Limited {
     protected int shootCoolDown; //effectively fire rate
     protected long lastShootTime;
     protected int projectilesPerShot;
+    protected int accuracy;
 
     Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, Projectile projectile,
-            AmmoList ammoType, int spread, int coolDown, int projectilesPerShot) {
+            AmmoList ammoType, int spread, int coolDown, int projectilesPerShot, int accuracy) {
         super(gunName);
         this.gunName = gunName;
         this.clipSize = clipSize;
@@ -36,10 +37,21 @@ public abstract class Gun extends Weapon implements Limited {
         this.lastShootTime = 0;
         this.spread = spread;
         this.projectilesPerShot = projectilesPerShot;
+        this.accuracy = accuracy;
     }
 
     public boolean isAutoFire() {
         return (shootCoolDown <= 800);
+    }
+
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(int accuracy) {
+        if (accuracy < 0) accuracy = -accuracy;
+        if (accuracy > 180) accuracy = 180;
+        this.accuracy = accuracy;
     }
 
     public int getSpread() {
@@ -48,7 +60,7 @@ public abstract class Gun extends Weapon implements Limited {
 
     public void setSpread(int spread) {
         if (spread < 0) spread = -spread;
-        if (spread > 360) spread = 360;
+        if (spread > 180) spread = 180;
         this.spread = spread;
     }
 

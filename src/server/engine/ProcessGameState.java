@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.EnemyAI;
@@ -104,6 +105,7 @@ public class ProcessGameState extends Thread {
     @Override
     public void run() {
         handler.updateGameView(view);
+        Random random = new Random();
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
 
@@ -215,10 +217,12 @@ public class ProcessGameState extends Thread {
 
                             LinkedList<Pose> bulletPoses = new LinkedList<>();
                             Pose gunPose = playerPose; // TODO change pose to include gunlength/position
+                            int accuracy = currentGun.getAccuracy();
 
                             int nextDirection = gunPose.getDirection() - spread;
                             for (int i = 0; i < numOfBullets; i++) {
-                                bulletPoses.add(new Pose(gunPose, nextDirection));
+                                int direction = nextDirection + (random.nextInt(accuracy) - (accuracy / 2));
+                                bulletPoses.add(new Pose(gunPose, direction));
                                 nextDirection += bulletSpacing;
                             }
 

@@ -13,7 +13,7 @@ import shared.Pose;
 import shared.lists.TileState;
 
 public class ZombieAI extends EnemyAI {
-    private static long DEFAULT_DELAY = 400;
+    private static long DEFAULT_DELAY = 380;
 
     private long attackDelay;
     private long beginAttackTime;
@@ -33,7 +33,7 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(attackLocation, 20, AttackType.AOE, 1));
+            attacks.add(new AoeAttack(attackLocation, 24, AttackType.AOE, 1));
             attacking = false;
         }
         return attacks;

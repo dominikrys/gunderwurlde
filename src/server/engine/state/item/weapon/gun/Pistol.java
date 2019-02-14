@@ -15,10 +15,11 @@ public class Pistol extends Gun {
     public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.BASIC_AMMO;
     public static final int DEFAULT_SPREAD = 0;
     public static final int DEFAULT_COOL_DOWN = 500; //2bps
+    public static final int DEFAULT_ACCURACY = 1;
 
     public Pistol() {
         super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
-                DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN, DEFAULT_PROJECTILES_PER_SHOT);
+                DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN, DEFAULT_PROJECTILES_PER_SHOT, DEFAULT_ACCURACY);
     }
 
 }
