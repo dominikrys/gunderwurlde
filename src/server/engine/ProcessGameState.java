@@ -221,7 +221,9 @@ public class ProcessGameState extends Thread {
 
                             int nextDirection = gunPose.getDirection() - spread;
                             for (int i = 0; i < numOfBullets; i++) {
-                                int direction = nextDirection + (random.nextInt(accuracy) - (accuracy / 2));
+                                int direction = nextDirection;
+                                if (accuracy != 0)
+                                    direction += (random.nextInt(accuracy) - (accuracy / 2));
                                 bulletPoses.add(new Pose(gunPose, direction));
                                 nextDirection += bulletSpacing;
                             }
