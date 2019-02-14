@@ -15,10 +15,11 @@ public class Shotgun extends Gun {
     public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.SHOTGUN_ROUND;
     public static final int DEFAULT_SPREAD = 20;
     public static final int DEFAULT_COOL_DOWN = 600;
+    public static final int DEFAULT_ACCURACY = 6;
 
     public Shotgun() {
         super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
-                DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN, DEFAULT_PROJECTILES_PER_SHOT);
+                DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN, DEFAULT_PROJECTILES_PER_SHOT, DEFAULT_ACCURACY);
     }
 
     @Override
