@@ -10,6 +10,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.Constants;
 
 import java.io.IOException;
 
@@ -45,7 +46,7 @@ public class SettingsMenuController extends VBox implements MenuController {
     private Button backButton;
 
     @FXML
-    private ComboBox<?> resolutionComboBox;
+    private ComboBox<String> resolutionComboBox;
 
     @FXML
     private Button applyButton;
@@ -98,6 +99,12 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(true);
 
         // Populate resolution box with resolutions
+        for (String resolution : Constants.SCREEN_RESOLUTIONS) {
+            resolutionComboBox.getItems().add(resolution);
+        }
+
+        // Add current resolution to resolutioncombobox
+        resolutionComboBox.getSelectionModel().select(settings.getScreenResolutionString());
     }
 
     @Override

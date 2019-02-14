@@ -31,8 +31,8 @@ public interface MenuController {
     }
 
     // setSceneToStage but for Parent inputs
-    public static void setRootToStage(Stage stage, Parent root) {
-        setSceneToStage(stage, new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
+    public static void setRootToStage(Stage stage, Parent root, Settings settings) {
+        setSceneToStage(stage, new Scene(root, settings.get, Constants.SCREEN_HEIGHT));
     }
 
     // Show menu to screen

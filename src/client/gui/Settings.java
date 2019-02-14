@@ -2,8 +2,6 @@ package client.gui;
 
 // Object for storing game settings
 public class Settings {
-    // Array holding possible screen resolutions
-    public final String[] SCREEN_RESOLUTIONS;
     // Constants
     private final int MIN_VOLUME = 0;
     private final int MAX_VOLUME = 100;
@@ -19,10 +17,6 @@ public class Settings {
 
     public Settings() {
         // TODO: have these get loaded from a file
-
-        SCREEN_RESOLUTIONS = new String[]{"800x600", "1024x768", "1280x1024", "1280x720", "1280x800", "1360x768",
-                "1440x900", "1536x864", "1600x900", "1680x1050", "1920x1200", "1920x1080", "2560x1080", "3440x1440",
-                "3840x2160"};
 
         // Initialise settings
         soundVolume = 70;
@@ -87,8 +81,16 @@ public class Settings {
         this.fullScreen = fullScreen;
     }
 
-    public String getScreenResolution() {
+    public String getScreenResolutionString() {
         return screenResolution.toString();
+    }
+
+    public int getScreenHeight() {
+        return screenResolution.getScreenHeight();
+    }
+
+    public int getScreenWidth() {
+        return screenResolution.getScreenWidth();
     }
 
     public void setScreenResolution(String resolution) {
@@ -112,6 +114,14 @@ public class Settings {
         @Override
         public String toString() {
             return screenWidth + "x" + screenHeight;
+        }
+
+        private int getScreenWidth(){
+            return screenWidth;
+        }
+
+        private int getScreenHeight() {
+            return screenHeight;
         }
     }
 }

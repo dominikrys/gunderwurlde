@@ -121,7 +121,11 @@
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
-            <ComboBox fx:id="resolutionComboBox" onAction="#resolutionComboBoxChanged" prefWidth="150.0" styleClass="manaspaceFont" visibleRowCount="5" />
+            <ComboBox fx:id="resolutionComboBox" onAction="#resolutionComboBoxChanged" visibleRowCount="5">
+               <styleClass>
+                  <String fx:value="manaspaceFont" />
+                  <String fx:value="mapButton" />
+               </styleClass></ComboBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
