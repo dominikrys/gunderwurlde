@@ -49,6 +49,10 @@
 	-fx-pref-width: 230px;
 }
 
+.resolutionSelector {
+	-fx-font-size: 20px
+}
+
 .backButton {
 	-fx-font-size: 22px;
 	-fx-background-radius: 0px;

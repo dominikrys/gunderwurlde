@@ -124,7 +124,7 @@
             <ComboBox fx:id="resolutionComboBox" onAction="#resolutionComboBoxChanged" visibleRowCount="5">
                <styleClass>
                   <String fx:value="manaspaceFont" />
-                  <String fx:value="mapButton" />
+                  <String fx:value="resolutionSelector" />
                </styleClass></ComboBox>
          </children>
       </HBox>
