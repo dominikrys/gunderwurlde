@@ -21,12 +21,14 @@ public class GameHandler extends Thread {
     // Misc
     private Settings settings;
     private String playerName;
+    private MapList map;
 
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name) {
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, MapList map) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
         this.playerName = name;
+        this.map = map;
     }
 
     public void run() {
@@ -34,7 +36,7 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    server = new Server(MapList.MEADOW, playerName);
+                    server = new Server(map, playerName);
                     serverStarted = true;
                     client = new Client(stage, playerName, 0, this, settings);
                     client.start();

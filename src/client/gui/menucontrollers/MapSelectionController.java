@@ -11,8 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import shared.lists.MapList;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MapSelectionController extends VBox implements MenuController{
     private Stage stage;
@@ -73,10 +75,8 @@ public class MapSelectionController extends VBox implements MenuController{
         loadingLabel.setFont(new Font("Consolas", 40));
         this.getChildren().add(loadingLabel);
 
-        //TODO: PASS MAP ARGUMENT!!!!!!!
-
-        // Start gamehandler as single player
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, playerName)).start();
+        // Start gamehandler as single player with map meadow
+        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, playerName, MapList.MEADOW)).start();
     }
 
     @FXML

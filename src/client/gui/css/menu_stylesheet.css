@@ -42,8 +42,11 @@
 }
 
 .mapButton {
-	-fx-font-size: 16px;
+	-fx-font-size: 24px;
 	-fx-background-radius: 0px;
+	-fx-padding: 10px;
+	-fx-pref-height: 230px;
+	-fx-pref-width: 230px;
 }
 
 .backButton {
