@@ -194,6 +194,8 @@ public class SettingsMenuController extends VBox implements MenuController {
         stage.setFullScreen(settings.isFullScreen());
         stage.setWidth(settings.getScreenWidth());
         stage.setHeight(settings.getScreenHeight());
+
+        // Disable button since settings already applied
         applyButton.setDisable(true);
     }
 }
