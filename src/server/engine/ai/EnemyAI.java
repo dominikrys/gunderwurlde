@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
+import shared.lists.ActionList;
 
 public abstract class EnemyAI {
 
@@ -17,9 +18,12 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     protected Pose closestPlayer;
     protected Tile[][] tileMap;
-    private boolean isProcessing = false;
+    private boolean isProcessing;
+    protected ActionList actionState;
 
     protected EnemyAI() {
+        isProcessing = false;
+        actionState = ActionList.NONE;
     }
 
     public abstract LinkedList<Attack> getAttacks();
@@ -69,6 +73,10 @@ public abstract class EnemyAI {
         }
 
         return closestPlayer;
+    }
+
+    public ActionList getActionState() {
+        return actionState;
     }
 
 }

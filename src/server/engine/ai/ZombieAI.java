@@ -10,6 +10,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.Location;
 import shared.Pose;
+import shared.lists.ActionList;
 import shared.lists.TileState;
 
 public class ZombieAI extends EnemyAI {
@@ -35,6 +36,7 @@ public class ZombieAI extends EnemyAI {
         if ((now - beginAttackTime) >= attackDelay) {
             attacks.add(new AoeAttack(attackLocation, 24, AttackType.AOE, 1));
             attacking = false;
+            this.actionState = ActionList.NONE;
         }
         return attacks;
     }
@@ -46,6 +48,7 @@ public class ZombieAI extends EnemyAI {
         } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE) {
             return AIAction.MOVE;
         } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE) {
+            this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
             attackLocation = closestPlayer;

@@ -30,9 +30,11 @@ import server.engine.state.map.Wave;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
+import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.ItemType;
 import shared.lists.MapList;
+import shared.lists.Status;
 import shared.lists.Teams;
 import shared.lists.TileState;
 import shared.request.ClientRequests;
@@ -185,12 +187,26 @@ public class ProcessGameState extends Thread {
                     continue;
                 }
 
+                // reset player values
+                currentPlayer.setMoving(false);
+                currentPlayer.setTakenDamage(false);
+                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING)
+                    currentPlayer.setCurrentAction(ActionList.NONE);
+
                 if (currentPlayer.getHealth() <= 0) {
+                    currentPlayer.setStatus(Status.DEAD);
+                    LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
+                    for (int[] playerTileCords : playerTilesOn) {
+                        tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
+                    }
                     continue; // TODO proper way of dealing with player death
                 }
 
+
                 Pose playerPose = currentPlayer.getPose();
                 Item currentItem = currentPlayer.getCurrentItem();
+
+                // TODO process status (Make method for this?)
 
                 if (currentItem instanceof Gun) {
                     Gun currentGun = ((Gun) currentItem);
@@ -199,14 +215,14 @@ public class ProcessGameState extends Thread {
                         int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
                         if (amountTaken > 0) {
                             currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
-                            // TODO reload complete, gun updates itself but it might be good to send
-                            // confirmation as well?
                         }
+                        currentPlayer.setCurrentAction(ActionList.NONE);
                     }
                 }
 
                 if (request.getShoot()) {
                     if (currentItem.getItemType() == ItemType.GUN) {
+                        currentPlayer.setCurrentAction(ActionList.ATTACKING);
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             int numOfBullets = currentGun.getProjectilesPerShot();
@@ -251,7 +267,8 @@ public class ProcessGameState extends Thread {
                 } else if (request.getReload()) {
                     if (currentItem instanceof Gun) {
                         Gun currentGun = ((Gun) currentItem);
-                        currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType()));
+                        if (currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType())))
+                            currentPlayer.setCurrentAction(ActionList.RELOADING);
                     }
                 }
 
@@ -265,8 +282,8 @@ public class ProcessGameState extends Thread {
                     }
 
                     if (request.movementExists()) {
+                        currentPlayer.setMoving(true);
                         double distanceMoved = getDistanceMoved(currentTimeDifference, currentPlayer.getMoveSpeed());
-                        // System.out.println("playerdist: " + distanceMoved);
                         newLocation = Location.calculateNewLocation(playerPose, request.getMovementDirection(), distanceMoved);
 
                         LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
@@ -360,6 +377,7 @@ public class ProcessGameState extends Thread {
 
                 if (request.selectItemAtExists()) {
                     currentPlayer.setCurrentItemIndex(request.getSelectItemAt());
+                    currentPlayer.setCurrentAction(ActionList.ITEM_SWITCH);
                 }
 
                 players.put(playerID, currentPlayer);
@@ -392,16 +410,24 @@ public class ProcessGameState extends Thread {
 
             for (Enemy e : enemies.values()) {
                 Enemy currentEnemy = e;
+
+                // reset values
+                currentEnemy.setMoving(false);
+                currentEnemy.setTakenDamage(false);
+
+                // TODO process status (Make method for this?)
+
                 int enemyID = currentEnemy.getID();
                 Pose enemyPose = currentEnemy.getPose(); // don't change
                 double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
-                // System.out.println("maxdist:" + maxDistanceMoved);
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
                     ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
+                currentEnemy.setCurrentAction(ai.getActionState());
+
                 switch (enemyAction) {
                 case ATTACK:
                     LinkedList<Attack> attacks = ai.getAttacks();
@@ -420,6 +446,7 @@ public class ProcessGameState extends Thread {
                                     Player playerBeingChecked = players.get(playerID);
                                     if (haveCollided(attack, playerBeingChecked)) {
                                         playerBeingChecked.damage(attack.getDamage());
+                                        playerBeingChecked.setTakenDamage(true);
                                         players.put(playerID, playerBeingChecked);
                                     }
                                 }
@@ -432,6 +459,7 @@ public class ProcessGameState extends Thread {
 
                     break;
                 case MOVE:
+                    currentEnemy.setMoving(true);
                     LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
 
                     for (int[] tileCords : tilesOn) {
@@ -547,14 +575,8 @@ public class ProcessGameState extends Thread {
 
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
                                         removed = true;
-                                        if (playerBeingChecked.damage(currentProjectile.getDamage())) {
-                                            // TODO check how player death needs to be handled
-
-                                            LinkedHashSet<int[]> playerTilesOn = tilesOn(playerBeingChecked);
-                                            for (int[] playerTileCords : playerTilesOn) {
-                                                tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
-                                            }
-                                        }
+                                        playerBeingChecked.setTakenDamage(true);
+                                        playerBeingChecked.damage(currentProjectile.getDamage());
                                         break; // bullet was removed no need to check other players
                                     }
                                 }
@@ -568,9 +590,8 @@ public class ProcessGameState extends Thread {
 
                 }
                 if (removed) {
-                    // TODO removed projectile change
+                    // TODO removed projectile process
                 } else {
-                    // TODO basic projectile change
                     newProjectiles.add(currentProjectile);
                     projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getEntityListName()));
                 }
@@ -599,8 +620,8 @@ public class ProcessGameState extends Thread {
                                     enemySpawnIterator = currentMap.getEnemySpawns().iterator();
                                 Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
                                 enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
+                                // TODO spawning status & add to gameview
                                 enemies.put(enemyToSpawn.getID(), enemyToSpawn);
-                                // TODO enemy change here
                             }
                         }
                         newWaves.add(currentWave);

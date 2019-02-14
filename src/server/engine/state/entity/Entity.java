@@ -4,7 +4,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.StatusEffect;
+import shared.lists.Status;
 
 // Class for renderable entities
 public abstract class Entity {
@@ -12,7 +12,7 @@ public abstract class Entity {
     
     protected Pose pose;
     protected EntityList entityListName;
-    protected StatusEffect status; // TODO add to view
+    protected Status status; // TODO add to view
     protected int size;
     protected boolean cloaked; // "invisible"
 
@@ -39,11 +39,11 @@ public abstract class Entity {
         this.cloaked = cloaked;
     }
 
-    public StatusEffect getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(StatusEffect status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

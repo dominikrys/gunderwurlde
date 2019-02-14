@@ -6,7 +6,7 @@ import shared.lists.EntityList;
 import shared.lists.Teams;
 
 public abstract class Projectile extends Entity {
-    protected int speed;
+    protected int speed; // max ~1800
     protected int damage;
     protected EntityList entityListName;
     protected int max_range;
