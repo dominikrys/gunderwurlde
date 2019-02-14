@@ -19,7 +19,6 @@ import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
 import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.entity.projectile.SmallBullet;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
@@ -223,17 +222,11 @@ public class ProcessGameState extends Thread {
                                 nextDirection += bulletSpacing;
                             }
 
-                            switch (currentGun.getProjectileType()) {
-                            case BASIC_BULLET:
-                                for (Pose p : bulletPoses) {
-                                    SmallBullet b = new SmallBullet(p, currentPlayer.getTeam());
-                                    newProjectiles.add(b);
-                                    projectilesView.add(new ProjectileView(p, b.getSize(), b.getEntityListName()));
-                                }
-                                break;
-                            default:
-                                System.out.println("Projectile type not known for: " + currentItem.getItemListName().toString());
-                                break;
+                            Projectile templateProjectile = currentGun.getProjectile();
+                            for (Pose p : bulletPoses) {
+                                Projectile proj = templateProjectile.createFor(p, currentPlayer.getTeam());
+                                newProjectiles.add(proj);
+                                projectilesView.add(new ProjectileView(p, proj.getSize(), proj.getEntityListName()));
                             }
                         }
                     }

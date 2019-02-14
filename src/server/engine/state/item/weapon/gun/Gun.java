@@ -1,9 +1,9 @@
 package server.engine.state.item.weapon.gun;
 
+import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Limited;
 import server.engine.state.item.weapon.Weapon;
 import shared.lists.AmmoList;
-import shared.lists.EntityList;
 import shared.lists.ItemList;
 
 public abstract class Gun extends Weapon implements Limited {
@@ -15,14 +15,14 @@ public abstract class Gun extends Weapon implements Limited {
     protected boolean reloading;
     protected int ammoPerShot;
     protected int spread;
-    protected EntityList projectileType;
+    protected Projectile projectile;
     protected AmmoList ammoType;
     protected ItemList gunName;
     protected int shootCoolDown; //effectively fire rate
     protected long lastShootTime;
     protected int projectilesPerShot;
 
-    Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, EntityList projectileType,
+    Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, Projectile projectile,
             AmmoList ammoType, int spread, int coolDown, int projectilesPerShot) {
         super(gunName);
         this.gunName = gunName;
@@ -30,7 +30,7 @@ public abstract class Gun extends Weapon implements Limited {
         this.ammoInClip = clipSize;
         this.reloadTime = reloadTime;
         this.ammoPerShot = ammoPerShot;
-        this.projectileType = projectileType;
+        this.projectile = projectile;
         this.ammoType = ammoType;
         this.shootCoolDown = coolDown;
         this.lastShootTime = 0;
@@ -82,12 +82,12 @@ public abstract class Gun extends Weapon implements Limited {
         return clipSize;
     }
 
-    public EntityList getProjectileType() {
-        return projectileType;
+    public Projectile getProjectile() {
+        return projectile;
     }
 
-    public void setProjectileType(EntityList projectileType) {
-        this.projectileType = projectileType;
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
     }
 
     public boolean isReloading() {
