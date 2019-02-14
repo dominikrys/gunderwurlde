@@ -36,7 +36,7 @@ public class GameHandler extends Thread {
                 if (!serverStarted) {
                     server = new Server(MapList.MEADOW, playerName);
                     serverStarted = true;
-                    client = new Client(stage, playerName, 0, this);
+                    client = new Client(stage, playerName, 0, this, settings);
                     client.start();
                 }
                 break;

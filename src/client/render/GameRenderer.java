@@ -59,9 +59,9 @@ public class GameRenderer implements Runnable {
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
     // Settings object
-    Settings settings;
+    private Settings settings;
 
-    //TODO: REMOVE THIS, PURELY FOR TEST
+    //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         this(stage, initialGameView, playerID, true, settings);
     }

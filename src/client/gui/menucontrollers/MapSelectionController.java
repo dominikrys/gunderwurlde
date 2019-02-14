@@ -1,11 +1,15 @@
 package client.gui.menucontrollers;
 
+import client.GameHandler;
+import client.data.ConnectionType;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,9 +17,11 @@ import java.io.IOException;
 public class MapSelectionController extends VBox implements MenuController{
     private Stage stage;
     private Settings settings;
+    private ConnectionType connectionType;
+    private String playerName;
 
     @FXML
-    private Button map1Button;
+    private Button meadowButton;
 
     @FXML
     private Button map2Button;
@@ -26,9 +32,11 @@ public class MapSelectionController extends VBox implements MenuController{
     @FXML
     private Button backButton;
 
-    public MapSelectionController(Stage stage, Settings settings) {
+    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName) {
         this.stage = stage;
         this.settings = settings;
+        this.connectionType = connectionType;
+        this.playerName = playerName;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/map_selection.fxml"));
@@ -56,8 +64,19 @@ public class MapSelectionController extends VBox implements MenuController{
     }
 
     @FXML
-    void map1ButtonPress(ActionEvent event) {
+    void meadowButtonPress(ActionEvent event) {
+        // Clear the screen
+        this.getChildren().clear();
 
+        //TODO: remove this with a nicer loading screen
+        Label loadingLabel = new Label("Creating game...");
+        loadingLabel.setFont(new Font("Consolas", 40));
+        this.getChildren().add(loadingLabel);
+
+        //TODO: PASS MAP ARGUMENT!!!!!!!
+
+        // Start gamehandler as single player
+        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, playerName)).start();
     }
 
     @FXML

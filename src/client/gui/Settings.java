@@ -1,7 +1,9 @@
 package client.gui;
 
+import java.io.*;
+
 // Object for storing game settings
-public class Settings {
+public class Settings implements Serializable {
     // Constants
     private final int MIN_VOLUME = 0;
     private final int MAX_VOLUME = 100;
@@ -17,8 +19,6 @@ public class Settings {
     private int screenHeight;
 
     public Settings() {
-        // TODO: have these get loaded from a file
-
         // Initialise settings
         soundVolume = 70;
         musicVolume = 70;
@@ -102,5 +102,17 @@ public class Settings {
 
     public void setScreenHeight (int screenHeight) {
         this.screenHeight = screenHeight;
+    }
+
+    public void saveToDisk() {
+        try (
+                OutputStream file = new FileOutputStream("settings.ser");
+                OutputStream buffer = new BufferedOutputStream(file);
+                ObjectOutput output = new ObjectOutputStream(buffer)
+        ) {
+            output.writeObject(this);
+        } catch (IOException ex) {
+            System.out.println("Cannot perform output." + ex.getMessage());
+        }
     }
 }

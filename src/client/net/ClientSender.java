@@ -12,13 +12,13 @@ import java.util.Enumeration;
 import java.util.Scanner;
 
 public class ClientSender extends Thread {
-    MulticastSocket senderSocket;
-    InetAddress senderAddress;
-    Boolean running;
-    DatagramPacket packet = null;
-    int port;
-    byte[] buffer;
-    Scanner scan;
+    private MulticastSocket senderSocket;
+    private InetAddress senderAddress;
+    private Boolean running;
+    private DatagramPacket packet = null;
+    private int port;
+    private byte[] buffer;
+    private Scanner scan;
 
     public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
