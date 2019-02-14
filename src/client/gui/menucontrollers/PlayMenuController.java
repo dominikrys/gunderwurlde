@@ -85,20 +85,17 @@ public class PlayMenuController extends VBox implements MenuController {
         // Clear the screen
         this.getChildren().clear();
 
-        //TODO: remove this with a nicer loading screen
-        Label loadingLabel = new Label("Creating game...");
-        loadingLabel.setFont(new Font("Consolas", 40));
-        this.getChildren().add(loadingLabel);
-
-        // Start gamehandler as single player
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
-
-        //TODO: Go into map selection
+        // Go to map selection screen
+        (new MapSelectionController(stage, settings, ConnectionType.SINGLE_PLAYER, nameField.getText())).show();
     }
 
     @FXML
     void multiCreateGameButtonPress(ActionEvent event) {
-        // TODO: Go into map selection, and then choose team, and then start server
+        // Clear the screen
+        this.getChildren().clear();
+
+        // Go to map selection screen
+        (new MapSelectionController(stage, settings, ConnectionType.MULTI_PLAYER_HOST, nameField.getText())).show();
     }
 
     @FXML
