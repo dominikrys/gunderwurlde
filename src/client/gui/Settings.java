@@ -5,15 +5,16 @@ public class Settings {
     // Constants
     private final int MIN_VOLUME = 0;
     private final int MAX_VOLUME = 100;
-
     // Sound variables
     private int soundVolume;
     private int musicVolume;
     private boolean soundMute;
     private boolean musicMute;
-
     // Screen variables
     private boolean fullScreen;
+    // Current screen resolution
+    private int screenWidth;
+    private int screenHeight;
 
     public Settings() {
         // TODO: have these get loaded from a file
@@ -24,6 +25,9 @@ public class Settings {
         soundMute = false;
         musicMute = false;
         fullScreen = false;
+
+        screenWidth = 1280;
+        screenHeight = 720;
     }
 
     public int getSoundVolume() {
@@ -78,5 +82,25 @@ public class Settings {
 
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+    }
+
+    public String getScreenResolutionString() {
+        return screenWidth + "x" + screenHeight;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public void setScreenHeight (int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 }

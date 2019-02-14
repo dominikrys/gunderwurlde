@@ -5,13 +5,12 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import shared.Constants;
 
 public interface MenuController {
     Stage stage = null;
 
     // Set scene of stage to input scene
-    public static void setSceneToStage (Stage stage, Scene scene)  {
+    static void setSceneToStage(Stage stage, Scene scene) {
         // Check if JavaFX thread and update stage accordingly
         if (Platform.isFxApplicationThread()) {
             stage.setScene(scene);
@@ -31,10 +30,10 @@ public interface MenuController {
     }
 
     // setSceneToStage but for Parent inputs
-    public static void setRootToStage(Stage stage, Parent root) {
-        setSceneToStage(stage, new Scene(root, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
+    static void setRootToStage(Stage stage, Parent root, Settings settings) {
+        setSceneToStage(stage, new Scene(root, settings.getScreenWidth(), settings.getScreenHeight()));
     }
 
     // Show menu to screen
-    public void show();
+    void show();
 }
