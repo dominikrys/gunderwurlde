@@ -8,7 +8,6 @@ import java.util.LinkedList;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.map.tile.Tile;
-import shared.Constants;
 import shared.Pose;
 
 public abstract class EnemyAI {
@@ -43,14 +42,7 @@ public abstract class EnemyAI {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-    public AIAction getAction() {
-        if(getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE){
-            return AIAction.MOVE;
-        }else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE){
-            return AIAction.ATTACK;
-        }
-        return AIAction.WAIT;
-    }
+    public abstract AIAction getAction();
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
         this.pose = pose;
