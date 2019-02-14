@@ -305,7 +305,7 @@ public class GameRenderer implements Runnable {
             ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
 
             // Pane for item image to go in - for border
-            FlowPane itemPane = new FlowPane(Constants.TILE_SIZE, Constants.TILE_SIZE);
+            FlowPane itemPane = new FlowPane();
             itemPane.setPrefWidth(Constants.TILE_SIZE);
             itemPane.setPadding(new Insets(2, 2, 2, 2));
 
@@ -334,8 +334,8 @@ public class GameRenderer implements Runnable {
 
         // Add empty item slots
         while (currentItemIndex < 3) {
-            FlowPane itemPane = new FlowPane(Constants.TILE_SIZE, Constants.TILE_SIZE);
-            itemPane.setPrefWidth(Constants.TILE_SIZE);
+            HBox itemPane = new HBox();
+            itemPane.setMinWidth(Constants.TILE_SIZE * 1.3);
             itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
 
@@ -441,7 +441,7 @@ public class GameRenderer implements Runnable {
         heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
 
         // Iterate through held items list and add to the HUD
-        heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
+        heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
 
         // Ammo vbox
         ammoBox = new VBox();
