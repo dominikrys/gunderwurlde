@@ -20,14 +20,14 @@
                 <String fx:value="manaspaceFont" />
             </styleClass>
         </Label>
-      <Label styleClass="manaspaceFont" text="Enter port and IP, and press &quot;Enter&quot;">
+      <Label styleClass="manaspaceFont" text="Enter server details and press &quot;Enter&quot;">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 5px;">
          <children>
-            <TextField fx:id="IPField" alignment="CENTER" onAction="#IPFieldInput" promptText="Server IP..." style="-fx-max-width: 400;" styleClass="nameInputBox">
+            <TextField fx:id="IPField" alignment="CENTER" onAction="#IPFieldInput" promptText="Server IP" style="-fx-pref-width: 400;" styleClass="nameInputBox">
                <font>
                   <Font name="Consolas" size="26.0" />
                </font>
@@ -35,7 +35,8 @@
                   <Insets />
                </opaqueInsets>
             </TextField>
-            <TextField fx:id="portField" onAction="#portFieldInput" style="-fx-max-width: 100;" styleClass="nameInputBox" />
+            <Label styleClass="nameInputBox" text=":" />
+            <TextField fx:id="portField" onAction="#portFieldInput" promptText="Port" style="-fx-pref-width: 150;" styleClass="nameInputBox" />
          </children>
       </HBox>
       <Button fx:id="joinServerButton" mnemonicParsing="false" onAction="#joinServerButtonPress" text="Join Server">

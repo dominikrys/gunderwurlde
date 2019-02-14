@@ -19,6 +19,7 @@
 .nameInputBox {
 	-fx-font-family: 'Manaspace', Consolas;
 	-fx-font-size: 28px;
+	-fx-background-radius: 0px;
 }
 
 .nameTooLong {

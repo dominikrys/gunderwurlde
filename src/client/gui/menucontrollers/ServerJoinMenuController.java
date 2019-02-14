@@ -47,6 +47,10 @@ public class ServerJoinMenuController extends VBox implements MenuController {
                 IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // Divert focus away from text boxes so tips are shown
+        IPField.setFocusTraversable(false);
+        portField.setFocusTraversable(false);
     }
 
     @FXML
@@ -68,7 +72,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
 
     @FXML
     void joinServerButtonPress(ActionEvent event) {
-        
+
     }
 
     @Override

@@ -44,6 +44,9 @@ public class PlayMenuController extends VBox implements MenuController {
                 IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // Divert focus away from namefield
+        nameField.setFocusTraversable(false);
     }
 
     public void show() {
