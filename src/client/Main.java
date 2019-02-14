@@ -26,22 +26,13 @@ public class Main extends Application {
         ) {
             // Deserialize the file
             settings = (Settings) input.readObject();
-            System.out.println("Settings file loaded!");
+            System.out.println("Settings file found and loaded!");
         } catch (ClassNotFoundException e) {
-            System.out.println(e.getException());
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             // No existing file found so create a new one
             System.out.println("No settings file found, creating new one...");
-            try (
-                    OutputStream file = new FileOutputStream("settings.ser");
-                    OutputStream buffer = new BufferedOutputStream(file);
-                    ObjectOutput output = new ObjectOutputStream(buffer)
-            ) {
-                output.writeObject(settings);
-            } catch (IOException ex) {
-                System.out.println("Cannot perform output." + ex.getMessage());
-            }
-
+            settings.saveToDisk();
         }
 
         // Set up stage

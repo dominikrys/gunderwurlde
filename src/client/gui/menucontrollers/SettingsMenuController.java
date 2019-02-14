@@ -114,6 +114,9 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
+        // Save settings to file
+        settings.saveToDisk();
+
         // Switch to main menu and clear this object
         (new MainMenuController(stage, settings)).show();
         this.getChildren().clear();

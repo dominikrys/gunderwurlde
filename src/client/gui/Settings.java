@@ -1,6 +1,6 @@
 package client.gui;
 
-import java.io.Serializable;
+import java.io.*;
 
 // Object for storing game settings
 public class Settings implements Serializable {
@@ -102,5 +102,17 @@ public class Settings implements Serializable {
 
     public void setScreenHeight (int screenHeight) {
         this.screenHeight = screenHeight;
+    }
+
+    public void saveToDisk() {
+        try (
+                OutputStream file = new FileOutputStream("settings.ser");
+                OutputStream buffer = new BufferedOutputStream(file);
+                ObjectOutput output = new ObjectOutputStream(buffer)
+        ) {
+            output.writeObject(this);
+        } catch (IOException ex) {
+            System.out.println("Cannot perform output." + ex.getMessage());
+        }
     }
 }
