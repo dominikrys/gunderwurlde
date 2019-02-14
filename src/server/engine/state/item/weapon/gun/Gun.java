@@ -168,4 +168,8 @@ public abstract class Gun extends Weapon implements Limited {
         }
         return amountTaken;
     }
+
+    public void cancelReload() {
+        this.reloading = false;
+    }
 }

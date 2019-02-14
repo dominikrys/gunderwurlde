@@ -8,6 +8,7 @@ import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
 import server.engine.state.item.Item;
+import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.map.tile.Tile;
@@ -155,7 +156,11 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
             slot = 0;
         else if (slot > items.size() - 1)
             slot = items.size() - 1;
-        currentItem = slot;
+        if (slot != currentItem) {
+            if (items.get(currentItem) instanceof Gun)
+                ((Gun) items.get(currentItem)).cancelReload();
+            currentItem = slot;
+        }
     }
 
     public int getScore() {
