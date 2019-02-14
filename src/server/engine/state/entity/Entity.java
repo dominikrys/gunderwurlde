@@ -4,19 +4,23 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
+import shared.lists.StatusEffect;
 
 // Class for renderable entities
 public abstract class Entity {
     public static final int MAX_SIZE = (3 * Tile.TILE_SIZE);
     
     protected Pose pose;
-    protected int size;
     protected EntityList entityListName;
+    protected StatusEffect status; // TODO add to view
+    protected int size;
+    protected boolean cloaked; // "invisible"
 
     protected Entity(Pose pose, int size, EntityList entityListName) {
         this.pose = pose;
         this.size = size;
         this.entityListName = entityListName;
+        this.cloaked = false;
     }
     
     protected Entity(int size, EntityList entityListName) {
@@ -25,6 +29,22 @@ public abstract class Entity {
 
     protected Entity(Location location, int size, EntityList entityListName) {
         this(new Pose(location), size, entityListName);
+    }
+
+    public boolean isCloaked() {
+        return cloaked;
+    }
+
+    public void setCloaked(boolean cloaked) {
+        this.cloaked = cloaked;
+    }
+
+    public StatusEffect getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEffect status) {
+        this.status = status;
     }
 
     public Pose getPose() {
