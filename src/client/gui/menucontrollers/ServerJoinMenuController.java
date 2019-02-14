@@ -51,6 +51,9 @@ public class ServerJoinMenuController extends VBox implements MenuController {
         // Divert focus away from text boxes so tips are shown
         IPField.setFocusTraversable(false);
         portField.setFocusTraversable(false);
+
+        // Disable join button
+        joinServerButton.setDisable(true);
     }
 
     @FXML
@@ -62,12 +65,20 @@ public class ServerJoinMenuController extends VBox implements MenuController {
 
     @FXML
     void IPFieldInput(ActionEvent event) {
-
+        if (IPField.getText().length() > 0 && portField.getText().length() > 0) {
+            joinServerButton.setDisable(false);
+        } else {
+            joinServerButton.setDisable(true);
+        }
     }
 
     @FXML
     void portFieldInput(ActionEvent event) {
-
+        if (IPField.getText().length() > 0 && portField.getText().length() > 0) {
+            joinServerButton.setDisable(false);
+        } else {
+            joinServerButton.setDisable(true);
+        }
     }
 
     @FXML
