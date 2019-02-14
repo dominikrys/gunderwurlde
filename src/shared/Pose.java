@@ -14,16 +14,16 @@ public class Pose extends Location implements Serializable {
         this(location, 0);
     }
 
-    public Pose(double d, double e) {
-        this(d, e, 0);
+    public Pose(double x, double y) {
+        this(x, y, 0);
     }
 
     public Pose(Location location, int direction) {
         this(location.getX(), location.getY(), direction);
     }
 
-    public Pose(double d, double e, int direction) {
-        super(d, e);
+    public Pose(double x, double y, int direction) {
+        super(x, y);
         setDirection(direction);
     }
 
