@@ -181,11 +181,19 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void resolutionComboBoxChanged(ActionEvent event) {
-
+        // Get resolution from combobos and adjust the settings object accordingly
+        String selectedResolution = resolutionComboBox.getValue();
+        settings.setScreenWidth(Integer.parseInt(selectedResolution.substring(0, selectedResolution.indexOf('x'))));
+        settings.setScreenHeight(Integer.parseInt(selectedResolution.substring(selectedResolution.indexOf('x') + 1)));
+        applyButton.setDisable(false);
     }
 
     @FXML
     void applyButtonPress(ActionEvent event) {
         // Apply graphics settings
+        stage.setFullScreen(settings.isFullScreen());
+        stage.setWidth(settings.getScreenWidth());
+        stage.setHeight(settings.getScreenHeight());
+        applyButton.setDisable(true);
     }
 }
