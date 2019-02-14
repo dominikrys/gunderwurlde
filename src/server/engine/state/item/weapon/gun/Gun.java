@@ -38,6 +38,9 @@ public abstract class Gun extends Weapon implements Limited {
         this.projectilesPerShot = projectilesPerShot;
     }
 
+    public boolean isAutoFire() {
+        return (shootCoolDown <= 800);
+    }
 
     public int getSpread() {
         return spread;
