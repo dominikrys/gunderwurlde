@@ -202,8 +202,8 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Center player
-        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - 16);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - 16);
+        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
     }
 
     // Render entities to the map canvas
@@ -304,17 +304,44 @@ public class GameRenderer implements Runnable {
             // Make image view out of graphic
             ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
 
+            // Pane for item image to go in - for border
+            FlowPane itemPane = new FlowPane(Constants.TILE_SIZE, Constants.TILE_SIZE);
+            itemPane.setPrefWidth(Constants.TILE_SIZE);
+            itemPane.setPadding(new Insets(2, 2, 2, 2));
+
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
+                DropShadow dropShadow = new DropShadow(25, Color.CORNFLOWERBLUE);
                 dropShadow.setSpread(0.75);
                 itemImageView.setEffect(dropShadow);
+                itemPane.setBorder(new Border(new BorderStroke(Color.CORNFLOWERBLUE,
+                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+            } else {
+                // Not selected item, add black border
+                itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
             }
 
+            // Add imageview to pane
+            itemPane.getChildren().add(itemImageView);
+
             // Add item to list
-            heldItems.getChildren().add(itemImageView);
+            heldItems.getChildren().add(itemPane);
 
             // Increment current item index
+            currentItemIndex++;
+        }
+
+        // Add empty item slots
+        while (currentItemIndex < 3) {
+            FlowPane itemPane = new FlowPane(Constants.TILE_SIZE, Constants.TILE_SIZE);
+            itemPane.setPrefWidth(Constants.TILE_SIZE);
+            itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+
+            // Add box to item list
+            heldItems.getChildren().add(itemPane);
+
             currentItemIndex++;
         }
 
