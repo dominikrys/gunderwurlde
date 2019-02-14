@@ -1,8 +1,5 @@
 package server.engine.ai;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.AttackType;
@@ -11,8 +8,10 @@ import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.TileState;
 
+import java.util.LinkedHashSet;
+
 public class ZombieAI extends EnemyAI {
-    public static long DEFAULT_DELAY = 800;
+    private static long DEFAULT_DELAY = 800;
 
     private long attackDelay;
     private long lastAttackTime;
@@ -29,7 +28,7 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - lastAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(pose, 16, AttackType.AOE, 1)); // TODO sort out to be infront of zombie
+            attacks.add(new AoeAttack(closestPlayer, 16, AttackType.AOE, 1));
             lastAttackTime = now;
         }
 
@@ -40,55 +39,58 @@ public class ZombieAI extends EnemyAI {
     protected Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer) {
         int[] tile = Tile.locationToTile(pose);
 
-        if(tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
+        if (tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
             return new Pose(pose.getX() + 0.1, pose.getY(), 90);
         }
 
-        if(tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2){
+        if (tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
             return new Pose(pose.getX() - 0.1, pose.getY(), 270);
         }
 
         for (double i = 0.1; i < maxDistanceMoved; i += 0.1) {
-            pose = newPose(closestPlayer, pose);
+            pose = poseByAngle(getAngle(pose, closestPlayer), pose);
         }
 
         return pose;
     }
 
-    private Pose newPose(Pose player, Pose enemy) {
-
-
-        double angle = getAngle(enemy, player);
+    public Pose poseByAngle(double angle, Pose enemy) {
 
         if (angle > 337.5 || angle <= 22.5) {
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() + 1, enemy.getY()));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX() + 0.1, enemy.getY(), (int) angle + 90);
+
         } else if (angle > 22.5 && angle <= 67.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) angle + 90);
+
         } else if (angle > 67.5 && angle <= 112.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX(), enemy.getY() + 0.1));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX(), enemy.getY() + 0.1, (int) angle + 90);
+
         } else if (angle > 112.5 && angle <= 157.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) angle + 90);
+
         } else if (angle > 157.5 && angle <= 202.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() - 0.1, enemy.getY()));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX() - 0.1, enemy.getY(), (int) angle + 90);
+
         } else if (angle > 202.5 && angle <= 247.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1));
             if (tileNotSolid(tile))
                 return new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) angle + 90);
+
         } else if (angle > 247.5 && angle <= 292.5) {
 
             int[] tile = Tile.locationToTile(new Pose(enemy.getX(), enemy.getY() - 0.1));

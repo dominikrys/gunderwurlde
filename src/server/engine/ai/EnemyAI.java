@@ -16,7 +16,7 @@ public abstract class EnemyAI {
     protected Pose pose;
     private int size;
     private HashSet<Pose> playerPoses;
-    private Pose closestPlayer;
+    protected Pose closestPlayer;
     protected Tile[][] tileMap;
     private boolean isProcessing = false;
 
@@ -33,6 +33,10 @@ public abstract class EnemyAI {
 
     public synchronized Pose getNewPose(double maxDistanceMoved) {
         return generateNextPose(maxDistanceMoved, closestPlayer);
+    }
+
+    public Pose getCurrentPose(){
+        return pose;
     }
 
     protected int getDistToPlayer(Pose player) {
