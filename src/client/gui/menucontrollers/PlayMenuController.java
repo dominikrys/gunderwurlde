@@ -1,6 +1,5 @@
 package client.gui.menucontrollers;
 
-import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
@@ -10,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -82,24 +80,22 @@ public class PlayMenuController extends VBox implements MenuController {
 
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
-        // Clear the screen
-        this.getChildren().clear();
-
-        // Go to map selection screen
+        // Go to map selection screen  and clear menu
         (new MapSelectionController(stage, settings, ConnectionType.SINGLE_PLAYER, nameField.getText())).show();
+        this.getChildren().clear();
     }
 
     @FXML
     void multiCreateGameButtonPress(ActionEvent event) {
-        // Clear the screen
-        this.getChildren().clear();
-
-        // Go to map selection screen
+        // Go to map selection screen and clear menu
         (new MapSelectionController(stage, settings, ConnectionType.MULTI_PLAYER_HOST, nameField.getText())).show();
+        this.getChildren().clear();
     }
 
     @FXML
     void multiJoinGameButtonPress(ActionEvent event) {
-        // TODO: enter IP screen, choose team
+        // Go to server joining screen and clear this menu
+        (new ServerJoinMenuController(stage, settings, ConnectionType.MULTI_PLAYER_JOIN, nameField.getText())).show();
+        this.getChildren().clear();
     }
 }

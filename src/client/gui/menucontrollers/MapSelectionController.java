@@ -75,8 +75,8 @@ public class MapSelectionController extends VBox implements MenuController{
         loadingLabel.setFont(new Font("Consolas", 40));
         this.getChildren().add(loadingLabel);
 
-        // Start gamehandler as single player with map meadow
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, playerName, MapList.MEADOW)).start();
+        // Start gamehandler with correct connectiontype and map
+        (new GameHandler(stage, connectionType, settings, playerName, MapList.MEADOW)).start();
     }
 
     @FXML
