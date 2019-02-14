@@ -1,5 +1,6 @@
 package client.render;
 
+import client.gui.Settings;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,8 +30,9 @@ public class TestRenderer extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Settings settings = new Settings();
         primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(new VBox(), Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
+        primaryStage.setScene(new Scene(new VBox(), settings.getScreenWidth(), settings.getScreenHeight()));
         primaryStage.show();
         GameMap map = new Meadow();
         int xDim = map.getXDim();
@@ -57,7 +59,7 @@ public class TestRenderer extends Application {
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 
         // Set up renderer
-        GameRenderer rend = new GameRenderer(primaryStage, view1, 0);
+        GameRenderer rend = new GameRenderer(primaryStage, view1, 0, settings);
         rend.run();
 
         // Alternate between the 2 gameviews on a timer

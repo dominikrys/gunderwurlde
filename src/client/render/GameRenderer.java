@@ -1,5 +1,6 @@
 package client.render;
 
+import client.gui.Settings;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
@@ -57,19 +58,22 @@ public class GameRenderer implements Runnable {
     // Input variables
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
+    // Settings object
+    Settings settings;
 
     //TODO: REMOVE THIS, PURELY FOR TEST
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID) {
-        this(stage, initialGameView, playerID, true);
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
+        this(stage, initialGameView, playerID, true, settings);
     }
 
     // Constructor
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered, Settings settings) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.cameraCentered = cameraCentered;
+        this.settings = settings;
 
         // Load fonts
         try {
@@ -134,7 +138,7 @@ public class GameRenderer implements Runnable {
         mapBox = new AnchorPane();
 
         if (cameraCentered) {
-            mapCanvas = new Canvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+            mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
         } else {
             // Create canvas according to dimensions of the map
             mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
@@ -198,8 +202,8 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Center player
-        AnchorPane.setTopAnchor(mapCanvas, (double) Constants.SCREEN_HEIGHT / 2 - playerY - 16);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) Constants.SCREEN_WIDTH / 2 - playerX - 16);
+        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - 16);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - 16);
     }
 
     // Render entities to the map canvas
