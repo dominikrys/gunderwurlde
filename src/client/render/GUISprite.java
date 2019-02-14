@@ -1,6 +1,6 @@
 package client.render;
 
-public enum GUISprites {
+public enum GUISprite {
     // Menu items
     SOUND_OFF("assets/img/gui/sound_off"),
     SOUND_ON("assets/img/gui/sound_on"),
@@ -10,7 +10,7 @@ public enum GUISprites {
 
     private String spritePath;
 
-    GUISprites(String spritePath) {
+    GUISprite(String spritePath) {
         this.spritePath = spritePath;
     }
 

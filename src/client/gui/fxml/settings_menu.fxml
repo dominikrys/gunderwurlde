@@ -135,7 +135,7 @@
                   <String fx:value="backButton" />
                </styleClass>
             </Button>
-            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#applyButtonPress" text="Apply">
+            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#applyButtonPress" text="Apply Graphics Settings">
                <styleClass>
                   <String fx:value="backButton" />
                   <String fx:value="manaspaceFont" />
