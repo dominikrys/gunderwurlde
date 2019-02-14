@@ -398,7 +398,7 @@ public class ProcessGameState extends Thread {
                 AIAction enemyAction = ai.getAction();
                 switch (enemyAction) {
                 case ATTACK:
-                    LinkedHashSet<Attack> attacks = ai.getAttacks();
+                    LinkedList<Attack> attacks = ai.getAttacks();
 
                     for (Attack a : attacks) {
                         switch (a.getAttackType()) {
