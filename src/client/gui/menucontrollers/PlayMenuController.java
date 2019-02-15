@@ -10,12 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.lists.Teams;
 
 import java.io.IOException;
 
 public class PlayMenuController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
+    private Teams selectedTeam;
 
     @FXML
     private TextField nameField;
@@ -41,6 +43,9 @@ public class PlayMenuController extends VBox implements MenuController {
     public PlayMenuController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
+
+        // Set team to unset
+        this.selectedTeam = Teams.NONE;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/play_menu.fxml"));
@@ -70,43 +75,52 @@ public class PlayMenuController extends VBox implements MenuController {
 
     @FXML
     void handleNameInput(ActionEvent event) {
-        // Only allow going into single or multi player if a name has been entered
-        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
-            singlePlayerButton.setDisable(false);
-            multiJoinGameButton.setDisable(false);
-            multiCreateGameButton.setDisable(false);
-            characterErrorText.setVisible(false);
-        } else if (nameField.getCharacters().length() == 0) {
-            singlePlayerButton.setDisable(true);
-            multiJoinGameButton.setDisable(true);
-            multiCreateGameButton.setDisable(true);
-            characterErrorText.setVisible(false);
-        } else {
-            singlePlayerButton.setDisable(true);
-            multiJoinGameButton.setDisable(true);
-            multiCreateGameButton.setDisable(true);
-            characterErrorText.setVisible(true);
-        }
+        // Check if correct input
+        checkButtons();
     }
 
     @FXML
     void teamBlueButtonPress(ActionEvent event) {
-
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.BLUE;
+        teamBlueButton.setDefaultButton(true);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
     }
 
     @FXML
     void teamGreenButtonPress(ActionEvent event) {
-
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.GREEN;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(true);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
     }
 
     @FXML
     void teamRedButtonPress(ActionEvent event) {
-
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.RED;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(true);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
     }
 
     @FXML
     void teamYellowButtonPress(ActionEvent event) {
-
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.YELLOW;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(true);
+        checkButtons();
     }
 
     @FXML
@@ -128,5 +142,27 @@ public class PlayMenuController extends VBox implements MenuController {
         // Go to server joining screen and clear this menu
         (new ServerJoinMenuController(stage, settings, ConnectionType.MULTI_PLAYER_JOIN, nameField.getText())).show();
         this.getChildren().clear();
+    }
+
+    private void checkButtons() {
+        // Only allow going into single or multi player if a name has been entered
+        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
+            characterErrorText.setVisible(false);
+            if (selectedTeam != Teams.NONE) {
+                singlePlayerButton.setDisable(false);
+                multiJoinGameButton.setDisable(false);
+                multiCreateGameButton.setDisable(false);
+            }
+        } else if (nameField.getCharacters().length() == 0) {
+            singlePlayerButton.setDisable(true);
+            multiJoinGameButton.setDisable(true);
+            multiCreateGameButton.setDisable(true);
+            characterErrorText.setVisible(false);
+        } else {
+            singlePlayerButton.setDisable(true);
+            multiJoinGameButton.setDisable(true);
+            multiCreateGameButton.setDisable(true);
+            characterErrorText.setVisible(true);
+        }
     }
 }
