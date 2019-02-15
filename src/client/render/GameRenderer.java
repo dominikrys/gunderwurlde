@@ -152,7 +152,7 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 20, 0, true), new Insets(0, 0, 0, 0))));
+        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 140, 0, false), new Insets(0, 0, 0, 0))));
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
