@@ -219,16 +219,16 @@ public class GameRenderer implements Runnable {
             Image spriteToRender;
             switch (currentPlayer.getID()) {
                 case 0:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_1);
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
                     break;
                 case 1:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_2);
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
                     break;
                 case 2:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_3);
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
                     break;
                 case 3:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_4);
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
                     break;
                 default:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER);

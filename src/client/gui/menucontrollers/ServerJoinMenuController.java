@@ -83,7 +83,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
 
     @FXML
     void joinServerButtonPress(ActionEvent event) {
-
+        // TODO: Clear screen, add joining message + start gamehandler with IP and port
     }
 
     @Override
