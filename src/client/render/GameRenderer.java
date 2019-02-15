@@ -152,6 +152,7 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
+        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 20, 0, true), new Insets(0, 0, 0, 0))));
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
@@ -411,7 +412,8 @@ public class GameRenderer implements Runnable {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth(Constants.TILE_SIZE * 7);
+        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
+        HUDBox.setMaxHeight(350); // TODO: get rid of this when minimap added?
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
@@ -431,7 +433,7 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
-        // Add player team to HUD
+        // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
         Label playerTeamText;
         switch(currentPlayer.getTeam()) {
             case RED:
