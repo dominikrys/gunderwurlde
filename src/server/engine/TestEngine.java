@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import client.gui.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;

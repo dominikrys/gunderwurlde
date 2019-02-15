@@ -131,6 +131,7 @@ public class ProcessGameState extends Thread {
                 totalTimeProcessing += currentTimeDifference;
                 if (currentTimeDifference > longestTimeProcessing)
                     longestTimeProcessing = currentTimeDifference;
+                //if (numOfProcesses % 3600 == 0) printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing); //uncomment for regular performance info
             }
 
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
@@ -248,7 +249,7 @@ public class ProcessGameState extends Thread {
                             for (Pose p : bulletPoses) {
                                 Projectile proj = templateProjectile.createFor(p, currentPlayer.getTeam());
                                 newProjectiles.add(proj);
-                                projectilesView.add(new ProjectileView(p, proj.getSize(), proj.getEntityListName()));
+                                projectilesView.add(new ProjectileView(p, proj.getSize(), proj.getEntityListName(), proj.isCloaked(), proj.getStatus()));
                             }
                         }
                     }
@@ -396,7 +397,7 @@ public class ProcessGameState extends Thread {
                     }
                     // TODO itemdrop change here
                 } else {
-                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName()));
+                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName(), i.isCloaked(), i.getStatus()));
                 }
             }
             itemsToRemove.stream().forEach((i) -> items.remove(i));
@@ -477,12 +478,13 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 default:
-                    System.out.println("Action " + enemyAction.toString() + " not known!");
+                    System.out.println("AIAction " + enemyAction.toString() + " not known!");
                     break;
                 }
 
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName()));
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
+                        currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving()));
 
                 // TODO enemy change here
             }
@@ -513,8 +515,7 @@ public class ProcessGameState extends Thread {
                         }
                         if (tileOn.getState() == TileState.SOLID) {
                             removed = true;
-                            // TODO add data to tile object to store the bullet collision (used for audio
-                            // and visual effects).
+                            tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
                             break;
                         }
                     }
@@ -550,7 +551,8 @@ public class ProcessGameState extends Thread {
                                                 ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO item change here
-                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName()));
+                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
+                                                        newDrop.isCloaked(), newDrop.getStatus()));
 
                                                 LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
                                                 for (int[] itemTileCords : itemTilesOn) {
@@ -593,7 +595,8 @@ public class ProcessGameState extends Thread {
                     // TODO removed projectile process
                 } else {
                     newProjectiles.add(currentProjectile);
-                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getEntityListName()));
+                    projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getEntityListName(),
+                            currentProjectile.isCloaked(), currentProjectile.getStatus()));
                 }
             }
 
@@ -653,6 +656,10 @@ public class ProcessGameState extends Thread {
             handler.updateGameView(view);
             // TODO overhaul gamestatechanges if used for multithreading
         }
+        printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
+    }
+
+    private void printPerformanceInfo(long totalTimeProcessing, long numOfProcesses, long longestTimeProcessing) {
         System.out.println("LongestTimeProcessing: " + longestTimeProcessing);
         double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
         System.out.println("TimeProcessing: " + totalTimeProcessing);
@@ -720,7 +727,8 @@ public class ProcessGameState extends Thread {
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
-                p.getAmmoList(), p.getID(), p.getTeam());
+                p.getAmmoList(), p.getID(), p.getTeam(), p.getMoveSpeed(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(),
+                p.isMoving());
     }
 
 }

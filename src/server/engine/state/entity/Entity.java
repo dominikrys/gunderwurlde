@@ -12,7 +12,7 @@ public abstract class Entity {
     
     protected Pose pose;
     protected EntityList entityListName;
-    protected Status status; // TODO add to view
+    protected Status status;
     protected int size;
     protected boolean cloaked; // "invisible"
 
@@ -21,6 +21,7 @@ public abstract class Entity {
         this.size = size;
         this.entityListName = entityListName;
         this.cloaked = false;
+        this.status = Status.NONE;
     }
     
     protected Entity(int size, EntityList entityListName) {

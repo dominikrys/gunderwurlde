@@ -18,12 +18,19 @@ public class TileView implements Serializable {
     // State of tile, e.g. solid or passable
     protected TileState tileState;
 
-    protected EntityList entityName;
+    protected EntityList entityName; // TODO is this needed?
+
+    private boolean wasHit;
 
     public TileView(TileTypes tileType, TileState tileState) {
+        this(tileType, tileState, false);
+    }
+
+    public TileView(TileTypes tileType, TileState tileState, boolean wasHit) {
         this.tileType = tileType;
         this.tileState = tileState;
         this.entityName = EntityList.DEFAULT;
+        this.wasHit = wasHit;
     }
 
     public TileTypes getTileType() {
@@ -34,5 +41,7 @@ public class TileView implements Serializable {
         return tileState;
     }
 
-
+    public boolean wasHit() {
+        return wasHit;
+    }
 }
