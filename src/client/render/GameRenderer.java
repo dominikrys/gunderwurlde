@@ -431,6 +431,36 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
+        // Add player team to HUD
+        Label playerTeamText;
+        switch(currentPlayer.getTeam()) {
+            case RED:
+                playerTeamText = new Label("RED");
+                playerTeamText.setTextFill(Color.RED);
+                break;
+            case BLUE:
+                playerTeamText = new Label("BLUE");
+                playerTeamText.setTextFill(Color.BLUE);
+                break;
+            case GREEN:
+                playerTeamText = new Label("GREEN");
+                playerTeamText.setTextFill(Color.GREEN);
+                break;
+            case YELLOW:
+                playerTeamText = new Label("YELLOW");
+                playerTeamText.setTextFill(Color.YELLOW);
+                break;
+            case ENEMY:
+                playerTeamText = new Label("ENEMY");
+                playerTeamText.setTextFill(Color.GREY);
+                break;
+            default:
+                playerTeamText = new Label("NONE");
+                playerTeamText.setTextFill(Color.GREY);
+                break;
+        }
+        playerTeamText.setFont(fontManaspace28);
+
         // Player score
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
@@ -447,7 +477,7 @@ public class GameRenderer implements Runnable {
         ammoBox = new VBox();
 
         // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
     }
