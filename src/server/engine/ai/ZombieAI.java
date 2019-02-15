@@ -5,9 +5,9 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.AttackType;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
+import shared.Constants;
 import shared.Pose;
 import shared.lists.TileState;
-
 import java.util.LinkedList;
 
 public class ZombieAI extends EnemyAI {
@@ -23,12 +23,22 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
+    public AIAction getAction() {
+        if(getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE){
+            return AIAction.MOVE;
+        }else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE){
+            return AIAction.ATTACK;
+        }
+        return AIAction.WAIT;
+    }
+
+    @Override
     public LinkedList<Attack> getAttacks() {
         LinkedList<Attack> attacks = new LinkedList<>();
         long now = System.currentTimeMillis();
 
         if ((now - lastAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(closestPlayer, 16, AttackType.AOE, 1));
+            attacks.add(new AoeAttack(getClosestPlayer(), 16, AttackType.AOE, 1));
             lastAttackTime = now;
         }
 

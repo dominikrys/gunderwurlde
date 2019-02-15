@@ -25,31 +25,26 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
-    protected HashSet<Pose> getPlayerPoses() {
-        return playerPoses;
-    }
-
     protected abstract Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer);
 
-    public synchronized Pose getNewPose(double maxDistanceMoved) {
-        return generateNextPose(maxDistanceMoved, closestPlayer);
+    public abstract AIAction getAction();
+
+    protected HashSet<Pose> getPlayerPoses() {
+        return playerPoses;
     }
 
     public Pose getCurrentPose(){
         return pose;
     }
 
-    protected int getDistToPlayer(Pose player) {
-        return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
+    public Pose getClosestPlayer(){ return closestPlayer; }
+
+    public Pose getNewPose(double maxDistanceToMove) {
+        return generateNextPose(maxDistanceToMove, closestPlayer);
     }
 
-    public AIAction getAction() {
-        if(getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE){
-            return AIAction.MOVE;
-        }else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE){
-            return AIAction.ATTACK;
-        }
-        return AIAction.WAIT;
+    protected int getDistToPlayer(Pose player) {
+        return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
     public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
@@ -60,6 +55,7 @@ public abstract class EnemyAI {
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
+    // May not need this
     public boolean isProcessing() {
         return isProcessing;
     }
