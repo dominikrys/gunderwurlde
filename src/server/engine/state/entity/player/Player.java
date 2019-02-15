@@ -72,22 +72,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.currentAction = currentAction;
     }
 
-    public boolean hasTakenDamage() {
-        return takenDamage;
-    }
-
-    public void setTakenDamage(boolean takenDamage) {
-        this.takenDamage = takenDamage;
-    }
-
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
     public static void changeScore(Teams team, int value) {
         if (teamScore.containsKey(team))
             teamScore.put(team, teamScore.get(team) + value);
@@ -100,11 +84,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
             return teamScore.get(team);
         else
             return 0;
-    }
-
-    @Override
-    public int getID() {
-        return playerID;
     }
 
     public int getMaxItems() {
@@ -206,6 +185,35 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         return name;
     }
 
+    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
+    }
+
+    @Override
+    public int getID() {
+        return playerID;
+    }
+
+    @Override
+    public boolean hasTakenDamage() {
+        return takenDamage;
+    }
+
+    @Override
+    public void setTakenDamage(boolean takenDamage) {
+        this.takenDamage = takenDamage;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return moving;
+    }
+
+    @Override
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
     @Override
     public int getMoveSpeed() {
         return moveSpeed;
@@ -249,10 +257,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         if (maxHealth < 0)
             maxHealth = 0;
         this.maxHealth = maxHealth;
-    }
-
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
-        return ammo;
     }
 
 }

@@ -10,4 +10,8 @@ public interface HasHealth {
     public abstract int getMaxHealth();
 
     public abstract void setMaxHealth(int maxHealth);
+
+    public abstract boolean hasTakenDamage();
+
+    public abstract void setTakenDamage(boolean takenDamage);
 }

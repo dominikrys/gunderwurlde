@@ -53,22 +53,6 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.currentAction = currentAction;
     }
 
-    public boolean hasTakenDamage() {
-        return takenDamage;
-    }
-
-    public void setTakenDamage(boolean takenDamage) {
-        this.takenDamage = takenDamage;
-    }
-
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
     public EnemyAI getAI() {
         return ai;
     }
@@ -87,6 +71,26 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
 
     public EntityList getEntityListName() {
         return entityListName;
+    }
+
+    @Override
+    public boolean hasTakenDamage() {
+        return takenDamage;
+    }
+
+    @Override
+    public void setTakenDamage(boolean takenDamage) {
+        this.takenDamage = takenDamage;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return moving;
+    }
+
+    @Override
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     @Override
