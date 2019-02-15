@@ -4,15 +4,8 @@ import server.engine.state.entity.attack.Attack;
 import shared.Pose;
 
 import java.util.LinkedList;
-
+//TODO ask about speed
 public class RunnerZombieAI extends EnemyAI{
-
-
-    @Override
-    public AIAction getAction() {
-        return null;
-    }
-
     @Override
     public LinkedList<Attack> getAttacks() {
         return null;
@@ -20,6 +13,11 @@ public class RunnerZombieAI extends EnemyAI{
 
     @Override
     protected Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer) {
+        return null;
+    }
+
+    @Override
+    public AIAction getAction() {
         return null;
     }
 }
