@@ -111,7 +111,7 @@ public class ProcessGameState extends Thread {
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
 
-        // TODO reset all of this if map is changed or find a better way to do this
+        // TODO update this depending on areas (Stop spawning in empty areas)
         Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator();
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
@@ -153,14 +153,10 @@ public class ProcessGameState extends Thread {
             if (clientRequests == null)
                 continue; // waits until clients start doing something.
 
-            // TODO can be multi-threaded with immutable gamestate for each process stage
-            // and detailed gamestatechanges used instead which is merged at the end (may be
-            // unnecessary)
-
             // extract/setup necessary data
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
-            LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>(); // TODO change projectiles to use hashmap with id which may improve performance
+            LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>(); // TODO change projectiles to use hashmap with id which may improve performance?
             LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
 
             TileView[][] tileMapView = view.getTileMap();
@@ -200,7 +196,7 @@ public class ProcessGameState extends Thread {
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
                     }
-                    continue; // TODO proper way of dealing with player death
+                    continue; // TODO find proper way of dealing with player death?
                 }
 
 
@@ -257,6 +253,7 @@ public class ProcessGameState extends Thread {
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
                     ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
+                    // TODO add force & add damage if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
 
                     LinkedHashSet<int[]> tilesOn = tilesOn(itemDropped);
@@ -329,7 +326,7 @@ public class ProcessGameState extends Thread {
                                             // As there is no max ammo player takes it all and itemdrop is removed
                                             removed = true;
                                             break;
-                                        case GUN: // TODO change for everything that isn't ammo or powerup
+                                        case GUN: // TODO change case to include melee as well
                                             if (playerItems.stream().anyMatch((i) -> i.getItemListName() == currentItemDrop.getItemName())) {
                                                 // player already has that item TODO take some ammo from it
                                             } else if (playerItems.size() < currentPlayer.getMaxItems()
@@ -371,7 +368,6 @@ public class ProcessGameState extends Thread {
 
                     }
 
-                    // TODO player changed data
                 }
 
                 currentPlayer.setCurrentItem(currentItem); // sets item changes before switching
@@ -395,7 +391,7 @@ public class ProcessGameState extends Thread {
                     for (int[] tileCords : tilesOn) {
                         tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
                     }
-                    // TODO itemdrop change here
+                    // TODO itemdrop decay status here
                 } else {
                     itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName(), i.isCloaked(), i.getStatus()));
                 }
@@ -485,8 +481,6 @@ public class ProcessGameState extends Thread {
                 enemies.put(enemyID, currentEnemy);
                 enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
                         currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving()));
-
-                // TODO enemy change here
             }
 
             // process projectiles
@@ -530,9 +524,10 @@ public class ProcessGameState extends Thread {
                                 Location enemyLocation = enemyBeingChecked.getLocation();
 
                                 if (haveCollided(currentProjectile, enemyBeingChecked)) {
+                                    // TODO add force to enemy
                                     removed = true;
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
-                                        // TODO add enemychange
+                                        // TODO enemy death status here
                                         enemies.remove(enemyID);
 
                                         LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyBeingChecked);
@@ -547,10 +542,10 @@ public class ProcessGameState extends Thread {
                                             int dropAmount = d.getDrop();
                                             if (dropAmount != 0) {
                                                 Item itemToDrop = d.getItem();
-                                                // TODO have itemdrops of the same type stack
+                                                // TODO have itemdrops of the same type stack?
                                                 ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
-                                                // TODO item change here
+                                                // TODO spawned itemdrop status? is this needed?
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
                                                         newDrop.isCloaked(), newDrop.getStatus()));
 
@@ -562,7 +557,7 @@ public class ProcessGameState extends Thread {
                                             }
                                         }
                                     } else {
-                                        // TODO add enemychange
+                                        enemyBeingChecked.setTakenDamage(true);
                                         enemies.put(enemyID, enemyBeingChecked);
                                     }
                                     break; // bullet was removed no need to check other enemies
@@ -576,6 +571,7 @@ public class ProcessGameState extends Thread {
                                     Player playerBeingChecked = players.get(playerID);
 
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
+                                        // TODO add force to player
                                         removed = true;
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.damage(currentProjectile.getDamage());
@@ -634,13 +630,12 @@ public class ProcessGameState extends Thread {
                 if (roundIterator.hasNext()) {
                     currentRound = roundIterator.next();
                 } else {
-                    // TODO no more rounds left send win message
+                    // TODO no more rounds left send win message if co-op
                 }
             }
             currentWaves = newWaves;
 
             gameState.setPlayers(players);
-            // TODO changes loop of new projectiles
             gameState.setProjectiles(newProjectiles);
             gameState.setEnemies(enemies);
             gameState.setItems(items);
@@ -654,7 +649,6 @@ public class ProcessGameState extends Thread {
 
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
             handler.updateGameView(view);
-            // TODO overhaul gamestatechanges if used for multithreading
         }
         printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
     }
