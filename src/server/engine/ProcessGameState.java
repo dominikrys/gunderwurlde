@@ -23,8 +23,7 @@ import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
-import server.engine.state.map.Meadow;
-import server.engine.state.map.MeadowTest;
+import server.engine.state.map.MapReader;
 import server.engine.state.map.Round;
 import server.engine.state.map.Wave;
 import server.engine.state.map.tile.Tile;
@@ -62,14 +61,7 @@ public class ProcessGameState extends Thread {
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
-        switch (mapName) {
-        case MEADOW:
-            this.gameState = new GameState(new Meadow(), players);
-            break;
-        case MEADOWTEST:
-            this.gameState = new GameState(new MeadowTest(), players);
-            break;
-        }
+        this.gameState = new GameState(MapReader.readMap(mapName), players);
         this.handlerClosing = false;
 
         // setup GameView

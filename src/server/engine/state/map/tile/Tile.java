@@ -88,4 +88,8 @@ public class Tile {
         return i;
     }
 
+    public Tile getCopy() {
+        return new Tile(this.tileType, this.tileState);
+    }
+
 }
