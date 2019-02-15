@@ -29,6 +29,14 @@ public class PlayMenuController extends VBox implements MenuController {
     private Button backButton;
     @FXML
     private Label characterErrorText;
+    @FXML
+    private Button teamRedButton;
+    @FXML
+    private Button teamBlueButton;
+    @FXML
+    private Button teamGreenButton;
+    @FXML
+    private Button teamYellowButton;
 
     public PlayMenuController(Stage stage, Settings settings) {
         this.stage = stage;
@@ -79,6 +87,26 @@ public class PlayMenuController extends VBox implements MenuController {
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(true);
         }
+    }
+
+    @FXML
+    void teamBlueButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void teamGreenButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void teamRedButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void teamYellowButtonPress(ActionEvent event) {
+
     }
 
     @FXML

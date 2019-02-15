@@ -217,17 +217,17 @@ public class GameRenderer implements Runnable {
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Get the correct sprite according to playerID, otherwise load the default player graphic
             Image spriteToRender;
-            switch (currentPlayer.getID()) {
-                case 0:
+            switch (currentPlayer.getTeam()) {
+                case RED:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
                     break;
-                case 1:
+                case GREEN:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
                     break;
-                case 2:
+                case YELLOW:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
                     break;
-                case 3:
+                case BLUE:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
                     break;
                 default:
