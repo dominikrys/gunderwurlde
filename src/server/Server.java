@@ -10,6 +10,7 @@ import server.engine.ProcessGameState;
 import server.net.ServerReceiver;
 import server.net.ServerSender;
 import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
@@ -30,8 +31,8 @@ public class Server extends Thread implements HasEngine {
     static final int LISTENPORT = 4445;
 
 
-    public Server(MapList mapName, String hostName) {
-    	this.engine = new ProcessGameState(this, mapName, hostName);
+    public Server(MapList mapName, String hostName, Teams hostTeam) {
+        this.engine = new ProcessGameState(this, mapName, hostName, hostTeam);
         this.hostName = hostName;
         // TODO: set num of player
         this.clientRequests = null;

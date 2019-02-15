@@ -1,5 +1,7 @@
 package client.gui.menucontrollers;
 
+import java.io.IOException;
+
 import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
@@ -13,9 +15,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.lists.MapList;
 import shared.lists.Teams;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class MapSelectionController extends VBox implements MenuController{
     private Stage stage;
@@ -79,7 +78,7 @@ public class MapSelectionController extends VBox implements MenuController{
         this.getChildren().add(loadingLabel);
 
         // Start gamehandler with correct connectiontype and map TODO: add team to this
-        (new GameHandler(stage, connectionType, settings, playerName, MapList.MEADOW)).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW)).start();
     }
 
     @FXML

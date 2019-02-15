@@ -57,10 +57,10 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hostName) {
+    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Teams hostTeam) {
         this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
-        Player hostPlayer = new Player(Teams.RED, hostName);
+        Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
         switch (mapName) {
         case MEADOW:
