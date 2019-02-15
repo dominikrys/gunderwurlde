@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.lists.MapList;
+import shared.lists.Teams;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class MapSelectionController extends VBox implements MenuController{
     private Settings settings;
     private ConnectionType connectionType;
     private String playerName;
+    private Teams selectedTeam;
 
     @FXML
     private Button meadowButton;
@@ -34,11 +36,12 @@ public class MapSelectionController extends VBox implements MenuController{
     @FXML
     private Button backButton;
 
-    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName) {
+    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
         this.stage = stage;
         this.settings = settings;
         this.connectionType = connectionType;
         this.playerName = playerName;
+        this.selectedTeam = selectedTeam;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/map_selection.fxml"));
@@ -75,7 +78,7 @@ public class MapSelectionController extends VBox implements MenuController{
         loadingLabel.setFont(new Font("Consolas", 40));
         this.getChildren().add(loadingLabel);
 
-        // Start gamehandler with correct connectiontype and map
+        // Start gamehandler with correct connectiontype and map TODO: add team to this
         (new GameHandler(stage, connectionType, settings, playerName, MapList.MEADOW)).start();
     }
 

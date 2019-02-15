@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.lists.Teams;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     private Settings settings;
     private ConnectionType connectionType;
     private String playerName;
+    private Teams selectedTeam;
 
     @FXML
     private TextField IPField;
@@ -30,11 +32,12 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     @FXML
     private Button joinServerButton;
 
-    public ServerJoinMenuController(Stage stage, Settings settings, ConnectionType connectionType, String playerName) {
+    public ServerJoinMenuController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
         this.stage = stage;
         this.settings = settings;
         this.connectionType = connectionType;
         this.playerName = playerName;
+        this.selectedTeam = selectedTeam;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/server_join_menu.fxml"));
@@ -83,7 +86,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
 
     @FXML
     void joinServerButtonPress(ActionEvent event) {
-        // TODO: Clear screen, add joining message + start gamehandler with IP and port
+        // TODO: Clear screen, add joining message + start gamehandler with IP and port + ADD TEAM TO THIS
     }
 
     @Override

@@ -126,21 +126,21 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
         // Go to map selection screen  and clear menu
-        (new MapSelectionController(stage, settings, ConnectionType.SINGLE_PLAYER, nameField.getText())).show();
+        (new MapSelectionController(stage, settings, ConnectionType.SINGLE_PLAYER, nameField.getText(), selectedTeam)).show();
         this.getChildren().clear();
     }
 
     @FXML
     void multiCreateGameButtonPress(ActionEvent event) {
         // Go to map selection screen and clear menu
-        (new MapSelectionController(stage, settings, ConnectionType.MULTI_PLAYER_HOST, nameField.getText())).show();
+        (new MapSelectionController(stage, settings, ConnectionType.MULTI_PLAYER_HOST, nameField.getText(), selectedTeam)).show();
         this.getChildren().clear();
     }
 
     @FXML
     void multiJoinGameButtonPress(ActionEvent event) {
         // Go to server joining screen and clear this menu
-        (new ServerJoinMenuController(stage, settings, ConnectionType.MULTI_PLAYER_JOIN, nameField.getText())).show();
+        (new ServerJoinMenuController(stage, settings, ConnectionType.MULTI_PLAYER_JOIN, nameField.getText(), selectedTeam)).show();
         this.getChildren().clear();
     }
 
