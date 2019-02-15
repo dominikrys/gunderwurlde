@@ -7,11 +7,11 @@ public enum EntityList {
     SHOTGUN("file:assets/img/entity/item/pistol.png"), // TODO get shotgun img
 
     // Player
-    PLAYER("file:assets/img/entity/player/player_1.png"),
-    PLAYER_1("file:assets/img/entity/player/player_1.png"),
-    PLAYER_2("file:assets/img/entity/player/player_2.png"),
-    PLAYER_3("file:assets/img/entity/player/player_3.png"),
-    PLAYER_4("file:assets/img/entity/player/player_4.png"),
+    PLAYER("file:assets/img/entity/player/player.png"),
+    PLAYER_RED("file:assets/img/entity/player/player_red.png"),
+    PLAYER_GREEN("file:assets/img/entity/player/player_green.png"),
+    PLAYER_YELLOW("file:assets/img/entity/player/player_yellow.png"),
+    PLAYER_BLUE("file:assets/img/entity/player/player_blue.png"),
 
     // Enemy
     ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
