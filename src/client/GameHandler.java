@@ -58,7 +58,12 @@ public class GameHandler extends Thread {
                 // TODO: Potential menu for choosing host address and port number?
                 client = new Client(stage, playerName, 1, this, settings);
                 client.start();
-                client.getClientSender().joinGame(playerName, team);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                client.joinGame(playerName, team);
                 // Code for joining some server
                 break;
         }

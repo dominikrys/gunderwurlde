@@ -11,6 +11,7 @@ import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
+import shared.lists.Teams;
 import shared.view.GameView;
 
 public class Client extends Thread {
@@ -25,7 +26,6 @@ public class Client extends Thread {
     private GameRenderer renderer;
     private String playerName;
     private int playerID;
-    private Boolean running;
     private ClientSender sender;
     private ClientReceiver receiver;
     private Stage stage;
@@ -38,10 +38,10 @@ public class Client extends Thread {
         this.stage = stage;
         this.playerName = playerName;
         this.playerID = playerID;
-        this.running = true;
         this.handler = handler;
         this.settings = settings;
         firstView = true;
+
     }
 
     public void run(){
@@ -51,12 +51,12 @@ public class Client extends Thread {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-
-            // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
+            System.out.println("Sender up");
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
+            // Start the sender and receiver threads for the client
 
-            // TODO: How will these threads close if the client is constantly rendering
+
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
@@ -92,8 +92,11 @@ public class Client extends Thread {
     	return this.sender;
     }
 
+    public void joinGame(String playerName, Teams team){
+        System.out.println("joining game");
+        sender.joinGame(playerName, team);
+    }
     public void close() {
-    	this.running = false;
         sender.stopRunning();
         receiver.stopRunning();
     }
