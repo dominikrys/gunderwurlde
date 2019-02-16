@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class SoldierZombieAI extends EnemyAI{
 
-    private final int RANGE_TO_SHOOT;
+    private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
     private Random rand = new Random();
 
@@ -45,7 +45,7 @@ public class SoldierZombieAI extends EnemyAI{
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer) {
+    protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
         return null;
     }
 }

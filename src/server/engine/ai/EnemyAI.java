@@ -25,7 +25,7 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
-    protected abstract Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer);
+    protected abstract Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer);
 
     public abstract AIAction getAction();
 

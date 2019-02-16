@@ -46,7 +46,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer) {
+    protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
         int[] tile = Tile.locationToTile(pose);
 
         if (tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
@@ -57,7 +57,7 @@ public class ZombieAI extends EnemyAI {
             return new Pose(pose.getX() - 0.1, pose.getY(), 270);
         }
 
-        for (double i = 0.1; i < maxDistanceMoved; i += 0.1) {
+        for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
             pose = poseByAngle(getAngle(pose, closestPlayer), pose);
         }
 
