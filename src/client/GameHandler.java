@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import server.Server;
 import shared.lists.MapList;
+import shared.lists.Teams;
 
 public class GameHandler extends Thread {
     // Server variables
@@ -21,12 +22,16 @@ public class GameHandler extends Thread {
     // Misc
     private Settings settings;
     private String playerName;
+    private MapList map;
+    private Teams team;
 
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name) {
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
         this.playerName = name;
+        this.map = map;
+        this.team = team;
     }
 
     public void run() {
@@ -34,9 +39,9 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    server = new Server(MapList.MEADOW, playerName);
+                    server = new Server(map, playerName, team);
                     serverStarted = true;
-                    client = new Client(stage, playerName, 0, this);
+                    client = new Client(stage, playerName, 0, this, settings);
                     client.start();
                 }
                 break;

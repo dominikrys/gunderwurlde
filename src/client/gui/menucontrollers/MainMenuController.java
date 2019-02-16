@@ -48,7 +48,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     public void show() {
         if (stage.getScene() == null) {
-            MenuController.setRootToStage(stage, this);
+            MenuController.setRootToStage(stage, this, settings);
         } else {
             this.stage.getScene().setRoot(this);
         }

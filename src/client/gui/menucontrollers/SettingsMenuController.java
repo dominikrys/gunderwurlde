@@ -5,10 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.Constants;
 
 import java.io.IOException;
 
@@ -42,6 +44,12 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private ComboBox<String> resolutionComboBox;
+
+    @FXML
+    private Button applyButton;
 
     public SettingsMenuController(Stage stage, Settings settings) {
         this.stage = stage;
@@ -87,6 +95,16 @@ public class SettingsMenuController extends VBox implements MenuController {
             displayWindowedButton.setDefaultButton(true);
         }
 
+        // Disable apply button
+        applyButton.setDisable(true);
+
+        // Populate resolution box with resolutions
+        for (int[] resolution : Constants.SCREEN_RESOLUTIONS) {
+            resolutionComboBox.getItems().add(resolution[0] + "x" + resolution[1]);
+        }
+
+        // Add current resolution to resolutioncombobox
+        resolutionComboBox.getSelectionModel().select(settings.getScreenResolutionString());
     }
 
     @Override
@@ -96,6 +114,9 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
+        // Save settings to file
+        settings.saveToDisk();
+
         // Switch to main menu and clear this object
         (new MainMenuController(stage, settings)).show();
         this.getChildren().clear();
@@ -103,10 +124,10 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     @FXML
     void displayFullscreenButtonPress(ActionEvent event) {
-        //TODO: Make this work, perhaps add an "apply" button
         settings.setFullScreen(true);
         displayFullscreenButton.setDefaultButton(true);
         displayWindowedButton.setDefaultButton(false);
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -114,6 +135,7 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setFullScreen(false);
         displayFullscreenButton.setDefaultButton(false);
         displayWindowedButton.setDefaultButton(true);
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -121,6 +143,7 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setMusicMute(true);
         musicOffButton.setDefaultButton(true);
         musicOnButton.setDefaultButton(false);
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -128,6 +151,7 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setMusicMute(false);
         musicOffButton.setDefaultButton(false);
         musicOnButton.setDefaultButton(true);
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -135,6 +159,7 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setSoundMute(true);
         soundOffButton.setDefaultButton(true);
         soundOnButton.setDefaultButton(false);
+        applyButton.setDisable(false);
     }
 
     @FXML
@@ -142,15 +167,38 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setSoundMute(false);
         soundOffButton.setDefaultButton(false);
         soundOnButton.setDefaultButton(true);
+        applyButton.setDisable(false);
     }
 
     @FXML
     void musicVolumeSliderDragged(MouseEvent event) {
         settings.setMusicVolume((int) musicVolumeSlider.getValue());
+        applyButton.setDisable(false);
     }
 
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
         settings.setSoundVolume((int) soundVolumeSlider.getValue());
+        applyButton.setDisable(false);
+    }
+
+    @FXML
+    void resolutionComboBoxChanged(ActionEvent event) {
+        // Get resolution from combobos and adjust the settings object accordingly
+        String selectedResolution = resolutionComboBox.getValue();
+        settings.setScreenWidth(Integer.parseInt(selectedResolution.substring(0, selectedResolution.indexOf('x'))));
+        settings.setScreenHeight(Integer.parseInt(selectedResolution.substring(selectedResolution.indexOf('x') + 1)));
+        applyButton.setDisable(false);
+    }
+
+    @FXML
+    void applyButtonPress(ActionEvent event) {
+        // Apply graphics settings
+        stage.setFullScreen(settings.isFullScreen());
+        stage.setWidth(settings.getScreenWidth());
+        stage.setHeight(settings.getScreenHeight());
+
+        // Disable button since settings already applied
+        applyButton.setDisable(true);
     }
 }

@@ -1,29 +1,33 @@
 package client.gui;
 
+import java.io.*;
+
 // Object for storing game settings
-public class Settings {
+public class Settings implements Serializable {
     // Constants
     private final int MIN_VOLUME = 0;
     private final int MAX_VOLUME = 100;
-
     // Sound variables
     private int soundVolume;
     private int musicVolume;
     private boolean soundMute;
     private boolean musicMute;
-
     // Screen variables
     private boolean fullScreen;
+    // Current screen resolution
+    private int screenWidth;
+    private int screenHeight;
 
     public Settings() {
-        // TODO: have these get loaded from a file
-
         // Initialise settings
         soundVolume = 70;
         musicVolume = 70;
         soundMute = false;
         musicMute = false;
         fullScreen = false;
+
+        screenWidth = 1280;
+        screenHeight = 720;
     }
 
     public int getSoundVolume() {
@@ -78,5 +82,37 @@ public class Settings {
 
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+    }
+
+    public String getScreenResolutionString() {
+        return screenWidth + "x" + screenHeight;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public void setScreenHeight (int screenHeight) {
+        this.screenHeight = screenHeight;
+    }
+
+    public void saveToDisk() {
+        try (
+                OutputStream file = new FileOutputStream("settings.ser");
+                OutputStream buffer = new BufferedOutputStream(file);
+                ObjectOutput output = new ObjectOutputStream(buffer)
+        ) {
+            output.writeObject(this);
+        } catch (IOException ex) {
+            System.out.println("Cannot perform output." + ex.getMessage());
+        }
     }
 }

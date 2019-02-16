@@ -6,6 +6,7 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import client.gui.Settings;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
@@ -13,31 +14,33 @@ import javafx.stage.Stage;
 import shared.view.GameView;
 
 public class Client extends Thread {
-    MulticastSocket listenSocket;
+    private MulticastSocket listenSocket;
     // Socket to send requests to the server
-    MulticastSocket sendSocket;
-    InetAddress listenAddress;
-    InetAddress senderAddress;
-    static final int LISTENPORT = 4444;
-    static final int SENDPORT = 4445;
-    GameView view;
-    GameRenderer renderer;
-    String playerName;
-    int playerID;
-    Boolean running;
-    ClientSender sender;
-    ClientReceiver receiver;
-    Stage stage;
-    boolean firstView;
-    GameHandler handler;
+    private MulticastSocket sendSocket;
+    private InetAddress listenAddress;
+    private InetAddress senderAddress;
+    private static final int LISTENPORT = 4444;
+    private static final int SENDPORT = 4445;
+    private GameView view;
+    private GameRenderer renderer;
+    private String playerName;
+    private int playerID;
+    private Boolean running;
+    private ClientSender sender;
+    private ClientReceiver receiver;
+    private Stage stage;
+    private boolean firstView;
+    private GameHandler handler;
+    private Settings settings;
 
 
-    public Client(Stage stage, String playerName, int playerID, GameHandler handler) {
+    public Client(Stage stage, String playerName, int playerID, GameHandler handler, Settings settings) {
         this.stage = stage;
         this.playerName = playerName;
         this.playerID = playerID;
         this.running = true;
         this.handler = handler;
+        this.settings = settings;
         firstView = true;
     }
 
@@ -51,7 +54,7 @@ public class Client extends Thread {
 
             // Start the sender and receiver threads for the client
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
-            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
+            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
 
             // TODO: How will these threads close if the client is constantly rendering
             // Waits for the sender to join as that will be the first thread to close
@@ -72,11 +75,11 @@ public class Client extends Thread {
         }
     }
 
-    public void setGameView(GameView view){
+    public void setGameView(GameView view, Settings settings){
         this.view = view;
         if (firstView) {
             firstView = false;
-            renderer = new GameRenderer(stage, this.view, playerID);
+            renderer = new GameRenderer(stage, this.view, playerID, settings);
             renderer.getKeyboardHandler().setGameHandler(handler);
             renderer.getMouseHandler().setGameHandler(handler);
             renderer.run();

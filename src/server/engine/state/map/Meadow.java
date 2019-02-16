@@ -1,5 +1,6 @@
 package server.engine.state.map;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.TreeSet;
 
@@ -8,6 +9,7 @@ import server.engine.state.entity.enemy.Zombie;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
 
@@ -16,7 +18,7 @@ public class Meadow extends GameMap {
     public static final int DEFAULT_Y_DIM = 22;
 
     public Meadow() {
-        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
+        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generateTeamSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
     }
 
     public static Tile[][] generateTileMap() {
@@ -37,13 +39,13 @@ public class Meadow extends GameMap {
         return tileMap;
     }
 
-    private static LinkedHashSet<Location> generatePlayerSpawns() {
-        LinkedHashSet<Location> playerSpawns = new LinkedHashSet<Location>();
-        playerSpawns.add(Tile.tileToLocation(1, 1));
-        playerSpawns.add(Tile.tileToLocation(1, DEFAULT_Y_DIM - 2));
-        playerSpawns.add(Tile.tileToLocation(DEFAULT_X_DIM - 2, 1));
-        playerSpawns.add(Tile.tileToLocation(DEFAULT_X_DIM - 2, DEFAULT_Y_DIM - 2));
-        return playerSpawns;
+    private static HashMap<Teams, Location> generateTeamSpawns() {
+        HashMap<Teams, Location> teamSpawns = new HashMap<>();
+        teamSpawns.put(Teams.RED, Tile.tileToLocation(1, 1));
+        teamSpawns.put(Teams.BLUE, Tile.tileToLocation(1, DEFAULT_Y_DIM - 2));
+        teamSpawns.put(Teams.GREEN, Tile.tileToLocation(DEFAULT_X_DIM - 2, 1));
+        teamSpawns.put(Teams.YELLOW, Tile.tileToLocation(DEFAULT_X_DIM - 2, DEFAULT_Y_DIM - 2));
+        return teamSpawns;
     }
 
     private static LinkedHashSet<Location> generateEnemySpawns() {
@@ -53,7 +55,7 @@ public class Meadow extends GameMap {
         return enemySpawns;
     }
 
-    private static LinkedHashSet<Round> generateRounds() {
+    public static LinkedHashSet<Round> generateRounds() {
         LinkedHashSet<Round> rounds = new LinkedHashSet<>();
         TreeSet<Wave> waves = new TreeSet<>();
 

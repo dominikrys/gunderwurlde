@@ -3,13 +3,14 @@ package server.engine;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import client.gui.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
@@ -47,7 +48,7 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob");
+        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob", Teams.RED);
         stage.setResizable(true);
         stage.setScene(new Scene(new VBox()));
         engine.start();
@@ -56,7 +57,7 @@ public class TestEngine extends Application implements HasEngine {
         while (firstRender) {
             if (view != null) {
                 stage.show();
-                rend = new GameRenderer(stage, view, 0);
+                rend = new GameRenderer(stage, view, 0, new Settings());
                 firstRender = false;
                 rend.run();
                 System.out.println("Renderer started");

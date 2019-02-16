@@ -143,39 +143,57 @@ public class KeyboardHandler extends UserInteraction {
     @Override
     public void activate() {
         super.activate();
-        AnimationTimer t = new AnimationTimer() {
+        this.t = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (upPressed || leftPressed || downPressed || rightPressed) {
-                    for (int i = 0; i < input.size(); i++) {
-                        String key = input.get(i);
-                        if (key.equals(kbSettings.getKey("up")) ||
-                                key.equals(kbSettings.getKey("left")) ||
-                                key.equals(kbSettings.getKey("down")) ||
-                                key.equals(kbSettings.getKey("right"))) {
-                            movement.move(key);
-                        }
-                    }
+                	if((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
+                		movement.move("up");
+                	}
+                	else if((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
+                		movement.move("left");
+                	}
+                	else if((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
+                		movement.move("down");
+                	}
+                	else if((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
+                		movement.move("right");
+                	}
+                	else if(upPressed && leftPressed && !downPressed && !rightPressed) {
+                		movement.move("upLeft");
+                	}
+                	else if(upPressed && !leftPressed && !downPressed && rightPressed) {
+                		movement.move("upRight");
+                	}
+                	else if(!upPressed && leftPressed && downPressed && !rightPressed) {
+                		movement.move("downLeft");
+                	}
+                	else if(!upPressed && !leftPressed && downPressed && rightPressed) {
+                		movement.move("downRight");
+                	}
+                	else {
+                		// do nothing
+                	}
                 }
-                if (reloadPressed) {
+                if(reloadPressed) {
                     reload.reload();
                 }
-                if (dropPressed) {
+                if(dropPressed) {
                     dropItem.drop();
                 }
-                if (interactPressed) {
+                if(interactPressed) {
 
                 }
             }
         };
 
-        t.start();
+        this.t.start();
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
-        t.stop();
+        this.t.stop();
     }
 
     @Override

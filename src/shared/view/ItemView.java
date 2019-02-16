@@ -8,32 +8,26 @@ import shared.lists.ItemList;
 public class ItemView implements Serializable {
     private static final long serialVersionUID = 1L;
     protected ItemList name;
-    protected String pathToGraphic;
     protected AmmoList ammoType;
     protected int clipSize;
     protected int ammoInClip;
+    protected boolean autoFire;
 
-    public ItemView(ItemList name, AmmoList ammoType, int clipSize, int ammoInClip) {
+    public ItemView(ItemList name, AmmoList ammoType, int clipSize, int ammoInClip, boolean autoFire) {
         this.name = name;
         this.ammoType = ammoType;
         this.clipSize = clipSize;
         this.ammoInClip = ammoInClip;
+        this.autoFire = autoFire;
 
-        switch (name) {
-        case BASIC_AMMO:
-            break;
-        case PISTOL:
-            this.pathToGraphic = "file:assets/img/items/pistol.png";
-            break;
-        }
+    }
+
+    public boolean isAutoFire() {
+        return autoFire;
     }
 
     public ItemList getItemListName() {
         return name;
-    }
-
-    public String getPathToGraphic() {
-        return pathToGraphic;
     }
 
     public AmmoList getAmmoType() {

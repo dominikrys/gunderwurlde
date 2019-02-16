@@ -1,14 +1,15 @@
 package server.engine.state.map;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.TreeSet;
 
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.enemy.Zombie;
-import server.engine.state.map.GameMap;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
 
@@ -17,7 +18,7 @@ public class MeadowTest extends GameMap {
     public static final int DEFAULT_Y_DIM = 22;
 
     public MeadowTest() {
-        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generatePlayerSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
+        super(DEFAULT_X_DIM, DEFAULT_Y_DIM, generateTileMap(), generateTeamSpawns(), generateEnemySpawns(), generateRounds(), MapList.MEADOW);
     }
 
     private static Tile[][] generateTileMap() {
@@ -38,10 +39,10 @@ public class MeadowTest extends GameMap {
         return tileMap;
     }
 
-    private static LinkedHashSet<Location> generatePlayerSpawns() {
-        LinkedHashSet<Location> playerSpawns = new LinkedHashSet<Location>();
-        playerSpawns.add(Tile.tileToLocation(5, 15));
-        return playerSpawns;
+    private static HashMap<Teams, Location> generateTeamSpawns() {
+        HashMap<Teams, Location> teamSpawns = new HashMap<>();
+        teamSpawns.put(Teams.RED, Tile.tileToLocation(5, 15));
+        return teamSpawns;
     }
 
     private static LinkedHashSet<Location> generateEnemySpawns() {

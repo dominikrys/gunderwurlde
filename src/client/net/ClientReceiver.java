@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import client.Client;
+import client.gui.Settings;
 import client.render.GameRenderer;
 import shared.view.GameView;
 
@@ -22,20 +23,22 @@ import shared.view.GameView;
 // serverclientthreads.ServerSender thread).
 
 public class ClientReceiver extends Thread {
-    MulticastSocket listenSocket;
-    InetAddress listenAddress;
-    Boolean running;
-    DatagramPacket packet;
-    byte[] buffer;
-    Client client;
-    GameRenderer renderer;
+    private MulticastSocket listenSocket;
+    private InetAddress listenAddress;
+    private Boolean running;
+    private DatagramPacket packet;
+    private byte[] buffer;
+    private Client client;
+    private GameRenderer renderer;
+    private Settings settings;
 
-    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client) {
+    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client, Settings settings) {
         this.listenSocket = listenSocket;
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;
-        buffer = new byte[17000];
+        this.settings = settings;
+        buffer = new byte[];
         running = true;
         Addressing.setInterfaces(listenSocket);
         this.start();
@@ -81,7 +84,7 @@ public class ClientReceiver extends Thread {
                         // System.out.println("Client received new gameview");
                         in = new ObjectInputStream(bis);
                         view = (GameView) in.readObject();
-                        client.setGameView(view);
+                        client.setGameView(view, settings);
                         // renderer.updateGameView(view);
                         // renderer.getKeyboardHandler().setGameView(view);
                         // renderer.getMouseHandler().setGameView(view);

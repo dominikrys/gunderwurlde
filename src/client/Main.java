@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.*;
+
 public class Main extends Application {
     // Main method
     public static void main(String args[]) {
@@ -14,8 +16,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Settings object
+        // Try to load settings from local file. If not found, create new
         Settings settings = new Settings();
+        settings = loadSettingsFromFile(settings);
 
         // Set up stage
         stage.setResizable(false); // Disable resizing of the window TODO: check how this behaves on linux!
@@ -36,5 +39,25 @@ public class Main extends Application {
         // Create the main menu and show it
         (new MainMenuController(stage, settings)).show();
 
+    }
+
+    private Settings loadSettingsFromFile(Settings settings) {
+        // Look for existing settings object and try to load it
+        try (
+                InputStream file = new FileInputStream("settings.ser");
+                InputStream buffer = new BufferedInputStream(file);
+                ObjectInput input = new ObjectInputStream(buffer)
+        ) {
+            // Deserialize the file
+            settings = (Settings) input.readObject();
+            System.out.println("Settings file found and loaded!");
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            // No existing file found so create a new one
+            System.out.println("No settings file found, creating new one...");
+            settings.saveToDisk();
+        }
+        return settings;
     }
 }

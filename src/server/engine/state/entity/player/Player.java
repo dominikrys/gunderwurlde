@@ -8,9 +8,11 @@ import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
 import server.engine.state.item.Item;
+import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.map.tile.Tile;
+import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Teams;
@@ -30,12 +32,15 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList, Integer> ammo;
+    protected LinkedHashMap<AmmoList, Integer> ammo; // TODO add cap to ammo stored
+    protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
     protected int currentItem;
     protected int maxItems;
+    protected boolean takenDamage;
+    protected boolean moving;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE, EntityList.PLAYER);
@@ -54,6 +59,17 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.playerID = nextPlayerID++;
+        this.takenDamage = false;
+        this.moving = false;
+        this.currentAction = ActionList.NONE;
+    }
+
+    public ActionList getCurrentAction() {
+        return currentAction;
+    }
+
+    public void setCurrentAction(ActionList currentAction) {
+        this.currentAction = currentAction;
     }
 
     public static void changeScore(Teams team, int value) {
@@ -68,11 +84,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
             return teamScore.get(team);
         else
             return 0;
-    }
-
-    @Override
-    public int getID() {
-        return playerID;
     }
 
     public int getMaxItems() {
@@ -155,7 +166,11 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
             slot = 0;
         else if (slot > items.size() - 1)
             slot = items.size() - 1;
-        currentItem = slot;
+        if (slot != currentItem) {
+            if (items.get(currentItem) instanceof Gun)
+                ((Gun) items.get(currentItem)).cancelReload();
+            currentItem = slot;
+        }
     }
 
     public int getScore() {
@@ -168,6 +183,35 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
 
     public String getName() {
         return name;
+    }
+
+    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
+    }
+
+    @Override
+    public int getID() {
+        return playerID;
+    }
+
+    @Override
+    public boolean hasTakenDamage() {
+        return takenDamage;
+    }
+
+    @Override
+    public void setTakenDamage(boolean takenDamage) {
+        this.takenDamage = takenDamage;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return moving;
+    }
+
+    @Override
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     @Override
@@ -213,10 +257,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         if (maxHealth < 0)
             maxHealth = 0;
         this.maxHealth = maxHealth;
-    }
-
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
-        return ammo;
     }
 
 }

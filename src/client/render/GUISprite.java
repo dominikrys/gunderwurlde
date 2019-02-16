@@ -1,6 +1,6 @@
 package client.render;
 
-public enum SpritesNonGame {
+public enum GUISprite {
     // Menu items
     SOUND_OFF("assets/img/gui/sound_off"),
     SOUND_ON("assets/img/gui/sound_on"),
@@ -10,7 +10,7 @@ public enum SpritesNonGame {
 
     private String spritePath;
 
-    SpritesNonGame(String spritePath) {
+    GUISprite(String spritePath) {
         this.spritePath = spritePath;
     }
 

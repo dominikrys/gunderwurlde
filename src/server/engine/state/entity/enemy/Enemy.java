@@ -9,19 +9,25 @@ import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
 import server.engine.state.entity.attack.Attack;
+import shared.lists.ActionList;
 import shared.lists.EntityList;
 
 public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
     private static int nextID = 0;
+
     protected final LinkedHashSet<Drop> drops;
+    protected final int id;
+
+    protected EntityList entityListName;
+    protected ActionList currentAction;
+    protected EnemyAI ai;
+    protected LinkedList<Attack> attacksToDo;
     protected int scoreOnKill;
     protected int health;
     protected int maxHealth;
     protected int moveSpeed;
-    protected EntityList entityListName;
-    protected EnemyAI ai;
-    private int id;
-    protected LinkedList<Attack> attacksToDo;
+    protected boolean takenDamage;
+    protected boolean moving;
 
     Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
         super(size, entityListName);
@@ -34,6 +40,17 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.scoreOnKill = scoreOnKill;
         this.ai =ai;
         this.attacksToDo = new LinkedList<>();
+        this.takenDamage = false;
+        this.moving = false;
+        this.currentAction = ActionList.NONE;
+    }
+
+    public ActionList getCurrentAction() {
+        return currentAction;
+    }
+
+    public void setCurrentAction(ActionList currentAction) {
+        this.currentAction = currentAction;
     }
 
     public EnemyAI getAI() {
@@ -54,6 +71,26 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
 
     public EntityList getEntityListName() {
         return entityListName;
+    }
+
+    @Override
+    public boolean hasTakenDamage() {
+        return takenDamage;
+    }
+
+    @Override
+    public void setTakenDamage(boolean takenDamage) {
+        this.takenDamage = takenDamage;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return moving;
+    }
+
+    @Override
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     @Override

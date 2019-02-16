@@ -41,8 +41,8 @@ public class Location implements Serializable {
 
     public static Location calculateNewLocation(Location l, int direction, double distanceMoved) {
         double directionInRadians = Math.toRadians(direction);
-        double x_dist = (double) distanceMoved * Math.sin(directionInRadians);
-        double y_dist = (double) -distanceMoved * Math.cos(directionInRadians);
+        double x_dist = (double) distanceMoved * Math.cos(directionInRadians);
+        double y_dist = (double) distanceMoved * Math.sin(directionInRadians);
 
         // x_dist = Math.round(x_dist);
         // y_dist = Math.round(y_dist);
