@@ -64,7 +64,7 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
-                System.out.println("Receiver packet size is:" + packet.getLength());
+                System.out.println("Receiver packet");
                 if(packet.getLength() == 4){
                     System.out.println("Updating buffer size");
                     ByteBuffer wrapped = ByteBuffer.wrap(packet.getData());

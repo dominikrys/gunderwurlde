@@ -174,7 +174,10 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     }
 
     public int getScore() {
-        return teamScore.get(team);
+        if (teamScore.containsKey(team))
+            return teamScore.get(team);
+        else
+            return 0;
     }
 
     public Teams getTeam() {

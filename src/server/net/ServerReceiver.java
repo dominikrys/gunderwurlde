@@ -60,8 +60,18 @@ public class ServerReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
+                System.out.println("Received packet size:" + packet.getLength());
 
+                byte[] commandBytes = Arrays.copyOfRange(buffer, 0, 4);
+                ByteBuffer checkWrap = ByteBuffer.wrap(commandBytes);
+                int command = checkWrap.getInt();
+                System.out.println("Received command is " + command);
+                if(command == 99){
+                    joinGame(packet);
+                    continue;
+                }
                 // System.out.println("Packet recieved by ServerReceiver");
+
 
                 // Creates a bytearrayinputstream from the received packets data
                 byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length-4);
@@ -75,13 +85,10 @@ public class ServerReceiver extends Thread {
                 ObjectInputStream in = null;
                 try {
                     in = new ObjectInputStream(bis);
-
                     Integer[] received =  (Integer[]) in.readObject();
 
                     //Request request = new Request();
                     switch(received[0]) {
-                        case 99 :
-                            joinGame(packet);
                     	case 0 : // ATTACK
                     		//request.requestShoot();
                     		handler.getClientRequests().playerRequestShoot(playerID);
@@ -140,8 +147,11 @@ public class ServerReceiver extends Thread {
         try {
             System.out.println("join game request received");
             // check that it isnt a player joining the game
-            String data = new String(packet.getData());
+            byte[] dataBytes = Arrays.copyOfRange(packet.getData(), 4, packet.getLength());
+            String data = new String(dataBytes);
             String[] seperateData = data.split(" ");
+            System.out.println("Part 1 is " + seperateData[0]);
+            System.out.println("Part 2 is " + seperateData[1]);
             String playerName = seperateData[0];
             Teams team = null;
             switch(seperateData[1]){
@@ -158,7 +168,7 @@ public class ServerReceiver extends Thread {
             handler.addPlayer(playerName, team);
         }
         catch(Exception e){
-
+            e.printStackTrace();
         }
     }
 }

@@ -275,6 +275,7 @@ public class GameRenderer implements Runnable {
         PlayerView currentPlayer = getCurrentPlayer();
 
         // Update score
+
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
         // Update hearts

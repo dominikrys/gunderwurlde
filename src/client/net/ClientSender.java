@@ -3,6 +3,7 @@ package client.net;
 import shared.lists.Teams;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -10,6 +11,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
@@ -51,7 +53,7 @@ public class ClientSender extends Thread {
                try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(action);
-                out.write(clientID);
+                out.writeInt(clientID);
                 out.flush();
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
@@ -74,14 +76,15 @@ public class ClientSender extends Thread {
     public void joinGame(String playerName, Teams playerTeam){
         try{
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out;
-            out = new ObjectOutputStream(bos);
-            out.writeInt(99);
+            DataOutputStream out;
+            out = new DataOutputStream(bos);
             String data = (playerName + " " + playerTeam);
-            out.writeBytes(data);
+            out.writeInt(99);
+            out.writeUTF(data);
             out.flush();
-            buffer = data.getBytes();
+            buffer = bos.toByteArray();
             packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+            System.out.println("Join game packet size: " + packet.getLength());
             senderSocket.send(packet);
             System.out.println("Join game request sent");
         } catch (IOException e) {
