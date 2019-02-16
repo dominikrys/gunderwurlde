@@ -76,8 +76,7 @@ public class ServerSender extends Thread {
                     buffer = ByteBuffer.allocate(4).putInt(buffersize).array();
                     maxBufferSize = buffersize;
                     packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-                    System.out.println("Sender packet data size is:" + packet.getData().length);
-                    System.out.println("Sender packet size is:" + packet.getLength());
+                    System.out.println("ServerSender packet data size is:" + packet.getData().length);
                     senderSocket.send(packet);
                 }
 

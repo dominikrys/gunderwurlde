@@ -1,5 +1,6 @@
 package client.gui.menucontrollers;
 
+import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
@@ -9,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.lists.MapList;
 import shared.lists.Teams;
 
 import java.io.IOException;
@@ -86,6 +88,10 @@ public class ServerJoinMenuController extends VBox implements MenuController {
 
     @FXML
     void joinServerButtonPress(ActionEvent event) {
+        // Grab the specified map from the server attempting to connect to
+
+
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW)).start();
         // TODO: Clear screen, add joining message + start gamehandler with IP and port + ADD TEAM TO THIS
     }
 

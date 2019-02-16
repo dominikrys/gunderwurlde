@@ -15,6 +15,7 @@ import java.util.Enumeration;
 
 import client.net.Addressing;
 import server.Server;
+import shared.lists.Teams;
 
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
@@ -68,6 +69,7 @@ public class ServerReceiver extends Thread {
 
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();
+                System.out.println("ServerReceiver: client ID is " + playerID);
                 ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
@@ -78,6 +80,8 @@ public class ServerReceiver extends Thread {
 
                     //Request request = new Request();
                     switch(received[0]) {
+                        case 99 :
+                            joinGame(packet);
                     	case 0 : // ATTACK
                     		//request.requestShoot();
                     		handler.getClientRequests().playerRequestShoot(playerID);
@@ -102,14 +106,14 @@ public class ServerReceiver extends Thread {
                     		//request.setFacing(received[1]);
                     		handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                     }
-                    
+
                     /*
                     // Send the request to the Engine
                     handler.setClientRequests(requests);
-                    
+
                     handler.setClientRequests(null);
                     */
-                    
+
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {
@@ -131,6 +135,31 @@ public class ServerReceiver extends Thread {
             e1.printStackTrace();
         } catch (IOException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public void joinGame(DatagramPacket packet){
+        try {
+            // check that it isnt a player joining the game
+            String data = new String(packet.getData());
+            String[] seperateData = data.split(" ");
+            String playerName = seperateData[0];
+            Teams team = null;
+            switch(seperateData[1]){
+                // RED, BLUE, GREEN, YELLOW, ENEMY, NONE
+                case "RED" :
+                    team = Teams.RED;
+                case "BLUE" :
+                    team = Teams.BLUE;
+                case "GREEN" :
+                    team = Teams.GREEN;
+                case "YELLOW" :
+                    team = Teams.YELLOW;
+            }
+            handler.addPlayer(playerName, team);
+        }
+        catch(Exception e){
+
         }
     }
 }

@@ -1,5 +1,7 @@
 package client.net;
 
+import shared.lists.Teams;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -7,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;
@@ -63,12 +66,29 @@ public class ClientSender extends Thread {
             }
             // TODO Will be set on a loop to send every ______ seconds
 
-        } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void joinGame(String playerName, Teams playerTeam){
+        try{
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out;
+            out = new ObjectOutputStream(bos);
+            out.writeInt(99);
+            String data = (playerName + " " + playerTeam);
+            out.writeBytes(data);
+            out.flush();
+            buffer = data.getBytes();
+            packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+            senderSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

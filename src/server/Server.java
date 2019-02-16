@@ -29,11 +29,13 @@ public class Server extends Thread implements HasEngine {
     // Ports to be sent and received on
     static final int SENDPORT = 4444;
     static final int LISTENPORT = 4445;
+    int numOfPlayers;
 
 
-    public Server(MapList mapName, String hostName, Teams hostTeam) {
+    public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers) {
         this.engine = new ProcessGameState(this, mapName, hostName, hostTeam);
         this.hostName = hostName;
+        this.numOfPlayers = numOfPlayers;
         // TODO: set num of player
         this.clientRequests = null;
         this.start();
@@ -55,7 +57,7 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Threads up");
             
             // TODO: num of player setting
-            this.clientRequests = new ClientRequests(2);
+            this.clientRequests = new ClientRequests(numOfPlayers);
             
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
@@ -83,6 +85,10 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void removePlayer(int playerID) {
+    }
+
+    public void addPlayer(String playerName, Teams playerTeam){
+        engine.addPlayer(playerName, playerTeam);
     }
 
     @Override

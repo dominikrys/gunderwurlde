@@ -39,7 +39,7 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    server = new Server(map, playerName, team);
+                    server = new Server(map, playerName, team, 1);
                     serverStarted = true;
                     client = new Client(stage, playerName, 0, this, settings);
                     client.start();
@@ -47,15 +47,18 @@ public class GameHandler extends Thread {
                 break;
             case MULTI_PLAYER_HOST:
                 if(!serverStarted) {
-                    server = new Server(MapList.MEADOW, playerName);
+                    server = new Server(MapList.MEADOW, playerName, team, 2);
                     serverStarted = true;
-                    client = new Client(stage, playerName, 0, this);
+                    client = new Client(stage, playerName, 0, this, settings);
+                    client.start();
                 }
                 // Code for setting up server, joining it, and waiting for players
                 break;
             case MULTI_PLAYER_JOIN:
                 // TODO: Potential menu for choosing host address and port number?
-                client = new Client(stage, playerName, 1, this);
+                client = new Client(stage, playerName, 1, this, settings);
+                client.start();
+                client.getClientSender().joinGame(playerName, team);
                 // Code for joining some server
                 break;
         }
