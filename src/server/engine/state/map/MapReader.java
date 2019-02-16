@@ -18,6 +18,7 @@ import shared.lists.TileTypes;
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 
+    // test read
     public static void main(String[] args) {
         readMap(MapList.MEADOW);
     }
