@@ -39,7 +39,7 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    server = new Server(map, playerName, team, 1);
+                    server = new Server(map, playerName, team, 1, false);
                     serverStarted = true;
                     client = new Client(stage, playerName, 0, this, settings);
                     client.start();
@@ -47,7 +47,7 @@ public class GameHandler extends Thread {
                 break;
             case MULTI_PLAYER_HOST:
                 if(!serverStarted) {
-                    server = new Server(MapList.MEADOW, playerName, team, 2);
+                    server = new Server(MapList.MEADOW, playerName, team, 2, true);
                     serverStarted = true;
                     client = new Client(stage, playerName, 0, this, settings);
                     client.start();
