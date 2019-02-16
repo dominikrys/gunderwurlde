@@ -54,7 +54,7 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Threads up");
             
             // TODO: num of player setting
-            this.clientRequests = new ClientRequests(1);
+            this.clientRequests = new ClientRequests(2);
             
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join

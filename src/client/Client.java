@@ -50,7 +50,7 @@ public class Client extends Thread {
 
 
             // Start the sender and receiver threads for the client
-            sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this);
 
             // TODO: How will these threads close if the client is constantly rendering

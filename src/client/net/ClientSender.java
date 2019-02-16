@@ -15,11 +15,13 @@ public class ClientSender extends Thread {
     DatagramPacket packet = null;
     int port;
     byte[] buffer;
+    int clientID;
 
-    public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port, int clientID) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
+        this.clientID = clientID;
         running = true;
         senderSocket.setInterface(Addressing.findInetAddress());
         this.start();
@@ -42,10 +44,11 @@ public class ClientSender extends Thread {
     public void send(Integer[] action) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out = null;
+            ObjectOutputStream out;
                try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(action);
+                out.write(clientID);
                 out.flush();
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
