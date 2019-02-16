@@ -55,6 +55,7 @@ public class ProcessGameState extends Thread {
     private GameView view;
     private ClientRequests clientRequests;
     private boolean handlerClosing;
+    int numJoined;
 
     public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Teams hostTeam) {
         this.handler = handler;

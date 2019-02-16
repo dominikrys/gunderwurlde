@@ -56,15 +56,18 @@ public class GameHandler extends Thread {
                 break;
             case MULTI_PLAYER_JOIN:
                 // TODO: Potential menu for choosing host address and port number?
-                client = new Client(stage, playerName, 1, this, settings);
-                client.start();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(!serverStarted) {
+                    serverStarted = true;
+                    client = new Client(stage, playerName, 1, this, settings);
+                    client.start();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    client.joinGame(playerName, team);
+                    // Code for joining some server
                 }
-                client.joinGame(playerName, team);
-                // Code for joining some server
                 break;
         }
 

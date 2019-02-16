@@ -56,7 +56,6 @@ public class Client extends Thread {
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             // Start the sender and receiver threads for the client
 
-
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close

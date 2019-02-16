@@ -95,7 +95,7 @@ public class Server extends Thread implements HasEngine {
     public void requestClientRequests() {
         if (clientRequests != null) {
         	engine.setClientRequests(clientRequests);
-        	 this.clearClientRequests(1);
+        	 this.clearClientRequests(numOfPlayers);
         }
     }
     
