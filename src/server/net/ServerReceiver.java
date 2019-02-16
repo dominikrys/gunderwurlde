@@ -106,14 +106,12 @@ public class ServerReceiver extends Thread {
                     		//request.setFacing(received[1]);
                     		handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                     }
-
                     /*
                     // Send the request to the Engine
                     handler.setClientRequests(requests);
 
                     handler.setClientRequests(null);
                     */
-
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {
@@ -140,6 +138,7 @@ public class ServerReceiver extends Thread {
 
     public void joinGame(DatagramPacket packet){
         try {
+            System.out.println("join game request received");
             // check that it isnt a player joining the game
             String data = new String(packet.getData());
             String[] seperateData = data.split(" ");

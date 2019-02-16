@@ -52,7 +52,6 @@ public class Client extends Thread {
             senderAddress = InetAddress.getByName("230.0.0.1");
 
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
-            System.out.println("Sender up");
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             // Start the sender and receiver threads for the client
 
@@ -92,7 +91,6 @@ public class Client extends Thread {
     }
 
     public void joinGame(String playerName, Teams team){
-        System.out.println("joining game");
         sender.joinGame(playerName, team);
     }
     public void close() {

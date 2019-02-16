@@ -56,10 +56,12 @@ public class Server extends Thread implements HasEngine {
             // Create the threads that will run as sender and receiver
             sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
-
+            joinedPlayers = 1;
             if(multiplayer){
                 // loop until all players have joined
                 while(numOfPlayers != joinedPlayers){
+                    System.out.println("Current number of players" + joinedPlayers);
+                    Thread.sleep(5000);
                     Thread.yield();
                 }
             }

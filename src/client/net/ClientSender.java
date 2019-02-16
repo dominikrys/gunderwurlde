@@ -83,6 +83,7 @@ public class ClientSender extends Thread {
             buffer = data.getBytes();
             packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
             senderSocket.send(packet);
+            System.out.println("Join game request sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
