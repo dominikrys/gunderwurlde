@@ -670,9 +670,10 @@ public class ProcessGameState extends Thread {
         int e2_radius = e2.getSize() / 2;
         double e2_x = e2_loc.getX();
         double e2_y = e2_loc.getY();
+        
+        double dist_between_squared = Math.pow(Math.abs(e1_x - e2_x), 2) + Math.pow(Math.abs(e1_y - e2_y), 2);
 
-        return ((e1_x - e1_radius) <= (e2_x + e2_radius) && (e1_x + e1_radius) >= (e2_x - e2_radius) && (e1_y - e1_radius) <= (e2_y + e2_radius)
-                && (e1_y + e1_radius) >= (e2_y - e2_radius));
+        return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) {
