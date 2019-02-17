@@ -179,7 +179,7 @@ public class ProcessGameState extends Thread {
                 // reset player values
                 currentPlayer.setMoving(false);
                 currentPlayer.setTakenDamage(false);
-                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING)
+                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING || currentPlayer.getCurrentAction() == ActionList.THROW)
                     currentPlayer.setCurrentAction(ActionList.NONE);
 
                 if (currentPlayer.getHealth() <= 0) {
