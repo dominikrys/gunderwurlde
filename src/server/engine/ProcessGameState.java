@@ -680,25 +680,18 @@ public class ProcessGameState extends Thread {
         Location loc = e.getLocation();
         int radius = e.getSize();
         double x = loc.getX();
-        double max_x = x + radius;
-        double min_x = x - radius;
         double y = loc.getY();
-        double max_y = y + radius;
-        double min_y = y - radius;
+
+        int[] max_loc = Tile.locationToTile(new Location(x + radius, y + radius));
+        int[] min_loc = Tile.locationToTile(new Location(x - radius, y - radius));
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
-        double check_x = min_x;
-        double check_y = min_y;
-        while (check_x < max_x) {
-            while (check_y < max_y) {
-                tilesOn.add(Tile.locationToTile(new Location(check_x, check_y)));
-                check_y += Tile.TILE_SIZE;
+        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
+            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
+                tilesOn.add(new int[] { t_x, t_y });
             }
-            tilesOn.add(Tile.locationToTile(new Location(check_x, max_y)));
-            check_x += Tile.TILE_SIZE;
         }
-        tilesOn.add(Tile.locationToTile(new Location(max_x, max_y)));
 
         return tilesOn;
     }
