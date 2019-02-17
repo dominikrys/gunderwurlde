@@ -11,7 +11,7 @@ import shared.lists.EntityList;
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE / 3;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE;
+    public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 10;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
