@@ -244,6 +244,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
+                    currentPlayer.setCurrentAction(ActionList.THROW);
                     ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
                     // TODO add force & add damage if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
