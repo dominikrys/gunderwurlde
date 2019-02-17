@@ -23,8 +23,7 @@ import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
-import server.engine.state.map.Meadow;
-import server.engine.state.map.MeadowTest;
+import server.engine.state.map.MapReader;
 import server.engine.state.map.Round;
 import server.engine.state.map.Wave;
 import server.engine.state.map.tile.Tile;
@@ -62,14 +61,7 @@ public class ProcessGameState extends Thread {
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
-        switch (mapName) {
-        case MEADOW:
-            this.gameState = new GameState(new Meadow(), players);
-            break;
-        case MEADOWTEST:
-            this.gameState = new GameState(new MeadowTest(), players);
-            break;
-        }
+        this.gameState = new GameState(MapReader.readMap(mapName), players);
         this.handlerClosing = false;
 
         // setup GameView
@@ -187,7 +179,7 @@ public class ProcessGameState extends Thread {
                 // reset player values
                 currentPlayer.setMoving(false);
                 currentPlayer.setTakenDamage(false);
-                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING)
+                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING || currentPlayer.getCurrentAction() == ActionList.THROW)
                     currentPlayer.setCurrentAction(ActionList.NONE);
 
                 if (currentPlayer.getHealth() <= 0) {
@@ -252,6 +244,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
+                    currentPlayer.setCurrentAction(ActionList.THROW);
                     ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
                     // TODO add force & add damage if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
