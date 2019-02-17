@@ -662,12 +662,12 @@ public class ProcessGameState extends Thread {
 
     private static boolean haveCollided(Entity e1, Entity e2) {
         Location e1_loc = e1.getLocation();
-        int e1_radius = e1.getSize() / 2;
+        int e1_radius = e1.getSize();
         double e1_x = e1_loc.getX();
         double e1_y = e1_loc.getY();
 
         Location e2_loc = e2.getLocation();
-        int e2_radius = e2.getSize() / 2;
+        int e2_radius = e2.getSize();
         double e2_x = e2_loc.getX();
         double e2_y = e2_loc.getY();
         
@@ -678,8 +678,7 @@ public class ProcessGameState extends Thread {
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) {
         Location loc = e.getLocation();
-        int size = e.getSize();
-        int radius = size / 2;
+        int radius = e.getSize();
         double x = loc.getX();
         double max_x = x + radius;
         double min_x = x - radius;
