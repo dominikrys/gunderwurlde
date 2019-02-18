@@ -12,7 +12,7 @@ import shared.lists.SoundList;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
-public class Sound {
+public class GameSound {
 	
 	private EntityView entity;
 	private ActionList action;
@@ -22,7 +22,7 @@ public class Sound {
 	private TimerTask checkReplay;
 	private boolean replayable;
 	
-	public Sound(EntityView entity, ActionList action, double volume) {
+	public GameSound(EntityView entity, ActionList action, double volume) {
 		this.entity = entity;
 		this.action = action;
 		this.volume = volume;
