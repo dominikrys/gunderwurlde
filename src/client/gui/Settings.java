@@ -24,8 +24,8 @@ public class Settings implements Serializable {
         musicVolume = 70;
         soundMute = false;
         musicMute = false;
-        fullScreen = false;
 
+        fullScreen = false;
         screenWidth = 1280;
         screenHeight = 720;
     }
@@ -104,6 +104,7 @@ public class Settings implements Serializable {
         this.screenHeight = screenHeight;
     }
 
+    // Method for serialising this object and saving to the disk
     public void saveToDisk() {
         try (
                 OutputStream file = new FileOutputStream("settings.ser");

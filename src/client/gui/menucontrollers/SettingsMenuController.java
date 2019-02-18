@@ -72,27 +72,27 @@ public class SettingsMenuController extends VBox implements MenuController {
         musicVolumeSlider.setValue(settings.getMusicVolume());
 
         if (settings.isMusicMute()) {
-            musicOffButton.setDefaultButton(true);
-            musicOnButton.setDefaultButton(false);
+            musicOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+            musicOnButton.setEffect(null);
         } else {
-            musicOffButton.setDefaultButton(false);
-            musicOnButton.setDefaultButton(true);
+            musicOffButton.setEffect(null);
+            musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
         }
 
         if (settings.isSoundMute()) {
-            soundOffButton.setDefaultButton(true);
-            soundOnButton.setDefaultButton(false);
+            soundOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+            soundOnButton.setEffect(null);
         } else {
-            soundOffButton.setDefaultButton(false);
-            soundOnButton.setDefaultButton(true);
+            soundOffButton.setEffect(null);
+            soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
         }
 
         if (settings.isFullScreen()) {
-            displayFullscreenButton.setDefaultButton(true);
-            displayWindowedButton.setDefaultButton(false);
+            displayFullscreenButton.setEffect(ControllerUtils.getMenuDropshadow());
+            displayWindowedButton.setEffect(null);
         } else {
-            displayFullscreenButton.setDefaultButton(false);
-            displayWindowedButton.setDefaultButton(true);
+            displayFullscreenButton.setEffect(null);
+            displayWindowedButton.setEffect(ControllerUtils.getMenuDropshadow());
         }
 
         // Disable apply button
@@ -125,48 +125,48 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     void displayFullscreenButtonPress(ActionEvent event) {
         settings.setFullScreen(true);
-        displayFullscreenButton.setDefaultButton(true);
-        displayWindowedButton.setDefaultButton(false);
+        displayFullscreenButton.setEffect(ControllerUtils.getMenuDropshadow());
+        displayWindowedButton.setEffect(null);
         applyButton.setDisable(false);
     }
 
     @FXML
     void displayWindowedButtonPress(ActionEvent event) {
         settings.setFullScreen(false);
-        displayFullscreenButton.setDefaultButton(false);
-        displayWindowedButton.setDefaultButton(true);
+        displayFullscreenButton.setEffect(null);
+        displayWindowedButton.setEffect(ControllerUtils.getMenuDropshadow());
         applyButton.setDisable(false);
     }
 
     @FXML
     void musicOffButtonPress(ActionEvent event) {
         settings.setMusicMute(true);
-        musicOffButton.setDefaultButton(true);
-        musicOnButton.setDefaultButton(false);
+        musicOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+        musicOnButton.setEffect(null);
         applyButton.setDisable(false);
     }
 
     @FXML
     void musicOnButtonPress(ActionEvent event) {
         settings.setMusicMute(false);
-        musicOffButton.setDefaultButton(false);
-        musicOnButton.setDefaultButton(true);
+        musicOffButton.setEffect(null);
+        musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
         applyButton.setDisable(false);
     }
 
     @FXML
     void soundOffButtonPress(ActionEvent event) {
         settings.setSoundMute(true);
-        soundOffButton.setDefaultButton(true);
-        soundOnButton.setDefaultButton(false);
+        soundOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+        soundOnButton.setEffect(null);
         applyButton.setDisable(false);
     }
 
     @FXML
     void soundOnButtonPress(ActionEvent event) {
         settings.setSoundMute(false);
-        soundOffButton.setDefaultButton(false);
-        soundOnButton.setDefaultButton(true);
+        soundOffButton.setEffect(null);
+        soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
         applyButton.setDisable(false);
     }
 
