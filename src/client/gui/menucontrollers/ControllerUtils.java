@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 
 public class ControllerUtils {
     public static DropShadow getMenuDropshadow() {
-        DropShadow ds = new DropShadow(30, Color.WHITE);
-        ds.setInput(new Bloom(0.5));
+        DropShadow ds = new DropShadow(25, Color.WHITE);
+        ds.setInput(new Bloom(0.25));
         return ds;
     }
 }
