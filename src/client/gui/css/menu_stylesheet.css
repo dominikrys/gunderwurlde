@@ -32,6 +32,7 @@
     -fx-background-radius: 0px;
     -fx-border-color: white;
     -fx-background-color: black;
+    -fx-min-width: 400px;
 }
 
 .nameTooLong {
@@ -105,13 +106,13 @@
 
 .button:hover {
     -fx-text-fill: black;
-    -fx-border-color: grey;
+    -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
     /*-fx-effect: dropshadow(gaussian, grey, 20, 0.2, 0, 0);*/
 }
 
 .mapButton:hover {
     -fx-text-fill: black;
-    -fx-border-color: grey;
+    -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
 }

@@ -28,7 +28,7 @@
             <Font name="Consolas" size="24.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 5px;">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
             <TextField fx:id="nameField" alignment="CENTER" onAction="#handleNameInput" promptText="Enter here..." style="-fx-max-width: 400;" styleClass="nameInputBox">
                <font>

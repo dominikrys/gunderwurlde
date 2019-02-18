@@ -33,71 +33,44 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="meadowButton" mnemonicParsing="false" onAction="#meadowButtonPress">
-               <graphic>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="file:assets/img/map_thumbnail/meadow.png" />
-                           </image>
-                        </ImageView>
-                        <Label styleClass="manaspaceFontWhite" text="Meadow">
-                           <font>
-                              <Font name="Consolas" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-               </graphic>
+            <Button fx:id="meadowButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#meadowButtonPress" text="Meadow">
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="mapButton" />
                </styleClass>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="map2Button" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#map2ButtonPress" GridPane.columnIndex="1">
-               <graphic>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="manaspaceFontWhite">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="file:assets/img/map_thumbnail/meadow.png" />
-                           </image>
-                        </ImageView>
-                        <Label styleClass="manaspaceFontWhite" text="Placeholder">
-                           <font>
-                              <Font name="Consolas" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-               </graphic>
+            <Button fx:id="map2Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Placeholder" GridPane.columnIndex="1">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />
                </styleClass>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="map2Button1" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#map2ButtonPress" GridPane.columnIndex="2">
-               <graphic>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="manaspaceFontWhite">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="file:assets/img/map_thumbnail/meadow.png" />
-                           </image>
-                        </ImageView>
-                        <Label styleClass="manaspaceFontWhite" text="Placeholder">
-                           <font>
-                              <Font name="Consolas" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-               </graphic>
+            <Button fx:id="map2Button1" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Placeholder" GridPane.columnIndex="2">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />
                </styleClass>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
          </children>
       </GridPane>

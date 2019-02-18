@@ -155,18 +155,17 @@ public class PlayMenuController extends VBox implements MenuController {
         // Only allow going into single or multi player if a name has been entered
         if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
             characterErrorText.setVisible(false);
+            tick.setVisible(true);
             if (selectedTeam != Teams.NONE) {
                 singlePlayerButton.setDisable(false);
                 multiJoinGameButton.setDisable(false);
                 multiCreateGameButton.setDisable(false);
-                tick.setVisible(true);
             }
         } else if (nameField.getCharacters().length() == 0) {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(false);
-            tick.setVisible(true);
         } else {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
