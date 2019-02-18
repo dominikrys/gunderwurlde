@@ -7,14 +7,16 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
 
 public abstract class EnemyAI {
 
+    protected Enemy enemy;
     protected Pose pose;
-    private int size;
+    private int enemSize;
     private HashSet<Pose> playerPoses;
     protected Pose closestPlayer;
     protected Tile[][] tileMap;
@@ -32,8 +34,16 @@ public abstract class EnemyAI {
 
     public abstract AIAction getAction();
 
+
+
+    protected int getEnemSize() { return enemSize; }
+
     protected HashSet<Pose> getPlayerPoses() {
         return playerPoses;
+    }
+
+    public ActionList getActionState() {
+        return actionState;
     }
 
     public Pose getCurrentPose(){
@@ -50,15 +60,16 @@ public abstract class EnemyAI {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-    public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
-        this.pose = pose;
-        this.size = size;
+    public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
+        this.enemy = enemy;
+        this.pose = this.enemy.getPose();
+        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
-
     // May not need this
+
     public boolean isProcessing() {
         return isProcessing;
     }
@@ -76,10 +87,6 @@ public abstract class EnemyAI {
         }
 
         return closestPlayer;
-    }
-
-    public ActionList getActionState() {
-        return actionState;
     }
 
 }

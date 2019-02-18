@@ -8,7 +8,6 @@ import server.engine.state.entity.attack.AttackType;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
-import shared.Location;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
