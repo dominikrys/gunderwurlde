@@ -3,64 +3,74 @@
     src: url('file:assets/fonts/manaspc.ttf');
 }
 
+.background {
+    -fx-background-color: black;
+}
+
 .menuTitle {
-	-fx-font-size: 80px;
+    -fx-font-size: 80px;
 }
 
 .gameTitle {
-	-fx-font-size: 88px;
+    -fx-font-size: 88px;
 }
 
-.manaspaceFont {
+.manaspaceFontWhite {
     -fx-font-family: 'Manaspace', Consolas;
-	-fx-text-fill: black;
+    -fx-text-fill: white;
+}
+
+.manaspaceFontBlack {
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-text-fill: black;
 }
 
 .nameInputBox {
-	-fx-font-family: 'Manaspace', Consolas;
-	-fx-font-size: 28px;
-	-fx-background-radius: 0px;
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-font-size: 28px;
+    -fx-background-radius: 0px;
 }
 
 .nameTooLong {
-	-fx-font-family: 'Manaspace', Consolas;
-	-fx-text-fill: red;
-	-fx-font-size: 16px;
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-text-fill: red;
+    -fx-font-size: 16px;
 }
 
 .playButton {
-	-fx-font-size: 38px;
-	-fx-background-radius: 0px;
+    -fx-font-size: 38px;
+    -fx-background-radius: 0px;
+    -fx-background-color: black;
+    -fx-border-color: white;
 }
 
 .button {
-	-fx-background-radius: 0px;
+    -fx-background-radius: 0px;
 }
 
 .menuButton {
-	-fx-font-size: 28px;
-	-fx-background-radius: 0px;
+    -fx-font-size: 28px;
+    -fx-background-radius: 0px;
 }
 
 .mapButton {
-	-fx-font-size: 24px;
-	-fx-background-radius: 0px;
-	-fx-padding: 10px;
-	-fx-pref-height: 230px;
-	-fx-pref-width: 230px;
+    -fx-font-size: 24px;
+    -fx-background-radius: 0px;
+    -fx-padding: 10px;
+    -fx-pref-height: 230px;
+    -fx-pref-width: 230px;
 }
 
 .teamButton {
-	-fx-font-size: 28px;
-	-fx-background-radius: 0px;
+    -fx-font-size: 28px;
+    -fx-background-radius: 0px;
 }
 
-
 .resolutionSelector {
-	-fx-font-size: 20px
+    -fx-font-size: 20px
 }
 
 .backButton {
-	-fx-font-size: 22px;
-	-fx-background-radius: 0px;
+    -fx-font-size: 22px;
+    -fx-background-radius: 0px;
 }
