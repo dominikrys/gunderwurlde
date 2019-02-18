@@ -21,7 +21,7 @@ public class ItemDrop extends Entity implements HasID {
     protected long dropTime;
 
     public ItemDrop(Item item, Location location, int quantity) {
-        super(new Pose(location), Tile.TILE_SIZE, item.getItemListName().getEntityList());
+        super(new Pose(location), Tile.TILE_SIZE / 2, item.getItemListName().getEntityList());
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;

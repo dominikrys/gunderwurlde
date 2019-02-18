@@ -12,12 +12,14 @@ import java.util.LinkedList;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
+import shared.lists.Teams;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
 
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 
+    // test read
     public static void main(String[] args) {
         readMap(MapList.MEADOW);
     }
@@ -52,10 +54,11 @@ public class MapReader {
             line = file.removeFirst();
         }
 
-        LinkedHashSet<Location> teamSpawns = new LinkedHashSet<>();
+        HashMap<Teams, Location> teamSpawns = new HashMap<>();
         line = file.removeFirst();
         while (!line.isEmpty()) {
-            teamSpawns.add(compToLocation(getComponents(line)));
+            LinkedList<String> teamComp = getComponents(line);
+            teamSpawns.put(Teams.valueOf(teamComp.removeFirst()), compToLocation(teamComp));
             line = file.removeFirst();
         }
 

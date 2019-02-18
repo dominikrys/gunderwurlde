@@ -1,6 +1,6 @@
 package server.engine.state;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -12,6 +12,7 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
+import shared.lists.Teams;
 
 public class GameState {
     protected GameMap currentMap;
@@ -19,11 +20,11 @@ public class GameState {
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashMap<Integer, Player> players;
     protected LinkedHashMap<Integer, ItemDrop> items;
-    protected Iterator<Location> spawnIterator;
+    protected HashMap<Teams, Location> teamSpawns;
 
     public GameState(GameMap currentMap, LinkedHashMap<Integer, Player> players) {
         this.players = players;
-        this.spawnIterator = currentMap.getPlayerSpawns().iterator();
+        this.teamSpawns = currentMap.getTeamSpawns();
         setCurrentMap(currentMap);
     }
 
@@ -92,9 +93,7 @@ public class GameState {
     }
 
     public void addPlayer(Player player) {
-        if (!spawnIterator.hasNext())
-            spawnIterator = currentMap.getPlayerSpawns().iterator();
-        player.setPose(new Pose(spawnIterator.next()));
+        player.setPose(new Pose(teamSpawns.get(player.getTeam())));
         this.players.put(player.getID(), player);
     }
 

@@ -5,17 +5,17 @@ import java.util.Random;
 import server.engine.state.item.Item;
 
 public class Drop {
-    private static int MAX_DROP_CHANCE = 10000;
     
     private static Random rand = new Random();
 
-    protected final int dropChance; // 10000 to 1, higher value is higher drop chance
+    protected final double dropChance; // 0 to 1, higher value is higher drop chance
     protected final int minDrop;
     protected final int maxDrop;
     protected Item item;
 
-    Drop(Item item, int dropChance, int maxDrop, int minDrop) {
-        assert(minDrop >= 0);
+    Drop(Item item, double dropChance, int maxDrop, int minDrop) {
+        assert (minDrop >= 0);
+        assert (dropChance <= 1 && dropChance > 0);
         if (minDrop > maxDrop)
             maxDrop = minDrop;
         this.dropChance = dropChance;
@@ -24,18 +24,18 @@ public class Drop {
         this.item = item;
     }
 
-    Drop(Item item, int dropChance, int maxDrop) {
-        this(item, dropChance, maxDrop, maxDrop);
+    Drop(Item item, double dropChance, int dropAmount) {
+        this(item, dropChance, dropAmount, dropAmount);
     }
 
     public int getDrop() {
-        int val = rand.nextInt(MAX_DROP_CHANCE);
+        double val = rand.nextDouble();
         if (val <= dropChance) {
             if (maxDrop == minDrop)
                 return minDrop;
             else {
                 val = rand.nextInt(maxDrop - minDrop);
-                return (val + minDrop);
+                return (int) (val + minDrop);
             }
         } else
             return 0;

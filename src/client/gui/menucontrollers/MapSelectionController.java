@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.lists.MapList;
@@ -75,6 +76,7 @@ public class MapSelectionController extends VBox implements MenuController{
         //TODO: remove this with a nicer loading screen
         Label loadingLabel = new Label("Creating game...");
         loadingLabel.setFont(new Font("Consolas", 40));
+        loadingLabel.setTextFill(Color.WHITE);
         this.getChildren().add(loadingLabel);
 
         // Start gamehandler with correct connectiontype and map TODO: add team to this

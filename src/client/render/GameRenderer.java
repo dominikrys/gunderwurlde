@@ -135,6 +135,7 @@ public class GameRenderer implements Runnable {
 
     // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
+        // Initialise pane for map
         mapBox = new AnchorPane();
 
         if (cameraCentered) {
@@ -152,12 +153,18 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 140, 0, false), new Insets(0, 0, 0, 0))));
+        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
+                new CornerRadii(0, 0, 140, 0, false),
+                new Insets(0, 0, 0, 0))));
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(mapBox, HUDBox);
+
+        // Set background of root
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
+                new Insets(0, 0, 0, 0))));
 
         // Set stage root to game renderer
         stage.getScene().setRoot(root);
@@ -203,8 +210,10 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Center player
-        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
+        AnchorPane.setTopAnchor(mapCanvas,
+                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+        AnchorPane.setLeftAnchor(mapCanvas,
+                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
     }
 
     // Render entities to the map canvas
@@ -435,7 +444,7 @@ public class GameRenderer implements Runnable {
 
         // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
         Label playerTeamText;
-        switch(currentPlayer.getTeam()) {
+        switch (currentPlayer.getTeam()) {
             case RED:
                 playerTeamText = new Label("RED");
                 playerTeamText.setTextFill(Color.RED);
