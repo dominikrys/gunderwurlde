@@ -8,7 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shared.lists.Teams;
 
@@ -83,10 +86,10 @@ public class PlayMenuController extends VBox implements MenuController {
     void teamBlueButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectedTeam = Teams.BLUE;
-        teamBlueButton.setDefaultButton(true);
-        teamGreenButton.setDefaultButton(false);
-        teamRedButton.setDefaultButton(false);
-        teamYellowButton.setDefaultButton(false);
+        teamBlueButton.setEffect(ControllerUtils.getMenuDropshadow());
+        teamGreenButton.setEffect(null);
+        teamRedButton.setEffect(null);
+        teamYellowButton.setEffect(null);
         checkButtons();
     }
 
@@ -94,10 +97,10 @@ public class PlayMenuController extends VBox implements MenuController {
     void teamGreenButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectedTeam = Teams.GREEN;
-        teamBlueButton.setDefaultButton(false);
-        teamGreenButton.setDefaultButton(true);
-        teamRedButton.setDefaultButton(false);
-        teamYellowButton.setDefaultButton(false);
+        teamBlueButton.setEffect(null);
+        teamGreenButton.setEffect(ControllerUtils.getMenuDropshadow());
+        teamRedButton.setEffect(null);
+        teamYellowButton.setEffect(null);
         checkButtons();
     }
 
@@ -105,10 +108,10 @@ public class PlayMenuController extends VBox implements MenuController {
     void teamRedButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectedTeam = Teams.RED;
-        teamBlueButton.setDefaultButton(false);
-        teamGreenButton.setDefaultButton(false);
-        teamRedButton.setDefaultButton(true);
-        teamYellowButton.setDefaultButton(false);
+        teamBlueButton.setEffect(null);
+        teamGreenButton.setEffect(null);
+        teamRedButton.setEffect(ControllerUtils.getMenuDropshadow());
+        teamYellowButton.setEffect(null);
         checkButtons();
     }
 
@@ -116,10 +119,10 @@ public class PlayMenuController extends VBox implements MenuController {
     void teamYellowButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectedTeam = Teams.YELLOW;
-        teamBlueButton.setDefaultButton(false);
-        teamGreenButton.setDefaultButton(false);
-        teamRedButton.setDefaultButton(false);
-        teamYellowButton.setDefaultButton(true);
+        teamBlueButton.setEffect(null);
+        teamGreenButton.setEffect(null);
+        teamRedButton.setEffect(null);
+        teamYellowButton.setEffect(ControllerUtils.getMenuDropshadow());
         checkButtons();
     }
 

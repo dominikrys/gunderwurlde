@@ -3,7 +3,7 @@
     src: url('file:assets/fonts/manaspc.ttf');
 }
 
-.background {
+.root {
     -fx-background-color: black;
 }
 
@@ -28,7 +28,10 @@
 .nameInputBox {
     -fx-font-family: 'Manaspace', Consolas;
     -fx-font-size: 28px;
+    -fx-text-fill: white;
     -fx-background-radius: 0px;
+    -fx-border-color: white;
+    -fx-background-color: black;
 }
 
 .nameTooLong {
@@ -42,14 +45,14 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
 }
 
 .button {
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
 }
 
 .menuButton {
@@ -57,7 +60,7 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
 }
 
 .mapButton {
@@ -68,7 +71,7 @@
     -fx-pref-width: 230px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
 }
 
 .teamButton {
@@ -76,7 +79,7 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
 }
 
 .resolutionSelector {
@@ -88,5 +91,12 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 5px;
+    -fx-border-width: 3px;
+}
+
+.volumeSlider {
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-text-fill: white;
+    -fx-color: white;
+    -fx-control-inner-background: white;
 }
