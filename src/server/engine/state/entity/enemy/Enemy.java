@@ -1,14 +1,12 @@
 package server.engine.state.entity.enemy;
 
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 
 import server.engine.ai.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
-import server.engine.state.entity.attack.Attack;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
 
@@ -21,7 +19,6 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     protected EntityList entityListName;
     protected ActionList currentAction;
     protected EnemyAI ai;
-    protected LinkedList<Attack> attacksToDo;
     protected int scoreOnKill;
     protected int health;
     protected int maxHealth;
@@ -39,7 +36,6 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.id = nextID++;
         this.scoreOnKill = scoreOnKill;
         this.ai =ai;
-        this.attacksToDo = new LinkedList<>();
         this.takenDamage = false;
         this.moving = false;
         this.currentAction = ActionList.NONE;

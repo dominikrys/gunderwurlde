@@ -408,12 +408,11 @@ public class ProcessGameState extends Thread {
                 // TODO process status (Make method for this?)
 
                 int enemyID = currentEnemy.getID();
-                Pose enemyPose = currentEnemy.getPose(); // don't change
                 double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
-                    ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
+                    ai.setInfo(currentEnemy, playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
                 currentEnemy.setCurrentAction(ai.getActionState());

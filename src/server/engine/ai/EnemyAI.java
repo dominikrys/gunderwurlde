@@ -7,12 +7,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
 
 public abstract class EnemyAI {
 
+    protected Enemy enemy;
     protected Pose pose;
     private int size;
     private HashSet<Pose> playerPoses;
@@ -48,9 +50,10 @@ public abstract class EnemyAI {
 
     public abstract AIAction getAction();
 
-    public void setInfo(Pose pose, int size, HashSet<Pose> playerPoses, Tile[][] tileMap) {
-        this.pose = pose;
-        this.size = size;
+    public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
+        this.enemy = enemy;
+        this.pose = this.enemy.getPose();
+        this.size = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
