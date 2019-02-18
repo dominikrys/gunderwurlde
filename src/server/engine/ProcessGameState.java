@@ -204,8 +204,8 @@ public class ProcessGameState extends Thread {
                         int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
                         if (amountTaken > 0) {
                             currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
+                            currentPlayer.setCurrentAction(ActionList.NONE);
                         }
-                        currentPlayer.setCurrentAction(ActionList.NONE);
                     }
                 }
 
