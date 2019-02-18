@@ -105,7 +105,13 @@
 
 .button:hover {
     -fx-text-fill: black;
-    -fx-border-color: lightgrey;
+    -fx-border-color: grey;
     -fx-background-color: lightgrey;
     /*-fx-effect: dropshadow(gaussian, grey, 20, 0.2, 0, 0);*/
+}
+
+.mapButton:hover {
+    -fx-text-fill: black;
+    -fx-border-color: grey;
+    -fx-background-color: lightgrey;
 }

@@ -8,10 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.DropShadow;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shared.lists.Teams;
 
@@ -42,6 +40,8 @@ public class PlayMenuController extends VBox implements MenuController {
     private Button teamGreenButton;
     @FXML
     private Button teamYellowButton;
+    @FXML
+    private ImageView tick;
 
     public PlayMenuController(Stage stage, Settings settings) {
         this.stage = stage;
@@ -63,6 +63,10 @@ public class PlayMenuController extends VBox implements MenuController {
 
         // Divert focus away from namefield
         nameField.setFocusTraversable(false);
+
+        // Hide name too long text and tick
+        characterErrorText.setVisible(false);
+        tick.setVisible(false);
     }
 
     public void show() {
@@ -155,17 +159,20 @@ public class PlayMenuController extends VBox implements MenuController {
                 singlePlayerButton.setDisable(false);
                 multiJoinGameButton.setDisable(false);
                 multiCreateGameButton.setDisable(false);
+                tick.setVisible(true);
             }
         } else if (nameField.getCharacters().length() == 0) {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(false);
+            tick.setVisible(true);
         } else {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(true);
+            tick.setVisible(false);
         }
     }
 }

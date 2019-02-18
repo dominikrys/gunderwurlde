@@ -135,6 +135,7 @@ public class GameRenderer implements Runnable {
 
     // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
+        // Initialise pane for map
         mapBox = new AnchorPane();
 
         if (cameraCentered) {
@@ -160,6 +161,10 @@ public class GameRenderer implements Runnable {
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(mapBox, HUDBox);
+
+        // Set background of root
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
+                new Insets(0, 0, 0, 0))));
 
         // Set stage root to game renderer
         stage.getScene().setRoot(root);
