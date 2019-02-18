@@ -1,6 +1,5 @@
 package client.gui.menucontrollers;
 
-import client.GameHandler;
 import client.data.ConnectionType;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
@@ -10,14 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import shared.lists.Teams;
 
 import java.io.IOException;
 
 public class PlayMenuController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
+    private Teams selectedTeam;
 
     @FXML
     private TextField nameField;
@@ -31,22 +31,35 @@ public class PlayMenuController extends VBox implements MenuController {
     private Button backButton;
     @FXML
     private Label characterErrorText;
+    @FXML
+    private Button teamRedButton;
+    @FXML
+    private Button teamBlueButton;
+    @FXML
+    private Button teamGreenButton;
+    @FXML
+    private Button teamYellowButton;
 
     public PlayMenuController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
 
+        // Set team to unset
+        this.selectedTeam = Teams.NONE;
+
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/play_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
         try {
             fxmlLoader.load();
         } catch (
                 IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // Divert focus away from namefield
+        nameField.setFocusTraversable(false);
     }
 
     public void show() {
@@ -62,12 +75,84 @@ public class PlayMenuController extends VBox implements MenuController {
 
     @FXML
     void handleNameInput(ActionEvent event) {
+        // Check if correct input
+        checkButtons();
+    }
+
+    @FXML
+    void teamBlueButtonPress(ActionEvent event) {
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.BLUE;
+        teamBlueButton.setDefaultButton(true);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
+    }
+
+    @FXML
+    void teamGreenButtonPress(ActionEvent event) {
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.GREEN;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(true);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
+    }
+
+    @FXML
+    void teamRedButtonPress(ActionEvent event) {
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.RED;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(true);
+        teamYellowButton.setDefaultButton(false);
+        checkButtons();
+    }
+
+    @FXML
+    void teamYellowButtonPress(ActionEvent event) {
+        // Set correct team and highlight buttons
+        selectedTeam = Teams.YELLOW;
+        teamBlueButton.setDefaultButton(false);
+        teamGreenButton.setDefaultButton(false);
+        teamRedButton.setDefaultButton(false);
+        teamYellowButton.setDefaultButton(true);
+        checkButtons();
+    }
+
+    @FXML
+    void singlePlayerButtonPress(ActionEvent event) {
+        // Go to map selection screen  and clear menu
+        (new MapSelectionController(stage, settings, ConnectionType.SINGLE_PLAYER, nameField.getText(), selectedTeam)).show();
+        this.getChildren().clear();
+    }
+
+    @FXML
+    void multiCreateGameButtonPress(ActionEvent event) {
+        // Go to map selection screen and clear menu
+        (new MapSelectionController(stage, settings, ConnectionType.MULTI_PLAYER_HOST, nameField.getText(), selectedTeam)).show();
+        this.getChildren().clear();
+    }
+
+    @FXML
+    void multiJoinGameButtonPress(ActionEvent event) {
+        // Go to server joining screen and clear this menu
+        (new ServerJoinMenuController(stage, settings, ConnectionType.MULTI_PLAYER_JOIN, nameField.getText(), selectedTeam)).show();
+        this.getChildren().clear();
+    }
+
+    private void checkButtons() {
         // Only allow going into single or multi player if a name has been entered
         if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
-            singlePlayerButton.setDisable(false);
-            multiJoinGameButton.setDisable(false);
-            multiCreateGameButton.setDisable(false);
             characterErrorText.setVisible(false);
+            if (selectedTeam != Teams.NONE) {
+                singlePlayerButton.setDisable(false);
+                multiJoinGameButton.setDisable(false);
+                multiCreateGameButton.setDisable(false);
+            }
         } else if (nameField.getCharacters().length() == 0) {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
@@ -79,31 +164,5 @@ public class PlayMenuController extends VBox implements MenuController {
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(true);
         }
-    }
-
-    @FXML
-    void singlePlayerButtonPress(ActionEvent event) {
-        // Clear the screen
-        this.getChildren().clear();
-
-        //TODO: remove this with a nicer loading screen
-        Label loadingLabel = new Label("Creating game...");
-        loadingLabel.setFont(new Font("Consolas", 40));
-        this.getChildren().add(loadingLabel);
-
-        // Start gamehandler as single player
-        (new GameHandler(stage, ConnectionType.SINGLE_PLAYER, settings, nameField.getText())).start();
-
-        //TODO: Go into map selection
-    }
-
-    @FXML
-    void multiCreateGameButtonPress(ActionEvent event) {
-        // TODO: Go into map selection, and then choose team, and then start server
-    }
-
-    @FXML
-    void multiJoinGameButtonPress(ActionEvent event) {
-        // TODO: enter IP screen, choose team
     }
 }

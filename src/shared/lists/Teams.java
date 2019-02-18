@@ -1,5 +1,5 @@
 package shared.lists;
 
 public enum Teams {
-    RED, BLUE, GREEN, YELLOW, ENEMY;
+    RED, BLUE, GREEN, YELLOW, ENEMY, NONE;
 }

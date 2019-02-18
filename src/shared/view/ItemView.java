@@ -22,10 +22,6 @@ public class ItemView implements Serializable {
 
     }
 
-    public ItemList getName() {
-        return name;
-    }
-
     public boolean isAutoFire() {
         return autoFire;
     }

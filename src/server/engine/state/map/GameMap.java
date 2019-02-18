@@ -6,11 +6,11 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
 
-public abstract class GameMap {
+public class GameMap {
     protected final int DEFAULT_X_DIM;
     protected final int DEFAULT_Y_DIM;
     protected Tile[][] tileMap;
-    protected LinkedHashSet<Location> playerSpawns;
+    protected LinkedHashSet<Location> playerSpawns; // TODO change to team spawns
     protected LinkedHashSet<Location> enemySpawns;
     protected LinkedHashSet<Round> rounds;
     protected MapList mapName;

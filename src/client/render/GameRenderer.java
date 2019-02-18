@@ -59,9 +59,9 @@ public class GameRenderer implements Runnable {
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
     // Settings object
-    Settings settings;
+    private Settings settings;
 
-    //TODO: REMOVE THIS, PURELY FOR TEST
+    //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         this(stage, initialGameView, playerID, true, settings);
     }
@@ -152,6 +152,7 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
+        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 140, 0, false), new Insets(0, 0, 0, 0))));
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
@@ -202,8 +203,8 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Center player
-        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - 16);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - 16);
+        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
     }
 
     // Render entities to the map canvas
@@ -217,18 +218,18 @@ public class GameRenderer implements Runnable {
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Get the correct sprite according to playerID, otherwise load the default player graphic
             Image spriteToRender;
-            switch (currentPlayer.getID()) {
-                case 0:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_1);
+            switch (currentPlayer.getTeam()) {
+                case RED:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
                     break;
-                case 1:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_2);
+                case GREEN:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
                     break;
-                case 2:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_3);
+                case YELLOW:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
                     break;
-                case 3:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_4);
+                case BLUE:
+                    spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
                     break;
                 default:
                     spriteToRender = loadedSprites.get(EntityList.PLAYER);
@@ -304,17 +305,44 @@ public class GameRenderer implements Runnable {
             // Make image view out of graphic
             ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
 
+            // Pane for item image to go in - for border
+            FlowPane itemPane = new FlowPane();
+            itemPane.setPrefWidth(Constants.TILE_SIZE);
+            itemPane.setPadding(new Insets(2, 2, 2, 2));
+
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(20, Color.CORNFLOWERBLUE);
+                DropShadow dropShadow = new DropShadow(25, Color.CORNFLOWERBLUE);
                 dropShadow.setSpread(0.75);
                 itemImageView.setEffect(dropShadow);
+                itemPane.setBorder(new Border(new BorderStroke(Color.CORNFLOWERBLUE,
+                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
+            } else {
+                // Not selected item, add black border
+                itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
             }
 
+            // Add imageview to pane
+            itemPane.getChildren().add(itemImageView);
+
             // Add item to list
-            heldItems.getChildren().add(itemImageView);
+            heldItems.getChildren().add(itemPane);
 
             // Increment current item index
+            currentItemIndex++;
+        }
+
+        // Add empty item slots
+        while (currentItemIndex < 3) {
+            HBox itemPane = new HBox();
+            itemPane.setMinWidth(Constants.TILE_SIZE * 1.3);
+            itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
+
+            // Add box to item list
+            heldItems.getChildren().add(itemPane);
+
             currentItemIndex++;
         }
 
@@ -384,7 +412,8 @@ public class GameRenderer implements Runnable {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth(Constants.TILE_SIZE * 7);
+        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
+        HUDBox.setMaxHeight(350); // TODO: get rid of this when minimap added?
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
@@ -404,6 +433,36 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
+        // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
+        Label playerTeamText;
+        switch(currentPlayer.getTeam()) {
+            case RED:
+                playerTeamText = new Label("RED");
+                playerTeamText.setTextFill(Color.RED);
+                break;
+            case BLUE:
+                playerTeamText = new Label("BLUE");
+                playerTeamText.setTextFill(Color.BLUE);
+                break;
+            case GREEN:
+                playerTeamText = new Label("GREEN");
+                playerTeamText.setTextFill(Color.GREEN);
+                break;
+            case YELLOW:
+                playerTeamText = new Label("YELLOW");
+                playerTeamText.setTextFill(Color.YELLOW);
+                break;
+            case ENEMY:
+                playerTeamText = new Label("ENEMY");
+                playerTeamText.setTextFill(Color.GREY);
+                break;
+            default:
+                playerTeamText = new Label("NONE");
+                playerTeamText.setTextFill(Color.GREY);
+                break;
+        }
+        playerTeamText.setFont(fontManaspace28);
+
         // Player score
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
@@ -414,13 +473,13 @@ public class GameRenderer implements Runnable {
         heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
 
         // Iterate through held items list and add to the HUD
-        heldItems = new FlowPane(); // Make flowpane for held items - supports unlimited amount of them
+        heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
 
         // Ammo vbox
         ammoBox = new VBox();
 
         // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
     }

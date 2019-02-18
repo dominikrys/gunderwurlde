@@ -53,7 +53,7 @@ public class Meadow extends GameMap {
         return enemySpawns;
     }
 
-    private static LinkedHashSet<Round> generateRounds() {
+    public static LinkedHashSet<Round> generateRounds() {
         LinkedHashSet<Round> rounds = new LinkedHashSet<>();
         TreeSet<Wave> waves = new TreeSet<>();
 

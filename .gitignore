@@ -1,6 +1,9 @@
 #java class
 *.class
 
+#java serialised files
+*.ser
+
 #log
 *.log
 
