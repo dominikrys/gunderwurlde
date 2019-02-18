@@ -274,8 +274,10 @@ public class GameRenderer implements Runnable {
         // Get the player from gameview
         PlayerView currentPlayer = getCurrentPlayer();
 
+        if(playerScoreNumber == null){
+            System.out.println("player score number is null");
+        }
         // Update score
-
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
         // Update hearts

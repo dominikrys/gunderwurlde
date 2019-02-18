@@ -55,13 +55,16 @@ public class ProcessGameState extends Thread {
     private GameView view;
     private ClientRequests clientRequests;
     private boolean handlerClosing;
-    int numJoined;
 
     public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Teams hostTeam) {
         this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
+        Player secondPlayer = new Player(Teams.BLUE, hostName);
+        players.put(1, secondPlayer);
+
+
         this.gameState = new GameState(MapReader.readMap(mapName), players);
         this.handlerClosing = false;
 
@@ -80,6 +83,7 @@ public class ProcessGameState extends Thread {
 
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
         playerViews.add(toPlayerView(hostPlayer));
+        playerViews.add(toPlayerView(secondPlayer));
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
     }
@@ -95,6 +99,7 @@ public class ProcessGameState extends Thread {
 
     public void addPlayer(String playerName, Teams team) {
         gameState.addPlayer(new Player(team, playerName));
+        System.out.println("Player: " + playerName + " has joined the game");
     }
 
     @Override

@@ -64,6 +64,8 @@ public class Server extends Thread implements HasEngine {
                     Thread.sleep(5000);
                     Thread.yield();
                 }
+
+                System.out.println("All players have joined the game");
             }
             engine.start();
             System.out.println("Threads up");
