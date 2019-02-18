@@ -18,6 +18,10 @@ public class KeyboardSettings {
 		mapping.put("reload", "R");
 		mapping.put("drop", "G");
 		mapping.put("interact", "E");
+		mapping.put("item1", "DIGIT1");
+		mapping.put("item2", "DIGIT2");
+		mapping.put("item3", "DIGIT3");
+		mapping.put("esc", "ESCAPE");
 	}
 	
 	public String getKey(String action) {

@@ -24,6 +24,7 @@ public class KeyboardHandler extends UserInteraction {
     private Reload reload;
     private DropItem dropItem;
     private PickItem pickItem;
+    private ChangeItem changeItem;
     private ArrayList<String> input = new ArrayList<String>();
     private KeyboardSettings kbSettings = new KeyboardSettings();
     private boolean upPressed = false;
@@ -88,6 +89,18 @@ public class KeyboardHandler extends UserInteraction {
                     if (kbSettings.getKey("interact").equals(pressed)) {
                         interactPressed = true;
                     }
+                    if(kbSettings.getKey("item1").equals(pressed)) {
+                    	changeItem.changeTo(1);
+                    }
+                    if(kbSettings.getKey("item2").equals(pressed)) {
+                    	changeItem.changeTo(2);
+                    }
+                    if(kbSettings.getKey("item3").equals(pressed)) {
+                    	changeItem.changeTo(3);
+                    }
+                    if(kbSettings.getKey("esc").equals(pressed)) {
+                    	// TODO: escape menu
+                    }
                 }
             }
         });
@@ -138,6 +151,7 @@ public class KeyboardHandler extends UserInteraction {
         this.movement = new Movement(handler, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
         this.reload = new Reload(handler, playerView);
         this.dropItem = new DropItem(handler, playerView);
+        this.changeItem = new ChangeItem(handler, playerView);
     }
 
     @Override

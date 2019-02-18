@@ -91,6 +91,7 @@ public class MouseHandler extends UserInteraction {
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			if(e.isPrimaryButtonDown()) {
 				mouseMovement(e);
+				attack.attack();
 				this.hold = true;
 			}
 			else {
@@ -100,6 +101,7 @@ public class MouseHandler extends UserInteraction {
 		
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(e.isPrimaryButtonDown()) {
+				attack.attack();
 				this.hold = true;
 			}
 		});
@@ -150,7 +152,9 @@ public class MouseHandler extends UserInteraction {
 			@Override
 			public void handle(long now) {
 				if(hold == true) {
-					attack.attack();
+					if(playerView.getCurrentItem().isAutoFire()) {
+						attack.attack();
+					}
 				}
 			}
 		};

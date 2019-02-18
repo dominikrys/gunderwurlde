@@ -14,24 +14,26 @@ public class ChangeItem extends Action{
 		this.playerView = playerView;
 	}
 	
-	public boolean checkItemIndex(int oldItemIndex, int newItemIndex) {
+	public int checkItemIndex(int oldItemIndex, int newItemIndex) {
 		if(newItemIndex == -1) {
 			newItemIndex = playerView.getItems().size() - 1;
 		}
+		else if(newItemIndex == playerView.getItems().size()) {
+			newItemIndex = 0;
+		}
 		if(oldItemIndex == newItemIndex) {
-			return false;
+			return -1;
 		}
 		else
-			return true;
+			return newItemIndex;
 	}
 	
 	public void previousItem() {
 		int oldItemIndex = playerView.getCurrentItemIndex();
 		int newItemIndex = oldItemIndex - 1;
-		if(newItemIndex == -1) {
-			newItemIndex = playerView.getItems().size() - 1;
-		}
-		if(oldItemIndex != newItemIndex) {
+		
+		newItemIndex = checkItemIndex(oldItemIndex, newItemIndex);
+		if(newItemIndex != -1) {
 			handler.send(ActionList.CHANGEITEM, newItemIndex);
 		}
 		// no item to switch to
@@ -40,13 +42,25 @@ public class ChangeItem extends Action{
 	public void nextItem() {
 		int oldItemIndex = playerView.getCurrentItemIndex();
 		int newItemIndex = oldItemIndex + 1;
-		if(newItemIndex == playerView.getItems().size()) {
-			newItemIndex = 0;
-		}
-		if(oldItemIndex != newItemIndex) {
+		
+		newItemIndex = checkItemIndex(oldItemIndex, newItemIndex);
+		if(newItemIndex != -1) {
 			handler.send(ActionList.CHANGEITEM, newItemIndex);
 		}
 		// no item to switch to
+	}
+	
+	public void changeTo(int number) {
+		System.out.println(playerView.getItems().size());
+		if(playerView.getCurrentItemIndex() + 1 == number) {
+			// do nothing
+		}
+		else if(playerView.getItems().size() < number) {
+			// do nothing
+		}
+		else {
+			handler.send(ActionList.CHANGEITEM, number - 1);
+		}
 	}
 
 }
