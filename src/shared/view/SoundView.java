@@ -20,7 +20,7 @@ public class SoundView {
 	
 	protected GameView gameView;
 	protected Settings settings;
-	protected HashMap<EntityView, Sound> playing;
+	protected HashMap<Integer, Sound> playing;
 	protected AudioClip audioClip;
 	protected AnimationTimer t;
 	
@@ -28,7 +28,7 @@ public class SoundView {
 	public SoundView(GameView gameView, Settings settings) {
 		this.gameView = gameView;
 		this.settings = settings;
-		this.playing = new HashMap<EntityView, Sound>();
+		this.playing = new HashMap<Integer, Sound>();
 		this.t = null;
 	}
 	
@@ -41,7 +41,7 @@ public class SoundView {
 			@Override
 			public void handle(long now) {
 				if(!settings.isSoundMute()) {
-					analyze();
+					playSounds();
 				}
 				
 			}
@@ -53,21 +53,21 @@ public class SoundView {
 		this.t.stop();
 	}
 	
-	public void analyze() {
-		this.clear();
+	public void playSounds() {
 		for(PlayerView p : gameView.getPlayers()) {
 			if(!p.getCurrentAction().equals(ActionList.NONE)) {
-				if(!playing.containsKey(p)) {
-					playing.put(p, new Sound(p, p.getCurrentAction()));
+				if(playing.containsKey(p.getID())) {
+					playing.get(p.getID()).setEntityView(p);
+					if(!playing.get(p.getID()).getActionList().equals(p.getCurrentAction())) {
+						playing.get(p.getID()).stop();
+						playing.put(p.getID(), new Sound(p, p.getCurrentAction(), this.settings.getSoundVolume()));
+					}
+					else if(p.getCurrentAction().equals(ActionList.ATTACKING)) {
+						playing.get(p.getID()).replay();
+					}
 				}
-				else if(!playing.get(p).getActionList().equals(p.getCurrentAction())) {
-					playing.get(p).stop();
-					playing.put(p, new Sound(p, p.getCurrentAction()));
-				}
-			}
-			else {
-				if(playing.containsKey(p)) {
-					playing.get(p).stop();
+				else {
+					playing.put(p.getID(), new Sound(p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
 		}
