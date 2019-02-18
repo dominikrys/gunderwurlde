@@ -23,14 +23,14 @@
          </font>
          <styleClass>
             <String fx:value="playButton" />
-            <String fx:value="manaspaceFontBlack" />
+            <String fx:value="manaspaceFontWhite" />
          </styleClass></Button>
       <Button fx:id="highScoreButton" mnemonicParsing="false" onAction="#highScoreButtonPress" text="High Scores">
          <font>
             <Font name="Manaspace" size="34.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuButton" />
          </styleClass>
       </Button>
@@ -39,7 +39,7 @@
             <Font name="Manaspace" size="22.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuButton" />
          </styleClass></Button>
       <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonPress" text="Help">
@@ -47,7 +47,7 @@
             <Font name="Manaspace" size="22.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuButton" />
          </styleClass>
       </Button>
@@ -56,7 +56,7 @@
             <Font name="Manaspace" size="22.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuButton" />
          </styleClass></Button>
    </children>

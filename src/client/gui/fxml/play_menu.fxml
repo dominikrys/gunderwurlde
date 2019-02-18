@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Play">
          <font>
@@ -20,10 +20,10 @@
          </font>
          <styleClass>
             <String fx:value="menuTitle" />
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Label>
-      <Label styleClass="manaspaceFont" text="Type Player Name and Press 'ENTER':">
+      <Label styleClass="manaspaceFontWhite" text="Type Player Name and Press 'ENTER':">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
@@ -41,7 +41,7 @@
             <Font name="Consolas" size="22.0" />
          </font>
       </Label>
-      <Label styleClass="manaspaceFont" text="Chooose Team:">
+      <Label styleClass="manaspaceFontWhite" text="Chooose Team:">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
@@ -57,7 +57,7 @@
                   </ImageView>
                </graphic>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
             </Button>
@@ -70,7 +70,7 @@
                   </ImageView>
                </graphic>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
             </Button>
@@ -83,7 +83,7 @@
                   </ImageView>
                </graphic>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
             </Button>
@@ -96,7 +96,7 @@
                   </ImageView>
                </graphic>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
             </Button>
@@ -110,7 +110,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="menuButton" />
                </styleClass>
                <graphic>
@@ -130,7 +130,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="menuButton" />
                </styleClass>
                <graphic>
@@ -146,7 +146,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="menuButton" />
                </styleClass>
                <graphic>
@@ -165,7 +165,7 @@
             <Font name="Consolas" size="22.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="backButton" />
          </styleClass>
       </Button>

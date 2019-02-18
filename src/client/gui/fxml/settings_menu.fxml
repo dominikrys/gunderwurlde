@@ -19,13 +19,13 @@
             <Font name="Consolas" size="42.0" />
          </font>
          <styleClass>
-            <String fx:value="manaspaceFont" />
+            <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuTitle" />
          </styleClass>
       </Label>
       <HBox alignment="CENTER" prefHeight="70.0" prefWidth="600.0" style="-fx-spacing: 5px;">
          <children>
-            <Label style="-fx-padding: 5px;" styleClass="manaspaceFont" text="Sound Volume">
+            <Label style="-fx-padding: 5px;" styleClass="manaspaceFontWhite" text="Sound Volume">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -57,7 +57,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="70.0" prefWidth="600.0" style="-fx-spacing: 5px;">
          <children>
-            <Label style="-fx-padding: 5px;" styleClass="manaspaceFont" text="Music Volume">
+            <Label style="-fx-padding: 5px;" styleClass="manaspaceFontWhite" text="Music Volume">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -89,7 +89,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
-            <Label styleClass="manaspaceFont" text="Display Mode">
+            <Label styleClass="manaspaceFontWhite" text="Display Mode">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -99,7 +99,7 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="backButton" />
                </styleClass>
             </Button>
@@ -108,22 +108,22 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="backButton" />
                </styleClass>
             </Button>
          </children>
       </HBox>
-      <HBox alignment="CENTER" style="-fx-spacing: 15px;">
+      <HBox alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background">
          <children>
-            <Label styleClass="manaspaceFont" text="Display Resolution">
+            <Label styleClass="manaspaceFontWhite" text="Display Resolution">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
             </Label>
             <ComboBox fx:id="resolutionComboBox" onAction="#resolutionComboBoxChanged" visibleRowCount="5">
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="resolutionSelector" />
                </styleClass></ComboBox>
          </children>
@@ -135,14 +135,14 @@
                   <Font name="Consolas" size="22.0" />
                </font>
                <styleClass>
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                   <String fx:value="backButton" />
                </styleClass>
             </Button>
             <Button fx:id="applyButton" mnemonicParsing="false" onAction="#applyButtonPress" text="Apply Graphics Settings">
                <styleClass>
                   <String fx:value="backButton" />
-                  <String fx:value="manaspaceFont" />
+                  <String fx:value="manaspaceFontWhite" />
                </styleClass>
             </Button>
          </children>

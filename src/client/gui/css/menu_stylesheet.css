@@ -42,15 +42,22 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
+    -fx-border-width: 5px;
 }
 
 .button {
     -fx-background-radius: 0px;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 5px;
 }
 
 .menuButton {
     -fx-font-size: 28px;
     -fx-background-radius: 0px;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 5px;
 }
 
 .mapButton {
@@ -59,11 +66,17 @@
     -fx-padding: 10px;
     -fx-pref-height: 230px;
     -fx-pref-width: 230px;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 5px;
 }
 
 .teamButton {
     -fx-font-size: 28px;
     -fx-background-radius: 0px;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 5px;
 }
 
 .resolutionSelector {
@@ -73,4 +86,7 @@
 .backButton {
     -fx-font-size: 22px;
     -fx-background-radius: 0px;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-border-width: 5px;
 }
