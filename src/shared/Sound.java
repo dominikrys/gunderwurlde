@@ -36,7 +36,7 @@ public class Sound {
 		this.audio = getAudio(action);
 		if(this.audio != null) {
 			this.replayable = false;
-			this.audio.setVolume(volume);
+			this.audio.setVolume(volume/100);
 			this.audio.play();
 		}
 	}
