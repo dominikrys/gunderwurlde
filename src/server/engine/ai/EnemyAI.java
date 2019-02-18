@@ -15,6 +15,7 @@ import shared.lists.ActionList;
 public abstract class EnemyAI {
 
     protected Enemy enemy;
+    protected static long DEFAULT_DELAY = 380;
     protected Pose pose;
     private int enemSize;
     private HashSet<Pose> playerPoses;
