@@ -26,7 +26,7 @@ public class Reload extends Action {
             // TODO: send reload request
             handler.send(ActionList.RELOAD);
         } else {
-            System.out.println("Reload failed");
+            //System.out.println("Reload failed");
             // TODO: reload fail stuff here (sound...)
         }
     }

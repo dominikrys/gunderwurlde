@@ -22,6 +22,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
+import shared.view.SoundView;
 import shared.view.entity.*;
 
 import java.io.File;
@@ -60,6 +61,7 @@ public class GameRenderer implements Runnable {
     private MouseHandler mHandler;
     // Settings object
     private Settings settings;
+    private SoundView soundView;
 
     //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -110,6 +112,8 @@ public class GameRenderer implements Runnable {
         // Initialise input variables
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
+        
+        soundView = new SoundView(initialGameView, settings);
     }
 
     // Run the thread - set up window and update game on a timer
@@ -177,6 +181,8 @@ public class GameRenderer implements Runnable {
         mHandler.setGameView(inputGameView);
         mHandler.setScene(stage.getScene());
         mHandler.activate();
+        
+        soundView.activate();
     }
 
     // Update stored gameView
@@ -184,6 +190,7 @@ public class GameRenderer implements Runnable {
         this.gameView = gameView;
         this.kbHandler.setGameView(gameView);
         this.mHandler.setGameView(gameView);
+        this.soundView.setGameView(gameView);
     }
 
     // Render gameView - KEEP PRIVATE
