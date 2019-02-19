@@ -15,8 +15,9 @@ import shared.lists.ActionList;
 public abstract class EnemyAI {
 
     protected Enemy enemy;
+    protected static long DEFAULT_DELAY = 380;
     protected Pose pose;
-    private int size;
+    private int enemSize;
     private HashSet<Pose> playerPoses;
     protected Pose closestPlayer;
     protected Tile[][] tileMap;
@@ -30,34 +31,45 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
+    protected abstract Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer);
+
+    public abstract AIAction getAction();
+
+
+
+    protected int getEnemSize() { return enemSize; }
+
     protected HashSet<Pose> getPlayerPoses() {
         return playerPoses;
     }
 
-    protected abstract Pose generateNextPose(double maxDistanceMoved, Pose closestPlayer);
-
-    public synchronized Pose getNewPose(double maxDistanceMoved) {
-        return generateNextPose(maxDistanceMoved, closestPlayer);
+    public ActionList getActionState() {
+        return actionState;
     }
 
     public Pose getCurrentPose(){
         return pose;
     }
 
+    public Pose getClosestPlayer(){ return closestPlayer; }
+
+    public Pose getNewPose(double maxDistanceToMove) {
+        return generateNextPose(maxDistanceToMove, closestPlayer);
+    }
+
     protected int getDistToPlayer(Pose player) {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-    public abstract AIAction getAction();
-
     public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
         this.enemy = enemy;
         this.pose = this.enemy.getPose();
-        this.size = this.enemy.getSize();
+        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
+    // May not need this
 
     public boolean isProcessing() {
         return isProcessing;
@@ -76,10 +88,6 @@ public abstract class EnemyAI {
         }
 
         return closestPlayer;
-    }
-
-    public ActionList getActionState() {
-        return actionState;
     }
 
 }
