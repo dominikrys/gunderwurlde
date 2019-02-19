@@ -11,7 +11,7 @@ public class RunnerZombie extends Zombie {
     public static final int DEFAULT_SCORE_ON_KILL = 15;
 
     public RunnerZombie(){
-        super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new RunnerZombieAI());
+        super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI());
     }
 
 }

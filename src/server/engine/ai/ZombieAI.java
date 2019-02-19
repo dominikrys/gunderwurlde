@@ -1,10 +1,7 @@
 package server.engine.ai;
 
-import java.util.LinkedList;
-
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
-import server.engine.state.entity.attack.AttackType;
 import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
@@ -12,11 +9,16 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 public class ZombieAI extends EnemyAI {
 
     long attackDelay;
     long beginAttackTime;
     boolean attacking;
+    private boolean turnLeft;
+    private int stepsUntilNormPath = 0;
 
     public ZombieAI() {
         super();
@@ -74,38 +76,77 @@ public class ZombieAI extends EnemyAI {
 
     private Pose poseByAngle(double angle, Pose enemy) {
         Pose newPose = null;
+        double realAngle = angle;
+        angle = randomizePath(angle);
 
+            //east
         if (angle > 337.5 || angle <= 22.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY(), (int) angle + 90);
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY(), (int) realAngle + 90);
 
+            //north-east
         } else if (angle > 22.5 && angle <= 67.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) realAngle + 90);
 
+            //north
         } else if (angle > 67.5 && angle <= 112.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() + 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX(), enemy.getY() + 0.1, (int) realAngle + 90);
 
+            //north-west
         } else if (angle > 112.5 && angle <= 157.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) realAngle + 90);
 
+            //west
         } else if (angle > 157.5 && angle <= 202.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY(), (int) angle + 90);
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY(), (int) realAngle + 90);
 
+            //south-west
         } else if (angle > 202.5 && angle <= 247.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) realAngle + 90);
 
+            //south
         } else if (angle > 247.5 && angle <= 292.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() - 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX(), enemy.getY() - 0.1, (int) realAngle + 90);
 
+            //south-east
         } else if (angle > 292.5 && angle <= 337.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() - 0.1, (int) angle + 90);
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() - 0.1, (int) realAngle + 90);
         }
 
-        if(newPose != null) {
-            if(tileNotSolid(Tile.locationToTile(newPose)))
+        if (newPose != null) {
+            if (tileNotSolid(Tile.locationToTile(newPose)))
                 return newPose;
         }
-        
+
         return enemy;
+    }
+
+    //Maybe needs some more balancing
+    private double randomizePath(double angle) {
+        Random rand = new Random();
+        //change of moving from direct path
+        int r = rand.nextInt(1000);
+
+        if(stepsUntilNormPath == 0) {
+            if (r == 1) {
+                turnLeft = true;
+                //How much to move to a side
+                stepsUntilNormPath = rand.nextInt(200) + 50;
+            } else if (r == 0) {
+                turnLeft = false;
+                stepsUntilNormPath = rand.nextInt(200) + 50;
+            } else {
+                return angle;
+            }
+        } else {
+            if (turnLeft) {
+                angle -= 50;
+            } else {
+                angle += 50;
+            }
+            stepsUntilNormPath--;
+        }
+
+        return angle;
     }
 
     private boolean tileNotSolid(int[] tile) {
