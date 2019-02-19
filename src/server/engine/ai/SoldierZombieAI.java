@@ -3,6 +3,8 @@ package server.engine.ai;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.AttackType;
 import server.engine.state.entity.attack.ProjectileAttack;
+import server.engine.state.map.Meadow;
+import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
 
@@ -18,7 +20,7 @@ public class SoldierZombieAI extends EnemyAI{
     private Random rand = new Random();
     private boolean attacking;
     private long beginAttackTime;
-    private Stack<Pose> path;
+    private Pose poseToGo;
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire){
         this.RANGE_TO_SHOOT = rangeToShoot;
@@ -67,15 +69,31 @@ public class SoldierZombieAI extends EnemyAI{
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        if(path.empty()){
-            new GenerateSoldierPath(this).start();
-            return path.pop();
-        }else {
-            return path.pop();
+    protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
+        Pose nextPose = checkIfInSpawn(pose);
+
+        if(pose == nextPose) {                  //if out of spawn
+            if (poseToGo == pose || poseToGo == null) {             //if does not a pose to go
+                if(!isProcessing()) {           //if not already generating a new pose to go
+                    setProcessing(true);
+                    new GenerateSoldierPath(this, pose).start();
+
+                }else{                          //if has a pose generated
+                    double angle = getAngle(pose, poseToGo);
+                    return poseByAngle(angle, pose, angle, tileMap);
+                }
+            } else {                            //if has a pose to go
+                double angle = getAngle(pose, poseToGo);
+                return poseByAngle(angle, pose, angle, tileMap);
+            }
         }
+
+        return nextPose;
     }
 
 
-
+    synchronized void setPoseToGo(Pose pose) {
+        poseToGo = pose;
+        setProcessing(false);
+    }
 }

@@ -1,18 +1,18 @@
 package server.engine.ai;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
+import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
+
+import static java.lang.Math.*;
 
 public abstract class EnemyAI {
 
@@ -63,6 +63,10 @@ public abstract class EnemyAI {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
+    synchronized void setProcessing(boolean processing){
+        isProcessing = processing;
+    }
+
     public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
         this.enemy = enemy;
         this.pose = this.enemy.getPose();
@@ -93,40 +97,40 @@ public abstract class EnemyAI {
     }
 
     //TODO I don't really need to pass enemy do I?
-    protected static Pose poseByAngle(double angle, Pose enemy, double angleToFace, Tile [][] tileMap) {
+    static Pose poseByAngle(double angle, Pose enemy, double angleToFace, Tile [][] tileMap) {
         Pose newPose = null;
 
         //east
         if (angle > 337.5 || angle <= 22.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY(), (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() + 1, enemy.getY(), (int) angleToFace + 90);
 
             //north-east
         } else if (angle > 22.5 && angle <= 67.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() + 1, enemy.getY() + 1, (int) angleToFace + 90);
 
             //north
         } else if (angle > 67.5 && angle <= 112.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() + 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX(), enemy.getY() + 1, (int) angleToFace + 90);
 
             //north-west
         } else if (angle > 112.5 && angle <= 157.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() - 1, enemy.getY() + 1, (int) angleToFace + 90);
 
             //west
         } else if (angle > 157.5 && angle <= 202.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY(), (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() - 1, enemy.getY(), (int) angleToFace + 90);
 
             //south-west
         } else if (angle > 202.5 && angle <= 247.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() - 1, enemy.getY() - 1, (int) angleToFace + 90);
 
             //south
         } else if (angle > 247.5 && angle <= 292.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() - 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX(), enemy.getY() - 1, (int) angleToFace + 90);
 
             //south-east
         } else if (angle > 292.5 && angle <= 337.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() - 0.1, (int) angleToFace + 90);
+            newPose = new Pose(enemy.getX() + 1, enemy.getY() - 1, (int) angleToFace + 90);
         }
 
         if (newPose != null) {
@@ -138,7 +142,14 @@ public abstract class EnemyAI {
     }
 
     static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
-        return tileMap[tile[0]][tile[1]].getState() != TileState.SOLID;
+        boolean tileNotSolid;
+        try {
+            tileNotSolid = tileMap[tile[0]][tile[1]].getState() != TileState.SOLID;
+        }catch (Exception e){
+            return false;
+        }
+
+        return  tileNotSolid;
     }
 
     static double getAngle(Pose enemy, Pose player) {
@@ -149,6 +160,20 @@ public abstract class EnemyAI {
         }
 
         return angle;
+    }
+
+    static Pose checkIfInSpawn(Pose pose){
+        int[] tile = Tile.locationToTile(pose);
+
+        if (tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
+            return new Pose(pose.getX() + 1, pose.getY(), 90);
+        }
+
+        if (tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
+            return new Pose(pose.getX() - 1, pose.getY(), 270);
+        }
+
+        return pose;
     }
 
 }
