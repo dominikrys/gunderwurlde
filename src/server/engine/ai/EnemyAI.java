@@ -5,12 +5,14 @@ import static java.lang.Math.sqrt;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Random;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
+import shared.lists.TileState;
 
 public abstract class EnemyAI {
 
@@ -51,13 +53,13 @@ public abstract class EnemyAI {
         return pose;
     }
 
-    public Pose getClosestPlayer(){ return closestPlayer; }
+    Pose getClosestPlayer(){ return closestPlayer; }
 
     public Pose getNewPose(double maxDistanceToMove) {
         return generateNextPose(maxDistanceToMove, closestPlayer);
     }
 
-    protected int getDistToPlayer(Pose player) {
+    int getDistToPlayer(Pose player) {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
@@ -69,13 +71,13 @@ public abstract class EnemyAI {
         this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
-    // May not need this
 
+    // May not need this
     public boolean isProcessing() {
         return isProcessing;
     }
 
-    protected Pose findClosestPlayer(HashSet<Pose> playerPoses) {
+    private Pose findClosestPlayer(HashSet<Pose> playerPoses) {
         Pose closestPlayer = playerPoses.iterator().next();
         int distToClosest = Integer.MAX_VALUE;
 
@@ -88,6 +90,65 @@ public abstract class EnemyAI {
         }
 
         return closestPlayer;
+    }
+
+    //TODO I don't really need to pass enemy do I?
+    protected static Pose poseByAngle(double angle, Pose enemy, double angleToFace, Tile [][] tileMap) {
+        Pose newPose = null;
+
+        //east
+        if (angle > 337.5 || angle <= 22.5) {
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY(), (int) angleToFace + 90);
+
+            //north-east
+        } else if (angle > 22.5 && angle <= 67.5) {
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) angleToFace + 90);
+
+            //north
+        } else if (angle > 67.5 && angle <= 112.5) {
+            newPose = new Pose(enemy.getX(), enemy.getY() + 0.1, (int) angleToFace + 90);
+
+            //north-west
+        } else if (angle > 112.5 && angle <= 157.5) {
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) angleToFace + 90);
+
+            //west
+        } else if (angle > 157.5 && angle <= 202.5) {
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY(), (int) angleToFace + 90);
+
+            //south-west
+        } else if (angle > 202.5 && angle <= 247.5) {
+            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) angleToFace + 90);
+
+            //south
+        } else if (angle > 247.5 && angle <= 292.5) {
+            newPose = new Pose(enemy.getX(), enemy.getY() - 0.1, (int) angleToFace + 90);
+
+            //south-east
+        } else if (angle > 292.5 && angle <= 337.5) {
+            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() - 0.1, (int) angleToFace + 90);
+        }
+
+        if (newPose != null) {
+            if (tileNotSolid(Tile.locationToTile(newPose), tileMap))
+                return newPose;
+        }
+
+        return enemy;
+    }
+
+    static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
+        return tileMap[tile[0]][tile[1]].getState() != TileState.SOLID;
+    }
+
+    static double getAngle(Pose enemy, Pose player) {
+        double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
     }
 
 }

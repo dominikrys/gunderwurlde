@@ -1,13 +1,14 @@
 package server.engine.ai;
 
-import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.AttackType;
+import server.engine.state.entity.attack.ProjectileAttack;
 import shared.Pose;
 import shared.lists.ActionList;
 
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Stack;
 
 public class SoldierZombieAI extends EnemyAI{
 
@@ -17,6 +18,7 @@ public class SoldierZombieAI extends EnemyAI{
     private Random rand = new Random();
     private boolean attacking;
     private long beginAttackTime;
+    private Stack<Pose> path;
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire){
         this.RANGE_TO_SHOOT = rangeToShoot;
@@ -56,7 +58,8 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            //attacks.add(new );
+            //TODO change this projAttack object
+            attacks.add(new ProjectileAttack(closestPlayer,4, AttackType.PROJECTILE));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -65,6 +68,14 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        return null;
+        if(path.empty()){
+            new GenerateSoldierPath(this).start();
+            return path.pop();
+        }else {
+            return path.pop();
+        }
     }
+
+
+
 }

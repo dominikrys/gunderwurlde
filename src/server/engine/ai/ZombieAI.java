@@ -68,56 +68,11 @@ public class ZombieAI extends EnemyAI {
         }
 
         for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
-            pose = poseByAngle(getAngle(pose, closestPlayer), pose);
+            double angle = getAngle(pose, closestPlayer);
+            pose = poseByAngle(randomizePath(angle), pose, angle, tileMap);
         }
 
         return pose;
-    }
-
-    private Pose poseByAngle(double angle, Pose enemy) {
-        Pose newPose = null;
-        double realAngle = angle;
-        angle = randomizePath(angle);
-
-            //east
-        if (angle > 337.5 || angle <= 22.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY(), (int) realAngle + 90);
-
-            //north-east
-        } else if (angle > 22.5 && angle <= 67.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() + 0.1, (int) realAngle + 90);
-
-            //north
-        } else if (angle > 67.5 && angle <= 112.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() + 0.1, (int) realAngle + 90);
-
-            //north-west
-        } else if (angle > 112.5 && angle <= 157.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() + 0.1, (int) realAngle + 90);
-
-            //west
-        } else if (angle > 157.5 && angle <= 202.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY(), (int) realAngle + 90);
-
-            //south-west
-        } else if (angle > 202.5 && angle <= 247.5) {
-            newPose = new Pose(enemy.getX() - 0.1, enemy.getY() - 0.1, (int) realAngle + 90);
-
-            //south
-        } else if (angle > 247.5 && angle <= 292.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() - 0.1, (int) realAngle + 90);
-
-            //south-east
-        } else if (angle > 292.5 && angle <= 337.5) {
-            newPose = new Pose(enemy.getX() + 0.1, enemy.getY() - 0.1, (int) realAngle + 90);
-        }
-
-        if (newPose != null) {
-            if (tileNotSolid(Tile.locationToTile(newPose)))
-                return newPose;
-        }
-
-        return enemy;
     }
 
     //Maybe needs some more balancing
@@ -149,19 +104,6 @@ public class ZombieAI extends EnemyAI {
         return angle;
     }
 
-    private boolean tileNotSolid(int[] tile) {
-        return tileMap[tile[0]][tile[1]].getState() != TileState.SOLID;
-    }
-
-    private static double getAngle(Pose enemy, Pose player) {
-        double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
-
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        return angle;
-    }
 
 
 }

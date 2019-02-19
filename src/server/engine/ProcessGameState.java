@@ -442,6 +442,7 @@ public class ProcessGameState extends Thread {
                             }
                             break;
                         case PROJECTILE:
+                            System.out.println("Pew pew");
                             break;
                         }
                     }
