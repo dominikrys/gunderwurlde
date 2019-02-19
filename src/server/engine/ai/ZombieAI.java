@@ -14,9 +14,9 @@ import shared.lists.TileState;
 
 public class ZombieAI extends EnemyAI {
 
-    private long attackDelay;
-    private long beginAttackTime;
-    private boolean attacking;
+    long attackDelay;
+    long beginAttackTime;
+    boolean attacking;
 
     public ZombieAI() {
         super();
