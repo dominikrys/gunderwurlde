@@ -130,10 +130,10 @@ public class ZombieAI extends EnemyAI {
             if (r == 1) {
                 turnLeft = true;
                 //How much to move to a side
-                stepsUntilNormPath = rand.nextInt(200) + 50;
+                stepsUntilNormPath = rand.nextInt(100) + 20;
             } else if (r == 0) {
                 turnLeft = false;
-                stepsUntilNormPath = rand.nextInt(200) + 50;
+                stepsUntilNormPath = rand.nextInt(100) + 20;
             } else {
                 return angle;
             }

@@ -1,14 +1,11 @@
 package server.engine.state.entity.enemy;
 
 import server.engine.ai.SoldierZombieAI;
-import server.engine.state.map.tile.Tile;
 
 public class SoldierZombie extends Zombie {
 
     public static final int DEFAULT_HEALTH = 2;
-    public static final int DEFAULT_MOVESPEED = (Tile.TILE_SIZE / 3) * 2;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
-    public static final int DEFAULT_SCORE_ON_KILL = 10;
+    public static final int DEFAULT_SCORE_ON_KILL = 30;
     private final int RANGE_TO_SHOOT;
     private final int RATE_OF_FIRE;
 

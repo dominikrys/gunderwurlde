@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.enemy.RunnerZombie;
+import server.engine.state.entity.enemy.SoldierZombie;
 import server.engine.state.entity.enemy.Zombie;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
@@ -62,7 +63,8 @@ public class Meadow extends GameMap {
 
         // Simple rounds just for testings
         // Round 1
-        Enemy enemyType = new RunnerZombie();
+        Enemy enemyType = new SoldierZombie(5, 100);
+//        Enemy enemyType = new RunnerZombie();
         //enemyType.setMoveSpeed(Zombie.DEFAULT_MOVESPEED * 2);
         waves.add(new Wave(0, 2000, enemyType, 2, 20));
         waves.add(new Wave(28000, 1600, enemyType, 2, 30));
