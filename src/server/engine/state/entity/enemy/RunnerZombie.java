@@ -1,6 +1,5 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.RunnerZombieAI;
 import server.engine.ai.ZombieAI;
 import server.engine.state.map.tile.Tile;
 
