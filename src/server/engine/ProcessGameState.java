@@ -179,7 +179,8 @@ public class ProcessGameState extends Thread {
                 // reset player values
                 currentPlayer.setMoving(false);
                 currentPlayer.setTakenDamage(false);
-                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING || currentPlayer.getCurrentAction() == ActionList.THROW)
+                ActionList lastAction = currentPlayer.getCurrentAction();
+                if (lastAction == ActionList.ATTACKING || lastAction == ActionList.THROW || lastAction == ActionList.ITEM_SWITCH)
                     currentPlayer.setCurrentAction(ActionList.NONE);
 
                 if (currentPlayer.getHealth() <= 0) {
@@ -204,7 +205,8 @@ public class ProcessGameState extends Thread {
                         int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
                         if (amountTaken > 0) {
                             currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
-                            currentPlayer.setCurrentAction(ActionList.NONE);
+                            if (!currentGun.isReloading())
+                                currentPlayer.setCurrentAction(ActionList.NONE);
                         }
                     }
                 }
