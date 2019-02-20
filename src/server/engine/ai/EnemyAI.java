@@ -25,6 +25,7 @@ public abstract class EnemyAI {
     protected Tile[][] tileMap;
     private boolean isProcessing;
     protected ActionList actionState;
+    boolean outOfSpawn = false;
 
     protected EnemyAI() {
         isProcessing = false;
@@ -95,7 +96,7 @@ public abstract class EnemyAI {
 
         return closestPlayer;
     }
-
+    //TODO idk if these need to be static
     //TODO I don't really need to pass enemy do I?
     static Pose poseByAngle(double angle, Pose enemy, double angleToFace, Tile [][] tileMap) {
         Pose newPose = null;
@@ -165,7 +166,7 @@ public abstract class EnemyAI {
         return angle;
     }
 
-    static Pose checkIfInSpawn(Pose pose){
+    static Pose moveOutOfSpawn(Pose pose){
         int[] tile = Tile.locationToTile(pose);
 
         if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
@@ -179,6 +180,20 @@ public abstract class EnemyAI {
         }
 
         return pose;
+    }
+
+    Pose checkIfInSpawn(){
+        Pose nextPose = pose;
+        if(!outOfSpawn) {
+            //This will return original pose if zombie is out of spawn
+            nextPose = moveOutOfSpawn(pose);
+            if(nextPose == pose){
+                outOfSpawn = true;
+            }else{
+                return nextPose;
+            }
+        }
+        return nextPose;
     }
 
 }

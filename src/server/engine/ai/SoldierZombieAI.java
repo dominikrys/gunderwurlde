@@ -3,15 +3,11 @@ package server.engine.ai;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.AttackType;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.map.Meadow;
-import server.engine.state.map.tile.Tile;
-import shared.Location;
 import shared.Pose;
 import shared.lists.ActionList;
 
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Stack;
 
 public class SoldierZombieAI extends EnemyAI{
 
@@ -82,16 +78,7 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        Pose nextPose = pose;
-        if(!outOfSpawn) {
-            //This will return original pose if zombie is out of spawn
-            nextPose = checkIfInSpawn(pose);
-            if(nextPose == pose){
-                outOfSpawn = true;
-            }else{
-                return nextPose;
-            }
-        }
+        Pose nextPose = checkIfInSpawn();
         //if out of spawn
         if(outOfSpawn) {
             //if does not have pose to go

@@ -2,12 +2,9 @@ package server.engine.ai;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
-import server.engine.state.map.Meadow;
-import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.TileState;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -17,6 +14,7 @@ public class ZombieAI extends EnemyAI {
     long attackDelay;
     long beginAttackTime;
     boolean attacking;
+    private boolean outOfSpawn = false;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
 
@@ -57,7 +55,7 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        Pose nextPose = checkIfInSpawn(pose);
+        Pose nextPose = checkIfInSpawn();
 
         if(pose == nextPose) {
             for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
