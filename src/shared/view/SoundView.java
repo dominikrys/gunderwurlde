@@ -59,7 +59,8 @@ public class SoundView {
 	
 	public void playSounds() {
 		for(PlayerView p : gameView.getPlayers()) {
-			if(!p.getCurrentAction().equals(ActionList.NONE)) {
+			System.out.println(p.getCurrentAction());
+			if(!p.getCurrentAction().equals(ActionList.NONE) && !p.getCurrentAction().equals(ActionList.DEAD)) {
 				if(playing.containsKey(p.getID())) {
 					playing.get(p.getID()).setEntityView(p);
 					if(!playing.get(p.getID()).getActionList().equals(p.getCurrentAction())) {
@@ -75,6 +76,9 @@ public class SoundView {
 				else {
 					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
+			}
+			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
+				playing.get(p.getID()).stop();
 			}
 		}
 	}

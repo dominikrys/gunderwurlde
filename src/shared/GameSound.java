@@ -85,6 +85,19 @@ public class GameSound {
 		}
 	}
 	
+	private void playShellsFall() {
+		Timer t = new Timer();
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				AudioClip shells = new AudioClip(SoundList.SHELLS_FALL.getPath());
+				shells.setVolume(volume/100);
+				shells.play();
+			}
+		};
+		t.schedule(task, 700);
+	}
+	
 	private AudioClip getAudio(ActionList action) {
 		audio = null;
 		switch(action) {
@@ -98,8 +111,9 @@ public class GameSound {
 							break;
 						case SHOTGUN:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN_SINGLE_RELOAD);
-							this.timer.schedule(checkReplay, Shotgun.DEFAULT_RELOAD_TIME + 175);
-							//audio.setCycleCount(Shotgun.DEFAULT_CLIP_SIZE - ((PlayerView) entity).getCurrentItem().getAmmoInClip());
+							if(((PlayerView) entity).getAmmo().get(AmmoList.SHOTGUN_ROUND) > 0 && ((PlayerView) entity).getCurrentItem().getAmmoInClip() + 1 != 8) {
+								this.timer.schedule(checkReplay, Shotgun.DEFAULT_RELOAD_TIME + 50);
+							}
 							break;
 					}
 				}
@@ -111,10 +125,12 @@ public class GameSound {
 					case PISTOL:
 						audio = loadedGameSounds.get(SoundList.PISTOL);
 						this.timer.schedule(checkReplay, Pistol.DEFAULT_COOL_DOWN - 15);
+						this.playShellsFall();
 						break;
 					case SHOTGUN:
 						audio = loadedGameSounds.get(SoundList.SHOTGUN);
 						this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
+						this.playShellsFall();
 						break;
 					}
 				}
