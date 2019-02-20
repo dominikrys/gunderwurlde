@@ -56,6 +56,8 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    // Whether the game is paused or not
+    private boolean paused;
     // Input variables
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
@@ -76,6 +78,9 @@ public class GameRenderer implements Runnable {
         this.playerID = playerID;
         this.cameraCentered = cameraCentered;
         this.settings = settings;
+
+        // Set paused to false
+        paused = false;
 
         // Load fonts
         try {
@@ -112,7 +117,8 @@ public class GameRenderer implements Runnable {
         // Initialise input variables
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
-        
+
+        // Initialise soundview
         soundView = new SoundView(initialGameView, settings);
     }
 
@@ -587,5 +593,13 @@ public class GameRenderer implements Runnable {
 
     public MouseHandler getMouseHandler() {
         return this.mHandler;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }
