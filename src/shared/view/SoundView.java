@@ -1,5 +1,6 @@
 package shared.view;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,6 +10,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.media.AudioClip;
 import shared.GameSound;
 import shared.lists.ActionList;
+import shared.lists.SoundList;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
@@ -17,7 +19,7 @@ public class SoundView {
 	protected GameView gameView;
 	protected Settings settings;
 	protected HashMap<Integer, GameSound> playing;
-	protected AudioClip audioClip;
+	protected HashMap<SoundList, AudioClip> loadedGameSounds;
 	protected AnimationTimer t;
 	
 	
@@ -25,11 +27,17 @@ public class SoundView {
 		this.gameView = gameView;
 		this.settings = settings;
 		this.playing = new HashMap<Integer, GameSound>();
+		this.loadGameSounds();
 		this.t = null;
 	}
 	
 	public void setGameView(GameView gameView) {
 		this.gameView = gameView;
+	}
+	
+	public void loadGameSounds() {
+		this.loadedGameSounds = new HashMap<SoundList, AudioClip>();
+		EnumSet.allOf(SoundList.class).forEach(SoundList -> loadedGameSounds.put(SoundList, new AudioClip(SoundList.getPath())));
 	}
 	
 	public void activate() {
@@ -56,14 +64,16 @@ public class SoundView {
 					playing.get(p.getID()).setEntityView(p);
 					if(!playing.get(p.getID()).getActionList().equals(p.getCurrentAction())) {
 						playing.get(p.getID()).stop();
-						playing.put(p.getID(), new GameSound(p, p.getCurrentAction(), this.settings.getSoundVolume()));
+						playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 					}
-					else if(p.getCurrentAction().equals(ActionList.ATTACKING)) {
-						playing.get(p.getID()).replay();
+					else if(p.getCurrentAction().equals(ActionList.ATTACKING) || p.getCurrentAction().equals(ActionList.RELOADING)) {
+						if(playing.get(p.getID()).getReplayable()) {
+							playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
+						}
 					}
 				}
 				else {
-					playing.put(p.getID(), new GameSound(p, p.getCurrentAction(), this.settings.getSoundVolume()));
+					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
 		}
