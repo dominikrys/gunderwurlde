@@ -68,6 +68,10 @@ public class Pose extends Location implements Serializable {
         return (this.direction == c.getDirection() && this.x == c.getX() && this.y == c.getY());
     }
 
+    public boolean compareLocation(Pose p){
+        return this.x == p.getX() && this.y == p.getY();
+    }
+
     @Override
     public String toString(){
         return "Coordinates: " + x + ", " + y + "; Direction: " + direction;

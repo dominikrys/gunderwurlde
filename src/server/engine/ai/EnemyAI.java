@@ -144,8 +144,11 @@ public abstract class EnemyAI {
     static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
         boolean tileNotSolid;
         try {
-            tileNotSolid = tileMap[tile[0]][tile[1]].getState() != TileState.SOLID;
+            tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
+                    !((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) ||
+                            ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)));
         }catch (Exception e){
+            System.out.println("enemy wants to go out of map");
             return false;
         }
 
@@ -165,11 +168,13 @@ public abstract class EnemyAI {
     static Pose checkIfInSpawn(Pose pose){
         int[] tile = Tile.locationToTile(pose);
 
-        if (tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
+        if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
+        || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
             return new Pose(pose.getX() + 1, pose.getY(), 90);
         }
 
-        if (tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) {
+        if ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
+        || (tile[0] == Meadow.DEFAULT_X_DIM - 2 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
             return new Pose(pose.getX() - 1, pose.getY(), 270);
         }
 
