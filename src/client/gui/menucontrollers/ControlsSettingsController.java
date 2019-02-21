@@ -65,6 +65,19 @@ public class ControlsSettingsController extends VBox implements MenuController {
                 IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // Set text of all keyboard buttons to their current mappings
+        upButton.setText(settings.getKey("up"));
+        downButton.setText(settings.getKey("down"));
+        leftButton.setText(settings.getKey("left"));
+        rightButton.setText(settings.getKey("right"));
+        interactButton.setText(settings.getKey("interact"));
+        dropButton.setText(settings.getKey("drop"));
+        reloadButton.setText(settings.getKey("reload"));
+        item1Button.setText(settings.getKey("item1"));
+        item2Button.setText(settings.getKey("item2"));
+        item3Button.setText(settings.getKey("item3"));
+        escapeButton.setText(settings.getKey("esc"));
     }
 
     @Override
@@ -81,52 +94,92 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void downButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            downButton.setText(pressed);
+            settings.changeKey("down", pressed);
+        });
     }
 
     @FXML
     void dropButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            dropButton.setText(pressed);
+            settings.changeKey("drop", pressed);
+        });
     }
 
     @FXML
     void escapeButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            escapeButton.setText(pressed);
+            settings.changeKey("esc", pressed);
+        });
     }
 
     @FXML
     void interactButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            interactButton.setText(pressed);
+            settings.changeKey("interact", pressed);
+        });
     }
 
     @FXML
     void item1ButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            item1Button.setText(pressed);
+            settings.changeKey("item1", pressed);
+        });
     }
 
     @FXML
     void item2ButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            item2Button.setText(pressed);
+            settings.changeKey("item2", pressed);
+        });
     }
 
     @FXML
     void item3ButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            item3Button.setText(pressed);
+            settings.changeKey("item3", pressed);
+        });
     }
 
     @FXML
     void leftButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            leftButton.setText(pressed);
+            settings.changeKey("left", pressed);
+        });
     }
 
     @FXML
     void reloadButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            reloadButton.setText(pressed);
+            settings.changeKey("reload", pressed);
+        });
     }
 
     @FXML
     void rightButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
+            rightButton.setText(pressed);
+            settings.changeKey("right", pressed);
+        });
     }
 
     @FXML
@@ -134,6 +187,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             upButton.setText(pressed);
+            settings.changeKey("up", pressed);
         });
     }
 }
