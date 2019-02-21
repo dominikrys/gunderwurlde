@@ -192,16 +192,16 @@ public class GameRenderer implements Runnable {
         pausedOverlay.setSpacing(10);
         pausedOverlay.setVisible(false);
 
-        // Create root stackpane and add elements to be rendered to it
+        // Create root stackpane
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
-
-        // Set background of root
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
                 new Insets(0, 0, 0, 0))));
 
-        // Clear existing root and set stage root to game renderer
+        // Add elements to root
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
+
+        // Set root to scene
         stage.getScene().setRoot(root);
 
         // Initialise input handler methods
