@@ -80,7 +80,7 @@ public class ClientReceiver extends Thread {
                     }
                     else if(command == 2){
                         System.out.println("Setting playerID");
-                        client.setPlayerID(value);
+                        //client.setPlayerID(value);
                     }
                     continue;
                 }

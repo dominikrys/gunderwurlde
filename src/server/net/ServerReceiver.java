@@ -71,7 +71,7 @@ public class ServerReceiver extends Thread {
 
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();
-                System.out.println("Player: " + playerID + "request");
+                System.out.println("PLayerID is " + playerID);
                 ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;

@@ -101,15 +101,5 @@ public class ServerSender extends Thread {
         }
     }
 
-    public void send(int playerID){
-        try {
-            buffer = ByteBuffer.allocate(4).putInt(2).putInt(playerID).array();
-            packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-            senderSocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
 

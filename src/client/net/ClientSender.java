@@ -22,10 +22,11 @@ public class ClientSender extends Thread {
     byte[] buffer;
     int playerID;
 
-    public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port, int playerID) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
+        this.playerID = playerID;
         running = true;
         Addressing.setInterfaces(senderSocket);
         this.start();
@@ -90,13 +91,4 @@ public class ClientSender extends Thread {
             e.printStackTrace();
         }
     }
-
-    public void setPlayerID(int playerID){
-        this.playerID = playerID;
-    }
-
-
-
-
-
 }

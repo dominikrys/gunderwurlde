@@ -34,11 +34,12 @@ public class Client extends Thread {
     int playerID;
 
 
-    public Client(Stage stage, String playerName, GameHandler handler, Settings settings) {
+    public Client(Stage stage, String playerName, GameHandler handler, Settings settings, int playerID) {
         this.stage = stage;
         this.playerName = playerName;
         this.handler = handler;
         this.settings = settings;
+        this.playerID = playerID;
         firstView = true;
         // TODO WINDOWS DEFENDER WITH ADVANCED SECURITY
     }
@@ -50,7 +51,7 @@ public class Client extends Thread {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
 
             // Start the sender and receiver threads for the client
@@ -88,11 +89,6 @@ public class Client extends Thread {
     
     public ClientSender getClientSender() {
     	return this.sender;
-    }
-
-    public void setPlayerID(int id){
-        this.playerID = id;
-        sender.setPlayerID(id);
     }
 
     public void joinGame(String playerName, Teams team){

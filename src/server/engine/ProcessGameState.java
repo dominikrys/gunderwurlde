@@ -62,7 +62,7 @@ public class ProcessGameState extends Thread {
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
         Player secondPlayer = new Player(Teams.BLUE, hostName);
-        players.put(1, secondPlayer);
+        players.put(secondPlayer.getID(), secondPlayer);
 
 
         this.gameState = new GameState(MapReader.readMap(mapName), players);
@@ -99,6 +99,7 @@ public class ProcessGameState extends Thread {
 
     public void addPlayer(String playerName, Teams team) {
         gameState.addPlayer(new Player(team, playerName));
+
     }
 
     @Override
