@@ -2,17 +2,15 @@ package client.gui.menucontrollers;
 
 import client.gui.Settings;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ControlsSettingsController extends VBox implements MenuController{
+public class ControlsSettingsController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
 
@@ -53,8 +51,8 @@ public class ControlsSettingsController extends VBox implements MenuController{
 
     @FXML
     void upButtonPress(ActionEvent event) {
-        stage.getScene().setOnKeyPressed(event -> {
-            String pressed = event.getCode().toString();
+        stage.getScene().setOnKeyPressed(event1 -> {
+            String pressed = event1.getCode().toString();
             upButton.setText(pressed);
         });
     }

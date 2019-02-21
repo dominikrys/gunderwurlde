@@ -3,6 +3,7 @@ package client.input;
 import java.util.ArrayList;
 
 import client.GameHandler;
+import client.gui.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -14,7 +15,6 @@ import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
 public class KeyboardHandler extends UserInteraction {
-
     private GameHandler handler;
     private Scene scene;
     private GameView gameView;
@@ -26,7 +26,6 @@ public class KeyboardHandler extends UserInteraction {
     private PickItem pickItem;
     private ChangeItem changeItem;
     private ArrayList<String> input = new ArrayList<String>();
-    private KeyboardSettings kbSettings = new KeyboardSettings();
     private boolean upPressed = false;
     private boolean leftPressed = false;
     private boolean downPressed = false;
@@ -37,9 +36,13 @@ public class KeyboardHandler extends UserInteraction {
     private AnimationTimer t;
     private boolean activated;
 
-    public KeyboardHandler() {
+    // Settings
+    private Settings settings;
+
+    public KeyboardHandler(Settings settings) {
         super();
         this.t = null;
+        this.settings = settings;
     }
 
     // NOT USED
@@ -68,37 +71,37 @@ public class KeyboardHandler extends UserInteraction {
                 if (!input.contains(pressed)) {
                     input.add(pressed);
                     // System.out.println(input.toString());
-                    if (kbSettings.getKey("up").equals(pressed)) {
+                    if (settings.getKey("up").equals(pressed)) {
                         upPressed = true;
                     }
-                    if (kbSettings.getKey("left").equals(pressed)) {
+                    if (settings.getKey("left").equals(pressed)) {
                         leftPressed = true;
                     }
-                    if (kbSettings.getKey("down").equals(pressed)) {
+                    if (settings.getKey("down").equals(pressed)) {
                         downPressed = true;
                     }
-                    if (kbSettings.getKey("right").equals(pressed)) {
+                    if (settings.getKey("right").equals(pressed)) {
                         rightPressed = true;
                     }
-                    if (kbSettings.getKey("reload").equals(pressed)) {
+                    if (settings.getKey("reload").equals(pressed)) {
                         reloadPressed = true;
                     }
-                    if (kbSettings.getKey("drop").equals(pressed)) {
+                    if (settings.getKey("drop").equals(pressed)) {
                         dropPressed = true;
                     }
-                    if (kbSettings.getKey("interact").equals(pressed)) {
+                    if (settings.getKey("interact").equals(pressed)) {
                         interactPressed = true;
                     }
-                    if(kbSettings.getKey("item1").equals(pressed)) {
+                    if(settings.getKey("item1").equals(pressed)) {
                     	changeItem.changeTo(1);
                     }
-                    if(kbSettings.getKey("item2").equals(pressed)) {
+                    if(settings.getKey("item2").equals(pressed)) {
                     	changeItem.changeTo(2);
                     }
-                    if(kbSettings.getKey("item3").equals(pressed)) {
+                    if(settings.getKey("item3").equals(pressed)) {
                     	changeItem.changeTo(3);
                     }
-                    if(kbSettings.getKey("esc").equals(pressed)) {
+                    if(settings.getKey("esc").equals(pressed)) {
                     	// TODO: escape menu
                     }
                 }
@@ -111,25 +114,25 @@ public class KeyboardHandler extends UserInteraction {
                 String released = event.getCode().toString();
                 input.remove(released);
                 // System.out.println(input.toString());
-                if (kbSettings.getKey("up").equals(released)) {
+                if (settings.getKey("up").equals(released)) {
                     upPressed = false;
                 }
-                if (kbSettings.getKey("left").equals(released)) {
+                if (settings.getKey("left").equals(released)) {
                     leftPressed = false;
                 }
-                if (kbSettings.getKey("down").equals(released)) {
+                if (settings.getKey("down").equals(released)) {
                     downPressed = false;
                 }
-                if (kbSettings.getKey("right").equals(released)) {
+                if (settings.getKey("right").equals(released)) {
                     rightPressed = false;
                 }
-                if (kbSettings.getKey("reload").equals(released)) {
+                if (settings.getKey("reload").equals(released)) {
                     reloadPressed = false;
                 }
-                if (kbSettings.getKey("drop").equals(released)) {
+                if (settings.getKey("drop").equals(released)) {
                     dropPressed = false;
                 }
-                if (kbSettings.getKey("interact").equals(released)) {
+                if (settings.getKey("interact").equals(released)) {
                     interactPressed = false;
                 }
             }
@@ -148,7 +151,7 @@ public class KeyboardHandler extends UserInteraction {
             }
         }
         this.pImage = new Image(EntityList.PLAYER.getPath());
-        this.movement = new Movement(handler, playerView, pImage, gameView.getTileMap(), kbSettings, gameView.getItemDrops());
+        this.movement = new Movement(handler, playerView, pImage, gameView.getTileMap(), settings, gameView.getItemDrops());
         this.reload = new Reload(handler, playerView);
         this.dropItem = new DropItem(handler, playerView);
         this.changeItem = new ChangeItem(handler, playerView);
