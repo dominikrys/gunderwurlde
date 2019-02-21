@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -22,8 +23,10 @@ public class ByteConversion {
                 out.flush();
                 buffer = bos.toByteArray();
 
-                byte[] receivedBytes = Arrays.copyOfRange(buffer, 0, buffer.length-4);
-                byte[] clientIDBytes = Arrays.copyOfRange(buffer, buffer.length-4, buffer.length);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getLocalHost(), 4444);
+
+                byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength()-4);
+                byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
 
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();

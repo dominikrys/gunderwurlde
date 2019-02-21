@@ -56,22 +56,20 @@ public class ServerReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
-                byte[] commandBytes = Arrays.copyOfRange(buffer, 0, 4);
+                byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
                 ByteBuffer checkWrap = ByteBuffer.wrap(commandBytes);
                 int command = checkWrap.getInt();
                 if(command == 99){
                     joinGame(packet);
                     continue;
                 }
-
-
+                
                 // Creates a bytearrayinputstream from the received packets data
-                byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length-4);
-                byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getData().length-4, packet.getData().length);
+                byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
+                byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength()-4);
 
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();
-                System.out.println("PLayerID is " + playerID);
                 ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;

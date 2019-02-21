@@ -51,13 +51,17 @@ public class ClientSender extends Thread {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out;
                try {
-                out = new ObjectOutputStream(bos);
-                out.writeObject(action);
-                out.writeInt(playerID);
-                out.flush();
-                buffer = bos.toByteArray();
-                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-                senderSocket.send(packet);
+                   out = new ObjectOutputStream(bos);
+                   out.writeObject(action);
+                   out.writeInt(playerID);
+                   out.flush();
+                   buffer = bos.toByteArray();
+
+                   packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                   byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
+                   ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
+                   int playerID = wrapped.getInt();
+                   senderSocket.send(packet);
             } finally {
                 try {
                     bos.close();
