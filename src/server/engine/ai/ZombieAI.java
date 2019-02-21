@@ -59,7 +59,7 @@ public class ZombieAI extends EnemyAI {
         if(outOfSpawn) {
             for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
                 double angle = getAngle(pose, closestPlayer);
-                nextPose = poseByAngle(randomizePath(angle), pose, angle, tileMap);
+                nextPose = poseByAngle(randomizePath(angle), angle);
             }
         }
 

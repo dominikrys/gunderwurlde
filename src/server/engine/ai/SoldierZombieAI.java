@@ -17,7 +17,6 @@ public class SoldierZombieAI extends EnemyAI{
     private Random rand = new Random();
     private boolean attacking = false;
     private boolean moving = false;
-    private boolean outOfSpawn = false;
     private long beginAttackTime;
     private Pose poseToGo;
 
@@ -28,7 +27,7 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     public AIAction getAction() {
-        if(outOfSpawn) {                                       //Check if in spawn and if so, move
+        if(outOfSpawn) {                                    //Check if in spawn and if so, move
 
             if (attacking) {                                //If attacking, continue to attack
                 return AIAction.ATTACK;
@@ -93,14 +92,14 @@ public class SoldierZombieAI extends EnemyAI{
 //                  System.out.println("1st move");
                     moving = true;
                     double angle = getAngle(pose, poseToGo);
-                    return poseByAngle(angle, pose, angle, tileMap);
+                    return poseByAngle(angle, angle);
                 }
             } else {
                 //if has a pose to go
 //              System.out.println("2nd move");
                 moving = true;
                 double angle = getAngle(pose, poseToGo);
-                return poseByAngle(angle, pose, angle, tileMap);
+                return poseByAngle(angle, angle);
             }
         }
 

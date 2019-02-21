@@ -2,7 +2,6 @@ package server.engine.ai;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Random;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
@@ -16,7 +15,7 @@ import static java.lang.Math.*;
 
 public abstract class EnemyAI {
 
-    protected Enemy enemy;
+    Enemy enemy;
     static long DEFAULT_DELAY = 380;
     protected Pose pose;
     private int enemSize;
@@ -68,6 +67,21 @@ public abstract class EnemyAI {
         isProcessing = processing;
     }
 
+    //Static RandomPoseGenerator
+    static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
+        boolean tileNotSolid;
+        try {
+            tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
+                    !((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) ||
+                            ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)));
+        }catch (Exception e){
+            System.out.println("enemy wants to go out of map");
+            return false;
+        }
+
+        return  tileNotSolid;
+    }
+
     public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
         this.enemy = enemy;
         this.pose = this.enemy.getPose();
@@ -77,7 +91,6 @@ public abstract class EnemyAI {
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
-    // May not need this
     public boolean isProcessing() {
         return isProcessing;
     }
@@ -96,42 +109,41 @@ public abstract class EnemyAI {
 
         return closestPlayer;
     }
-    //TODO idk if these need to be static
-    //TODO I don't really need to pass enemy do I?
-    static Pose poseByAngle(double angle, Pose enemy, double angleToFace, Tile [][] tileMap) {
+
+    Pose poseByAngle(double angleToMove, double angleToFace) {
         Pose newPose = null;
 
         //east
-        if (angle > 337.5 || angle <= 22.5) {
-            newPose = new Pose(enemy.getX() + 1, enemy.getY(), (int) angleToFace + 90);
+        if (angleToMove > 337.5 || angleToMove <= 22.5) {
+            newPose = new Pose(pose.getX() + 1, pose.getY(), (int) angleToFace + 90);
 
             //north-east
-        } else if (angle > 22.5 && angle <= 67.5) {
-            newPose = new Pose(enemy.getX() + 1, enemy.getY() + 1, (int) angleToFace + 90);
+        } else if (angleToMove > 22.5 && angleToMove <= 67.5) {
+            newPose = new Pose(pose.getX() + 1, pose.getY() + 1, (int) angleToFace + 90);
 
             //north
-        } else if (angle > 67.5 && angle <= 112.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() + 1, (int) angleToFace + 90);
+        } else if (angleToMove > 67.5 && angleToMove <= 112.5) {
+            newPose = new Pose(pose.getX(), pose.getY() + 1, (int) angleToFace + 90);
 
             //north-west
-        } else if (angle > 112.5 && angle <= 157.5) {
-            newPose = new Pose(enemy.getX() - 1, enemy.getY() + 1, (int) angleToFace + 90);
+        } else if (angleToMove > 112.5 && angleToMove <= 157.5) {
+            newPose = new Pose(pose.getX() - 1, pose.getY() + 1, (int) angleToFace + 90);
 
             //west
-        } else if (angle > 157.5 && angle <= 202.5) {
-            newPose = new Pose(enemy.getX() - 1, enemy.getY(), (int) angleToFace + 90);
+        } else if (angleToMove > 157.5 && angleToMove <= 202.5) {
+            newPose = new Pose(pose.getX() - 1, pose.getY(), (int) angleToFace + 90);
 
             //south-west
-        } else if (angle > 202.5 && angle <= 247.5) {
-            newPose = new Pose(enemy.getX() - 1, enemy.getY() - 1, (int) angleToFace + 90);
+        } else if (angleToMove > 202.5 && angleToMove <= 247.5) {
+            newPose = new Pose(pose.getX() - 1, pose.getY() - 1, (int) angleToFace + 90);
 
             //south
-        } else if (angle > 247.5 && angle <= 292.5) {
-            newPose = new Pose(enemy.getX(), enemy.getY() - 1, (int) angleToFace + 90);
+        } else if (angleToMove > 247.5 && angleToMove <= 292.5) {
+            newPose = new Pose(pose.getX(), pose.getY() - 1, (int) angleToFace + 90);
 
             //south-east
-        } else if (angle > 292.5 && angle <= 337.5) {
-            newPose = new Pose(enemy.getX() + 1, enemy.getY() - 1, (int) angleToFace + 90);
+        } else if (angleToMove > 292.5 && angleToMove <= 337.5) {
+            newPose = new Pose(pose.getX() + 1, pose.getY() - 1, (int) angleToFace + 90);
         }
 
         if (newPose != null) {
@@ -139,24 +151,10 @@ public abstract class EnemyAI {
                 return newPose;
         }
 
-        return enemy;
+        return pose;
     }
 
-    static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
-        boolean tileNotSolid;
-        try {
-            tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
-                    !((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) ||
-                            ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)));
-        }catch (Exception e){
-            System.out.println("enemy wants to go out of map");
-            return false;
-        }
-
-        return  tileNotSolid;
-    }
-
-    static double getAngle(Pose enemy, Pose player) {
+    double getAngle(Pose enemy, Pose player) {
         double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
         if (angle < 0) {
