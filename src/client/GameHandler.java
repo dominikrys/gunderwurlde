@@ -1,6 +1,5 @@
 package client;
 
-import client.data.ConnectionType;
 import client.gui.Settings;
 import client.input.ActionList;
 import javafx.application.Platform;

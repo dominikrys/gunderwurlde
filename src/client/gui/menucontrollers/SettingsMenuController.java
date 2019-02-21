@@ -229,7 +229,6 @@ public class SettingsMenuController extends VBox implements MenuController {
 
         // Reset window to show changes
         updateScreen();
-
         (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();
     }

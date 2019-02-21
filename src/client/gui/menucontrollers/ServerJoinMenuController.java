@@ -1,6 +1,6 @@
 package client.gui.menucontrollers;
 
-import client.data.ConnectionType;
+import client.ConnectionType;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

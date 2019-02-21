@@ -1,4 +1,4 @@
-package client.data;
+package client;
 
 // Connection Types for GameHandler
 public enum ConnectionType {
