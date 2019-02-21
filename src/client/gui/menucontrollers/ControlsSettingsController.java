@@ -98,6 +98,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void downButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        downButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             downButton.setText(pressed);
@@ -107,6 +111,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void dropButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        dropButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             dropButton.setText(pressed);
@@ -116,6 +124,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void escapeButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        escapeButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             escapeButton.setText(pressed);
@@ -125,6 +137,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void interactButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        interactButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             interactButton.setText(pressed);
@@ -134,6 +150,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void item1ButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        item1Button.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item1Button.setText(pressed);
@@ -143,6 +163,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void item2ButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        item2Button.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item2Button.setText(pressed);
@@ -152,6 +176,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void item3ButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        item3Button.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item3Button.setText(pressed);
@@ -161,6 +189,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void leftButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        leftButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             leftButton.setText(pressed);
@@ -170,6 +202,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void reloadButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        reloadButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             reloadButton.setText(pressed);
@@ -179,6 +215,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void rightButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        rightButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             rightButton.setText(pressed);
@@ -188,6 +228,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void upButtonPress(ActionEvent event) {
+        // Change text to tell user how to reassign button
+        upButton.setText("<Press Button>");
+
+        // Wait for input from user and set label and modify settings accordingly
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             upButton.setText(pressed);

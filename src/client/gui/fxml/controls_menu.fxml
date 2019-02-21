@@ -19,8 +19,8 @@
       </Label>
       <GridPane alignment="CENTER" vgap="15.0">
         <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="175.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="225.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -36,17 +36,61 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label styleClass="manaspaceFontWhite" text="Up" />
-            <Label styleClass="manaspaceFontWhite" text="Down" GridPane.rowIndex="1" />
-            <Label styleClass="manaspaceFontWhite" text="Left" GridPane.rowIndex="2" />
-            <Label styleClass="manaspaceFontWhite" text="Right" GridPane.rowIndex="3" />
-            <Label styleClass="manaspaceFontWhite" text="Reload" GridPane.rowIndex="4" />
-            <Label styleClass="manaspaceFontWhite" text="Drop" GridPane.rowIndex="5" />
-            <Label styleClass="manaspaceFontWhite" text="Interact" GridPane.rowIndex="6" />
-            <Label styleClass="manaspaceFontWhite" text="Item Slot 1" GridPane.rowIndex="7" />
-            <Label styleClass="manaspaceFontWhite" text="Item Slot 2" GridPane.rowIndex="8" />
-            <Label styleClass="manaspaceFontWhite" text="Item Slot 3" GridPane.rowIndex="9" />
-            <Label styleClass="manaspaceFontWhite" text="Escape" GridPane.rowIndex="10" />
+            <Label text="Up">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Down" GridPane.rowIndex="1">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Left" GridPane.rowIndex="2">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Right" GridPane.rowIndex="3">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Reload" GridPane.rowIndex="4">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Drop" GridPane.rowIndex="5">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Interact" GridPane.rowIndex="6">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Item Slot 1" GridPane.rowIndex="7">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Item Slot 2" GridPane.rowIndex="8">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Item Slot 3" GridPane.rowIndex="9">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
+            <Label text="Escape" GridPane.rowIndex="10">
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="controlsItem" />
+               </styleClass></Label>
             <Button fx:id="upButton" mnemonicParsing="false" onAction="#upButtonPress" GridPane.columnIndex="1">
                <styleClass>
                   <String fx:value="controlsItem" />
