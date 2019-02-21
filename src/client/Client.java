@@ -41,11 +41,11 @@ public class Client extends Thread {
         this.settings = settings;
         this.playerID = playerID;
         firstView = true;
-        // TODO WINDOWS DEFENDER WITH ADVANCED SECURITY
     }
 
     public void run(){
         try{
+
             listenSocket = new MulticastSocket(LISTENPORT);
             sendSocket = new MulticastSocket();
             listenAddress = InetAddress.getByName("230.0.1.1");
@@ -53,8 +53,6 @@ public class Client extends Thread {
 
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
-
-            // Start the sender and receiver threads for the client
 
             // Waits for the sender to join as that will be the first thread to close
             sender.join();

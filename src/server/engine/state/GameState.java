@@ -95,7 +95,6 @@ public class GameState {
     public void addPlayer(Player player) {
         player.setPose(new Pose(teamSpawns.get(player.getTeam())));
         this.players.put(player.getID(), player);
-        System.out.println("Player added to players list with ID: " + player.getID());
     }
 
 }

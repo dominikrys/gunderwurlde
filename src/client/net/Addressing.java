@@ -8,17 +8,17 @@ import java.util.Enumeration;
 
 public class Addressing {
 
+    // Sets the correct network interface to be communicated with
     public static void setInterfaces(MulticastSocket listenSocket) {
         Enumeration<NetworkInterface> interfaces;
-        // TODO Turn on laptop and check for ethernet address
-        // TODO ensure that ethernet address is the chosen address for both desktop and laptop
-        // attempt to set the sockets interface to all the addresses of the machine
         try {
+            //check for interfaces that arent loopbacks
             interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface iface = interfaces.nextElement();
                 if (iface.isLoopback())
                     continue;
+                // if that interface has an address that is for the ethernet port then add it to the socket
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
@@ -32,21 +32,5 @@ public class Addressing {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-    }
-
-    public static NetworkInterface getInterface() {
-        Enumeration<NetworkInterface> interfaces;
-        NetworkInterface iface = null;
-        try {
-            interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-                if (iface.isLoopback())
-                    continue;
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        return iface;
     }
 }

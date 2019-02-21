@@ -10,6 +10,8 @@ import java.util.Arrays;
 
 public class ByteConversion {
 
+
+    // TESTING CLASS FOR BYTE ARRAY CONVERSION
     public static void main(String[] args) {
 
         try {

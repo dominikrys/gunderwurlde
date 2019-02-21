@@ -35,11 +35,10 @@ public class Server extends Thread implements HasEngine {
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
-        this.engine = new ProcessGameState(this, mapName, hostName, hostTeam);
         this.hostName = hostName;
         this.numOfPlayers = numOfPlayers;
+        this.engine = new ProcessGameState(this, mapName, hostName, hostTeam);
         this.multiplayer = multiplayer;
-        // TODO: set num of player
         this.clientRequests = null;
         this.start();
     }
@@ -59,7 +58,7 @@ public class Server extends Thread implements HasEngine {
             joinedPlayers = 1;
             if(multiplayer){
                 // loop until all players have joined
-                while(numOfPlayers != joinedPlayers){
+                while(numOfPlayers > joinedPlayers){
                     System.out.println("Current number of players" + joinedPlayers);
                     Thread.sleep(5000);
                     Thread.yield();
@@ -101,8 +100,10 @@ public class Server extends Thread implements HasEngine {
     public void removePlayer(int playerID) {
     }
 
+    // Add player request from the serverReceiver sent to the engine
     public void addPlayer(String playerName, Teams playerTeam){
         engine.addPlayer(playerName, playerTeam);
+        // joinedPlayers++ to know when the engine should begin
         joinedPlayers++;
     }
 

@@ -49,35 +49,41 @@ public class ServerReceiver extends Thread {
 
     public void run() {
         try {
+            // join the multicast group
             listenSocket.joinGroup(listenAddress);
-
             while (running) {
                 // packet to receive incoming messages
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
+
+                // check for a joinGame command
                 byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
                 ByteBuffer checkWrap = ByteBuffer.wrap(commandBytes);
                 int command = checkWrap.getInt();
+                // if it is the joinGame command then call joinGame and continue
                 if(command == 99){
                     joinGame(packet);
                     continue;
                 }
-                
-                // Creates a bytearrayinputstream from the received packets data
+
+                // if not joinGame then must be action request
+                // Split the byte array into the clientID and the received requests
                 byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
                 byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength()-4);
 
+                // Convert the byteArray clientID to the int clientID
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();
+
                 ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
-                //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
                 try {
+                    // Turn the requests bytearray into a requests Integer[]
                     in = new ObjectInputStream(bis);
                     Integer[] received =  (Integer[]) in.readObject();
 
-                    //Request request = new Request();
+                    // Based on the request perform the specified action
                     switch(received[0]) {
                     	case 0 : // ATTACK
                     		//request.requestShoot();
@@ -136,9 +142,10 @@ public class ServerReceiver extends Thread {
     public void joinGame(DatagramPacket packet){
         try {
             System.out.println("join game request received");
-            // check that it isnt a player joining the game
+            // turn the dataBytes into the strings
             byte[] dataBytes = Arrays.copyOfRange(packet.getData(), 4, packet.getLength());
             String data = new String(dataBytes);
+            // split on the space to seperate the data
             String[] seperateData = data.split(" ");
             System.out.println("Part 1 is " + seperateData[0]);
             System.out.println("Part 2 is " + seperateData[1]);
@@ -155,6 +162,7 @@ public class ServerReceiver extends Thread {
                 case "YELLOW" :
                     team = Teams.YELLOW;
             }
+            // call add player from the server
             handler.addPlayer(playerName, team);
         }
         catch(Exception e){

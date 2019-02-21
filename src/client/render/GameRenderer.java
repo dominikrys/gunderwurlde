@@ -238,8 +238,12 @@ public class GameRenderer implements Runnable {
         }
 
         // Update HUD
-        updateHUD();
+        try {
+            updateHUD();
+        }
+        catch(Exception ex){
 
+        }
         // If game is paused, add the paused overlay
         if (paused) {
             pausedOverlay.setVisible(true);
