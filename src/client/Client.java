@@ -25,19 +25,18 @@ public class Client extends Thread {
     private GameView view;
     private GameRenderer renderer;
     private String playerName;
-    private int playerID;
     private ClientSender sender;
     private ClientReceiver receiver;
     private Stage stage;
     private boolean firstView;
     private GameHandler handler;
     private Settings settings;
+    int playerID;
 
 
-    public Client(Stage stage, String playerName, int playerID, GameHandler handler, Settings settings) {
+    public Client(Stage stage, String playerName, GameHandler handler, Settings settings) {
         this.stage = stage;
         this.playerName = playerName;
-        this.playerID = playerID;
         this.handler = handler;
         this.settings = settings;
         firstView = true;
@@ -51,8 +50,9 @@ public class Client extends Thread {
             listenAddress = InetAddress.getByName("230.0.1.1");
             senderAddress = InetAddress.getByName("230.0.0.1");
 
-            sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
+
             // Start the sender and receiver threads for the client
 
             // Waits for the sender to join as that will be the first thread to close
@@ -88,6 +88,11 @@ public class Client extends Thread {
     
     public ClientSender getClientSender() {
     	return this.sender;
+    }
+
+    public void setPlayerID(int id){
+        this.playerID = id;
+        sender.setPlayerID(id);
     }
 
     public void joinGame(String playerName, Teams team){

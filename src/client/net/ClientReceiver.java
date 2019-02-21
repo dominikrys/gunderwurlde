@@ -12,6 +12,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 import client.Client;
@@ -65,11 +66,22 @@ public class ClientReceiver extends Thread {
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
                 System.out.println("Receiver packet");
-                if(packet.getLength() == 4){
+                if(packet.getLength() == 8){
                     System.out.println("Updating buffer size");
-                    ByteBuffer wrapped = ByteBuffer.wrap(packet.getData());
-                    int bufferSize = wrapped.getInt();
-                    buffer = new byte[bufferSize];
+                    byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
+                    byte[] ValueBytes = Arrays.copyOfRange(packet.getData(), 4, 8);
+                    ByteBuffer wrappedCommand = ByteBuffer.wrap(commandBytes);
+                    int command = wrappedCommand.getInt();
+                    ByteBuffer wrappedValue = ByteBuffer.wrap(ValueBytes);
+                    int value = wrappedValue.getInt();
+                    if(command == 1){
+                        System.out.println("Updating buffersize");
+                        buffer = new byte[value];
+                    }
+                    else if(command == 2){
+                        System.out.println("Setting playerID");
+                        client.setPlayerID(value);
+                    }
                     continue;
                 }
                 else {

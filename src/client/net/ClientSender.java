@@ -20,13 +20,12 @@ public class ClientSender extends Thread {
     DatagramPacket packet = null;
     int port;
     byte[] buffer;
-    int clientID;
+    int playerID;
 
-    public ClientSender(InetAddress address, MulticastSocket socket, int port, int clientID) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
-        this.clientID = clientID;
         running = true;
         Addressing.setInterfaces(senderSocket);
         this.start();
@@ -53,7 +52,7 @@ public class ClientSender extends Thread {
                try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(action);
-                out.writeInt(clientID);
+                out.writeInt(playerID);
                 out.flush();
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
@@ -91,6 +90,11 @@ public class ClientSender extends Thread {
             e.printStackTrace();
         }
     }
+
+    public void setPlayerID(int playerID){
+        this.playerID = playerID;
+    }
+
 
 
 

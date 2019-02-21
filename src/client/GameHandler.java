@@ -40,7 +40,7 @@ public class GameHandler extends Thread {
                 if (!serverStarted) {
                     server = new Server(map, playerName, team, 1, false);
                     serverStarted = true;
-                    client = new Client(stage, playerName, 0, this, settings);
+                    client = new Client(stage, playerName, this, settings);
                     client.start();
                 }
                 break;
@@ -48,7 +48,7 @@ public class GameHandler extends Thread {
                 if(!serverStarted) {
                     server = new Server(MapList.MEADOW, playerName, team, 2, true);
                     serverStarted = true;
-                    client = new Client(stage, playerName, 0, this, settings);
+                    client = new Client(stage, playerName, this, settings);
                     client.start();
                 }
                 // Code for setting up server, joining it, and waiting for players
@@ -57,7 +57,7 @@ public class GameHandler extends Thread {
                 // TODO: Potential menu for choosing host address and port number?
                 if(!serverStarted) {
                     serverStarted = true;
-                    client = new Client(stage, playerName, 1, this, settings);
+                    client = new Client(stage, playerName, this, settings);
                     client.start();
                     try {
                         Thread.sleep(1000);
@@ -69,6 +69,8 @@ public class GameHandler extends Thread {
                 }
                 break;
         }
+
+
 
         //CODE FOR RUNNING THE GAME???
 
@@ -82,6 +84,8 @@ public class GameHandler extends Thread {
 
         // TODO: handle the game closing once all stuff is running as is supposed to
     }
+
+
 
     public void end() {
         // End server if running/exists

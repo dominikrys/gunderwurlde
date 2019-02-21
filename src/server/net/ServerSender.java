@@ -71,7 +71,7 @@ public class ServerSender extends Thread {
 
                 int buffersize = bos.toByteArray().length;
                 if(buffersize > maxBufferSize){
-                    buffer = ByteBuffer.allocate(4).putInt(buffersize).array();
+                    buffer = ByteBuffer.allocate(8).putInt(1).putInt(buffersize).array();
                     maxBufferSize = buffersize;
                     packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                     System.out.println("ServerSender packet data size is:" + packet.getData().length);
@@ -100,5 +100,16 @@ public class ServerSender extends Thread {
             e.printStackTrace();
         }
     }
+
+    public void send(int playerID){
+        try {
+            buffer = ByteBuffer.allocate(4).putInt(2).putInt(playerID).array();
+            packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+            senderSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

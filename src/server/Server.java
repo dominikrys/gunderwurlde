@@ -103,6 +103,7 @@ public class Server extends Thread implements HasEngine {
 
     public void addPlayer(String playerName, Teams playerTeam){
         engine.addPlayer(playerName, playerTeam);
+        sender.send(joinedPlayers++);
         joinedPlayers++;
     }
 

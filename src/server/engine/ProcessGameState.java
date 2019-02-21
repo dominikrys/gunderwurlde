@@ -99,7 +99,6 @@ public class ProcessGameState extends Thread {
 
     public void addPlayer(String playerName, Teams team) {
         gameState.addPlayer(new Player(team, playerName));
-        System.out.println("Player: " + playerName + " has joined the game");
     }
 
     @Override
