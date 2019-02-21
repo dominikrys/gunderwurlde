@@ -18,6 +18,36 @@ public class ControlsSettingsController extends VBox implements MenuController {
     private Button upButton;
 
     @FXML
+    private Button interactButton;
+
+    @FXML
+    private Button dropButton;
+
+    @FXML
+    private Button reloadButton;
+
+    @FXML
+    private Button rightButton;
+
+    @FXML
+    private Button leftButton;
+
+    @FXML
+    private Button downButton;
+
+    @FXML
+    private Button item3Button;
+
+    @FXML
+    private Button item2Button;
+
+    @FXML
+    private Button item1Button;
+
+    @FXML
+    private Button escapeButton;
+
+    @FXML
     private Button backButton;
 
     public ControlsSettingsController(Stage stage, Settings settings) {
@@ -47,6 +77,56 @@ public class ControlsSettingsController extends VBox implements MenuController {
         // Switch to settings menu and clear this object
         (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();
+    }
+
+    @FXML
+    void downButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void dropButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void escapeButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void interactButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void item1ButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void item2ButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void item3ButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void leftButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void reloadButtonPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void rightButtonPress(ActionEvent event) {
+
     }
 
     @FXML
