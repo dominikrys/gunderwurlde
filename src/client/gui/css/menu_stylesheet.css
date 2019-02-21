@@ -35,6 +35,21 @@
     -fx-min-width: 400px;
 }
 
+.serverInputBox {
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-font-size: 28px;
+    -fx-text-fill: white;
+    -fx-background-radius: 0px;
+    -fx-border-color: white;
+    -fx-background-color: black;
+}
+
+.serverColon {
+    -fx-font-family: 'Manaspace', Consolas;
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+}
+
 .nameTooLong {
     -fx-font-family: 'Manaspace', Consolas;
     -fx-text-fill: red;

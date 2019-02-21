@@ -27,7 +27,7 @@
       </Label>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 5px;">
          <children>
-            <TextField fx:id="IPField" alignment="CENTER" onAction="#IPFieldInput" promptText="Server IP" style="-fx-pref-width: 400;" styleClass="nameInputBox">
+            <TextField fx:id="IPField" alignment="CENTER" onAction="#IPFieldInput" promptText="Server IP" style="-fx-pref-width: 400;" styleClass="serverInputBox">
                <font>
                   <Font name="Consolas" size="26.0" />
                </font>
@@ -35,8 +35,8 @@
                   <Insets />
                </opaqueInsets>
             </TextField>
-            <Label styleClass="nameInputBox" text=":" />
-            <TextField fx:id="portField" onAction="#portFieldInput" promptText="Port" style="-fx-pref-width: 150;" styleClass="nameInputBox" />
+            <Label styleClass="serverColon" text=":" />
+            <TextField fx:id="portField" onAction="#portFieldInput" promptText="Port" style="-fx-pref-width: 150;" styleClass="serverInputBox" />
          </children>
       </HBox>
       <Button fx:id="joinServerButton" mnemonicParsing="false" onAction="#joinServerButtonPress" text="Join Server">
