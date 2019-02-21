@@ -45,7 +45,7 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(getClosestPlayer(), 24, 1));
+            attacks.add(new AoeAttack(closestPlayer, 24, 1));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -53,7 +53,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
+    protected Pose generateNextPose() {
         pose = checkIfInSpawn();
 
         if (outOfSpawn) {
