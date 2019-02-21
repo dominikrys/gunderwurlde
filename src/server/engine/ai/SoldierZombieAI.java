@@ -28,14 +28,13 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     public AIAction getAction() {
-        if(outOfSpawn) {                                    //Check if in spawn and if so, move
+        if(outOfSpawn) {                                    //Check if in spawn and if so, move out
 
             if (attacking) {                                //If attacking, continue to attack
                 return AIAction.ATTACK;
             } else if (moving) {                            //If moving, continue to move
                 return AIAction.MOVE;
             } else if (getDistToPlayer(getClosestPlayer()) >= RANGE_TO_SHOOT) {
-//                System.out.println("Out of range");
                 //1 in 50 change it will decide to move
                 if (rand.nextInt(50) == 0) {
                     return AIAction.MOVE;
@@ -43,9 +42,8 @@ public class SoldierZombieAI extends EnemyAI{
                     return AIAction.WAIT;
                 }
             } else if (getDistToPlayer(getClosestPlayer()) < RANGE_TO_SHOOT) {
-//                System.out.println("in Range");
                 int decision = rand.nextInt(100);
-                // 1/40 for attack, 1/40 move or wait
+                //Will decide whether to attack based on the RATE_OF_FIRE
                 if (decision <= RATE_OF_FIRE && decision >= 2) {
                     attacking = true;
                     beginAttackTime = System.currentTimeMillis();
@@ -78,17 +76,11 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        Pose pose = checkIfInSpawn();
+        pose = checkIfInSpawn();
         //if out of spawn
         if(outOfSpawn) {
             //if does not have pose to go
             if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
-//                System.out.println("1stIf");
-//                try {
-//                    TimeUnit.SECONDS.sleep(1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 moving = false;
                 //if not already generating a new pose to go
                 if(!isProcessing()) {
@@ -96,18 +88,15 @@ public class SoldierZombieAI extends EnemyAI{
                     new RandomPoseGen(this, pose).start();
                 }else{
                     //if has a pose generated
-//                  System.out.println("1st move");
                     moving = true;
                     double angle = getAngle(pose, poseToGo);
-                    return poseFromAngle(angle, angle, maxDistanceToMove);
+                    pose = poseFromAngle(angle, angle, maxDistanceToMove);
                 }
             } else {
                 //if has a pose to go
-//              System.out.println("2nd move");
-//                System.out.println("pose: " + pose + " \nposeToGo: " + poseToGo);
                 moving = true;
                 double angle = getAngle(pose, poseToGo);
-                return poseFromAngle(angle, angle, maxDistanceToMove);
+                pose = poseFromAngle(angle, angle, maxDistanceToMove);
             }
         }
 

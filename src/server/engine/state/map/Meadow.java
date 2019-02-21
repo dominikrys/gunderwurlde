@@ -64,11 +64,10 @@ public class Meadow extends GameMap {
         // Simple rounds just for testings
         // Round 1
         Enemy enemyType = new Zombie();
-        //enemyType.setMoveSpeed(Zombie.DEFAULT_MOVESPEED * 2);
+        waves.add(new Wave(0, 2000, enemyType, 2, 20));
         enemyType = new SoldierZombie(200, 5);
-        waves.add(new Wave(0, 2000, enemyType, 1, 1));
         waves.add(new Wave(28000, 1600, enemyType, 2, 30));
-//        enemyType = new RunnerZombie(3);
+        enemyType = new RunnerZombie(3);
         waves.add(new Wave(60000, 1000, enemyType, 2, 40));
         waves.add(new Wave(82000, 1000, enemyType, 2, 2));
         Round round = new Round(waves, false);
