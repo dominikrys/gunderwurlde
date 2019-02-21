@@ -14,7 +14,6 @@ public class ZombieAI extends EnemyAI {
     long attackDelay;
     long beginAttackTime;
     boolean attacking;
-    private boolean outOfSpawn = false;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
 
@@ -57,7 +56,7 @@ public class ZombieAI extends EnemyAI {
     protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
         Pose nextPose = checkIfInSpawn();
 
-        if(pose == nextPose) {
+        if(outOfSpawn) {
             for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
                 double angle = getAngle(pose, closestPlayer);
                 nextPose = poseByAngle(randomizePath(angle), pose, angle, tileMap);
@@ -71,7 +70,7 @@ public class ZombieAI extends EnemyAI {
     private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
-        int r = rand.nextInt(1000);
+        int r = rand.nextInt(500);
 
         if(stepsUntilNormPath == 0) {
             if (r == 1) {

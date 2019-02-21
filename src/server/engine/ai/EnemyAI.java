@@ -17,14 +17,14 @@ import static java.lang.Math.*;
 public abstract class EnemyAI {
 
     protected Enemy enemy;
-    protected static long DEFAULT_DELAY = 380;
+    static long DEFAULT_DELAY = 380;
     protected Pose pose;
     private int enemSize;
     private HashSet<Pose> playerPoses;
-    protected Pose closestPlayer;
+    Pose closestPlayer;
     protected Tile[][] tileMap;
     private boolean isProcessing;
-    protected ActionList actionState;
+    ActionList actionState;
     boolean outOfSpawn = false;
 
     protected EnemyAI() {
@@ -166,7 +166,7 @@ public abstract class EnemyAI {
         return angle;
     }
 
-    static Pose moveOutOfSpawn(Pose pose){
+    private Pose moveOutOfSpawn(Pose pose){
         int[] tile = Tile.locationToTile(pose);
 
         if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)

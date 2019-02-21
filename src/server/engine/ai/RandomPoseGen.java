@@ -5,11 +5,11 @@ import shared.Pose;
 
 import java.util.Random;
 
-public class GenerateSoldierPath extends Thread {
+public class RandomPoseGen extends Thread {
     private SoldierZombieAI ai;
     private Pose startingPose;
 
-    GenerateSoldierPath(SoldierZombieAI ai, Pose startingPose){
+    RandomPoseGen(SoldierZombieAI ai, Pose startingPose){
         this.ai = ai;
         this.startingPose = startingPose;
     }

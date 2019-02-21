@@ -87,7 +87,7 @@ public class SoldierZombieAI extends EnemyAI{
                 //if not already generating a new pose to go
                 if(!isProcessing()) {
                     setProcessing(true);
-                    new GenerateSoldierPath(this, pose).start();
+                    new RandomPoseGen(this, pose).start();
                 }else{
                     //if has a pose generated
 //                  System.out.println("1st move");
