@@ -1,15 +1,14 @@
 package client.gui.menucontrollers;
 
-import java.io.IOException;
-
-import client.GameHandler;
 import client.ConnectionType;
+import client.GameHandler;
 import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -17,7 +16,9 @@ import javafx.stage.Stage;
 import shared.lists.MapList;
 import shared.lists.Teams;
 
-public class MapSelectionController extends VBox implements MenuController{
+import java.io.IOException;
+
+public class MapSelectionController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
     private ConnectionType connectionType;
@@ -74,10 +75,23 @@ public class MapSelectionController extends VBox implements MenuController{
         this.getChildren().clear();
 
         //TODO: remove this with a nicer loading screen
+
+        // Add creating game label
         Label loadingLabel = new Label("Creating game...");
-        loadingLabel.setFont(new Font("Consolas", 40));
+        loadingLabel.setFont(new Font("Consolas", 50));
         loadingLabel.setTextFill(Color.WHITE);
-        this.getChildren().add(loadingLabel);
+        loadingLabel.setStyle("-fx-font-smoothing-type: lcd;");
+
+        // Indefinite progress wheel
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setStyle("-fx-progress-color: white;");
+        progressIndicator.setMinWidth(75);
+        progressIndicator.setMinHeight(75);
+
+        // Add label and wheel to scene
+        this.setSpacing(40);
+        this.getChildren().addAll(loadingLabel, progressIndicator);
+
 
         // Start gamehandler with correct connectiontype and map TODO: add team to this
         (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW)).start();
