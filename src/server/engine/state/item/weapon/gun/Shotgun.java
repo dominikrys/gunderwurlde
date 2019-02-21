@@ -31,6 +31,8 @@ public class Shotgun extends Gun {
                 reloading = true;
                 reloadStartTime = System.currentTimeMillis();
             }
+        } else {
+            reloading = false;
         }
         return amountTaken;
     }

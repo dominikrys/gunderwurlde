@@ -180,17 +180,23 @@ public class ProcessGameState extends Thread {
                 // reset player values
                 currentPlayer.setMoving(false);
                 currentPlayer.setTakenDamage(false);
-                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING || currentPlayer.getCurrentAction() == ActionList.THROW)
-                    currentPlayer.setCurrentAction(ActionList.NONE);
+                ActionList lastAction = currentPlayer.getCurrentAction();
+                
+                if (lastAction == ActionList.DEAD)
+                    continue;
 
                 if (currentPlayer.getHealth() <= 0) {
                     currentPlayer.setStatus(Status.DEAD);
+                    currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
                     }
                     continue; // TODO find proper way of dealing with player death?
                 }
+                
+                if (lastAction == ActionList.ATTACKING || lastAction == ActionList.THROW || lastAction == ActionList.ITEM_SWITCH)
+                    currentPlayer.setCurrentAction(ActionList.NONE);
 
 
                 Pose playerPose = currentPlayer.getPose();
@@ -205,8 +211,9 @@ public class ProcessGameState extends Thread {
                         int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
                         if (amountTaken > 0) {
                             currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
-                            currentPlayer.setCurrentAction(ActionList.NONE);
                         }
+                        if (!currentGun.isReloading())
+                            currentPlayer.setCurrentAction(ActionList.NONE);
                     }
                 }
 

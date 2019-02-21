@@ -33,10 +33,10 @@ import java.util.Map;
 
 public class GameRenderer implements Runnable {
     // HashMap to store all graphics
-    Map<EntityList, Image> loadedSprites;
+    private Map<EntityList, Image> loadedSprites;
     // Client
-    ClientSender sender;
-    AnchorPane mapBox; // Pane for map canvas
+    private ClientSender sender;
+    private AnchorPane mapBox; // Pane for map canvas
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
@@ -56,6 +56,9 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    // Whether the game is paused or not
+    private boolean paused;
+    private VBox pausedOverlay;
     // Input variables
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
@@ -76,6 +79,9 @@ public class GameRenderer implements Runnable {
         this.playerID = playerID;
         this.cameraCentered = cameraCentered;
         this.settings = settings;
+
+        // Set paused to false
+        paused = false;
 
         // Load fonts
         try {
@@ -112,7 +118,8 @@ public class GameRenderer implements Runnable {
         // Initialise input variables
         kbHandler = new KeyboardHandler();
         mHandler = new MouseHandler();
-        
+
+        // Initialise soundview
         soundView = new SoundView(initialGameView, settings);
     }
 
@@ -161,10 +168,34 @@ public class GameRenderer implements Runnable {
                 new CornerRadii(0, 0, 140, 0, false),
                 new Insets(0, 0, 0, 0))));
 
+        // Create pause overlay
+
+        // "PAUSE" message
+        Label pauseLabel = new Label("PAUSE");
+        pauseLabel.setFont(fontManaspace28);
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Label with instructions how to unpause
+        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
+        Label pauseInstructions = new Label("Press ESC to unpause");
+        pauseLabel.setFont(fontManaspace18);
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Set pausedoverlay VBox - make it slightly translucent
+        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
+        pausedOverlay.setStyle(
+                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
+                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
+                        "-fx-background-insets: 50;"
+        );
+        pausedOverlay.setAlignment(Pos.CENTER);
+        pausedOverlay.setSpacing(10);
+        pausedOverlay.setVisible(false);
+
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mapBox, HUDBox);
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
 
         // Set background of root
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
@@ -181,7 +212,7 @@ public class GameRenderer implements Runnable {
         mHandler.setGameView(inputGameView);
         mHandler.setScene(stage.getScene());
         mHandler.activate();
-        
+
         soundView.activate();
     }
 
@@ -208,6 +239,13 @@ public class GameRenderer implements Runnable {
 
         // Update HUD
         updateHUD();
+
+        // If game is paused, add the paused overlay
+        if (paused) {
+            pausedOverlay.setVisible(true);
+        } else {
+            pausedOverlay.setVisible(false);
+        }
     }
 
     private void centerCamera() {
@@ -587,5 +625,13 @@ public class GameRenderer implements Runnable {
 
     public MouseHandler getMouseHandler() {
         return this.mHandler;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }
