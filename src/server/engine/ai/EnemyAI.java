@@ -163,7 +163,7 @@ public abstract class EnemyAI {
 
     private Pose moveOutOfSpawn(Pose pose) {
         int[] tile = Tile.locationToTile(pose);
-        
+
         if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
             //TODO make this use maxDistanceToMove instead of just +1
