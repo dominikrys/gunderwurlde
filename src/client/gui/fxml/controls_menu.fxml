@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label style="-fx-padding: 10px;" text="Controls">
          <styleClass>
@@ -71,4 +71,4 @@
          </styleClass>
       </Button>
    </children>
-</VBox>
+</fx:root>

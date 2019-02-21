@@ -2,9 +2,11 @@ package client.gui.menucontrollers;
 
 import client.gui.Settings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -44,11 +46,16 @@ public class ControlsSettingsController extends VBox implements MenuController{
 
     @FXML
     void backButtonPress(ActionEvent event) {
-
+        // Switch to settings menu and clear this object
+        (new SettingsMenuController(stage, settings)).show();
+        this.getChildren().clear();
     }
 
     @FXML
     void upButtonPress(ActionEvent event) {
-
+        stage.getScene().setOnKeyPressed(event -> {
+            String pressed = event.getCode().toString();
+            upButton.setText(pressed);
+        });
     }
 }
