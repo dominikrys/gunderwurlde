@@ -20,6 +20,7 @@ public abstract class EnemyAI {
     Enemy enemy;
     static long DEFAULT_DELAY = 380;
     protected Pose pose;
+    double maxDistanceToMove;
     private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
@@ -35,34 +36,17 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
-    protected abstract Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer);
+    protected abstract Pose generateNextPose();
 
     public abstract AIAction getAction();
-
-
-    protected int getEnemSize() {
-        return enemSize;
-    }
-
-    protected HashSet<Pose> getPlayerPoses() {
-        return playerPoses;
-    }
 
     public ActionList getActionState() {
         return actionState;
     }
 
-    public Pose getCurrentPose() {
-        return pose;
-    }
-
-    Pose getClosestPlayer() {
-        return closestPlayer;
-    }
-
     public Pose getNewPose(double maxDistanceToMove) {
-//        System.out.println(maxDistanceToMove);
-        return generateNextPose(maxDistanceToMove, closestPlayer);
+        this.maxDistanceToMove = maxDistanceToMove;
+        return generateNextPose();
     }
 
     int getDistToPlayer(Pose player) {
@@ -177,13 +161,12 @@ public abstract class EnemyAI {
 
         if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
-            //TODO make this use maxDistanceToMove instead of just +1
-            return new Pose(pose.getX() + 1, pose.getY(), 90);
+            return new Pose(pose.getX() + maxDistanceToMove, pose.getY(), 90);
         }
 
         if ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
                 || (tile[0] == Meadow.DEFAULT_X_DIM - 2 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
-            return new Pose(pose.getX() - 1, pose.getY(), 270);
+            return new Pose(pose.getX() - maxDistanceToMove, pose.getY(), 270);
         }
 
         return pose;

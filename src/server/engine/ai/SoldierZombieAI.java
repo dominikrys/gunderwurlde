@@ -8,7 +8,6 @@ import shared.lists.ActionList;
 
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class SoldierZombieAI extends EnemyAI{
 
@@ -34,14 +33,14 @@ public class SoldierZombieAI extends EnemyAI{
                 return AIAction.ATTACK;
             } else if (moving) {                            //If moving, continue to move
                 return AIAction.MOVE;
-            } else if (getDistToPlayer(getClosestPlayer()) >= RANGE_TO_SHOOT) {
+            } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
                 //1 in 50 change it will decide to move
                 if (rand.nextInt(50) == 0) {
                     return AIAction.MOVE;
                 } else {
                     return AIAction.WAIT;
                 }
-            } else if (getDistToPlayer(getClosestPlayer()) < RANGE_TO_SHOOT) {
+            } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
                 int decision = rand.nextInt(100);
                 //Will decide whether to attack based on the RATE_OF_FIRE
                 if (decision <= RATE_OF_FIRE && decision >= 2) {
@@ -75,7 +74,7 @@ public class SoldierZombieAI extends EnemyAI{
     }
 
     @Override
-    protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
+    protected synchronized Pose generateNextPose() {
         pose = checkIfInSpawn();
         //if out of spawn
         if(outOfSpawn) {
