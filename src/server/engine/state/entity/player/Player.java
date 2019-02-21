@@ -22,7 +22,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE * 4;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE - 6;
+    public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
 
     private static int nextPlayerID = 0;
     protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();

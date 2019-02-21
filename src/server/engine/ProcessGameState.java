@@ -185,17 +185,23 @@ public class ProcessGameState extends Thread {
                 // reset player values
                 currentPlayer.setMoving(false);
                 currentPlayer.setTakenDamage(false);
-                if (currentPlayer.getCurrentAction() == ActionList.ATTACKING)
-                    currentPlayer.setCurrentAction(ActionList.NONE);
+                ActionList lastAction = currentPlayer.getCurrentAction();
+                
+                if (lastAction == ActionList.DEAD)
+                    continue;
 
                 if (currentPlayer.getHealth() <= 0) {
                     currentPlayer.setStatus(Status.DEAD);
+                    currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
                     }
                     continue; // TODO find proper way of dealing with player death?
                 }
+                
+                if (lastAction == ActionList.ATTACKING || lastAction == ActionList.THROW || lastAction == ActionList.ITEM_SWITCH)
+                    currentPlayer.setCurrentAction(ActionList.NONE);
 
 
                 Pose playerPose = currentPlayer.getPose();
@@ -211,7 +217,8 @@ public class ProcessGameState extends Thread {
                         if (amountTaken > 0) {
                             currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) - amountTaken);
                         }
-                        currentPlayer.setCurrentAction(ActionList.NONE);
+                        if (!currentGun.isReloading())
+                            currentPlayer.setCurrentAction(ActionList.NONE);
                     }
                 }
 
@@ -250,6 +257,7 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
+                    currentPlayer.setCurrentAction(ActionList.THROW);
                     ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
                     // TODO add force & add damage if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
@@ -413,12 +421,11 @@ public class ProcessGameState extends Thread {
                 // TODO process status (Make method for this?)
 
                 int enemyID = currentEnemy.getID();
-                Pose enemyPose = currentEnemy.getPose(); // don't change
                 double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
-                    ai.setInfo(enemyPose, currentEnemy.getSize(), playerPoses, tileMap);
+                    ai.setInfo(currentEnemy, playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
                 currentEnemy.setCurrentAction(ai.getActionState());
@@ -448,6 +455,7 @@ public class ProcessGameState extends Thread {
                             }
                             break;
                         case PROJECTILE:
+                            System.out.println("Pew pew");
                             break;
                         }
                     }
@@ -465,7 +473,11 @@ public class ProcessGameState extends Thread {
 
                     tilesOn = tilesOn(currentEnemy);
                     for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                        try {
+                            tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                        }catch(ArrayIndexOutOfBoundsException ex){
+                            System.out.println("WARNING: Enemy tried to move out of map.");
+                        }
                     }
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
@@ -667,43 +679,36 @@ public class ProcessGameState extends Thread {
 
     private static boolean haveCollided(Entity e1, Entity e2) {
         Location e1_loc = e1.getLocation();
-        int e1_radius = e1.getSize() / 2;
+        int e1_radius = e1.getSize();
         double e1_x = e1_loc.getX();
         double e1_y = e1_loc.getY();
 
         Location e2_loc = e2.getLocation();
-        int e2_radius = e2.getSize() / 2;
+        int e2_radius = e2.getSize();
         double e2_x = e2_loc.getX();
         double e2_y = e2_loc.getY();
+        
+        double dist_between_squared = Math.pow(Math.abs(e1_x - e2_x), 2) + Math.pow(Math.abs(e1_y - e2_y), 2);
 
-        return ((e1_x - e1_radius) <= (e2_x + e2_radius) && (e1_x + e1_radius) >= (e2_x - e2_radius) && (e1_y - e1_radius) <= (e2_y + e2_radius)
-                && (e1_y + e1_radius) >= (e2_y - e2_radius));
+        return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) {
         Location loc = e.getLocation();
-        int size = e.getSize();
-        int radius = size / 2;
+        int radius = e.getSize();
         double x = loc.getX();
-        double max_x = x + radius;
-        double min_x = x - radius;
         double y = loc.getY();
-        double max_y = y + radius;
-        double min_y = y - radius;
+
+        int[] max_loc = Tile.locationToTile(new Location(x + radius, y + radius));
+        int[] min_loc = Tile.locationToTile(new Location(x - radius, y - radius));
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
-        double check_x = min_x;
-        double check_y = min_y;
-        while (check_x < max_x) {
-            while (check_y < max_y) {
-                tilesOn.add(Tile.locationToTile(new Location(check_x, check_y)));
-                check_y += Tile.TILE_SIZE;
+        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
+            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
+                tilesOn.add(new int[] { t_x, t_y });
             }
-            tilesOn.add(Tile.locationToTile(new Location(check_x, max_y)));
-            check_x += Tile.TILE_SIZE;
         }
-        tilesOn.add(Tile.locationToTile(new Location(max_x, max_y)));
 
         return tilesOn;
     }

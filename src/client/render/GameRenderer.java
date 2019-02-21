@@ -22,6 +22,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.ItemView;
+import shared.view.SoundView;
 import shared.view.entity.*;
 
 import java.io.File;
@@ -32,10 +33,10 @@ import java.util.Map;
 
 public class GameRenderer implements Runnable {
     // HashMap to store all graphics
-    Map<EntityList, Image> loadedSprites;
+    private Map<EntityList, Image> loadedSprites;
     // Client
-    ClientSender sender;
-    AnchorPane mapBox; // Pane for map canvas
+    private ClientSender sender;
+    private AnchorPane mapBox; // Pane for map canvas
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
@@ -55,11 +56,15 @@ public class GameRenderer implements Runnable {
     private GameView gameView;
     // Stage to render to
     private Stage stage;
+    // Whether the game is paused or not
+    private boolean paused;
+    private VBox pausedOverlay;
     // Input variables
     private KeyboardHandler kbHandler;
     private MouseHandler mHandler;
     // Settings object
     private Settings settings;
+    private SoundView soundView;
 
     //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -74,6 +79,9 @@ public class GameRenderer implements Runnable {
         this.playerID = playerID;
         this.cameraCentered = cameraCentered;
         this.settings = settings;
+
+        // Set paused to false
+        paused = false;
 
         // Load fonts
         try {
@@ -108,8 +116,11 @@ public class GameRenderer implements Runnable {
         ammoBox = null;
 
         // Initialise input variables
-        kbHandler = new KeyboardHandler();
-        mHandler = new MouseHandler();
+        kbHandler = new KeyboardHandler(this.playerID, settings);
+        mHandler = new MouseHandler(this.playerID);
+
+        // Initialise soundview
+        soundView = new SoundView(initialGameView, settings);
     }
 
     // Run the thread - set up window and update game on a timer
@@ -135,6 +146,7 @@ public class GameRenderer implements Runnable {
 
     // Set up the window for tha game
     private void setUpGameView(GameView inputGameView, int playerID) {
+        // Initialise pane for map
         mapBox = new AnchorPane();
 
         if (cameraCentered) {
@@ -152,12 +164,42 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD(inputGameView, playerID);
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 140, 0, false), new Insets(0, 0, 0, 0))));
+        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
+                new CornerRadii(0, 0, 140, 0, false),
+                new Insets(0, 0, 0, 0))));
+
+        // Create pause overlay
+
+        // "PAUSE" message
+        Label pauseLabel = new Label("PAUSE");
+        pauseLabel.setFont(fontManaspace28);
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Label with instructions how to unpause
+        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
+        Label pauseInstructions = new Label("Press ESC to unpause");
+        pauseLabel.setFont(fontManaspace18);
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Set pausedoverlay VBox - make it slightly translucent
+        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
+        pausedOverlay.setStyle(
+                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
+                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
+                        "-fx-background-insets: 50;"
+        );
+        pausedOverlay.setAlignment(Pos.CENTER);
+        pausedOverlay.setSpacing(10);
+        pausedOverlay.setVisible(false);
 
         // Create root stackpane and add elements to be rendered to it
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mapBox, HUDBox);
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
+
+        // Set background of root
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
+                new Insets(0, 0, 0, 0))));
 
         // Set stage root to game renderer
         stage.getScene().setRoot(root);
@@ -170,6 +212,8 @@ public class GameRenderer implements Runnable {
         mHandler.setGameView(inputGameView);
         mHandler.setScene(stage.getScene());
         mHandler.activate();
+
+        soundView.activate();
     }
 
     // Update stored gameView
@@ -177,6 +221,7 @@ public class GameRenderer implements Runnable {
         this.gameView = gameView;
         this.kbHandler.setGameView(gameView);
         this.mHandler.setGameView(gameView);
+        this.soundView.setGameView(gameView);
     }
 
     // Render gameView - KEEP PRIVATE
@@ -194,6 +239,13 @@ public class GameRenderer implements Runnable {
 
         // Update HUD
         updateHUD();
+
+        // If game is paused, add the paused overlay
+        if (paused) {
+            pausedOverlay.setVisible(true);
+        } else {
+            pausedOverlay.setVisible(false);
+        }
     }
 
     private void centerCamera() {
@@ -203,8 +255,10 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Center player
-        AnchorPane.setTopAnchor(mapCanvas, (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
-        AnchorPane.setLeftAnchor(mapCanvas, (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
+        AnchorPane.setTopAnchor(mapCanvas,
+                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+        AnchorPane.setLeftAnchor(mapCanvas,
+                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
     }
 
     // Render entities to the map canvas
@@ -438,7 +492,7 @@ public class GameRenderer implements Runnable {
 
         // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
         Label playerTeamText;
-        switch(currentPlayer.getTeam()) {
+        switch (currentPlayer.getTeam()) {
             case RED:
                 playerTeamText = new Label("RED");
                 playerTeamText.setTextFill(Color.RED);
@@ -574,5 +628,13 @@ public class GameRenderer implements Runnable {
 
     public MouseHandler getMouseHandler() {
         return this.mHandler;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }

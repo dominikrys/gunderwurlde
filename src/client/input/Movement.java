@@ -3,6 +3,7 @@ package client.input;
 import java.util.LinkedHashSet;
 
 import client.GameHandler;
+import client.gui.Settings;
 import javafx.scene.image.Image;
 import shared.Pose;
 import shared.view.TileView;
@@ -13,15 +14,15 @@ public class Movement extends Action{
 	
 	private GameHandler handler;
 	private PlayerView playerView;
-	private KeyboardSettings kbSettings;
+	private Settings settings;
 	private Collision collision;
 	//private PickItem pickItem;
 
-	public Movement(GameHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, KeyboardSettings kbSettings,  LinkedHashSet<ItemDropView> itemDropView) {
+	public Movement(GameHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, Settings settings, LinkedHashSet<ItemDropView> itemDropView) {
 		super(handler, playerView);
 		this.handler = handler;
 		this.playerView = playerView;
-		this.kbSettings = kbSettings;
+		this.settings = settings;
 		this.collision = new Collision(tileMap, pImage);
 		//this.pickItem = new PickItem(handler, playerView, itemDropView);
 	}
@@ -32,7 +33,7 @@ public class Movement extends Action{
         // System.out.println(pose.getY());
         // System.out.println(pose.getDirection());
 		//pickItem.checkPick();
-		//String action = kbSettings.getAction(key);
+		//String action = settings.getAction(key);
 		int angle = -1;
 		switch (direction) {
 			case "up" :

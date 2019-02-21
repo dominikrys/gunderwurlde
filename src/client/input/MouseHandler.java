@@ -14,6 +14,7 @@ import shared.view.entity.PlayerView;
 
 public class MouseHandler extends UserInteraction {
 
+	private int playerID;
     private Scene scene;
     private Canvas mapCanvas;
     private GameView gameView;
@@ -31,9 +32,10 @@ public class MouseHandler extends UserInteraction {
     private boolean activated;
     private boolean hold;
 
-    public MouseHandler() {
+    public MouseHandler(int playerID) {
         super();
         this.t = null;
+        this.playerID = playerID;
         this.hold = false;
     }
 
@@ -91,6 +93,7 @@ public class MouseHandler extends UserInteraction {
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			if(e.isPrimaryButtonDown()) {
 				mouseMovement(e);
+				attack.attack();
 				this.hold = true;
 			}
 			else {
@@ -100,6 +103,7 @@ public class MouseHandler extends UserInteraction {
 		
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(e.isPrimaryButtonDown()) {
+				attack.attack();
 				this.hold = true;
 			}
 		});
@@ -134,7 +138,7 @@ public class MouseHandler extends UserInteraction {
         super.setGameView(gameView);
 
         for (PlayerView p : gameView.getPlayers()) {
-            if (p.getID() == 0) {
+            if (p.getID() == this.playerID) {
                 this.playerView = p;
                 break;
             }
@@ -150,7 +154,9 @@ public class MouseHandler extends UserInteraction {
 			@Override
 			public void handle(long now) {
 				if(hold == true) {
-					attack.attack();
+					if(playerView.getCurrentItem().isAutoFire()) {
+						attack.attack();
+					}
 				}
 			}
 		};

@@ -1,6 +1,8 @@
 package client.gui;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 // Object for storing game settings
 public class Settings implements Serializable {
@@ -17,17 +19,38 @@ public class Settings implements Serializable {
     // Current screen resolution
     private int screenWidth;
     private int screenHeight;
+    // Key mapping
+    private HashMap<String,String> keyMapping;
 
     public Settings() {
-        // Initialise settings
+        // Initialise sound settings
         soundVolume = 70;
         musicVolume = 70;
         soundMute = false;
         musicMute = false;
-        fullScreen = false;
 
+        // Initialise screen settings
+        fullScreen = false;
         screenWidth = 1280;
         screenHeight = 720;
+
+        // Initialise controls settings
+        mapDefaultKeys();
+    }
+
+    public void mapDefaultKeys() {
+        keyMapping = new HashMap<String,String>();
+        keyMapping.put("up", "W");
+        keyMapping.put("down", "S");
+        keyMapping.put("left", "A");
+        keyMapping.put("right", "D");
+        keyMapping.put("reload", "R");
+        keyMapping.put("drop", "G");
+        keyMapping.put("interact", "E");
+        keyMapping.put("item1", "DIGIT1");
+        keyMapping.put("item2", "DIGIT2");
+        keyMapping.put("item3", "DIGIT3");
+        keyMapping.put("esc", "ESCAPE");
     }
 
     public int getSoundVolume() {
@@ -104,6 +127,27 @@ public class Settings implements Serializable {
         this.screenHeight = screenHeight;
     }
 
+    // Get key mapping as a key
+    public String getKey(String action) {
+        return keyMapping.get(action);
+    }
+
+    // Get key action
+    public String getAction(String key) {
+        for(Map.Entry<String, String> entry : keyMapping.entrySet()) {
+            if(entry.getValue().equals(key)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    // Change key mapping
+    public void changeKey(String action, String newKey) {
+        keyMapping.put(action, newKey);
+    }
+
+    // Method for serialising this object and saving to the disk
     public void saveToDisk() {
         try (
                 OutputStream file = new FileOutputStream("settings.ser");
