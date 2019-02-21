@@ -1,5 +1,6 @@
 package server.engine;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -449,6 +450,7 @@ public class ProcessGameState extends Thread {
                             }
                             break;
                         case PROJECTILE:
+                            System.out.println("Pew pew");
                             break;
                         }
                     }
@@ -466,7 +468,12 @@ public class ProcessGameState extends Thread {
 
                     tilesOn = tilesOn(currentEnemy);
                     for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                        try {
+                            tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                        }catch(Exception ex){
+                            //Shouldn't happen but just it case (Not sure if I fixed the bug)
+                            System.out.println("Enemy tried to move out of map");
+                        }
                     }
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
