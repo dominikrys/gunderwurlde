@@ -28,7 +28,7 @@ public class ClientSender extends Thread {
         this.port = port;
         this.clientID = clientID;
         running = true;
-        senderSocket.setInterface(Addressing.findInetAddress());
+        Addressing.setInterfaces(senderSocket);
         this.start();
     }
 

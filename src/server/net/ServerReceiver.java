@@ -3,15 +3,11 @@ package server.net;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Enumeration;
 
 import client.net.Addressing;
 import server.Server;
@@ -31,8 +27,8 @@ public class ServerReceiver extends Thread {
     Server handler;
 
 
-    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, Server handler) {
-        this.listenSocket = listenSocket;
+    public ServerReceiver(InetAddress address, MulticastSocket socket, ServerSender sender, Server handler) {
+        this.listenSocket = socket;
         this.listenAddress = address;
         this.sender = sender;
         this.handler = handler;

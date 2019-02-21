@@ -41,7 +41,7 @@ public class Client extends Thread {
         this.handler = handler;
         this.settings = settings;
         firstView = true;
-
+        // TODO WINDOWS DEFENDER WITH ADVANCED SECURITY
     }
 
     public void run(){

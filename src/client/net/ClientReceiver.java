@@ -32,8 +32,8 @@ public class ClientReceiver extends Thread {
     private GameRenderer renderer;
     private Settings settings;
 
-    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client, Settings settings) {
-        this.listenSocket = listenSocket;
+    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket socket, Client client, Settings settings) {
+        this.listenSocket = socket;
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;

@@ -6,10 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-import java.util.Enumeration;
 
 import client.net.Addressing;
 import shared.view.GameView;
@@ -29,7 +27,7 @@ public class ServerSender extends Thread {
         this.senderSocket = socket;
         this.port = port;
         running = true;
-        senderSocket.setInterface(Addressing.findInetAddress());
+        Addressing.setInterfaces(senderSocket);
         this.start();
     }
 
