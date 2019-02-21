@@ -200,12 +200,16 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     void applyButtonPress(ActionEvent event) {
         // Apply graphics settings
-        stage.setFullScreen(settings.isFullScreen());
-        stage.setWidth(settings.getScreenWidth());
-        stage.setHeight(settings.getScreenHeight());
+        updateScreen();
 
         // Disable button since settings already applied
         applyButton.setDisable(true);
+    }
+
+    private void updateScreen() {
+        stage.setFullScreen(settings.isFullScreen());
+        stage.setWidth(settings.getScreenWidth());
+        stage.setHeight(settings.getScreenHeight());
     }
 
     @FXML
@@ -224,6 +228,8 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.saveToDisk();
 
         // Reset window to show changes
+        updateScreen();
+
         (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();
     }

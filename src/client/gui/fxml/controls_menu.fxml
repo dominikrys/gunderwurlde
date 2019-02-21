@@ -149,7 +149,7 @@
                 </styleClass></Button>
          </children>
       </GridPane>
-      <HBox alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;" VBox.vgrow="NEVER">
+      <HBox alignment="CENTER" prefWidth="200.0" style="-fx-spacing: 10px;">
          <children>
             <Button fx:id="backButton1" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
                <font>
