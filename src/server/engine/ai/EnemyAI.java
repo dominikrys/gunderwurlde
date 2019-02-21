@@ -1,8 +1,5 @@
 package server.engine.ai;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.Meadow;
@@ -11,7 +8,12 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
 
-import static java.lang.Math.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public abstract class EnemyAI {
 
@@ -38,8 +40,9 @@ public abstract class EnemyAI {
     public abstract AIAction getAction();
 
 
-
-    protected int getEnemSize() { return enemSize; }
+    protected int getEnemSize() {
+        return enemSize;
+    }
 
     protected HashSet<Pose> getPlayerPoses() {
         return playerPoses;
@@ -49,13 +52,16 @@ public abstract class EnemyAI {
         return actionState;
     }
 
-    public Pose getCurrentPose(){
+    public Pose getCurrentPose() {
         return pose;
     }
 
-    Pose getClosestPlayer(){ return closestPlayer; }
+    Pose getClosestPlayer() {
+        return closestPlayer;
+    }
 
     public Pose getNewPose(double maxDistanceToMove) {
+//        System.out.println(maxDistanceToMove);
         return generateNextPose(maxDistanceToMove, closestPlayer);
     }
 
@@ -63,23 +69,23 @@ public abstract class EnemyAI {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-    synchronized void setProcessing(boolean processing){
+    synchronized void setProcessing(boolean processing) {
         isProcessing = processing;
     }
 
     //Static RandomPoseGenerator
-    static boolean tileNotSolid(int[] tile, Tile [][] tileMap) {
+    static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
         try {
             tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
                     !((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) ||
                             ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("enemy wants to go out of map");
             return false;
         }
 
-        return  tileNotSolid;
+        return tileNotSolid;
     }
 
     public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
@@ -101,7 +107,7 @@ public abstract class EnemyAI {
 
         for (Pose playerPose : playerPoses) {
             int distToPlayer = getDistToPlayer(playerPose);
-            if(distToPlayer < distToClosest){
+            if (distToPlayer < distToClosest) {
                 distToClosest = distToPlayer;
                 closestPlayer = playerPose;
             }
@@ -110,49 +116,51 @@ public abstract class EnemyAI {
         return closestPlayer;
     }
 
-    Pose poseByAngle(double angleToMove, double angleToFace) {
+    Pose poseFromAngle(double angleToMove, double angleToFace, double distToMove) {
         Pose newPose = null;
 
         //east
         if (angleToMove > 337.5 || angleToMove <= 22.5) {
-            newPose = new Pose(pose.getX() + 1, pose.getY(), (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() + distToMove, pose.getY(), (int) angleToFace + 90);
 
             //north-east
         } else if (angleToMove > 22.5 && angleToMove <= 67.5) {
-            newPose = new Pose(pose.getX() + 1, pose.getY() + 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() + distToMove, pose.getY() + distToMove, (int) angleToFace + 90);
 
             //north
         } else if (angleToMove > 67.5 && angleToMove <= 112.5) {
-            newPose = new Pose(pose.getX(), pose.getY() + 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX(), pose.getY() + distToMove, (int) angleToFace + 90);
 
             //north-west
         } else if (angleToMove > 112.5 && angleToMove <= 157.5) {
-            newPose = new Pose(pose.getX() - 1, pose.getY() + 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() - distToMove, pose.getY() + distToMove, (int) angleToFace + 90);
 
             //west
         } else if (angleToMove > 157.5 && angleToMove <= 202.5) {
-            newPose = new Pose(pose.getX() - 1, pose.getY(), (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() - distToMove, pose.getY(), (int) angleToFace + 90);
 
             //south-west
         } else if (angleToMove > 202.5 && angleToMove <= 247.5) {
-            newPose = new Pose(pose.getX() - 1, pose.getY() - 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() - distToMove, pose.getY() - distToMove, (int) angleToFace + 90);
 
             //south
         } else if (angleToMove > 247.5 && angleToMove <= 292.5) {
-            newPose = new Pose(pose.getX(), pose.getY() - 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX(), pose.getY() - distToMove, (int) angleToFace + 90);
 
             //south-east
         } else if (angleToMove > 292.5 && angleToMove <= 337.5) {
-            newPose = new Pose(pose.getX() + 1, pose.getY() - 1, (int) angleToFace + 90);
+            newPose = new Pose(pose.getX() + distToMove, pose.getY() - distToMove, (int) angleToFace + 90);
         }
 
         if (newPose != null) {
-            if (tileNotSolid(Tile.locationToTile(newPose), tileMap))
+            if (tileNotSolid(Tile.locationToTile(newPose), tileMap)) {
                 return newPose;
+            }
         }
 
         return pose;
     }
+
 
     double getAngle(Pose enemy, Pose player) {
         double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
@@ -164,30 +172,30 @@ public abstract class EnemyAI {
         return angle;
     }
 
-    private Pose moveOutOfSpawn(Pose pose){
+    private Pose moveOutOfSpawn(Pose pose) {
         int[] tile = Tile.locationToTile(pose);
 
         if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
-        || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
+                || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
             return new Pose(pose.getX() + 1, pose.getY(), 90);
         }
 
         if ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
-        || (tile[0] == Meadow.DEFAULT_X_DIM - 2 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
+                || (tile[0] == Meadow.DEFAULT_X_DIM - 2 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
             return new Pose(pose.getX() - 1, pose.getY(), 270);
         }
 
         return pose;
     }
 
-    Pose checkIfInSpawn(){
+    Pose checkIfInSpawn() {
         Pose nextPose = pose;
-        if(!outOfSpawn) {
+        if (!outOfSpawn) {
             //This will return original pose if zombie is out of spawn
             nextPose = moveOutOfSpawn(pose);
-            if(nextPose == pose){
+            if (nextPose == pose) {
                 outOfSpawn = true;
-            }else{
+            } else {
                 return nextPose;
             }
         }

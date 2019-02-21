@@ -14,10 +14,10 @@ public class SoldierZombieAI extends EnemyAI{
     private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
     private long attackDelay = 500; //Might need to move this to enemyAI
-    private Random rand = new Random();
     private boolean attacking = false;
     private boolean moving = false;
     private long beginAttackTime;
+    private Random rand = new Random();
     private Pose poseToGo;
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire){
@@ -92,14 +92,14 @@ public class SoldierZombieAI extends EnemyAI{
 //                  System.out.println("1st move");
                     moving = true;
                     double angle = getAngle(pose, poseToGo);
-                    return poseByAngle(angle, angle);
+                    return poseFromAngle(angle, angle, maxDistanceToMove);
                 }
             } else {
                 //if has a pose to go
 //              System.out.println("2nd move");
                 moving = true;
                 double angle = getAngle(pose, poseToGo);
-                return poseByAngle(angle, angle);
+                return poseFromAngle(angle, angle, maxDistanceToMove);
             }
         }
 

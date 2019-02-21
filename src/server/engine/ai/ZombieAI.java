@@ -11,9 +11,9 @@ import java.util.Random;
 
 public class ZombieAI extends EnemyAI {
 
-    long attackDelay;
-    long beginAttackTime;
-    boolean attacking;
+    private long attackDelay;
+    private long beginAttackTime;
+    private boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
 
@@ -54,16 +54,14 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        Pose nextPose = checkIfInSpawn();
+        pose = checkIfInSpawn();
 
-        if(outOfSpawn) {
-            for (double i = 0.1; i < maxDistanceToMove; i += 0.1) {
-                double angle = getAngle(pose, closestPlayer);
-                nextPose = poseByAngle(randomizePath(angle), angle);
-            }
+        if (outOfSpawn) {
+            double angle = getAngle(pose, closestPlayer);
+            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
         }
 
-        return nextPose;
+        return pose;
     }
 
     //Maybe needs some more balancing
@@ -72,7 +70,7 @@ public class ZombieAI extends EnemyAI {
         //change of moving from direct path
         int r = rand.nextInt(500);
 
-        if(stepsUntilNormPath == 0) {
+        if (stepsUntilNormPath == 0) {
             if (r == 1) {
                 turnLeft = true;
                 //How much to move to a side
