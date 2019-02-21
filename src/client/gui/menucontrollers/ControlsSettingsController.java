@@ -87,6 +87,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
+        // Save settings to file - not really necessary since the settings menu would do this too, but it's a nice
+        // quality of life change in case the user quits the game without going back to the settings menu
+        settings.saveToDisk();
+
         // Switch to settings menu and clear this object
         (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();

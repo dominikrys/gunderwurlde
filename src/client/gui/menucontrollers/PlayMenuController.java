@@ -166,6 +166,7 @@ public class PlayMenuController extends VBox implements MenuController {
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
             characterErrorText.setVisible(false);
+            tick.setVisible(false);
         } else {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
