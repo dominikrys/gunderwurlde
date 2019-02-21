@@ -20,7 +20,7 @@ public class Settings implements Serializable {
     private int screenWidth;
     private int screenHeight;
     // Key mapping
-    private HashMap<String,String> keyMapping = new HashMap<String,String>();
+    private HashMap<String,String> keyMapping;
 
     public Settings() {
         // Initialise sound settings
@@ -35,6 +35,11 @@ public class Settings implements Serializable {
         screenHeight = 720;
 
         // Initialise controls settings
+        mapDefaultKeys();
+    }
+
+    public void mapDefaultKeys() {
+        keyMapping = new HashMap<String,String>();
         keyMapping.put("up", "W");
         keyMapping.put("down", "S");
         keyMapping.put("left", "A");

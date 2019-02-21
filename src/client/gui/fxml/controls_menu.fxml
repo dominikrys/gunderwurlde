@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -148,14 +149,27 @@
                 </styleClass></Button>
          </children>
       </GridPane>
-      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
-         <font>
-            <Font name="Consolas" size="22.0" />
-         </font>
-         <styleClass>
-            <String fx:value="manaspaceFontWhite" />
-            <String fx:value="backButton" />
-         </styleClass>
-      </Button>
+      <HBox alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="backButton1" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
+               <font>
+                  <Font name="Consolas" size="22.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="backButton" />
+               </styleClass>
+            </Button>
+            <Button fx:id="defaultsButton" mnemonicParsing="false" onAction="#defaultsButtonPress" text="Reset Defaults">
+               <font>
+                  <Font name="Consolas" size="22.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="backButton" />
+               </styleClass>
+            </Button>
+         </children>
+      </HBox>
    </children>
 </fx:root>

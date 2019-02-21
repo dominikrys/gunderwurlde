@@ -54,6 +54,9 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     private Button applyButton;
 
+    @FXML
+    private Button resetButton;
+
     public SettingsMenuController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
@@ -209,6 +212,19 @@ public class SettingsMenuController extends VBox implements MenuController {
     void controlsButtonPress(ActionEvent event) {
         // Switch to controls menu and clear this object
         (new ControlsSettingsController(stage, settings)).show();
+        this.getChildren().clear();
+    }
+
+    @FXML
+    void resetButtonPress(ActionEvent event) {
+        // Override settings object
+        settings = new Settings();
+
+        // Save settings
+        settings.saveToDisk();
+
+        // Reset window to show changes
+        (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();
     }
 }

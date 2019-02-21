@@ -50,6 +50,9 @@ public class ControlsSettingsController extends VBox implements MenuController {
     @FXML
     private Button backButton;
 
+    @FXML
+    private Button defaultsButton;
+
     public ControlsSettingsController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
@@ -237,5 +240,18 @@ public class ControlsSettingsController extends VBox implements MenuController {
             upButton.setText(pressed);
             settings.changeKey("up", pressed);
         });
+    }
+
+    @FXML
+    void defaultsButtonPress(ActionEvent event) {
+        // Set defaults in settings
+        settings.mapDefaultKeys();
+
+        // Save settings
+        settings.saveToDisk();
+
+        // Redraw scene to show changes
+        (new ControlsSettingsController(stage, settings)).show();
+        this.getChildren().clear();
     }
 }

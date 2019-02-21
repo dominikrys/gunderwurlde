@@ -46,14 +46,14 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
 }
 
 .button {
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
     -fx-text-fill: white;
 }
 
@@ -62,7 +62,7 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
 }
 
 .mapButton {
@@ -73,7 +73,7 @@
     -fx-pref-width: 230px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
 }
 
 .teamButton {
@@ -81,7 +81,7 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
 }
 
 .resolutionSelector {
@@ -93,7 +93,7 @@
     -fx-background-radius: 0px;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-border-width: 2px;
 }
 
 .volumeSlider {

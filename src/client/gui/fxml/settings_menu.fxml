@@ -128,6 +128,12 @@
                </styleClass></ComboBox>
          </children>
       </HBox>
+      <Button fx:id="applyButton" mnemonicParsing="false" onAction="#applyButtonPress" text="Apply Graphics Settings">
+         <styleClass>
+            <String fx:value="backButton" />
+            <String fx:value="manaspaceFontWhite" />
+         </styleClass>
+      </Button>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
             <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">
@@ -139,10 +145,13 @@
                   <String fx:value="backButton" />
                </styleClass>
             </Button>
-            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#applyButtonPress" text="Apply Graphics Settings">
+            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonPress" text="Reset Settings">
+               <font>
+                  <Font name="Consolas" size="22.0" />
+               </font>
                <styleClass>
-                  <String fx:value="backButton" />
                   <String fx:value="manaspaceFontWhite" />
+                  <String fx:value="backButton" />
                </styleClass>
             </Button>
          </children>
