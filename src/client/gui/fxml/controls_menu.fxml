@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label style="-fx-padding: 10px;" text="Controls">
+         <styleClass>
+            <String fx:value="menuTitle" />
+            <String fx:value="manaspaceFontWhite" />
+         </styleClass>
+      </Label>
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
+         <font>
+            <Font name="Consolas" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="backButton" />
+         </styleClass>
+      </Button>
+   </children>
+</VBox>

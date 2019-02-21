@@ -12,8 +12,8 @@ public class KeyboardSettings {
 	
 	public void init() {
 		mapping.put("up", "W");
-		mapping.put("left", "A");
 		mapping.put("down", "S");
+		mapping.put("left", "A");
 		mapping.put("right", "D");
 		mapping.put("reload", "R");
 		mapping.put("drop", "G");
