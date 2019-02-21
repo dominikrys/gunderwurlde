@@ -14,6 +14,7 @@ import shared.view.entity.PlayerView;
 
 public class MouseHandler extends UserInteraction {
 
+	private int playerID;
     private Scene scene;
     private Canvas mapCanvas;
     private GameView gameView;
@@ -31,9 +32,10 @@ public class MouseHandler extends UserInteraction {
     private boolean activated;
     private boolean hold;
 
-    public MouseHandler() {
+    public MouseHandler(int playerID) {
         super();
         this.t = null;
+        this.playerID = playerID;
         this.hold = false;
     }
 
@@ -136,7 +138,7 @@ public class MouseHandler extends UserInteraction {
         super.setGameView(gameView);
 
         for (PlayerView p : gameView.getPlayers()) {
-            if (p.getID() == 0) {
+            if (p.getID() == this.playerID) {
                 this.playerView = p;
                 break;
             }

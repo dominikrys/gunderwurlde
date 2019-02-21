@@ -116,8 +116,8 @@ public class GameRenderer implements Runnable {
         ammoBox = null;
 
         // Initialise input variables
-        kbHandler = new KeyboardHandler(settings);
-        mHandler = new MouseHandler();
+        kbHandler = new KeyboardHandler(this.playerID, settings);
+        mHandler = new MouseHandler(this.playerID);
 
         // Initialise soundview
         soundView = new SoundView(initialGameView, settings);

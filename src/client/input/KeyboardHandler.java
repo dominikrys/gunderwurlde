@@ -15,6 +15,7 @@ import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
 public class KeyboardHandler extends UserInteraction {
+	private int playerID;
     private GameHandler handler;
     private Scene scene;
     private GameView gameView;
@@ -39,9 +40,10 @@ public class KeyboardHandler extends UserInteraction {
     // Settings
     private Settings settings;
 
-    public KeyboardHandler(Settings settings) {
+    public KeyboardHandler(int playerID, Settings settings) {
         super();
         this.t = null;
+        this.playerID = playerID;
         this.settings = settings;
     }
 
@@ -145,7 +147,7 @@ public class KeyboardHandler extends UserInteraction {
 
         for (PlayerView p : gameView.getPlayers()) {
             //System.out.print(p.getID() + " " + p.getName());
-            if (p.getID() == 0) {
+            if (p.getID() == this.playerID) {
                 this.playerView = p;
                 break;
             }
