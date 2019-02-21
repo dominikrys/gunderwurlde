@@ -1,6 +1,5 @@
 package server.engine;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -470,9 +469,8 @@ public class ProcessGameState extends Thread {
                     for (int[] tileCords : tilesOn) {
                         try {
                             tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
-                        }catch(Exception ex){
-                            //Shouldn't happen but just it case (Not sure if I fixed the bug)
-                            System.out.println("Enemy tried to move out of map");
+                        }catch(ArrayIndexOutOfBoundsException ex){
+                            System.out.println("WARNING: Enemy tried to move out of map.");
                         }
                     }
                     // TODO include knock-back of player/enemies depending on some factor e.g. size.

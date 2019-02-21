@@ -2,7 +2,6 @@ package server.engine.ai;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
-import server.engine.state.map.Meadow;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.ActionList;
@@ -24,6 +23,8 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
     protected Tile[][] tileMap;
+    protected int mapXDim;
+    protected int mapYDim;
     private boolean isProcessing;
     ActionList actionState;
     boolean outOfSpawn = false;
@@ -76,10 +77,12 @@ public abstract class EnemyAI {
     //Static for RandomPoseGenerator
     static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
+        int mapXDim = tileMap.length;
+        int mapYDim = tileMap[0].length;
         try {
             tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
-                    !((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2) ||
-                            ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)));
+                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
+                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
             System.out.println("enemy wants to go out of map");
             return false;
@@ -94,6 +97,8 @@ public abstract class EnemyAI {
         this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
+        this.mapXDim = tileMap.length;
+        this.mapYDim = tileMap[0].length;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
@@ -175,14 +180,14 @@ public abstract class EnemyAI {
     private Pose moveOutOfSpawn(Pose pose) {
         int[] tile = Tile.locationToTile(pose);
 
-        if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
-                || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
+        if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
+                || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
             //TODO make this use maxDistanceToMove instead of just +1
             return new Pose(pose.getX() + 1, pose.getY(), 90);
         }
 
-        if ((tile[0] == Meadow.DEFAULT_X_DIM - 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
-                || (tile[0] == Meadow.DEFAULT_X_DIM - 2 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
+        if ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)
+                || (tile[0] == mapXDim - 2 && tile[1] == (mapYDim - 2) / 2)) {
             return new Pose(pose.getX() - 1, pose.getY(), 270);
         }
 

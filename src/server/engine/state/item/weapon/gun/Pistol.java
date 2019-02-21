@@ -8,7 +8,7 @@ import shared.lists.ItemList;
 public class Pistol extends Gun {
     public static final ItemList NAME = ItemList.PISTOL;
     public static final int DEFAULT_CLIP_SIZE = 12;
-    public static final int DEFAULT_RELOAD_TIME = 3500;
+    public static final int DEFAULT_RELOAD_TIME = 3000;
     public static final int DEFAULT_AMMO_PER_SHOT = 1;
     public static final int DEFAULT_PROJECTILES_PER_SHOT = 1;
     public static final Projectile DEFAULT_PROJECTILE = new SmallBullet();
