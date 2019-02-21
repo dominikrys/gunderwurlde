@@ -8,6 +8,7 @@ import shared.lists.ActionList;
 
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class SoldierZombieAI extends EnemyAI{
 
@@ -77,11 +78,17 @@ public class SoldierZombieAI extends EnemyAI{
 
     @Override
     protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
-        Pose nextPose = checkIfInSpawn();
+        Pose pose = checkIfInSpawn();
         //if out of spawn
         if(outOfSpawn) {
             //if does not have pose to go
-            if (poseToGo == null || poseToGo.compareLocation(pose)) {
+            if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
+//                System.out.println("1stIf");
+//                try {
+//                    TimeUnit.SECONDS.sleep(1);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
                 moving = false;
                 //if not already generating a new pose to go
                 if(!isProcessing()) {
@@ -97,13 +104,14 @@ public class SoldierZombieAI extends EnemyAI{
             } else {
                 //if has a pose to go
 //              System.out.println("2nd move");
+//                System.out.println("pose: " + pose + " \nposeToGo: " + poseToGo);
                 moving = true;
                 double angle = getAngle(pose, poseToGo);
                 return poseFromAngle(angle, angle, maxDistanceToMove);
             }
         }
 
-        return nextPose;
+        return pose;
     }
 
 

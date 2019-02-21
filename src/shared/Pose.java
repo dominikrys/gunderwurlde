@@ -68,8 +68,8 @@ public class Pose extends Location implements Serializable {
         return (this.direction == c.getDirection() && this.x == c.getX() && this.y == c.getY());
     }
 
-    public boolean compareLocation(Pose p){
-        return this.x == p.getX() && this.y == p.getY();
+    public boolean compareLocation(Pose p, double range) {
+        return (Math.abs(this.x - p.getX()) <= range) && (Math.abs(this.y - p.getY()) <= range);
     }
 
     @Override

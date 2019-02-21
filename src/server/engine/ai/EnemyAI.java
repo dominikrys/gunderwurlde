@@ -73,7 +73,7 @@ public abstract class EnemyAI {
         isProcessing = processing;
     }
 
-    //Static RandomPoseGenerator
+    //Static for RandomPoseGenerator
     static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
         try {
@@ -177,6 +177,7 @@ public abstract class EnemyAI {
 
         if ((tile[0] == 0 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (Meadow.DEFAULT_Y_DIM - 2) / 2)) {
+            //TODO make this use maxDistanceToMove instead of just +1
             return new Pose(pose.getX() + 1, pose.getY(), 90);
         }
 
