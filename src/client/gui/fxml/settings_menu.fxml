@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 20px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label style="-fx-padding: 10px;" text="Settings">
          <font>
@@ -24,6 +24,7 @@
             <String fx:value="menuTitle" />
          </styleClass>
       </Label>
+      <Label styleClass="settingsSmallLabel" text="Sound" />
       <HBox alignment="CENTER" prefWidth="600.0" style="-fx-spacing: 5px;">
          <children>
             <Label style="-fx-padding: 5px;" styleClass="manaspaceFontWhite" text="Sound Volume">
@@ -88,6 +89,8 @@
             </Button>
          </children>
       </HBox>
+      <Separator maxWidth="900.0" prefWidth="900.0" />
+      <Label styleClass="settingsSmallLabel" text="Display" />
       <HBox alignment="CENTER" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
             <Label styleClass="manaspaceFontWhite" text="Display Mode">
@@ -135,7 +138,7 @@
             <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Button>
-      <Separator prefWidth="900.0" />
+      <Separator maxWidth="900.0" prefWidth="900.0" />
       <HBox alignment="CENTER" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
             <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">

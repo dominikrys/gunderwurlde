@@ -80,7 +80,6 @@ public class MapSelectionController extends VBox implements MenuController {
         Label loadingLabel = new Label("Creating game...");
         loadingLabel.setFont(new Font("Consolas", 50));
         loadingLabel.setTextFill(Color.WHITE);
-        loadingLabel.setStyle("-fx-font-smoothing-type: lcd;");
 
         // Indefinite progress wheel
         ProgressIndicator progressIndicator = new ProgressIndicator();
