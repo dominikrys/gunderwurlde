@@ -130,7 +130,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
+            <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">
                <font>
                   <Font name="Consolas" size="22.0" />
                </font>
@@ -147,5 +147,14 @@
             </Button>
          </children>
       </HBox>
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
+         <font>
+            <Font name="Consolas" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="backButton" />
+         </styleClass>
+      </Button>
    </children>
 </fx:root>

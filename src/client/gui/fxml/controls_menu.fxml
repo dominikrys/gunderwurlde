@@ -3,6 +3,9 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -15,6 +18,49 @@
             <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Label>
+      <GridPane alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="manaspaceFontWhite" text="Up" />
+            <Label styleClass="manaspaceFontWhite" text="Down" GridPane.rowIndex="1" />
+            <Label styleClass="manaspaceFontWhite" text="Left" GridPane.rowIndex="2" />
+            <Label styleClass="manaspaceFontWhite" text="Right" GridPane.rowIndex="3" />
+            <Label styleClass="manaspaceFontWhite" text="Reload" GridPane.rowIndex="4" />
+            <Label styleClass="manaspaceFontWhite" text="Drop" GridPane.rowIndex="5" />
+            <Label styleClass="manaspaceFontWhite" text="Interact" GridPane.rowIndex="6" />
+            <Label styleClass="manaspaceFontWhite" text="Item Slot 1" GridPane.rowIndex="7" />
+            <Label styleClass="manaspaceFontWhite" text="Item Slot 2" GridPane.rowIndex="8" />
+            <Label styleClass="manaspaceFontWhite" text="Item Slot 3" GridPane.rowIndex="9" />
+            <Label styleClass="manaspaceFontWhite" text="Escape" GridPane.rowIndex="10" />
+            <Button fx:id="upButton" mnemonicParsing="false" onAction="#upButtonPress" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+         </children>
+      </GridPane>
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />

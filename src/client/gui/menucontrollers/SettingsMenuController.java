@@ -46,6 +46,9 @@ public class SettingsMenuController extends VBox implements MenuController {
     private Button backButton;
 
     @FXML
+    private Button controlsButton;
+
+    @FXML
     private ComboBox<String> resolutionComboBox;
 
     @FXML
@@ -200,5 +203,12 @@ public class SettingsMenuController extends VBox implements MenuController {
 
         // Disable button since settings already applied
         applyButton.setDisable(true);
+    }
+
+    @FXML
+    void controlsButtonPress(ActionEvent event) {
+        // Switch to controls menu and clear this object
+        (new ControlsSettingsController(stage, settings)).show();
+        this.getChildren().clear();
     }
 }
