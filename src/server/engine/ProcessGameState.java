@@ -61,6 +61,7 @@ public class ProcessGameState extends Thread {
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
+        // TODO add other players properly
         Player secondPlayer = new Player(Teams.BLUE, hostName);
         players.put(secondPlayer.getID(), secondPlayer);
 
@@ -82,8 +83,9 @@ public class ProcessGameState extends Thread {
         }
 
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
-        playerViews.add(toPlayerView(hostPlayer));
-        playerViews.add(toPlayerView(secondPlayer));
+        for (Player p: gameState.getPlayers().values()) {
+            playerViews.add(toPlayerView(p));
+        }
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
     }
