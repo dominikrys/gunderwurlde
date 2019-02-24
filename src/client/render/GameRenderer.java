@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,8 +41,6 @@ public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
-    // Whether the camera is centered on the player or not
-    private boolean cameraCentered;
     // Fonts
     private Font fontManaspace28;
     private Font fontManaspace18;
@@ -65,19 +64,16 @@ public class GameRenderer implements Runnable {
     // Settings object
     private Settings settings;
     private SoundView soundView;
-
-    //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
-        this(stage, initialGameView, playerID, true, settings);
-    }
+    // X and Y coordinates of the mouse
+    private double mouseX;
+    private double mouseY;
 
     // Constructor
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered, Settings settings) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
-        this.cameraCentered = cameraCentered;
         this.settings = settings;
 
         // Set paused to false
@@ -148,16 +144,7 @@ public class GameRenderer implements Runnable {
     private void setUpGameView(GameView inputGameView, int playerID) {
         // Initialise pane for map
         mapBox = new AnchorPane();
-
-        if (cameraCentered) {
-            mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
-        } else {
-            // Create canvas according to dimensions of the map
-            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                    inputGameView.getYDim() * Constants.TILE_SIZE);
-            AnchorPane.setRightAnchor(mapCanvas, 15.0);
-            AnchorPane.setTopAnchor(mapCanvas, 15.0);
-        }
+        mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
         mapGC = mapCanvas.getGraphicsContext2D();
         mapBox.getChildren().addAll(mapCanvas);
 
@@ -204,6 +191,11 @@ public class GameRenderer implements Runnable {
         // Set root to scene
         stage.getScene().setRoot(root);
 
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
+            mouseX = e.getSceneX();
+            mouseY = e.getSceneY();
+        });
+
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
         kbHandler.setScene(stage.getScene());
@@ -213,6 +205,7 @@ public class GameRenderer implements Runnable {
         mHandler.setScene(stage.getScene());
         mHandler.activate();
 
+        // Initialise sound
         soundView.activate();
     }
 
@@ -232,10 +225,8 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
 
-        // Center camera on player if needed
-        if (cameraCentered) {
-            centerCamera();
-        }
+        // Center camera on player
+        centerCamera();
 
         // Update HUD
         updateHUD();
@@ -256,9 +247,9 @@ public class GameRenderer implements Runnable {
 
         // Center player
         AnchorPane.setTopAnchor(mapCanvas,
-                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 - ( settings.getScreenHeight()/2-mouseY));
         AnchorPane.setLeftAnchor(mapCanvas,
-                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
+                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 - ( settings.getScreenWidth()/2-mouseX));
     }
 
     // Render entities to the map canvas
