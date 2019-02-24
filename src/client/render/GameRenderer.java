@@ -248,12 +248,12 @@ public class GameRenderer implements Runnable {
         // Adjust map horizontally
         AnchorPane.setLeftAnchor(mapCanvas,
                 (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenWidth() / 2 - mouseX) * 1 / (mouseX / (settings.getScreenWidth() / 2))/* Mouse */);
-
+                        + (settings.getScreenWidth() / 2 - mouseX) * 0.35 /* Mouse */);
+        //CLOSE BUT NOT YET LOGARITHMIC: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
         // Adjust map vertically
         AnchorPane.setTopAnchor(mapCanvas,
                 (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenHeight() / 2 - mouseY) * 1 / (mouseY / (settings.getScreenHeight() / 2))  /* Mouse */);
+                        + (settings.getScreenHeight() / 2 - mouseY) * 0.35 /* Mouse */);
 
     }
 
