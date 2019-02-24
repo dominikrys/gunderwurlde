@@ -56,15 +56,14 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Teams hostTeam) {
+    public ProcessGameState(HasEngine handler, MapList mapName, LinkedHashMap<String, Teams> playersToAdd) {
         this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
-        Player hostPlayer = new Player(hostTeam, hostName);
-        players.put(hostPlayer.getID(), hostPlayer);
-        // TODO add other players properly
-        Player secondPlayer = new Player(Teams.BLUE, hostName);
-        players.put(secondPlayer.getID(), secondPlayer);
 
+        for (Map.Entry<String, Teams> player : playersToAdd.entrySet()) {
+            Player playerToAdd = new Player(player.getValue(), player.getKey());
+            players.put(playerToAdd.getID(), playerToAdd);
+        }
 
         this.gameState = new GameState(MapReader.readMap(mapName), players);
         this.handlerClosing = false;
@@ -97,10 +96,6 @@ public class ProcessGameState extends Thread {
     public void handlerClosing() {
         this.handlerClosing = true;
         this.interrupt();
-    }
-
-    public void addPlayer(String playerName, Teams team) {
-        gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override

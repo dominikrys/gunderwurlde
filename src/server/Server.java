@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.LinkedHashMap;
 
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
@@ -32,12 +33,16 @@ public class Server extends Thread implements HasEngine {
     Boolean multiplayer;
     int numOfPlayers;
     int joinedPlayers;
+    LinkedHashMap<String, Teams> playersToAdd;
+    MapList mapName;
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
+        this.mapName = mapName;
         this.hostName = hostName;
         this.numOfPlayers = numOfPlayers;
-        this.engine = new ProcessGameState(this, mapName, hostName, hostTeam);
+        playersToAdd = new LinkedHashMap<>();
+        playersToAdd.put(hostName, hostTeam);
         this.multiplayer = multiplayer;
         this.clientRequests = null;
         this.start();
@@ -66,6 +71,7 @@ public class Server extends Thread implements HasEngine {
 
                 System.out.println("All players have joined the game");
             }
+            this.engine = new ProcessGameState(this, mapName, playersToAdd);
             engine.start();
             System.out.println("Threads up");
             
@@ -102,7 +108,7 @@ public class Server extends Thread implements HasEngine {
 
     // Add player request from the serverReceiver sent to the engine
     public void addPlayer(String playerName, Teams playerTeam){
-        engine.addPlayer(playerName, playerTeam);
+        playersToAdd.put(playerName, playerTeam);
         // joinedPlayers++ to know when the engine should begin
         joinedPlayers++;
     }

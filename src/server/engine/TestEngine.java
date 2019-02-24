@@ -1,5 +1,6 @@
 package server.engine;
 
+import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +49,9 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob", Teams.RED);
+        LinkedHashMap<String, Teams> testPlayers = new LinkedHashMap<>();
+        testPlayers.put("Bob", Teams.RED);
+        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, testPlayers);
         stage.setResizable(true);
         stage.setScene(new Scene(new VBox()));
         engine.start();

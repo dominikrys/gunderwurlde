@@ -92,6 +92,7 @@ public class GameState {
         this.currentMap.setTileMap(tileMap);
     }
 
+    // TODO remove if drop in isn't used.
     public void addPlayer(Player player) {
         player.setPose(new Pose(teamSpawns.get(player.getTeam())));
         this.players.put(player.getID(), player);
