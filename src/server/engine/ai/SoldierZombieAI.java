@@ -1,19 +1,21 @@
 package server.engine.ai;
 
-import server.engine.state.entity.attack.Attack;
-import server.engine.state.entity.attack.AttackType;
-import server.engine.state.entity.attack.ProjectileAttack;
-import shared.Pose;
-import shared.lists.ActionList;
-
 import java.util.LinkedList;
 import java.util.Random;
+
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.ProjectileAttack;
+import server.engine.state.entity.projectile.Projectile;
+import server.engine.state.entity.projectile.SmallBullet;
+import shared.Pose;
+import shared.lists.ActionList;
+import shared.lists.Teams;
 
 public class SoldierZombieAI extends EnemyAI{
 
     private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
-    private long attackDelay = 500; //Might need to move this to enemyAI
+    private long attackDelay = 600; // Might need to move this to enemyAI
     private boolean attacking = false;
     private boolean moving = false;
     private long beginAttackTime;
@@ -65,8 +67,12 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            //TODO change this projAttack object
-            attacks.add(new ProjectileAttack(closestPlayer,4, AttackType.PROJECTILE));
+            //TODO change this projAttack object?
+            LinkedList<Projectile> projectiles = new LinkedList<>();
+            SmallBullet bulletUsed = new SmallBullet();
+            bulletUsed.setSpeed(SmallBullet.DEFAULT_SPEED / 4);
+            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY));
+            attacks.add(new ProjectileAttack(projectiles));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
