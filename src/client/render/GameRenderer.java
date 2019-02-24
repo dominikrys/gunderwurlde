@@ -245,11 +245,16 @@ public class GameRenderer implements Runnable {
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
-        // Center player
-        AnchorPane.setTopAnchor(mapCanvas,
-                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 - ( settings.getScreenHeight()/2-mouseY));
+        // Adjust map horizontally
         AnchorPane.setLeftAnchor(mapCanvas,
-                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 - ( settings.getScreenWidth()/2-mouseX));
+                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+                        + (settings.getScreenWidth() / 2 - mouseX) * 1 / (mouseX / (settings.getScreenWidth() / 2))/* Mouse */);
+
+        // Adjust map vertically
+        AnchorPane.setTopAnchor(mapCanvas,
+                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+                        + (settings.getScreenHeight() / 2 - mouseY) * 1 / (mouseY / (settings.getScreenHeight() / 2))  /* Mouse */);
+
     }
 
     // Render entities to the map canvas
