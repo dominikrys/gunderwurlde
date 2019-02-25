@@ -32,6 +32,7 @@ public class Client extends Thread {
     private GameHandler handler;
     private Settings settings;
     int playerID;
+    boolean threadsup;
 
 
     public Client(Stage stage, String playerName, GameHandler handler, Settings settings, int playerID) {
@@ -41,6 +42,7 @@ public class Client extends Thread {
         this.settings = settings;
         this.playerID = playerID;
         firstView = true;
+        threadsup = false;
     }
 
     public void run(){
@@ -53,6 +55,7 @@ public class Client extends Thread {
 
             sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
+            threadsup = true;
 
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
@@ -97,4 +100,7 @@ public class Client extends Thread {
         receiver.stopRunning();
     }
 
+    public boolean isThreadsup() {
+        return threadsup;
+    }
 }

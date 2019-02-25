@@ -74,8 +74,7 @@ public class Server extends Thread implements HasEngine {
             this.engine = new ProcessGameState(this, mapName, playersToAdd);
             engine.start();
             System.out.println("Threads up");
-            
-            // TODO: num of player setting
+
             this.clientRequests = new ClientRequests(numOfPlayers);
             
             // Server will join with receiver when termination is requested
@@ -109,7 +108,6 @@ public class Server extends Thread implements HasEngine {
     // Add player request from the serverReceiver sent to the engine
     public void addPlayer(String playerName, Teams playerTeam){
         playersToAdd.put(playerName, playerTeam);
-        // joinedPlayers++ to know when the engine should begin
         joinedPlayers++;
     }
 
@@ -133,11 +131,4 @@ public class Server extends Thread implements HasEngine {
         sender.stopRunning();
         receiver.stopRunning();
     }
-	
-	/*
-	public void setClientRequests(ClientRequests clientRequests) {
-		this.clientRequests = clientRequests;
-	}
-	*/
-
 }

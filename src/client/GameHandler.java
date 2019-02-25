@@ -59,10 +59,8 @@ public class GameHandler extends Thread {
                     serverStarted = true;
                     client = new Client(stage, playerName, this, settings, 1);
                     client.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    while(client.isThreadsup()){
+                        Thread.yield();
                     }
                     client.joinGame(playerName, team);
                     // Code for joining some server
