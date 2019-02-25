@@ -5,6 +5,7 @@
 
 .root {
     -fx-background-color: black;
+    -fx-cursor: crosshair
 }
 
 .menuTitle {

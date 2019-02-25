@@ -111,6 +111,10 @@ public class GameRenderer implements Runnable {
         heldItems = null;
         ammoBox = null;
 
+        // Initialise mouse positions to not bug out camera
+        mouseX = settings.getScreenWidth() / 2;
+        mouseY = settings.getScreenHeight() / 2;
+
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
         mHandler = new MouseHandler(this.playerID);
