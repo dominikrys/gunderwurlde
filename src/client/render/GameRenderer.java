@@ -204,13 +204,13 @@ public class GameRenderer implements Runnable {
         cursorImage = new ImageView(loadedSprites.get(EntityList.CROSSHAIR));
         cursorPane.getChildren().add(cursorImage);
 
-        // Event handler for mouse movements
+        // Event handlers for mouse movements
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-            mouseX = e.getSceneX();
-            mouseY = e.getSceneY();
+            updateMouse(e);
+        });
 
-            // Render cursor image to location of cursor
-            renderCursor();
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+            updateMouse(e);
         });
 
         // Set root to scene
@@ -227,6 +227,14 @@ public class GameRenderer implements Runnable {
 
         // Initialise sound
         soundView.activate();
+    }
+
+    private void updateMouse(MouseEvent e) {
+        mouseX = e.getSceneX();
+        mouseY = e.getSceneY();
+
+        // Render cursor image to location of cursor
+        renderCursor();
     }
 
     // Render cursor
