@@ -50,8 +50,9 @@ public class GameRenderer implements Runnable {
     private FlowPane heldItems;
     private FlowPane heartBox;
     private VBox ammoBox;
-    // Pane for cursor
+    // Pane and imageview for cursor
     private AnchorPane cursorPane;
+    private ImageView cursorImage;
     // Current player info
     private int playerID;
     // GameView object which is to be updated
@@ -194,13 +195,14 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay, new ImageView((loadedSprites.get(EntityList.CROSSHAIR))));
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay, cursorPane);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
 
         // Set crosshair to cursorpane
-        cursorPane.getChildren().add(new ImageView(loadedSprites.get(EntityList.CROSSHAIR)));
+        cursorImage = new ImageView(loadedSprites.get(EntityList.CROSSHAIR));
+        cursorPane.getChildren().add(cursorImage);
 
         // Event handler for mouse movements
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
@@ -227,9 +229,10 @@ public class GameRenderer implements Runnable {
         soundView.activate();
     }
 
+    // Render cursor
     private void renderCursor() {
-        AnchorPane.setLeftAnchor(cursorPane, mouseY);
-        AnchorPane.setTopAnchor(cursorPane, mouseX);
+        AnchorPane.setLeftAnchor(cursorImage, mouseX);
+        AnchorPane.setTopAnchor(cursorImage, mouseY);
     }
 
     // Update stored gameView
