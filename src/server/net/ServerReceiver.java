@@ -151,16 +151,20 @@ public class ServerReceiver extends Thread {
             System.out.println("Part 2 is " + seperateData[1]);
             String playerName = seperateData[0];
             Teams team = null;
-            switch(seperateData[1]){
-                // RED, BLUE, GREEN, YELLOW, ENEMY, NONE
-                case "RED" :
-                    team = Teams.RED;
-                case "BLUE" :
-                    team = Teams.BLUE;
-                case "GREEN" :
-                    team = Teams.GREEN;
-                case "YELLOW" :
-                    team = Teams.YELLOW;
+            if(seperateData[1].equals("RED")){
+                team = Teams.RED;
+            }
+            else if(seperateData[1].equals("BLUE")){
+                team = Teams.BLUE;
+            }
+            else if(seperateData[1].equals("GREEN")){
+                team = Teams.BLUE;
+            }
+            else if(seperateData[1].equals("YELLOW")){
+                team = Teams.BLUE;
+            }
+            else{
+                team = Teams.NONE;
             }
             // call add player from the server
             handler.addPlayer(playerName, team);

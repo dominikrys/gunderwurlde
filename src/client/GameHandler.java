@@ -59,7 +59,7 @@ public class GameHandler extends Thread {
                     serverStarted = true;
                     client = new Client(stage, playerName, this, settings, 1);
                     client.start();
-                    while(client.isThreadsup()){
+                    while(!client.isThreadsup()){
                         Thread.yield();
                     }
                     client.joinGame(playerName, team);
