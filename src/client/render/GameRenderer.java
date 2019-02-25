@@ -231,8 +231,8 @@ public class GameRenderer implements Runnable {
 
     // Render cursor
     private void renderCursor() {
-        AnchorPane.setLeftAnchor(cursorImage, mouseX);
-        AnchorPane.setTopAnchor(cursorImage, mouseY);
+        AnchorPane.setLeftAnchor(cursorImage, mouseX - Constants.TILE_SIZE / 2);
+        AnchorPane.setTopAnchor(cursorImage, mouseY - Constants.TILE_SIZE / 2);
     }
 
     // Update stored gameView
