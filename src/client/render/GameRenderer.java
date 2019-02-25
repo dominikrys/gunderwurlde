@@ -159,7 +159,7 @@ public class GameRenderer implements Runnable {
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        VBox HUDBox = createHUD(inputGameView, playerID);
+        VBox HUDBox = createHUD();
         HUDBox.setAlignment(Pos.TOP_LEFT);
         HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
                 new CornerRadii(0, 0, 140, 0, false),
@@ -205,13 +205,9 @@ public class GameRenderer implements Runnable {
         cursorPane.getChildren().add(cursorImage);
 
         // Event handlers for mouse movements
-        stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-            updateMouse(e);
-        });
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, this::updateMouse);
 
-        stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-            updateMouse(e);
-        });
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::updateMouse);
 
         // Set root to scene
         stage.getScene().setRoot(root);
@@ -492,7 +488,7 @@ public class GameRenderer implements Runnable {
     }
 
     // Create HUD and initialise all elements
-    private VBox createHUD(GameView inputGameView, int playerID) {
+    private VBox createHUD() {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
