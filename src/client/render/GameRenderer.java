@@ -7,6 +7,7 @@ import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -49,6 +50,8 @@ public class GameRenderer implements Runnable {
     private FlowPane heldItems;
     private FlowPane heartBox;
     private VBox ammoBox;
+    // Pane for cursor
+    private AnchorPane cursorPane;
     // Current player info
     private int playerID;
     // GameView object which is to be updated
@@ -91,7 +94,6 @@ public class GameRenderer implements Runnable {
 
         // Iterate over sprites array and load all sprites used in the game
         loadedSprites = new HashMap<>();
-
         for (EntityList entity : EntityList.values()) {
             // Load image
             Image tempImage = new Image(entity.getPath());
@@ -110,6 +112,9 @@ public class GameRenderer implements Runnable {
         heartBox = null;
         heldItems = null;
         ammoBox = null;
+
+        // Initialise cursor pane
+        cursorPane = new AnchorPane();
 
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - Constants.TILE_SIZE / 2;
@@ -160,7 +165,6 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Create pause overlay
-
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
         pauseLabel.setFont(fontManaspace28);
@@ -190,15 +194,25 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay, new ImageView((loadedSprites.get(EntityList.CROSSHAIR))));
 
-        // Set root to scene
-        stage.getScene().setRoot(root);
+        // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
+        root.setCursor(Cursor.NONE);
 
+        // Set crosshair to cursorpane
+        cursorPane.getChildren().add(new ImageView(loadedSprites.get(EntityList.CROSSHAIR)));
+
+        // Event handler for mouse movements
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
             mouseX = e.getSceneX();
             mouseY = e.getSceneY();
+
+            // Render cursor image to location of cursor
+            renderCursor();
         });
+
+        // Set root to scene
+        stage.getScene().setRoot(root);
 
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
@@ -211,6 +225,11 @@ public class GameRenderer implements Runnable {
 
         // Initialise sound
         soundView.activate();
+    }
+
+    private void renderCursor() {
+        AnchorPane.setLeftAnchor(cursorPane, mouseY);
+        AnchorPane.setTopAnchor(cursorPane, mouseX);
     }
 
     // Update stored gameView

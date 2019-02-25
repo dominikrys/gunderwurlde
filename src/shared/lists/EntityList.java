@@ -28,7 +28,8 @@ public enum EntityList {
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
-    HEART_LOST("file:assets/img/other/heart_lost.png");
+    HEART_LOST("file:assets/img/other/heart_lost.png"),
+    CROSSHAIR("file:assets/img/gui/crosshair.png");
 
     private String spritePath;
 

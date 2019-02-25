@@ -110,6 +110,10 @@
     -fx-font-size: 20px
 }
 
+.resolutionSelector:hover {
+    -fx-cursor: hand;
+}
+
 .backButton {
     -fx-font-size: 22px;
     -fx-background-radius: 0px;
@@ -127,6 +131,10 @@
     -fx-control-inner-background: white;
 }
 
+.volumeSlider:hover {
+    -fx-cursor: hand;
+}
+
 .controlsItem {
     -fx-font-size: 18px;
 }
@@ -135,6 +143,7 @@
     -fx-text-fill: black;
     -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
+    -fx-cursor: hand;
     /*-fx-effect: dropshadow(gaussian, white, 5, 0.2, 0, 0);*/
 }
 
@@ -142,4 +151,5 @@
     -fx-text-fill: black;
     -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
+    -fx-cursor: hand;
 }
