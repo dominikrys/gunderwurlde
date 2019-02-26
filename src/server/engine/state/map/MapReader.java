@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -69,7 +70,7 @@ public class MapReader {
             line = file.removeFirst();
         }
 
-        LinkedHashSet<Zone> zones = new LinkedHashSet<>();
+        LinkedHashMap<Integer, Zone> zones = new LinkedHashMap<>();
         line = file.removeFirst();
         while (!line.isEmpty()) {
             LinkedHashSet<Location> entitySpawns = new LinkedHashSet<>();
@@ -98,8 +99,11 @@ public class MapReader {
                             Integer.valueOf(waveParams.removeFirst()), Integer.valueOf(waveParams.removeFirst())));
                     line = file.removeFirst();
                 }
+                rounds.add(new Round(waves, false));
                 line = file.removeFirst();
             }
+            Zone zoneToAdd = new Zone(entitySpawns, rounds, triggers);
+            zones.put(zoneToAdd.getId(), zoneToAdd);
             line = file.removeFirst();
         }
         

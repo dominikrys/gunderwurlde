@@ -40,9 +40,11 @@ public class Tile {
     }
 
     public LinkedHashSet<Integer> triggered() {
-        LinkedHashSet<Integer> triggers = zoneTriggers;
-        zoneTriggers = new LinkedHashSet<>();
-        return triggers;
+        return zoneTriggers;
+    }
+
+    public boolean removeTrigger(int zoneID) {
+        return zoneTriggers.remove(zoneID);
     }
 
     public void clearOnTile() {

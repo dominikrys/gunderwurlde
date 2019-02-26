@@ -1,7 +1,7 @@
 package server.engine.state.map;
 
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 
 import server.engine.state.map.tile.Tile;
 import shared.Location;
@@ -14,22 +14,29 @@ public class GameMap {
     protected Tile[][] tileMap;
     protected HashMap<Teams, Location> teamSpawns;
     protected MapList mapName;
-    protected LinkedHashSet<Zone> zones;
+    protected LinkedHashMap<Integer, Zone> zones;
 
-    GameMap(int xDim, int yDim, Tile[][] tileMap, HashMap<Teams, Location> teamSpawns, LinkedHashSet<Zone> zones, MapList mapName) {
+    GameMap(int xDim, int yDim, Tile[][] tileMap, HashMap<Teams, Location> teamSpawns, LinkedHashMap<Integer, Zone> zones, MapList mapName) {
         this.DEFAULT_X_DIM = xDim;
         this.DEFAULT_Y_DIM = yDim;
         this.tileMap = tileMap;
         this.teamSpawns = teamSpawns;
         this.zones = zones;
         this.mapName = mapName;
+
+        for (Zone z : zones.values()) {
+            int zoneID = z.getId();
+            for (int[] trigger : z.getTriggers()) {
+                this.tileMap[trigger[0]][trigger[1]].addTrigger(zoneID);
+            }
+        }
     }
     
     public MapList getMapName( ) {
         return mapName;
     }
 
-    public LinkedHashSet<Zone> getZones() {
+    public LinkedHashMap<Integer, Zone> getZones() {
         return zones;
     }
 

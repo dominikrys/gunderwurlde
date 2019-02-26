@@ -32,6 +32,10 @@ public class Zone {
         this.id = nextZoneID++;
     }
 
+    public void activate() {
+        currentRound.start();
+    }
+
     public LinkedHashSet<Entity> getEntitysToSpawn() {
         LinkedHashSet<Entity> entitysToSpawn = new LinkedHashSet<>();
         LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
@@ -57,7 +61,7 @@ public class Zone {
                             entityToSpawn.setPose(new Pose(entitySpawnIterator.next()));
                             // TODO spawning status
                             entitysToSpawn.add(entityToSpawn);
-                            entityCount += 1;
+                            entityCount++;
                         }
                     }
                     newWaves.add(currentWave);
@@ -66,6 +70,7 @@ public class Zone {
         } else if (entityCount == 0) {
             if (roundIterator.hasNext()) {
                 currentRound = roundIterator.next();
+                currentRound.start();
             } else {
                 // TODO no more rounds left deactivate zone
             }
@@ -75,7 +80,7 @@ public class Zone {
     }
 
     public boolean entityRemoved() { // TODO return true to open doors
-        entityCount -= 1;
+        entityCount--;
         return false;
     }
 

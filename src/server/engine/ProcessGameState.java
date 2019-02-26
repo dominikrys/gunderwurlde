@@ -24,6 +24,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
+import server.engine.state.map.Zone;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
@@ -108,6 +109,9 @@ public class ProcessGameState extends Thread {
 
         while (!handlerClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
+
+            LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
+            LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
 
             // performance checks
             numOfProcesses++;
@@ -356,6 +360,19 @@ public class ProcessGameState extends Thread {
                         tilesOn = tilesOn(currentPlayer);
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
+                            if (tileMap[tileCords[0]][tileCords[1]].hasTriggers()) {
+                                LinkedHashSet<Integer> zonesTriggered = tileMap[tileCords[0]][tileCords[1]].triggered();
+                                for (int zoneId : zonesTriggered) {
+                                    Zone zoneActivated = inactiveZones.remove(zoneId);
+                                    zoneActivated.activate();
+                                    activeZones.put(zoneId, zoneActivated);
+
+                                    LinkedHashSet<int[]> triggersToRemove = zoneActivated.getTriggers();
+                                    for (int[] trigger : triggersToRemove) {
+                                        tileMap[trigger[0]][trigger[1]].removeTrigger(zoneId);
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -598,7 +615,15 @@ public class ProcessGameState extends Thread {
 
             // TODO process tiles?
 
-            // TODO get enemies to spawn for each active zone!!!
+            for (Zone z : activeZones.values()) {
+                for (Entity e : z.getEntitysToSpawn()) {
+                    if (e instanceof Enemy) {
+                        Enemy enemyToSpawn = (Enemy) e;
+                        enemies.put(enemyToSpawn.getID(), enemyToSpawn);
+                    }
+                }
+            }
+
 
             gameState.setPlayers(players);
             gameState.setProjectiles(newProjectiles);
