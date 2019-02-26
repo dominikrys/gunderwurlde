@@ -107,11 +107,12 @@ public class ProcessGameState extends Thread {
         long numOfProcesses = -1;
         long longestTimeProcessing = 0;
 
+        // Zones
+        LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
+        LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
+
         while (!handlerClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
-
-            LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
-            LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
 
             // performance checks
             numOfProcesses++;
@@ -673,7 +674,7 @@ public class ProcessGameState extends Thread {
         return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
-    private static LinkedHashSet<int[]> tilesOn(Entity e) {
+    private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map
         Location loc = e.getLocation();
         int radius = e.getSize();
         double x = loc.getX();
