@@ -59,7 +59,7 @@ ZOMBIE
 
 #Rounds wave per line
 #Round1
-ZOMBIE
+SOLDIER 200 5
 0 2000 1 20
 
 

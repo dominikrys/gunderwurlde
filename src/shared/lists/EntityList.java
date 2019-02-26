@@ -15,6 +15,8 @@ public enum EntityList {
 
     // Enemy
     ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
+    RUNNER("file:assets/img/entity/enemy/zombie.png"),
+    SOLDIER("file:assets/img/entity/enemy/zombie.png"),
 
     // Projectile
     BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png"),

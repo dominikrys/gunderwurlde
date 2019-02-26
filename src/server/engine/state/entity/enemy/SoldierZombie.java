@@ -1,6 +1,7 @@
 package server.engine.state.entity.enemy;
 
 import server.engine.ai.SoldierZombieAI;
+import shared.lists.EntityList;
 
 public class SoldierZombie extends Zombie {
 
@@ -10,7 +11,8 @@ public class SoldierZombie extends Zombie {
     private final int RATE_OF_FIRE;
 
     public SoldierZombie(int range_to_shoot, int rate_of_fire){
-        super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SoldierZombieAI(range_to_shoot, rate_of_fire));
+        super(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SoldierZombieAI(range_to_shoot, rate_of_fire),
+                EntityList.SOLDIER);
 
         this.RANGE_TO_SHOOT = range_to_shoot;
         this.RATE_OF_FIRE = rate_of_fire;

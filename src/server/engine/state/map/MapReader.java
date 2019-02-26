@@ -117,6 +117,10 @@ public class MapReader {
         switch (entity) {
         case ZOMBIE:
             return new Zombie();
+        case RUNNER:
+            return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
+        case SOLDIER:
+            return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
