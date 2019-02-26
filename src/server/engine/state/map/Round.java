@@ -10,7 +10,7 @@ public class Round {
     Round(TreeSet<Wave> waves, boolean isBoss) {
         this.waves = waves;
         this.isBoss = isBoss;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = System.currentTimeMillis(); // TODO change this
     }
 
     public boolean hasWavesLeft() {

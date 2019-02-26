@@ -10,11 +10,11 @@ public class Zone {
 
     protected LinkedHashSet<Location> enemySpawns;
     protected LinkedList<Round> rounds;
-    protected LinkedList<int[]> triggers;
+    protected LinkedHashSet<int[]> triggers;
     // TODO doors & enemies to kill
     protected int id;
 
-    public Zone(LinkedHashSet<Location> enemySpawns, LinkedList<Round> rounds, LinkedList<int[]> triggers) {
+    public Zone(LinkedHashSet<Location> enemySpawns, LinkedList<Round> rounds, LinkedHashSet<int[]> triggers) {
         this.enemySpawns = enemySpawns;
         this.rounds = rounds;
         this.triggers = triggers;
@@ -29,7 +29,7 @@ public class Zone {
         return rounds.removeFirst();
     }
 
-    public LinkedList<int[]> getTriggers() {
+    public LinkedHashSet<int[]> getTriggers() {
         return triggers;
     }
 
