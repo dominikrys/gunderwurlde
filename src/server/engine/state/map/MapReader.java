@@ -72,9 +72,9 @@ public class MapReader {
         LinkedHashSet<Zone> zones = new LinkedHashSet<>();
         line = file.removeFirst();
         while (!line.isEmpty()) {
-            LinkedHashSet<Location> enemySpawns = new LinkedHashSet<>();
+            LinkedHashSet<Location> entitySpawns = new LinkedHashSet<>();
             while (!line.isEmpty()) {
-                enemySpawns.add(compToLocation(getComponents(line)));
+                entitySpawns.add(compToLocation(getComponents(line)));
                 line = file.removeFirst();
             }
             

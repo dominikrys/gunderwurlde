@@ -108,7 +108,7 @@ public class ProcessGameState extends Thread {
         Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator();
         Round currentRound = roundIterator.next();
         LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
-        Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
+        Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEntitySpawns().iterator();
 
         // performance checking variables
         long totalTimeProcessing = 0;
@@ -625,7 +625,7 @@ public class ProcessGameState extends Thread {
 
                             for (int i = 0; i < amountToSpawn; i++) {
                                 if (!enemySpawnIterator.hasNext())
-                                    enemySpawnIterator = currentMap.getEnemySpawns().iterator();
+                                    enemySpawnIterator = currentMap.getEntitySpawns().iterator();
                                 Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
                                 enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
                                 // TODO spawning status & add to gameview
