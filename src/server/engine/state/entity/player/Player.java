@@ -259,4 +259,9 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.maxHealth = maxHealth;
     }
 
+    @Override
+    public Entity makeCopy() {
+        return new Player(team, name);
+    }
+
 }

@@ -1,5 +1,6 @@
 package server.engine.state.entity.projectile;
 
+import server.engine.state.entity.Entity;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.EntityList;
@@ -26,6 +27,11 @@ public class SmallBullet extends Projectile {
     @Override
     public Projectile createFor(Pose p, Teams team) {
         return new SmallBullet(this.speed, this.damage, this.size, this.max_range, p, team);
+    }
+
+    @Override
+    public Entity makeCopy() {
+        return new SmallBullet(speed, damage, size, max_range, pose, team);
     }
 
 }
