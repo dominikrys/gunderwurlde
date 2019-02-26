@@ -1,6 +1,7 @@
 package server.engine.state.map.tile;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import shared.Constants;
 import shared.Location;
@@ -19,6 +20,7 @@ public class Tile {
     protected HashSet<Integer> itemDropsOnTile;
     protected HashSet<Integer> enemiesOnTile;
     protected HashSet<Integer> playersOnTile;
+    protected LinkedHashSet<Integer> zoneTriggers;
 
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
@@ -26,8 +28,23 @@ public class Tile {
         this.itemDropsOnTile = new HashSet<>();
         this.enemiesOnTile = new HashSet<>();
         this.playersOnTile = new HashSet<>();
+        this.zoneTriggers = new LinkedHashSet<>();
     }
     
+    public void addTrigger(int zoneID) {
+        zoneTriggers.add(zoneID);
+    }
+
+    public boolean hasTriggers() {
+        return !zoneTriggers.isEmpty();
+    }
+
+    public LinkedHashSet<Integer> triggered() {
+        LinkedHashSet<Integer> triggers = zoneTriggers;
+        zoneTriggers = new LinkedHashSet<>();
+        return triggers;
+    }
+
     public void clearOnTile() {
         this.itemDropsOnTile = new HashSet<>();
         this.enemiesOnTile = new HashSet<>();

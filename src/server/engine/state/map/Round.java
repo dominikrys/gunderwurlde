@@ -5,12 +5,20 @@ import java.util.TreeSet;
 public class Round {
     protected TreeSet<Wave> waves;
     protected boolean isBoss;
-    protected final long startTime;
+    protected long startTime;
 
     Round(TreeSet<Wave> waves, boolean isBoss) {
         this.waves = waves;
         this.isBoss = isBoss;
-        this.startTime = System.currentTimeMillis(); // TODO change this
+        this.startTime = 0;
+    }
+
+    public boolean start() {
+        if (startTime == 0) {
+            startTime = System.currentTimeMillis();
+            return true;
+        }
+        return false;
     }
 
     public boolean hasWavesLeft() {
