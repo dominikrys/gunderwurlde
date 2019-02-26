@@ -22,7 +22,8 @@ public class Addressing {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
-                    if(iface.getName().contains("eth") ){
+                    if(iface.getName().equals("Realtek PCIe GBE Family Controller") ){
+                        System.out.println(iface.getDisplayName());
                         listenSocket.setInterface(addr);
                     }
                     break;
