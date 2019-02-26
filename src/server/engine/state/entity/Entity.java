@@ -32,6 +32,8 @@ public abstract class Entity {
         this(new Pose(location), size, entityListName);
     }
 
+    public abstract Entity makeCopy();
+
     public boolean isCloaked() {
         return cloaked;
     }

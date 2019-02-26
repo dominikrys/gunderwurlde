@@ -2,7 +2,6 @@ package server.engine;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -25,8 +24,6 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
-import server.engine.state.map.Round;
-import server.engine.state.map.Wave;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
@@ -103,12 +100,6 @@ public class ProcessGameState extends Thread {
         Random random = new Random();
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
-
-        // TODO update this depending on areas (Stop spawning in empty areas)
-        Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator();
-        Round currentRound = roundIterator.next();
-        LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
-        Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEntitySpawns().iterator();
 
         // performance checking variables
         long totalTimeProcessing = 0;
@@ -607,42 +598,7 @@ public class ProcessGameState extends Thread {
 
             // TODO process tiles?
 
-            LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
-
-            if (currentRound.hasWavesLeft()) {
-                while (currentRound.isWaveReady()) {
-                    currentWaves.add(currentRound.getNextWave());
-                }
-            }
-
-            if (!currentWaves.isEmpty()) {
-                for (Wave wave : currentWaves) {
-                    if (!wave.isDone()) {
-                        Wave currentWave = wave;
-                        if (currentWave.readyToSpawn()) {
-                            Enemy templateEnemyToSpawn = currentWave.getEnemyToSpawn();
-                            int amountToSpawn = currentWave.getSpawn();
-
-                            for (int i = 0; i < amountToSpawn; i++) {
-                                if (!enemySpawnIterator.hasNext())
-                                    enemySpawnIterator = currentMap.getEntitySpawns().iterator();
-                                Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
-                                enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
-                                // TODO spawning status & add to gameview
-                                enemies.put(enemyToSpawn.getID(), enemyToSpawn);
-                            }
-                        }
-                        newWaves.add(currentWave);
-                    }
-                }
-            } else if (enemies.isEmpty()) {
-                if (roundIterator.hasNext()) {
-                    currentRound = roundIterator.next();
-                } else {
-                    // TODO no more rounds left send win message if co-op
-                }
-            }
-            currentWaves = newWaves;
+            // TODO get enemies to spawn for each active zone!!!
 
             gameState.setPlayers(players);
             gameState.setProjectiles(newProjectiles);

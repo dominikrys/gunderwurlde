@@ -139,6 +139,4 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         return id;
     }
 
-    public abstract Enemy makeCopy();
-
 }
