@@ -218,30 +218,10 @@ public class ProcessGameState extends Thread {
                         currentPlayer.setCurrentAction(ActionList.ATTACKING);
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
-                            int numOfBullets = currentGun.getProjectilesPerShot();
-                            int spread = currentGun.getSpread();
-                            int bulletSpacing = 0;
-                            if (numOfBullets > 1)
-                                bulletSpacing = (2 * spread) / (numOfBullets - 1);
-
-                            LinkedList<Pose> bulletPoses = new LinkedList<>();
-                            Pose gunPose = playerPose; // TODO change pose to include gunlength/position
-                            int accuracy = currentGun.getAccuracy();
-
-                            int nextDirection = gunPose.getDirection() - spread;
-                            for (int i = 0; i < numOfBullets; i++) {
-                                int direction = nextDirection;
-                                if (accuracy != 0)
-                                    direction += (random.nextInt(accuracy) - (accuracy / 2));
-                                bulletPoses.add(new Pose(gunPose, direction));
-                                nextDirection += bulletSpacing;
-                            }
-
-                            Projectile templateProjectile = currentGun.getProjectile();
-                            for (Pose p : bulletPoses) {
-                                Projectile proj = templateProjectile.createFor(p, currentPlayer.getTeam());
-                                newProjectiles.add(proj);
-                                projectilesView.add(new ProjectileView(p, proj.getSize(), proj.getEntityListName(), proj.isCloaked(), proj.getStatus()));
+                            LinkedList<Projectile> shotProjectiles = currentGun.getShotProjectiles(playerPose, currentPlayer.getTeam());
+                            for (Projectile p : shotProjectiles) {
+                                newProjectiles.add(p);
+                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
                         }
                     }
