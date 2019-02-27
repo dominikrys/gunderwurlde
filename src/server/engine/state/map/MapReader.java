@@ -10,10 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import server.engine.state.entity.enemy.Enemy;
-import server.engine.state.entity.enemy.RunnerZombie;
-import server.engine.state.entity.enemy.SoldierZombie;
-import server.engine.state.entity.enemy.Zombie;
+import server.engine.state.entity.enemy.*;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
@@ -111,7 +108,7 @@ public class MapReader {
 
         // Simple rounds just for testings
         // Round 1
-        Enemy enemyType = new SoldierZombie(200, 5);
+        Enemy enemyType = new ShotgunMidget(6, 20);
         waves.add(new Wave(0, 2000, enemyType, 2, 20));
 //        enemyType = new SoldierZombie(200, 5);
 //        waves.add(new Wave(28000, 1600, enemyType, 2, 30));

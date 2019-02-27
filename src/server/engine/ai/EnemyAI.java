@@ -18,6 +18,7 @@ public abstract class EnemyAI {
 
     Enemy enemy;
     static long DEFAULT_DELAY = 380;
+//    static long LONG_DELAY = 1000;
     protected Pose pose;
     double maxDistanceToMove;
     private int enemSize;
