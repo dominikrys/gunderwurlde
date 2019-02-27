@@ -547,6 +547,7 @@ public class ProcessGameState extends Thread {
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
                                         // TODO enemy death status here
                                         enemies.remove(enemyID);
+                                        activeZones.get(enemyBeingChecked.getZoneID()).entityRemoved();
 
                                         LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyBeingChecked);
                                         for (int[] enemyTileCords : enemyTilesOn) {
@@ -622,6 +623,13 @@ public class ProcessGameState extends Thread {
                         Enemy enemyToSpawn = (Enemy) e;
                         enemies.put(enemyToSpawn.getID(), enemyToSpawn);
                     }
+                }
+
+                for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
+                    int[] cords = tileChanged.getKey();
+                    Tile newTile = tileChanged.getValue();
+                    tileMap[cords[0]][cords[1]] = newTile;
+                    tileMapView[cords[0]][cords[1]] = new TileView(newTile.getType(), newTile.getState());
                 }
             }
 

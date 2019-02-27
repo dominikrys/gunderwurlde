@@ -45,6 +45,12 @@ public class Zone {
                 tileChanges.put(door.getKey(), doorChecked.getTileToReturn());
             }
         }
+
+        // TODO remove if doors dynamically open and close
+        for (int[] doorToRemove : tileChanges.keySet()) {
+            doors.remove(doorToRemove);
+        }
+
         return tileChanges;
     }
 
@@ -76,6 +82,7 @@ public class Zone {
                             Entity entityToSpawn = templateEntityToSpawn.makeCopy();
                             entityToSpawn.setPose(new Pose(entitySpawnIterator.next()));
                             // TODO spawning status
+                            entityToSpawn.setZoneID(this.id);
                             entitysToSpawn.add(entityToSpawn);
                             entityCount++;
                         }
@@ -95,9 +102,11 @@ public class Zone {
         return entitysToSpawn;
     }
 
-    public boolean entityRemoved() { // TODO return true to open doors
+    public void entityRemoved() {
         entityCount--;
-        return false;
+        for (int[] door : doors.keySet()) {
+            doors.get(door).entityKilled();
+        }
     }
 
     public LinkedHashSet<int[]> getTriggers() {

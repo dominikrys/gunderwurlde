@@ -15,6 +15,7 @@ public abstract class Entity {
     protected Status status;
     protected int size;
     protected boolean cloaked; // "invisible"
+    protected int zoneID;
 
     protected Entity(Pose pose, int size, EntityList entityListName) {
         this.pose = pose;
@@ -22,6 +23,7 @@ public abstract class Entity {
         this.entityListName = entityListName;
         this.cloaked = false;
         this.status = Status.NONE;
+        this.zoneID = -1;
     }
     
     protected Entity(int size, EntityList entityListName) {
@@ -33,6 +35,14 @@ public abstract class Entity {
     }
 
     public abstract Entity makeCopy();
+
+    public int getZoneID() {
+        return zoneID;
+    }
+
+    public void setZoneID(int zoneID) {
+        this.zoneID = zoneID;
+    }
 
     public boolean isCloaked() {
         return cloaked;
