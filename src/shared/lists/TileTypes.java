@@ -2,7 +2,8 @@ package shared.lists;
 
 public enum TileTypes {
     GRASS(EntityList.GRASS_TILE),
-    WOOD(EntityList.WOOD_TILE);
+    WOOD(EntityList.WOOD_TILE),
+    DOOR(EntityList.WOOD_TILE);
 
     EntityList entityListName;
 

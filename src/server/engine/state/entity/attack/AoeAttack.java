@@ -21,4 +21,9 @@ public class AoeAttack extends Entity implements Attack {
     public AttackType getAttackType() {
         return AttackType.AOE;
     }
+
+    @Override
+    public Entity makeCopy() {
+        return new AoeAttack(pose, size, damage);
+    }
 }

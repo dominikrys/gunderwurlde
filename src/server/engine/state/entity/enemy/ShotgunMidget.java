@@ -1,14 +1,13 @@
 package server.engine.state.entity.enemy;
 
+import java.util.LinkedHashSet;
+
 import server.engine.ai.EnemyAI;
 import server.engine.ai.ShotgunMidgetAI;
-import server.engine.ai.ZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-
-import java.util.LinkedHashSet;
 
 public class ShotgunMidget extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
@@ -31,11 +30,11 @@ public class ShotgunMidget extends Enemy {
     }
 
     ShotgunMidget(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
-        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, ai);
+        super(maxHealth, moveSpeed, EntityList.MIDGET, size, drops, scoreOnKill, ai);
     }
 
     @Override
     public Enemy makeCopy() {
-        return new Zombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ShotgunMidgetAI(knockbackAmount));
+        return new ShotgunMidget(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ShotgunMidgetAI(knockbackAmount));
     }
 }

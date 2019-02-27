@@ -2,7 +2,6 @@ package server.engine;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -25,8 +24,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
-import server.engine.state.map.Round;
-import server.engine.state.map.Wave;
+import server.engine.state.map.Zone;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
@@ -104,16 +102,14 @@ public class ProcessGameState extends Thread {
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
 
-        // TODO update this depending on areas (Stop spawning in empty areas)
-        Iterator<Round> roundIterator = gameState.getCurrentMap().getRounds().iterator();
-        Round currentRound = roundIterator.next();
-        LinkedHashSet<Wave> currentWaves = new LinkedHashSet<>();
-        Iterator<Location> enemySpawnIterator = gameState.getCurrentMap().getEnemySpawns().iterator();
-
         // performance checking variables
         long totalTimeProcessing = 0;
         long numOfProcesses = -1;
         long longestTimeProcessing = 0;
+
+        // Zones
+        LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
+        LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
 
         while (!handlerClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
@@ -365,6 +361,19 @@ public class ProcessGameState extends Thread {
                         tilesOn = tilesOn(currentPlayer);
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
+                            if (tileMap[tileCords[0]][tileCords[1]].hasTriggers()) {
+                                LinkedHashSet<Integer> zonesTriggered = tileMap[tileCords[0]][tileCords[1]].triggered();
+                                for (int zoneId : zonesTriggered) {
+                                    Zone zoneActivated = inactiveZones.remove(zoneId);
+                                    zoneActivated.activate();
+                                    activeZones.put(zoneId, zoneActivated);
+
+                                    LinkedHashSet<int[]> triggersToRemove = zoneActivated.getTriggers();
+                                    for (int[] trigger : triggersToRemove) {
+                                        tileMap[trigger[0]][trigger[1]].removeTrigger(zoneId);
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -538,6 +547,7 @@ public class ProcessGameState extends Thread {
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
                                         // TODO enemy death status here
                                         enemies.remove(enemyID);
+                                        activeZones.get(enemyBeingChecked.getZoneID()).entityRemoved();
 
                                         LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyBeingChecked);
                                         for (int[] enemyTileCords : enemyTilesOn) {
@@ -607,42 +617,22 @@ public class ProcessGameState extends Thread {
 
             // TODO process tiles?
 
-            LinkedHashSet<Wave> newWaves = new LinkedHashSet<>();
-
-            if (currentRound.hasWavesLeft()) {
-                while (currentRound.isWaveReady()) {
-                    currentWaves.add(currentRound.getNextWave());
-                }
-            }
-
-            if (!currentWaves.isEmpty()) {
-                for (Wave wave : currentWaves) {
-                    if (!wave.isDone()) {
-                        Wave currentWave = wave;
-                        if (currentWave.readyToSpawn()) {
-                            Enemy templateEnemyToSpawn = currentWave.getEnemyToSpawn();
-                            int amountToSpawn = currentWave.getSpawn();
-
-                            for (int i = 0; i < amountToSpawn; i++) {
-                                if (!enemySpawnIterator.hasNext())
-                                    enemySpawnIterator = currentMap.getEnemySpawns().iterator();
-                                Enemy enemyToSpawn = templateEnemyToSpawn.makeCopy();
-                                enemyToSpawn.setPose(new Pose(enemySpawnIterator.next()));
-                                // TODO spawning status & add to gameview
-                                enemies.put(enemyToSpawn.getID(), enemyToSpawn);
-                            }
-                        }
-                        newWaves.add(currentWave);
+            for (Zone z : activeZones.values()) {
+                for (Entity e : z.getEntitysToSpawn()) {
+                    if (e instanceof Enemy) {
+                        Enemy enemyToSpawn = (Enemy) e;
+                        enemies.put(enemyToSpawn.getID(), enemyToSpawn);
                     }
                 }
-            } else if (enemies.isEmpty()) {
-                if (roundIterator.hasNext()) {
-                    currentRound = roundIterator.next();
-                } else {
-                    // TODO no more rounds left send win message if co-op
+
+                for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
+                    int[] cords = tileChanged.getKey();
+                    Tile newTile = tileChanged.getValue();
+                    tileMap[cords[0]][cords[1]] = newTile;
+                    tileMapView[cords[0]][cords[1]] = new TileView(newTile.getType(), newTile.getState());
                 }
             }
-            currentWaves = newWaves;
+
 
             gameState.setPlayers(players);
             gameState.setProjectiles(newProjectiles);
@@ -692,7 +682,7 @@ public class ProcessGameState extends Thread {
         return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
-    private static LinkedHashSet<int[]> tilesOn(Entity e) {
+    private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map
         Location loc = e.getLocation();
         int radius = e.getSize();
         double x = loc.getX();

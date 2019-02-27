@@ -1,6 +1,6 @@
 package server.engine.state.map;
 
-import server.engine.state.entity.enemy.Enemy;
+import server.engine.state.entity.Entity;
 
 public class Wave implements Comparable<Wave> {
     protected long startTime;
@@ -8,13 +8,13 @@ public class Wave implements Comparable<Wave> {
                                  // obvs
     protected int amountPerSpawn;
     protected int amountLeftToSpawn;
-    protected Enemy enemyToSpawn;
+    protected Entity entityToSpawn;
     protected long lastSpawnTime;
 
-    Wave(long startTime, int spawnInterval, Enemy enemyToSpawn, int amountPerSpawn, int totalToSpawn) {
+    Wave(long startTime, int spawnInterval, Entity entityToSpawn, int amountPerSpawn, int totalToSpawn) {
         this.startTime = startTime;
         this.spawnInterval = spawnInterval;
-        this.enemyToSpawn = enemyToSpawn;
+        this.entityToSpawn = entityToSpawn;
         this.amountPerSpawn = amountPerSpawn;
         this.amountLeftToSpawn = totalToSpawn;
         this.lastSpawnTime = System.currentTimeMillis();
@@ -38,8 +38,8 @@ public class Wave implements Comparable<Wave> {
             return false;
     }
 
-    public Enemy getEnemyToSpawn() {
-        return enemyToSpawn;
+    public Entity getEntityToSpawn() {
+        return entityToSpawn;
     }
 
     public int getSpawn() {

@@ -29,6 +29,10 @@ public class Zombie extends Enemy {
         super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, ai);
     }
 
+    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type) {
+        super(maxHealth, moveSpeed, type, size, drops, scoreOnKill, ai);
+    }
+
     @Override
     public Enemy makeCopy() {
         return new Zombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ZombieAI());
