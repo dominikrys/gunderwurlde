@@ -5,11 +5,12 @@
 #TileID(Any unique char),TYPE,STATE
 W WOOD SOLID
 G GRASS PASSABLE
+D DOOR SOLID
 
 #Tile Map
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W D G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
@@ -44,6 +45,9 @@ YELLOW 30 20
 #Triggers
 31 10
 
+#Optional Doors (Tile to return) (Location params) (Kills Required)
+G 1 2 5
+
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
 ZOMBIE
@@ -56,6 +60,7 @@ ZOMBIE
 
 #Triggers
 0 10
+
 
 #Rounds wave per line
 #Round1

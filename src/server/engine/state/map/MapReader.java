@@ -16,6 +16,7 @@ import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.enemy.RunnerZombie;
 import server.engine.state.entity.enemy.SoldierZombie;
 import server.engine.state.entity.enemy.Zombie;
+import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.EntityList;
@@ -88,6 +89,16 @@ public class MapReader {
                 line = file.removeFirst();
             }
             
+            LinkedHashMap<int[], Door> doors = new LinkedHashMap<>();
+            line = file.removeFirst();
+            while (!line.isEmpty()) {
+                LinkedList<String> doorParams = getComponents(line);
+                Tile tileToReturn = tiles.get(doorParams.removeFirst().charAt(0)).getCopy();
+                int[] tileCords = { Integer.valueOf(doorParams.removeFirst()), Integer.valueOf(doorParams.removeFirst()) };
+                doors.put(tileCords, new Door(tileToReturn, Integer.valueOf(doorParams.removeFirst())));
+                line = file.removeFirst();
+            }
+
             LinkedList<Round> rounds = new LinkedList<>();
             line = file.removeFirst();
             while (!line.isEmpty()) {
@@ -102,7 +113,7 @@ public class MapReader {
                 rounds.add(new Round(waves, false));
                 line = file.removeFirst();
             }
-            Zone zoneToAdd = new Zone(entitySpawns, rounds, triggers);
+            Zone zoneToAdd = new Zone(entitySpawns, rounds, triggers, doors);
             zones.put(zoneToAdd.getId(), zoneToAdd);
             line = file.removeFirst();
         }

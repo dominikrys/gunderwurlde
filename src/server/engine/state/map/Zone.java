@@ -1,10 +1,14 @@
 package server.engine.state.map;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.map.tile.Door;
+import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 
@@ -18,18 +22,30 @@ public class Zone {
     protected LinkedHashSet<Wave> currentWaves;
     protected Round currentRound;
     protected int entityCount;
-    // TODO doors & enemies to kill
+    protected LinkedHashMap<int[], Door> doors;
     protected int id;
 
-    public Zone(LinkedHashSet<Location> entitySpawns, LinkedList<Round> rounds, LinkedHashSet<int[]> triggers) {
+    public Zone(LinkedHashSet<Location> entitySpawns, LinkedList<Round> rounds, LinkedHashSet<int[]> triggers, LinkedHashMap<int[], Door> doors) {
         this.entitySpawns = entitySpawns;
         this.entitySpawnIterator = entitySpawns.iterator();
         this.roundIterator = rounds.iterator();
         this.triggers = triggers;
         this.currentWaves = new LinkedHashSet<>();
         this.currentRound = roundIterator.next();
+        this.doors = doors;
         this.entityCount = 0;
         this.id = nextZoneID++;
+    }
+
+    public LinkedHashMap<int[], Tile> getTileChanges() {
+        LinkedHashMap<int[], Tile> tileChanges = new LinkedHashMap<>();
+        for (Map.Entry<int[], Door> door : doors.entrySet()) {
+            Door doorChecked = door.getValue();
+            if (doorChecked.isOpen()) {
+                tileChanges.put(door.getKey(), doorChecked.getTileToReturn());
+            }
+        }
+        return tileChanges;
     }
 
     public void activate() {
