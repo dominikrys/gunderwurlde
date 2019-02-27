@@ -67,10 +67,10 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            //TODO change this projAttack object?
             LinkedList<Projectile> projectiles = new LinkedList<>();
             SmallBullet bulletUsed = new SmallBullet();
             bulletUsed.setSpeed(SmallBullet.DEFAULT_SPEED / 4);
+//            projectiles.add(bulletUsed.createFor(pose, Teams.ENEMY));
             projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY));
             attacks.add(new ProjectileAttack(projectiles));
             attacking = false;

@@ -12,9 +12,9 @@ import shared.lists.ActionList;
 
 public class ZombieAI extends EnemyAI {
 
-    private long attackDelay;
-    private long beginAttackTime;
-    private boolean attacking;
+    long attackDelay;
+    long beginAttackTime;
+    boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     private Location attackLocation;
@@ -68,7 +68,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     //Maybe needs some more balancing
-    private double randomizePath(double angle) {
+    double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
         int r = rand.nextInt(500);
