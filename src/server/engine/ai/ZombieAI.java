@@ -1,13 +1,14 @@
 package server.engine.ai;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import shared.Constants;
+import shared.Location;
 import shared.Pose;
 import shared.lists.ActionList;
-
-import java.util.LinkedList;
-import java.util.Random;
 
 public class ZombieAI extends EnemyAI {
 
@@ -16,6 +17,7 @@ public class ZombieAI extends EnemyAI {
     private boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
+    private Location attackLocation;
 
     public ZombieAI() {
         super();
@@ -34,6 +36,7 @@ public class ZombieAI extends EnemyAI {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
+            attackLocation = closestPlayer;
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
@@ -45,7 +48,7 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(closestPlayer, 24, 1));
+            attacks.add(new AoeAttack(attackLocation, 24, 1));
             attacking = false;
             this.actionState = ActionList.NONE;
         }

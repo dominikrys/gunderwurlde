@@ -16,6 +16,7 @@ import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
@@ -431,8 +432,8 @@ public class ProcessGameState extends Thread {
                     for (Attack a : attacks) {
                         switch (a.getAttackType()) {
                         case AOE:
-                            AoeAttack attack = (AoeAttack) a;
-                            LinkedHashSet<int[]> tilesOn = tilesOn(attack);
+                            AoeAttack aoeAttack = (AoeAttack) a;
+                            LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
 
                             for (int[] tileCords : tilesOn) {
                                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
@@ -440,8 +441,8 @@ public class ProcessGameState extends Thread {
 
                                 for (Integer playerID : playersOnTile) {
                                     Player playerBeingChecked = players.get(playerID);
-                                    if (haveCollided(attack, playerBeingChecked)) {
-                                        playerBeingChecked.damage(attack.getDamage());
+                                    if (haveCollided(aoeAttack, playerBeingChecked)) {
+                                        playerBeingChecked.damage(aoeAttack.getDamage());
                                         playerBeingChecked.setTakenDamage(true);
                                         players.put(playerID, playerBeingChecked);
                                     }
@@ -449,7 +450,11 @@ public class ProcessGameState extends Thread {
                             }
                             break;
                         case PROJECTILE:
-                            System.out.println("Pew pew");
+                            ProjectileAttack projectileAttack = (ProjectileAttack) a;
+                            for (Projectile p : projectileAttack.getProjectiles()) {
+                                newProjectiles.add(p);
+                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                            }
                             break;
                         }
                     }
@@ -527,7 +532,7 @@ public class ProcessGameState extends Thread {
                                 Enemy enemyBeingChecked = enemies.get(enemyID);
                                 Location enemyLocation = enemyBeingChecked.getLocation();
 
-                                if (haveCollided(currentProjectile, enemyBeingChecked)) {
+                                if (currentProjectile.getTeam() != Teams.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
                                     // TODO add force to enemy
                                     removed = true;
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {

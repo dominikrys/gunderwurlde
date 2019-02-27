@@ -7,11 +7,13 @@ import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,8 +42,6 @@ public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
-    // Whether the camera is centered on the player or not
-    private boolean cameraCentered;
     // Fonts
     private Font fontManaspace28;
     private Font fontManaspace18;
@@ -50,6 +50,9 @@ public class GameRenderer implements Runnable {
     private FlowPane heldItems;
     private FlowPane heartBox;
     private VBox ammoBox;
+    // Pane and imageview for cursor
+    private AnchorPane cursorPane;
+    private ImageView cursorImage;
     // Current player info
     private int playerID;
     // GameView object which is to be updated
@@ -65,19 +68,16 @@ public class GameRenderer implements Runnable {
     // Settings object
     private Settings settings;
     private SoundView soundView;
-
-    //TODO: Remove this! Camera set to always be centered for now but once it's smarter, this can be chosen automatically
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
-        this(stage, initialGameView, playerID, true, settings);
-    }
+    // X and Y coordinates of the mouse
+    private double mouseX;
+    private double mouseY;
 
     // Constructor
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, boolean cameraCentered, Settings settings) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
-        this.cameraCentered = cameraCentered;
         this.settings = settings;
 
         // Set paused to false
@@ -95,7 +95,6 @@ public class GameRenderer implements Runnable {
 
         // Iterate over sprites array and load all sprites used in the game
         loadedSprites = new HashMap<>();
-
         for (EntityList entity : EntityList.values()) {
             // Load image
             Image tempImage = new Image(entity.getPath());
@@ -114,6 +113,13 @@ public class GameRenderer implements Runnable {
         heartBox = null;
         heldItems = null;
         ammoBox = null;
+
+        // Initialise cursor pane
+        cursorPane = new AnchorPane();
+
+        // Initialise mouse positions to not bug out camera
+        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - Constants.TILE_SIZE / 2;
+        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - Constants.TILE_SIZE / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
@@ -148,28 +154,18 @@ public class GameRenderer implements Runnable {
     private void setUpGameView(GameView inputGameView, int playerID) {
         // Initialise pane for map
         mapBox = new AnchorPane();
-
-        if (cameraCentered) {
-            mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
-        } else {
-            // Create canvas according to dimensions of the map
-            mapCanvas = new Canvas(inputGameView.getXDim() * Constants.TILE_SIZE,
-                    inputGameView.getYDim() * Constants.TILE_SIZE);
-            AnchorPane.setRightAnchor(mapCanvas, 15.0);
-            AnchorPane.setTopAnchor(mapCanvas, 15.0);
-        }
+        mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
         mapGC = mapCanvas.getGraphicsContext2D();
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        VBox HUDBox = createHUD(inputGameView, playerID);
+        VBox HUDBox = createHUD();
         HUDBox.setAlignment(Pos.TOP_LEFT);
         HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
                 new CornerRadii(0, 0, 140, 0, false),
                 new Insets(0, 0, 0, 0))));
 
         // Create pause overlay
-
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
         pauseLabel.setFont(fontManaspace28);
@@ -192,16 +188,28 @@ public class GameRenderer implements Runnable {
         pausedOverlay.setSpacing(10);
         pausedOverlay.setVisible(false);
 
-        // Create root stackpane and add elements to be rendered to it
+        // Create root stackpane
         StackPane root = new StackPane();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay);
-
-        // Set background of root
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
                 new Insets(0, 0, 0, 0))));
 
-        // Set stage root to game renderer
+        // Add elements to root
+        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay, cursorPane);
+
+        // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
+        root.setCursor(Cursor.NONE);
+
+        // Set crosshair to cursorpane
+        cursorImage = new ImageView(loadedSprites.get(EntityList.CROSSHAIR));
+        cursorPane.getChildren().add(cursorImage);
+
+        // Event handlers for mouse movements
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, this::updateMouse);
+
+        stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::updateMouse);
+
+        // Set root to scene
         stage.getScene().setRoot(root);
 
         // Initialise input handler methods
@@ -213,7 +221,22 @@ public class GameRenderer implements Runnable {
         mHandler.setScene(stage.getScene());
         mHandler.activate();
 
+        // Initialise sound
         soundView.activate();
+    }
+
+    private void updateMouse(MouseEvent e) {
+        mouseX = e.getSceneX();
+        mouseY = e.getSceneY();
+
+        // Render cursor image to location of cursor
+        renderCursor();
+    }
+
+    // Render cursor
+    private void renderCursor() {
+        AnchorPane.setLeftAnchor(cursorImage, mouseX - Constants.TILE_SIZE / 2);
+        AnchorPane.setTopAnchor(cursorImage, mouseY - Constants.TILE_SIZE / 2);
     }
 
     // Update stored gameView
@@ -232,10 +255,8 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
 
-        // Center camera on player if needed
-        if (cameraCentered) {
-            centerCamera();
-        }
+        // Center camera on player
+        centerCamera();
 
         // Update HUD
         updateHUD();
@@ -254,11 +275,16 @@ public class GameRenderer implements Runnable {
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
-        // Center player
-        AnchorPane.setTopAnchor(mapCanvas,
-                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2);
+        // Adjust map horizontally
         AnchorPane.setLeftAnchor(mapCanvas,
-                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2);
+                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+                        + (settings.getScreenWidth() / 2 - mouseX) * 0.35 /* Mouse */);
+        //CLOSE BUT NOT YET LOGARITHMIC: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
+        // Adjust map vertically
+        AnchorPane.setTopAnchor(mapCanvas,
+                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+                        + (settings.getScreenHeight() / 2 - mouseY) * 0.35 /* Mouse */);
+
     }
 
     // Render entities to the map canvas
@@ -462,7 +488,7 @@ public class GameRenderer implements Runnable {
     }
 
     // Create HUD and initialise all elements
-    private VBox createHUD(GameView inputGameView, int playerID) {
+    private VBox createHUD() {
         // Make HUD
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));

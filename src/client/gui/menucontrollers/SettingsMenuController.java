@@ -4,6 +4,7 @@ import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -149,7 +150,6 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setMusicMute(true);
         musicOffButton.setEffect(ControllerUtils.getMenuDropshadow());
         musicOnButton.setEffect(null);
-        applyButton.setDisable(false);
     }
 
     @FXML
@@ -157,7 +157,6 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setMusicMute(false);
         musicOffButton.setEffect(null);
         musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
-        applyButton.setDisable(false);
     }
 
     @FXML
@@ -165,7 +164,6 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setSoundMute(true);
         soundOffButton.setEffect(ControllerUtils.getMenuDropshadow());
         soundOnButton.setEffect(null);
-        applyButton.setDisable(false);
     }
 
     @FXML
@@ -173,19 +171,16 @@ public class SettingsMenuController extends VBox implements MenuController {
         settings.setSoundMute(false);
         soundOffButton.setEffect(null);
         soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
-        applyButton.setDisable(false);
     }
 
     @FXML
     void musicVolumeSliderDragged(MouseEvent event) {
         settings.setMusicVolume((int) musicVolumeSlider.getValue());
-        applyButton.setDisable(false);
     }
 
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
         settings.setSoundVolume((int) soundVolumeSlider.getValue());
-        applyButton.setDisable(false);
     }
 
     @FXML
