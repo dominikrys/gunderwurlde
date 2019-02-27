@@ -1,21 +1,23 @@
 package server.engine.ai;
 
-import server.engine.state.entity.attack.AoeAttack;
-import server.engine.state.entity.attack.Attack;
-import shared.Constants;
-import shared.Pose;
-import shared.lists.ActionList;
-
 import java.util.LinkedList;
 import java.util.Random;
 
+import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
+import shared.Constants;
+import shared.Location;
+import shared.Pose;
+import shared.lists.ActionList;
+
 public class ZombieAI extends EnemyAI {
 
-    private long attackDelay;
-    private long beginAttackTime;
-    private boolean attacking;
+    long attackDelay;
+    long beginAttackTime;
+    boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
+    private Location attackLocation;
 
     public ZombieAI() {
         super();
@@ -34,6 +36,7 @@ public class ZombieAI extends EnemyAI {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
+            attackLocation = closestPlayer;
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
@@ -45,7 +48,7 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(getClosestPlayer(), 24, 1));
+            attacks.add(new AoeAttack(attackLocation, 24, 1));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -53,7 +56,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     @Override
-    protected Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
+    protected Pose generateNextPose() {
         pose = checkIfInSpawn();
 
         if (outOfSpawn) {
@@ -65,7 +68,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     //Maybe needs some more balancing
-    private double randomizePath(double angle) {
+    double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
         int r = rand.nextInt(500);

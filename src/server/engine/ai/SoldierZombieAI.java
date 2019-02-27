@@ -1,20 +1,21 @@
 package server.engine.ai;
 
-import server.engine.state.entity.attack.Attack;
-import server.engine.state.entity.attack.AttackType;
-import server.engine.state.entity.attack.ProjectileAttack;
-import shared.Pose;
-import shared.lists.ActionList;
-
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.ProjectileAttack;
+import server.engine.state.entity.projectile.Projectile;
+import server.engine.state.entity.projectile.SmallBullet;
+import shared.Pose;
+import shared.lists.ActionList;
+import shared.lists.Teams;
 
 public class SoldierZombieAI extends EnemyAI{
 
     private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
-    private long attackDelay = 500; //Might need to move this to enemyAI
+    private long attackDelay = 600; // Might need to move this to enemyAI
     private boolean attacking = false;
     private boolean moving = false;
     private long beginAttackTime;
@@ -34,14 +35,14 @@ public class SoldierZombieAI extends EnemyAI{
                 return AIAction.ATTACK;
             } else if (moving) {                            //If moving, continue to move
                 return AIAction.MOVE;
-            } else if (getDistToPlayer(getClosestPlayer()) >= RANGE_TO_SHOOT) {
+            } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
                 //1 in 50 change it will decide to move
                 if (rand.nextInt(50) == 0) {
                     return AIAction.MOVE;
                 } else {
                     return AIAction.WAIT;
                 }
-            } else if (getDistToPlayer(getClosestPlayer()) < RANGE_TO_SHOOT) {
+            } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
                 int decision = rand.nextInt(100);
                 //Will decide whether to attack based on the RATE_OF_FIRE
                 if (decision <= RATE_OF_FIRE && decision >= 2) {
@@ -66,8 +67,12 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            //TODO change this projAttack object
-            attacks.add(new ProjectileAttack(closestPlayer,4, AttackType.PROJECTILE));
+            LinkedList<Projectile> projectiles = new LinkedList<>();
+            SmallBullet bulletUsed = new SmallBullet();
+            bulletUsed.setSpeed(SmallBullet.DEFAULT_SPEED / 4);
+//            projectiles.add(bulletUsed.createFor(pose, Teams.ENEMY));
+            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY));
+            attacks.add(new ProjectileAttack(projectiles));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -75,7 +80,7 @@ public class SoldierZombieAI extends EnemyAI{
     }
 
     @Override
-    protected synchronized Pose generateNextPose(double maxDistanceToMove, Pose closestPlayer) {
+    protected synchronized Pose generateNextPose() {
         pose = checkIfInSpawn();
         //if out of spawn
         if(outOfSpawn) {

@@ -69,4 +69,9 @@ public class ItemDrop extends Entity implements HasID {
         return id;
     }
 
+    @Override
+    public Entity makeCopy() {
+        return new ItemDrop(item, pose, quantity);
+    }
+
 }
