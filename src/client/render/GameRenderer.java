@@ -275,15 +275,18 @@ public class GameRenderer implements Runnable {
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
+        // Ratio for how sensitive the map is to mouse movements
+        // Proportional to position of player: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
+        double cameraMouseSensitivity = 0.25;
+
         // Adjust map horizontally
         AnchorPane.setLeftAnchor(mapCanvas,
                 (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenWidth() / 2 - mouseX) * 0.35 /* Mouse */);
-        //CLOSE BUT NOT YET LOGARITHMIC: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
+                        + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
         // Adjust map vertically
         AnchorPane.setTopAnchor(mapCanvas,
                 (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenHeight() / 2 - mouseY) * 0.35 /* Mouse */);
+                        + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
 
     }
 
