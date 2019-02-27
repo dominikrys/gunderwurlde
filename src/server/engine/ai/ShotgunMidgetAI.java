@@ -15,6 +15,7 @@ public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUT;
     private int knockback;
+    private double knockbackAgnle;
     private boolean knockbackState = false;
 
     public ShotgunMidgetAI(int knockbackAmount){
@@ -67,9 +68,10 @@ public class ShotgunMidgetAI extends ZombieAI{
             if(!knockbackState) {
                 pose = poseFromAngle(angle, angle, maxDistanceToMove);
             }else{
+                knockbackAgnle = angle;
                 if(knockback > 0) {
                     System.out.println("Knocking back");
-                    pose = poseFromAngle(Pose.normaliseDirection((int) angle + 180), angle, maxDistanceToMove + 1.5);
+                    pose = poseFromAngle(Pose.normaliseDirection((int) knockbackAgnle + 180), angle, maxDistanceToMove + 1.5);
                     knockback--;
                 }else{
                 knockback = KNOCKBACK_AMOUT;
