@@ -260,7 +260,9 @@ public class ProcessGameState extends Thread {
 
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
-                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize()));
+                        Force newForce = Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize());
+                        System.out.println("added f dir:" + newForce.getDirection());
+                        currentPlayer.addNewForce(newForce);
                     }
 
                 }
