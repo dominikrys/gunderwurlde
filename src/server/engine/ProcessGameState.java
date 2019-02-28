@@ -477,8 +477,10 @@ public class ProcessGameState extends Thread {
                 }
 
                 enemies.put(enemyID, currentEnemy);
-                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
-                        currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving()));
+                enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(),
+                        currentEnemy.getEntityListName(), currentEnemy.isCloaked(), currentEnemy.getStatus(),
+                        currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
+                        currentEnemy.getHealth(), currentEnemy.getMaxHealth()));
             }
 
             // process projectiles

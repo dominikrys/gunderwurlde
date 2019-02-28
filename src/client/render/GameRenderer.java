@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import shared.Constants;
+import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
@@ -247,7 +248,7 @@ public class GameRenderer implements Runnable {
         this.soundView.setGameView(gameView);
     }
 
-    // Render gameView - KEEP PRIVATE
+    // Render gameView
     private void renderGameView() {
         // Render map
         renderMap();
@@ -320,11 +321,17 @@ public class GameRenderer implements Runnable {
             }
 
             renderEntity(currentPlayer, mapGC, spriteToRender);
+
+            // Render healthbar
+            renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(), mapGC);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
             renderEntityView(currentEnemy);
+
+            // Render healthbar
+            renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(), mapGC);
         }
 
         // Render projectiles
@@ -333,12 +340,40 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Render healthbar above entity
+    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, GraphicsContext gc) {
+        // Variables for calculations
+        int healthBarHeight = 5;
+        int verticalOffset = 12;
+        double healthLeftPercentage = (double) currentHealth / (double) maxHealth;
+
+        // Render current health portion
+        gc.setFill(Color.LIME);
+        gc.fillRect(pose.getX(), pose.getY() - verticalOffset, Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
+
+        // Render lost health portion
+        gc.setFill(Color.RED);
+        gc.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset, Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
+    }
+
     private void renderEntityView(EntityView entityView) {
         // Get image from loaded sprites
         Image imageToRender = loadedSprites.get(entityView.getEntityListName());
 
         // Render image
         renderEntity(entityView, mapGC, imageToRender);
+    }
+
+    // Render entity onto the map canas
+    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
+        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
+        if (entity.getSizeScaleFactor() != 1) {
+            image = resampleImage(image, entity.getSizeScaleFactor());
+        }
+
+        // Render entity to specified location on canvas
+        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
+                entity.getPose().getY());
     }
 
     // Method for getting the current player
@@ -565,18 +600,6 @@ public class GameRenderer implements Runnable {
         HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
-    }
-
-    // Render entity onto the map canas
-    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
-        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
-        if (entity.getSizeScaleFactor() != 1) {
-            image = resampleImage(image, entity.getSizeScaleFactor());
-        }
-
-        // Render entity to specified location on canvas
-        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
-                entity.getPose().getY());
     }
 
     // Set transform for the GraphicsContext to rotate around a pivot point.

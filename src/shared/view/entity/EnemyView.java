@@ -13,12 +13,16 @@ public class EnemyView extends EntityView implements Serializable {
     protected ActionList currentAction;
     protected boolean takenDamage;
     protected boolean moving;
+    protected int health;
+    protected int maxHealth;
 
-    public EnemyView(Pose pose, int size, EntityList name, boolean cloaked, Status status, ActionList currentAction, boolean takenDamage, boolean moving) {
+    public EnemyView(Pose pose, int size, EntityList name, boolean cloaked, Status status, ActionList currentAction, boolean takenDamage, boolean moving, int health, int maxHealth) {
         super(pose, size, name, cloaked, status);
         this.takenDamage = takenDamage;
         this.moving = moving;
         this.currentAction = currentAction;
+        this.health = health;
+        this.maxHealth = maxHealth;
     }
 
     public ActionList getCurrentAction() {
@@ -33,4 +37,11 @@ public class EnemyView extends EntityView implements Serializable {
         return moving;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
 }
