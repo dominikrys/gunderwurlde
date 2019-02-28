@@ -14,7 +14,6 @@ public class Tile {
 
     private static final double DEFAULT_FRICTION = 0.5;
 
-
     // Type of tile
     protected TileTypes tileType;
 
@@ -26,6 +25,7 @@ public class Tile {
     protected HashSet<Integer> playersOnTile;
     protected LinkedHashSet<Integer> zoneTriggers;
     protected double frictionCoefficient;
+    protected double density;
 
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
@@ -35,6 +35,7 @@ public class Tile {
         this.playersOnTile = new HashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
         this.frictionCoefficient = DEFAULT_FRICTION;
+        this.density = DEFAULT_DENSITY;
     }
     
     public void addTrigger(int zoneID) {
@@ -103,6 +104,10 @@ public class Tile {
         return tileState;
     }
 
+    public double getFrictionCoefficient() {
+        return frictionCoefficient;
+    }
+
     public static Location tileToLocation(int x, int y) {
         int tileMid = TILE_SIZE / 2;
         return new Location((x * TILE_SIZE) + tileMid, (y * TILE_SIZE) + tileMid);
@@ -115,6 +120,10 @@ public class Tile {
 
     public Tile getCopy() {
         return new Tile(this.tileType, this.tileState);
+    }
+
+    public double getDensity() {
+        return density;
     }
 
 }

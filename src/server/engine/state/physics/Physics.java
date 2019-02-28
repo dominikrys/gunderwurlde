@@ -6,27 +6,41 @@ public class Physics {
     private static double MASS_PER_SIZE = 1;
     private static int TIME_PER_SECOND = 1000;
 
-    public static double getFrictionalForce(double frictionCoefficient, int size) {
-        return frictionCoefficient * getMass(size) * 100;
+    public static Force getFrictionalForce(double frictionCoefficient, int size, int directionOfVelocity) {
+        double force = getFrictionalForce(frictionCoefficient, getMass(size));
+        int direction = directionOfVelocity - 180;
+        if (direction < 0)
+            direction += 360;
+        return new Force(direction, force);
     }
 
-    public static double getDragForce(double fluidDensity, double speed, int size) {
-        return 0.5 * Math.pow(normalise(speed), 2) * normalise(size) * fluidDensity;
+    private static double getFrictionalForce(double frictionCoefficient, double mass) {
+        return frictionCoefficient * mass * 100;
     }
 
-    public static Velocity getNewVelocity(Impulse impulse, Velocity velocity, int size) {
-        return velocity;
+    public static Force getDragForce(double fluidDensity, Velocity velocity, int size) {
+        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normalise(size));
+        int direction = velocity.getDirection() - 180;
+        if (direction < 0)
+            direction += 360;
+        return new Force(direction, force);
     }
+
+    private static double getDragForce(double fluidDensity, double speed, double surfaceArea) {
+        return 0.5 * Math.pow(speed, 2) * surfaceArea * fluidDensity;
+    }
+
+    //public static Velocity getNewVelocity(Impulse impulse, Velocity velocity, int size) {
+       // return velocity;
+    //}
 
     public static Velocity getNewVelocity(double acceleration, Velocity velocity, int direction, long time) {
         double changeInSpeed = acceleration * normaliseTime(time);
         double[] changeInSpeedComponents = getComponents(direction, changeInSpeed);
         double[] velocityComponents = getComponents(velocity.getDirection(), velocity.getSpeed());
 
-        double newXComp = velocityComponents[0] + changeInSpeedComponents[0];
-        double newYComp = velocityComponents[1] + changeInSpeedComponents[1];
-
-        double[] result = fromComponents(newXComp, newYComp);
+        double[] result = combineComponents(changeInSpeedComponents, velocityComponents);
+        result = fromComponents(result[0], result[1]);
         return new Velocity((int) result[0], result[1]);
     }
 
@@ -42,9 +56,25 @@ public class Physics {
 
     public static double[] fromComponents(double xComp, double yComp) {
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
-        int direction = (int) Math.round(Math.toDegrees(Math.asin(yComp / value)));
+        int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
+        System.out.println(Math.atan(yComp / xComp));
+        System.out.println(yComp + " " + xComp);
         double[] result = { direction, value };
         return result;
+    }
+
+    public static Force getNewForce(Force f1, Force f2) {
+        double[] result = combineComponents(getComponents(f1.getDirection(), f1.getForce()), getComponents(f2.getDirection(), f2.getForce()));
+        result = fromComponents(result[0], result[1]);
+        return new Force((int) result[0], result[1]);
+    }
+
+    public static Force getForce(int acceleration, int direction, int size) {
+        return new Force(direction, acceleration * getMass(size));
+    }
+
+    public static double getAcceleration(Force f, int size) {
+        return f.getForce() / getMass(size);
     }
 
     private static double[] combineComponents(double[] c1, double[] c2) {
@@ -53,7 +83,7 @@ public class Physics {
     }
 
     private static double normaliseTime(long time) {
-        return time / TIME_PER_SECOND;
+        return time / (double) TIME_PER_SECOND;
     }
 
     private static double normalise(double val) {
@@ -64,9 +94,4 @@ public class Physics {
         return normalise(size) * MASS_PER_SIZE;
     }
 
-    public static Force getNewForce(Force f1, Force f2) {
-        double[] result = combineComponents(getComponents(f1.getDirection(), f1.getForce()), getComponents(f1.getDirection(), f1.getForce()));
-        result = fromComponents(result[0], result[1]);
-        return new Force((int) result[0], result[1]);
-    }
 }

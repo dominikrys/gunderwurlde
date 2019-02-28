@@ -278,6 +278,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     @Override
     public void setVelocity(Velocity v) {
         this.velocity = v;
+        this.resultantForce = new Force();
     }
 
     @Override
