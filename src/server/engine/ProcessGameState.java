@@ -693,7 +693,7 @@ public class ProcessGameState extends Thread {
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
-                p.getAmmoList(), p.getID(), p.getTeam(), p.getMoveSpeed(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(),
+                p.getAmmoList(), p.getID(), p.getTeam(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(),
                 p.isMoving());
     }
 

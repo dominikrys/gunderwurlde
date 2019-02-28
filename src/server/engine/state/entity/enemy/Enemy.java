@@ -89,12 +89,10 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.moving = moving;
     }
 
-    @Override
     public int getMoveSpeed() {
         return moveSpeed;
     }
 
-    @Override
     public void setMoveSpeed(int moveSpeed) {
         this.moveSpeed = moveSpeed;
     }

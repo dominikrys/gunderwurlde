@@ -10,6 +10,10 @@ import shared.lists.TileTypes;
 
 public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
+    public static final double DEFAULT_DENSITY = 1.2;
+
+    private static final double DEFAULT_FRICTION = 0.5;
+
 
     // Type of tile
     protected TileTypes tileType;
@@ -21,6 +25,7 @@ public class Tile {
     protected HashSet<Integer> enemiesOnTile;
     protected HashSet<Integer> playersOnTile;
     protected LinkedHashSet<Integer> zoneTriggers;
+    protected double frictionCoefficient;
 
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
@@ -29,6 +34,7 @@ public class Tile {
         this.enemiesOnTile = new HashSet<>();
         this.playersOnTile = new HashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
+        this.frictionCoefficient = DEFAULT_FRICTION;
     }
     
     public void addTrigger(int zoneID) {
