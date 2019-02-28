@@ -158,10 +158,10 @@ public class ServerReceiver extends Thread {
                 team = Teams.BLUE;
             }
             else if(seperateData[1].equals("GREEN")){
-                team = Teams.BLUE;
+                team = Teams.GREEN;
             }
             else if(seperateData[1].equals("YELLOW")){
-                team = Teams.BLUE;
+                team = Teams.YELLOW;
             }
             else{
                 team = Teams.NONE;
