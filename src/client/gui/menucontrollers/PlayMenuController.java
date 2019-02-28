@@ -5,7 +5,6 @@ import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -44,12 +43,12 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     private ImageView tick;
 
-    public PlayMenuController(Stage stage, Settings settings) {
+    public PlayMenuController(Stage stage, Settings settings, String playerName, Teams selectedTeam) {
         this.stage = stage;
         this.settings = settings;
 
-        // Set team to unset
-        this.selectedTeam = Teams.NONE;
+        // Set team
+        this.selectedTeam = selectedTeam;
 
         // Load FXML and set appropriate methods
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/play_menu.fxml"));
@@ -65,9 +64,29 @@ public class PlayMenuController extends VBox implements MenuController {
         // Divert focus away from namefield
         nameField.setFocusTraversable(false);
 
-        // Hide name too long text and tick
-        characterErrorText.setVisible(false);
-        tick.setVisible(false);
+        // Set name in case coming from another menu
+        nameField.setText(playerName);
+
+        // Set selected team if coming from another menu
+        switch (selectedTeam) {
+            case RED:
+                selectRedTeam();
+                break;
+            case BLUE:
+                selectBlueTeam();
+                break;
+            case GREEN:
+                selectGreenTeam();
+                break;
+            case YELLOW:
+                selectYellowTeam();
+                break;
+            default:
+                break;
+        }
+
+        // Check what buttons should be selected
+        checkButtons();
     }
 
     public void show() {
@@ -90,6 +109,10 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     void teamBlueButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
+        selectBlueTeam();
+    }
+
+    private void selectBlueTeam() {
         selectedTeam = Teams.BLUE;
         teamBlueButton.setEffect(ControllerUtils.getMenuDropshadow());
         teamGreenButton.setEffect(null);
@@ -101,6 +124,10 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     void teamGreenButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
+        selectGreenTeam();
+    }
+
+    private void selectGreenTeam() {
         selectedTeam = Teams.GREEN;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(ControllerUtils.getMenuDropshadow());
@@ -112,6 +139,10 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     void teamRedButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
+        selectRedTeam();
+    }
+
+    private void selectRedTeam() {
         selectedTeam = Teams.RED;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
@@ -123,6 +154,10 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     void teamYellowButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
+        selectYellowTeam();
+    }
+
+    private void selectYellowTeam() {
         selectedTeam = Teams.YELLOW;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
@@ -155,6 +190,7 @@ public class PlayMenuController extends VBox implements MenuController {
     private void checkButtons() {
         // Only allow going into single or multi player if a name has been entered
         if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
+            characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(true);
             if (selectedTeam != Teams.NONE) {
@@ -166,12 +202,14 @@ public class PlayMenuController extends VBox implements MenuController {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
+            characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(false);
         } else {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
+            characterErrorText.setManaged(true);
             characterErrorText.setVisible(true);
             tick.setVisible(false);
         }

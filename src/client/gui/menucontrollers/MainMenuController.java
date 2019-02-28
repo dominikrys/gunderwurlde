@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import shared.lists.Teams;
 
 import java.io.IOException;
 
@@ -65,7 +66,7 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     void playButtonPress(ActionEvent event) {
         // Switch to play menu and clear this object
-        (new PlayMenuController(stage, settings)).show();
+        (new PlayMenuController(stage, settings, "", Teams.NONE)).show();
         this.getChildren().clear();
     }
 
