@@ -56,13 +56,13 @@ public class Physics {
 
     public static double[] fromComponents(double xComp, double yComp) {
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
-        int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp))); // sort out dividing by tiny negative ruining this
-        if (direction < 0)
+        int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
+
+        if (xComp < 0)
+            direction += 180;
+        else if (yComp < 0)
             direction += 360;
-        System.out.println(Math.atan(yComp / xComp));
-        System.out.println(Math.toDegrees(Math.atan(yComp / xComp)));
-        System.out.println(yComp + " " + xComp);
-        System.out.println(direction);
+
         double[] result = { direction, value };
         return result;
     }

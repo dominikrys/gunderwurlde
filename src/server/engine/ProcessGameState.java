@@ -261,7 +261,6 @@ public class ProcessGameState extends Thread {
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
                         Force newForce = Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize());
-                        System.out.println("added f dir:" + newForce.getDirection());
                         currentPlayer.addNewForce(newForce);
                     }
 
@@ -507,7 +506,7 @@ public class ProcessGameState extends Thread {
                 Player currentPlayer = p;
                 Velocity currentVelocity = currentPlayer.getVelocity();
 
-                if (currentPlayer.getResultantForce().getForce() == 0) // TODO include after debugging && currentVelocity.getSpeed() == 0
+                if (currentPlayer.getResultantForce().getForce() == 0 && currentVelocity.getSpeed() == 0) // TODO include after debugging
                     continue;
 
                 int playerID = currentPlayer.getID();
@@ -538,8 +537,8 @@ public class ProcessGameState extends Thread {
                     frictionCoefficient = frictionCoefficient / numOfTilesOn;
                     density = density / numOfTilesOn;
 
-                    //currentPlayer.addNewForce(Physics.getFrictionalForce(frictionCoefficient, playerSize, currentVelocity.getDirection()));
-                    //currentPlayer.addNewForce(Physics.getDragForce(density, currentVelocity, playerSize));
+                    currentPlayer.addNewForce(Physics.getFrictionalForce(frictionCoefficient, playerSize, currentVelocity.getDirection()));
+                    currentPlayer.addNewForce(Physics.getDragForce(density, currentVelocity, playerSize));
 
                     // TODO entity collisions
                 }
@@ -547,10 +546,7 @@ public class ProcessGameState extends Thread {
 
                 Force resultantForce = currentPlayer.getResultantForce();
                 double acceleration = Physics.getAcceleration(resultantForce, playerSize);
-                System.out.println("fdir: " + resultantForce.getDirection());
-                System.out.println("volddir: " + currentVelocity.getDirection());
                 currentVelocity = Physics.getNewVelocity(acceleration, currentVelocity, resultantForce.getDirection(), currentTimeDifference);
-                System.out.println("vnewdir: " + currentVelocity.getDirection());
                 double distanceMoved = getDistanceMoved(currentTimeDifference, currentVelocity.getSpeed() * Tile.TILE_SIZE);
                 Location newLocation = Location.calculateNewLocation(currentPlayer.getLocation(), currentVelocity.getDirection(), distanceMoved);
 
