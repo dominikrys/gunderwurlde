@@ -126,7 +126,7 @@ public class GameRenderer implements Runnable {
         mHandler = new MouseHandler(this.playerID);
 
         // Initialise soundview
-        soundView = new SoundView(initialGameView, settings);
+        soundView = new SoundView(this.playerID, initialGameView, settings);
     }
 
     // Run the thread - set up window and update game on a timer

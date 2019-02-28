@@ -11,12 +11,14 @@ import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.SoundList;
+import shared.view.entity.EnemyView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
 public class GameSound {
 	
 	private HashMap<SoundList, AudioClip> loadedGameSounds;
+	private PlayerView client;
 	private EntityView entity;
 	private ActionList action;
 	private AudioClip audio;
@@ -25,8 +27,9 @@ public class GameSound {
 	private TimerTask checkReplay;
 	private boolean replayable;
 	
-	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, EntityView entity, ActionList action, double volume) {
+	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, EntityView entity, ActionList action, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
+		this.client = client;
 		this.entity = entity;
 		this.action = action;
 		this.volume = volume;
@@ -122,18 +125,34 @@ public class GameSound {
 				if(entity instanceof PlayerView) {
 					ItemList item = ((PlayerView) entity).getCurrentItem().getItemListName();
 					switch(item) {
-					case PISTOL:
-						audio = loadedGameSounds.get(SoundList.PISTOL);
-						this.timer.schedule(checkReplay, Pistol.DEFAULT_COOL_DOWN - 15);
-						this.playShellsFall();
-						break;
-					case SHOTGUN:
-						audio = loadedGameSounds.get(SoundList.SHOTGUN);
-						this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
-						this.playShellsFall();
-						break;
+						case PISTOL:
+							audio = loadedGameSounds.get(SoundList.PISTOL);
+							this.timer.schedule(checkReplay, Pistol.DEFAULT_COOL_DOWN - 15);
+							this.playShellsFall();
+							break;
+						case SHOTGUN:
+							audio = loadedGameSounds.get(SoundList.SHOTGUN);
+							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
+							this.playShellsFall();
+							break;
 					}
 				}
+				else if(entity instanceof EnemyView) {
+					switch(entity.getEntityListName()) {
+						case ZOMBIE:
+							break;
+						case RUNNER:
+							break;
+						case SOLDIER:
+							break;
+						case MIDGET:
+							audio = loadedGameSounds.get(SoundList.SHOTGUN);
+							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
+							this.playShellsFall();
+							break;
+					}
+				}
+				
 				break;
 			case RAGDOLL:
 				break;
