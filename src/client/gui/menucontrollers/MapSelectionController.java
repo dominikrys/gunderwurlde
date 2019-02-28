@@ -81,6 +81,7 @@ public class MapSelectionController extends VBox implements MenuController {
             playerNumberLabel.setText(Long.toString(Math.round(playerSlider.getValue())));
         } else {
             playerAmountBox.setManaged(false);
+            playerAmountBox.setVisible(false);
         }
     }
 
@@ -91,8 +92,8 @@ public class MapSelectionController extends VBox implements MenuController {
 
     @FXML
     void backButtonPress(ActionEvent event) {
-        // Switch to main menu and clear this object
-        (new MainMenuController(stage, settings)).show();
+        // Switch to play menu and clear this screen
+        (new PlayMenuController(stage, settings, playerName, selectedTeam)).show();
         this.getChildren().clear();
     }
 
