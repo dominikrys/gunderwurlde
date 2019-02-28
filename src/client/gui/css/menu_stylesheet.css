@@ -131,8 +131,28 @@
     -fx-control-inner-background: white;
 }
 
+.slider .thumb {
+    -fx-background-color: white,
+    -fx-inner-border,
+    -fx-body-color;
+    -fx-background-radius: 0.0em;
+    -fx-effect: null;
+}
+
+.slider .track {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 0;
+    -fx-padding: 0.25em;
+}
+
 .slider:hover {
     -fx-cursor: hand;
+}
+
+.slider .axis {
+    -fx-tick-label-fill: white;
+    -fx-tick-length: 7px;
+    -fx-minor-tick-length: 5px;
 }
 
 .controlsItem {
