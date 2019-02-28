@@ -23,7 +23,7 @@ import shared.lists.Teams;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPhysics {
     public static final int DEFAULT_HEALTH = 20;
-    public static final int DEFAULT_ACCELERATION = Tile.TILE_SIZE;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
@@ -40,7 +40,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
-    protected int acceleration;
+    protected double acceleration;
     protected int currentItem;
     protected int maxItems;
     protected boolean takenDamage;
@@ -197,11 +197,11 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         return ammo;
     }
 
-    public int getAcceleration() {
+    public double getAcceleration() {
         return acceleration;
     }
 
-    public void setAcceleration(int acceleration) {
+    public void setAcceleration(double acceleration) {
         this.acceleration = acceleration;
     }
 

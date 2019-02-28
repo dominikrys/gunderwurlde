@@ -3,8 +3,9 @@ package server.engine.state.physics;
 import server.engine.state.map.tile.Tile;
 
 public class Physics {
-    private static double MASS_PER_SIZE = 1;
+    private static double MASS_PER_SIZE = 2;
     private static int TIME_PER_SECOND = 1000;
+    private static int GRAVITY = 100;
 
     public static Force getFrictionalForce(double frictionCoefficient, int size, int directionOfVelocity) {
         double force = getFrictionalForce(frictionCoefficient, getMass(size));
@@ -15,11 +16,11 @@ public class Physics {
     }
 
     private static double getFrictionalForce(double frictionCoefficient, double mass) {
-        return frictionCoefficient * mass * 100;
+        return frictionCoefficient * mass * GRAVITY;
     }
 
     public static Force getDragForce(double fluidDensity, Velocity velocity, int size) {
-        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normalise(size));
+        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size));
         int direction = velocity.getDirection() - 180;
         if (direction < 0)
             direction += 360;
@@ -73,7 +74,7 @@ public class Physics {
         return new Force((int) result[0], result[1]);
     }
 
-    public static Force getForce(int acceleration, int direction, int size) {
+    public static Force getForce(double acceleration, int direction, int size) {
         return new Force(direction, acceleration * getMass(size));
     }
 
@@ -86,8 +87,12 @@ public class Physics {
         return result;
     }
 
-    private static double normaliseTime(long time) {
+    public static double normaliseTime(long time) {
         return time / (double) TIME_PER_SECOND;
+    }
+
+    private static double normaliseSize(int size) {
+        return normalise(size * 2);
     }
 
     private static double normalise(double val) {

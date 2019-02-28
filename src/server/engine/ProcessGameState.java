@@ -260,8 +260,7 @@ public class ProcessGameState extends Thread {
 
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
-                        Force newForce = Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize());
-                        currentPlayer.addNewForce(newForce);
+                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize()));
                     }
 
                 }
@@ -511,47 +510,65 @@ public class ProcessGameState extends Thread {
 
                 int playerID = currentPlayer.getID();
                 int playerSize = currentPlayer.getSize();
+                Force resultantForce = currentPlayer.getResultantForce();
 
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
+
+                double frictionCoefficient = 0;
+                double density = 0;
+
+                boolean pushedBack = false;
+                for (int[] tileCords : tilesOn) {
+                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                    if (tileOn.getState() != TileState.SOLID) {
+                        frictionCoefficient += tileOn.getFrictionCoefficient();
+                        density += tileOn.getDensity();
+                    } else if (!pushedBack) {
+                        pushedBack = true;
+                        // TODO wall collisions (reflect velocity)
+                    }
+                }
+
+                int numOfTilesOn = tilesOn.size();
+                frictionCoefficient = frictionCoefficient / numOfTilesOn;
+                density = density / numOfTilesOn;
+
+                Force frictionForce = Physics.getFrictionalForce(frictionCoefficient, playerSize, currentVelocity.getDirection());
+                Force dragForce = Physics.getDragForce(density, currentVelocity, playerSize);
+                
+                if (resultantForce.getForce() == 0
+                        && Physics.getAcceleration(frictionForce, playerSize) * Physics.normaliseTime(currentTimeDifference) > currentVelocity.getSpeed()) {
+                    currentPlayer.setVelocity(new Velocity());
+                    System.out.println("friction: " + Physics.getAcceleration(frictionForce, playerSize) * Physics.normaliseTime(currentTimeDifference));
+                    System.out.println("Stopping v at: " + currentVelocity.getSpeed());
+                    continue;
+                }
+
+                if (currentVelocity.getSpeed() != 0) {
+                    currentPlayer.addNewForce(frictionForce);
+                    currentPlayer.addNewForce(dragForce);
+                    resultantForce = currentPlayer.getResultantForce();
+                } else if (resultantForce.getForce() > frictionForce.getForce()) {
+                    resultantForce = new Force(resultantForce.getDirection(), resultantForce.getForce() - frictionForce.getForce());
+                } else {
+                    continue; // force not great enough
+                }
+
+                // TODO entity collisions
+
+                double acceleration = Physics.getAcceleration(resultantForce, playerSize);
+                currentVelocity = Physics.getNewVelocity(acceleration, currentVelocity, resultantForce.getDirection(), currentTimeDifference);
+
+                currentPlayer.setVelocity(currentVelocity);
+
                 for (int[] tileCords : tilesOn) {
                     tileMap[tileCords[0]][tileCords[1]].removePlayer(playerID);
                 }
 
-                if (currentVelocity.getSpeed() != 0) {
-                    double frictionCoefficient = 0;
-                    double density = 0;
-
-                    boolean pushedBack = false;
-                    for (int[] tileCords : tilesOn) {
-                        Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                        if (tileOn.getState() != TileState.SOLID) {
-                            frictionCoefficient += tileOn.getFrictionCoefficient();
-                            density += tileOn.getDensity();
-                        } else if (!pushedBack) {
-                            pushedBack = true;
-                            // TODO wall collisions (reflect velocity)
-                        }
-                    }
-
-                    int numOfTilesOn = tilesOn.size();
-                    frictionCoefficient = frictionCoefficient / numOfTilesOn;
-                    density = density / numOfTilesOn;
-
-                    currentPlayer.addNewForce(Physics.getFrictionalForce(frictionCoefficient, playerSize, currentVelocity.getDirection()));
-                    currentPlayer.addNewForce(Physics.getDragForce(density, currentVelocity, playerSize));
-
-                    // TODO entity collisions
-                }
-
-
-                Force resultantForce = currentPlayer.getResultantForce();
-                double acceleration = Physics.getAcceleration(resultantForce, playerSize);
-                currentVelocity = Physics.getNewVelocity(acceleration, currentVelocity, resultantForce.getDirection(), currentTimeDifference);
                 double distanceMoved = getDistanceMoved(currentTimeDifference, currentVelocity.getSpeed() * Tile.TILE_SIZE);
                 Location newLocation = Location.calculateNewLocation(currentPlayer.getLocation(), currentVelocity.getDirection(), distanceMoved);
 
                 currentPlayer.setLocation(newLocation);
-                currentPlayer.setVelocity(currentVelocity);
 
                 tilesOn = tilesOn(currentPlayer);
 
