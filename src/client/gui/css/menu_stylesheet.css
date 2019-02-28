@@ -122,7 +122,7 @@
     -fx-border-width: 2px;
 }
 
-.volumeSlider {
+.slider {
     -fx-font-family: 'Manaspace', Consolas;
     -fx-padding: 5px;
     -fx-text-fill: white;
@@ -131,7 +131,7 @@
     -fx-control-inner-background: white;
 }
 
-.volumeSlider:hover {
+.slider:hover {
     -fx-cursor: hand;
 }
 

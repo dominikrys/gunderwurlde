@@ -66,6 +66,7 @@ public class PlayMenuController extends VBox implements MenuController {
         nameField.setFocusTraversable(false);
 
         // Hide name too long text and tick
+        characterErrorText.setManaged(false);
         characterErrorText.setVisible(false);
         tick.setVisible(false);
     }
@@ -155,6 +156,7 @@ public class PlayMenuController extends VBox implements MenuController {
     private void checkButtons() {
         // Only allow going into single or multi player if a name has been entered
         if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
+            characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(true);
             if (selectedTeam != Teams.NONE) {
@@ -166,12 +168,14 @@ public class PlayMenuController extends VBox implements MenuController {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
+            characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(false);
         } else {
             singlePlayerButton.setDisable(true);
             multiJoinGameButton.setDisable(true);
             multiCreateGameButton.setDisable(true);
+            characterErrorText.setManaged(true);
             characterErrorText.setVisible(true);
             tick.setVisible(false);
         }
