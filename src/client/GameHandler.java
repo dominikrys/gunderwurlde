@@ -23,14 +23,16 @@ public class GameHandler extends Thread {
     private String playerName;
     private MapList map;
     private Teams team;
+    private int numPlayers;
 
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map) {
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
         this.playerName = name;
         this.map = map;
         this.team = team;
+        this.numPlayers = Integer.parseInt(numOfPlayers);
     }
 
     public void run() {
@@ -46,7 +48,7 @@ public class GameHandler extends Thread {
                 break;
             case MULTI_PLAYER_HOST:
                 if(!serverStarted) {
-                    server = new Server(MapList.MEADOW, playerName, team, 2, true);
+                    server = new Server(MapList.MEADOW, playerName, team, numPlayers, true);
                     serverStarted = true;
                     client = new Client(stage, playerName, this, settings, 0);
                     client.start();
