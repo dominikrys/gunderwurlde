@@ -696,7 +696,10 @@ public class ProcessGameState extends Thread {
     }
 
     private static double getDistanceMoved(long timeDiff, double speed) {
-        return (timeDiff / 1000.0) * speed; // time in millis
+        double distMoved = (timeDiff / 1000.0) * speed; // time in millis
+        if (distMoved >= Tile.TILE_SIZE)
+            System.out.println("WARNIG: Entity moving too fast!");
+        return distMoved;
     }
 
     private static boolean haveCollided(Entity e1, Entity e2) {
