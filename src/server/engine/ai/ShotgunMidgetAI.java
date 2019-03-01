@@ -4,6 +4,7 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.entity.projectile.SmallBullet;
+import server.engine.state.item.weapon.gun.Shotgun;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
@@ -17,6 +18,7 @@ public class ShotgunMidgetAI extends ZombieAI{
     private int knockback;
     private double knockbackAgnle;
     private boolean knockbackState = false;
+    private Shotgun shotgun = new Shotgun();
 
     public ShotgunMidgetAI(int knockbackAmount){
         super();
@@ -45,13 +47,8 @@ public class ShotgunMidgetAI extends ZombieAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            LinkedList<Projectile> projectiles = new LinkedList<>();
-            SmallBullet bulletUsed = new SmallBullet();
-            bulletUsed.setSpeed(SmallBullet.DEFAULT_SPEED / 3);
-            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY));
-            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer) + 15), Teams.ENEMY));
-            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer) - 15), Teams.ENEMY));
-            attacks.add(new ProjectileAttack(projectiles));
+            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(
+                    new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
             attacking = false;
             knockbackState = true;
             this.actionState = ActionList.NONE;
@@ -70,7 +67,6 @@ public class ShotgunMidgetAI extends ZombieAI{
             }else{
                 knockbackAgnle = angle;
                 if(knockback > 0) {
-                    System.out.println("Knocking back");
                     pose = poseFromAngle(Pose.normaliseDirection((int) knockbackAgnle + 180), angle, maxDistanceToMove + 1.5);
                     knockback--;
                 }else{

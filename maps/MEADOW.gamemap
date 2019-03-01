@@ -50,8 +50,8 @@ G 1 2 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-ZOMBIE
-0 2000 1 20
+SOLDIER 6 20
+0 100 1 20
 
 
 #Zone2
@@ -64,7 +64,7 @@ ZOMBIE
 
 #Rounds wave per line
 #Round1
-MIDGET 6 20
+SOLDIER 400 20
 0 2000 1 20
 
 
