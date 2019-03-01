@@ -18,7 +18,7 @@ public class ShotgunMidgetAI extends ZombieAI{
     private int knockback;
     private double knockbackAgnle;
     private boolean knockbackState = false;
-    private Shotgun shotgun = new Shotgun();
+    private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
         super();

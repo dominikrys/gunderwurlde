@@ -49,15 +49,6 @@ YELLOW 30 20
 G 1 2 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
-
-#Posible enemy types and their parameters:
-# ZOMBIE
-# ZOMBIE int maxHealth int moveSpeed int size LinkedHashSet<Drop> drops int scoreOnKill EnemyAI ai
-# ZOMBIE int maxHealth int moveSpeed int size LinkedHashSet<Drop> drops int scoreOnKill EnemyAI ai EntityList type
-# RUNNER int speed
-# SOLDIER int range_to_shoot int rate_of_fire
-# MIDGET int speed int knockbackAmount
-
 #Round1
 SOLDIER 6 20
 0 100 1 20
@@ -73,7 +64,7 @@ SOLDIER 6 20
 
 #Rounds wave per line
 #Round1
-SOLDIER 400 20
+MIDGET 6 20
 0 2000 1 20
 
 
