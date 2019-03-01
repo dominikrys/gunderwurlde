@@ -34,7 +34,7 @@ public enum EntityList {
     HEART_LOST("file:assets/img/other/heart_lost.png"),
     CROSSHAIR("file:assets/img/gui/crosshair.png");
 
-    private String spritePath;
+    private final String spritePath;
 
     EntityList(String spritePath) {
         this.spritePath = spritePath;
