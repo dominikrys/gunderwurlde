@@ -561,66 +561,12 @@ public class ProcessGameState extends Thread {
 
                 double distanceMoved = getDistanceMoved(currentTimeDifference, currentVelocity.getSpeed() * Tile.TILE_SIZE);
                 Location newLocation = Location.calculateNewLocation(currentPlayer.getLocation(), currentVelocity.getDirection(), distanceMoved);
-
                 currentPlayer.setLocation(newLocation);
-
                 tilesOn = tilesOn(currentPlayer);
 
-                Location mostSigTileLoc = null;
-                double mostSigXDiff = 0;
-                double mostSigYDiff = 0;
-                double mostSigDist = Double.MAX_VALUE;
-                for (int[] tileCords : tilesOn) {
-                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                    if (tileOn.getState() == TileState.SOLID) {
-                        Location tileLoc = Tile.tileToLocation(tileCords[0], tileCords[1]);
-                        double xDiff = tileLoc.getX() - newLocation.getX();
-                        double yDiff = tileLoc.getY() - newLocation.getY();
-                        double dist_sqrd = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
-
-                        if (dist_sqrd < mostSigDist) {
-                            mostSigTileLoc = tileLoc;
-                            mostSigXDiff = xDiff;
-                            mostSigYDiff = yDiff;
-                            mostSigDist = dist_sqrd;
-                        }
-                    }
-                }
-
+                Location mostSigTileLoc = getMostSignificatTileLocation(newLocation, tilesOn, tileMap);
                 if (mostSigTileLoc != null) {
-
-                    int gapSize = currentPlayer.getSize() + (Tile.TILE_SIZE / 2) + 1;
-                    int normal;
-                    if (Math.abs(mostSigXDiff) < Math.abs(mostSigYDiff)) {
-                        if (mostSigYDiff < 0) {
-                            normal = 90;
-                            newLocation = new Location(newLocation.getX(), mostSigTileLoc.getY() + gapSize);
-                        } else {
-                            normal = 270;
-                            newLocation = new Location(newLocation.getX(), mostSigTileLoc.getY() - gapSize);
-                        }
-                    } else if (Math.abs(mostSigXDiff) > Math.abs(mostSigYDiff)) {
-                        if (mostSigXDiff < 0) {
-                            normal = 0;
-                            newLocation = new Location(mostSigTileLoc.getX() + gapSize, newLocation.getY());
-                        } else {
-                            normal = 180;
-                            newLocation = new Location(mostSigTileLoc.getX() - gapSize, newLocation.getY());
-                        }
-                    } else {
-                        System.out.println("Corner hit!");
-                        // TODO handle
-                        normal = 0;
-                    }
-
-                    currentPlayer.setLocation(newLocation);
-
-                    int newDirection = normal + (normal - currentVelocity.getDirection()) - 180;
-                    if (newDirection < 0)
-                        newDirection += 360;
-                    currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * 0.7);
-                    currentPlayer.setVelocity(currentVelocity);
-
+                    currentPlayer = (Player) Physics.tileCollision(currentPlayer, mostSigTileLoc);
                     tilesOn = tilesOn(currentPlayer);
                 }
 
@@ -802,6 +748,26 @@ public class ProcessGameState extends Thread {
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
                 p.getAmmoList(), p.getID(), p.getTeam(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(),
                 p.isMoving());
+    }
+
+    private static Location getMostSignificatTileLocation(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {
+        Location mostSigTileLoc = null;
+        double mostSigDist = Double.MAX_VALUE;
+        for (int[] tileCords : tilesOn) {
+            Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+            if (tileOn.getState() == TileState.SOLID) {
+                Location tileLoc = Tile.tileToLocation(tileCords[0], tileCords[1]);
+                double xDiff = tileLoc.getX() - l.getX();
+                double yDiff = tileLoc.getY() - l.getY();
+                double distSqrd = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
+
+                if (distSqrd < mostSigDist) {
+                    mostSigTileLoc = tileLoc;
+                    mostSigDist = distSqrd;
+                }
+            }
+        }
+        return mostSigTileLoc;
     }
 
 }

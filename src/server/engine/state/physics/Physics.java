@@ -1,11 +1,52 @@
 package server.engine.state.physics;
 
 import server.engine.state.map.tile.Tile;
+import shared.Location;
 
 public class Physics {
     private static double MASS_PER_SIZE = 2;
     private static int TIME_PER_SECOND = 1000;
     private static int GRAVITY = 100;
+
+    public static HasPhysics tileCollision(HasPhysics e, Location tileLoc) {
+        int gapSize = e.getSize() + (Tile.TILE_SIZE / 2) + 1;
+        Location loc = e.getLocation();
+        double xDiff = tileLoc.getX() - loc.getX();
+        double yDiff = tileLoc.getY() - loc.getY();
+        Velocity currentVelocity = e.getVelocity();
+        int normal;
+        if (Math.abs(xDiff) < Math.abs(yDiff)) {
+            if (yDiff < 0) {
+                normal = 90;
+                loc = new Location(loc.getX(), tileLoc.getY() + gapSize);
+            } else {
+                normal = 270;
+                loc = new Location(loc.getX(), tileLoc.getY() - gapSize);
+            }
+        } else if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff < 0) {
+                normal = 0;
+                loc = new Location(tileLoc.getX() + gapSize, loc.getY());
+            } else {
+                normal = 180;
+                loc = new Location(tileLoc.getX() - gapSize, loc.getY());
+            }
+        } else {
+            System.out.println("Corner hit!");
+            // TODO handle
+            normal = 0;
+        }
+
+        e.setLocation(loc);
+
+        int newDirection = normal + (normal - currentVelocity.getDirection()) - 180;
+        if (newDirection < 0)
+            newDirection += 360;
+        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * 0.7);
+        e.setVelocity(currentVelocity);
+
+        return e;
+    }
 
     public static Force getFrictionalForce(double frictionCoefficient, int size, int directionOfVelocity) {
         double force = getFrictionalForce(frictionCoefficient, getMass(size));
