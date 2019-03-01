@@ -517,15 +517,13 @@ public class ProcessGameState extends Thread {
                 double frictionCoefficient = 0;
                 double density = 0;
 
-                boolean pushedBack = false;
                 for (int[] tileCords : tilesOn) {
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                     if (tileOn.getState() != TileState.SOLID) {
                         frictionCoefficient += tileOn.getFrictionCoefficient();
                         density += tileOn.getDensity();
-                    } else if (!pushedBack) {
-                        pushedBack = true;
-                        // TODO wall collisions (reflect velocity)
+                    } else {
+                        System.out.println("WARNING: Player stuck in tile.");
                     }
                 }
 
@@ -539,8 +537,6 @@ public class ProcessGameState extends Thread {
                 if (resultantForce.getForce() == 0
                         && Physics.getAcceleration(frictionForce, playerSize) * Physics.normaliseTime(currentTimeDifference) > currentVelocity.getSpeed()) {
                     currentPlayer.setVelocity(new Velocity());
-                    System.out.println("friction: " + Physics.getAcceleration(frictionForce, playerSize) * Physics.normaliseTime(currentTimeDifference));
-                    System.out.println("Stopping v at: " + currentVelocity.getSpeed());
                     continue;
                 }
 
@@ -553,8 +549,6 @@ public class ProcessGameState extends Thread {
                 } else {
                     continue; // force not great enough
                 }
-
-                // TODO entity collisions
 
                 double acceleration = Physics.getAcceleration(resultantForce, playerSize);
                 currentVelocity = Physics.getNewVelocity(acceleration, currentVelocity, resultantForce.getDirection(), currentTimeDifference);
@@ -571,6 +565,50 @@ public class ProcessGameState extends Thread {
                 currentPlayer.setLocation(newLocation);
 
                 tilesOn = tilesOn(currentPlayer);
+
+                // TODO check if tile is solid and reflect velocity and calculate location again
+                for (int[] tileCords : tilesOn) {
+                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                    if (tileOn.getState() == TileState.SOLID) {
+                        Location tileLoc = Tile.tileToLocation(tileCords[0], tileCords[1]);
+                        double xDiff = tileLoc.getX() - newLocation.getX();
+                        double yDiff = tileLoc.getY() - newLocation.getY();
+
+                        // TODO handle perfect corner collisions somehow?
+                        int gapSize = currentPlayer.getSize() + (Tile.TILE_SIZE / 2) + 1;
+                        int normal;
+                        if (Math.abs(xDiff) < Math.abs(yDiff)) {
+                            if (yDiff < 0) {
+                                normal = 90;
+                                newLocation = new Location(newLocation.getX(), tileLoc.getY() + gapSize);
+                            } else {
+                                normal = 270;
+                                newLocation = new Location(newLocation.getX(), tileLoc.getY() - gapSize);
+                            }
+                        } else {
+                            if (xDiff < 0) {
+                                normal = 0;
+                                newLocation = new Location(tileLoc.getX() + gapSize, newLocation.getY());
+                            } else {
+                                normal = 180;
+                                newLocation = new Location(tileLoc.getX() - gapSize, newLocation.getY());
+                            }
+                        }
+
+                        currentPlayer.setLocation(newLocation);
+
+                        int newDirection = normal + (normal - currentVelocity.getDirection()) - 180;
+                        if (newDirection < 0)
+                            newDirection += 360;
+                        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * 0.7);
+                        currentPlayer.setVelocity(currentVelocity);
+                        
+                        tilesOn = tilesOn(currentPlayer);
+                        break;
+                    }
+                }
+
+                // TODO entity collisions
 
                 for (int[] tileCords : tilesOn) {
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
