@@ -366,6 +366,46 @@ public class GameRenderer implements Runnable {
                         currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
                         thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
             }
+            // Check if player reloading
+            else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
+                // Check if in map of currently tracked players and if not, add it
+                if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                    switch (currentPlayer.getTeam()) {
+                        //TODO: adjust timeBetweenFrames according to how much time it takes to reload gun
+                        case RED:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
+                                    5, 200));
+                            break;
+                        case BLUE:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
+                                    5, 200));
+                            break;
+                        case GREEN:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
+                                    5, 200));
+                            break;
+                        case YELLOW:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
+                                    5, 200));
+                            break;
+                        default:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
+                                    5, 200));
+                    }
+                }
+
+                // Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
+                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
             // Check if player attacking
             else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
                 Image spriteToRender;

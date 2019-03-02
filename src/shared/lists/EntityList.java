@@ -31,6 +31,13 @@ public enum EntityList {
     PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(0.5, 0, 0, 0)),
     PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(0.15, 0, 0, 0)),
 
+    // Player reload
+    PLAYER_RELOAD("file:assets/img/entity/player/player_reload.png"),
+    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", new ColorAdjust(-0.3, 0, 0, 0)),
+    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", new ColorAdjust(-0.75, 0, 0, 0)),
+    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", new ColorAdjust(0.5, 0, 0, 0)),
+    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", new ColorAdjust(0.15, 0, 0, 0)),
+
     // Enemy
     ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
     RUNNER("file:assets/img/entity/enemy/zombie.png"),
