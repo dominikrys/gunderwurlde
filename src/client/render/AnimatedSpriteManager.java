@@ -44,7 +44,7 @@ public class AnimatedSpriteManager {
         if (frameCount != 1) {
             timeline = new Timeline(new KeyFrame(Duration.millis(timeBetweenFrames),
                     e -> {
-                        if (currentFrame < frameCount) {
+                        if (currentFrame < frameCount - 1) {
                             sx += individualImageWidth;
                             currentFrame++;
                         } else {

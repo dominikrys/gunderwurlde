@@ -1,6 +1,8 @@
 package client.input;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import client.GameHandler;
 import client.gui.Settings;
@@ -15,7 +17,7 @@ import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
 public class KeyboardHandler extends UserInteraction {
-	private int playerID;
+    private int playerID;
     private GameHandler handler;
     private Scene scene;
     private GameView gameView;
@@ -35,6 +37,8 @@ public class KeyboardHandler extends UserInteraction {
     private boolean dropPressed = false;
     private boolean interactPressed = false;
     private AnimationTimer t;
+    private Timer timer;
+    private TimerTask task;
     private boolean activated;
 
     // Settings
@@ -95,16 +99,16 @@ public class KeyboardHandler extends UserInteraction {
                         interactPressed = true;
                     }
                     if(settings.getKey("item1").equals(pressed)) {
-                    	changeItem.changeTo(1);
+                        changeItem.changeTo(1);
                     }
                     if(settings.getKey("item2").equals(pressed)) {
-                    	changeItem.changeTo(2);
+                        changeItem.changeTo(2);
                     }
                     if(settings.getKey("item3").equals(pressed)) {
-                    	changeItem.changeTo(3);
+                        changeItem.changeTo(3);
                     }
                     if(settings.getKey("esc").equals(pressed)) {
-                    	// TODO: escape menu
+                        // TODO: escape menu
                     }
                 }
             }
@@ -162,6 +166,55 @@ public class KeyboardHandler extends UserInteraction {
     @Override
     public void activate() {
         super.activate();
+
+        this.timer = new Timer();
+        this.task = new TimerTask() {
+            @Override
+            public void run() {
+                if (upPressed || leftPressed || downPressed || rightPressed) {
+                    if((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
+                        movement.move("up");
+                    }
+                    else if((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
+                        movement.move("left");
+                    }
+                    else if((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
+                        movement.move("down");
+                    }
+                    else if((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
+                        movement.move("right");
+                    }
+                    else if(upPressed && leftPressed && !downPressed && !rightPressed) {
+                        movement.move("upLeft");
+                    }
+                    else if(upPressed && !leftPressed && !downPressed && rightPressed) {
+                        movement.move("upRight");
+                    }
+                    else if(!upPressed && leftPressed && downPressed && !rightPressed) {
+                        movement.move("downLeft");
+                    }
+                    else if(!upPressed && !leftPressed && downPressed && rightPressed) {
+                        movement.move("downRight");
+                    }
+                    else {
+                        // do nothing
+                    }
+                }
+                if(reloadPressed) {
+                    reload.reload();
+                }
+                if(dropPressed) {
+                    dropItem.drop();
+                }
+                if(interactPressed) {
+
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 1);
+
+		/*
         this.t = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -207,6 +260,7 @@ public class KeyboardHandler extends UserInteraction {
         };
 
         this.t.start();
+        */
     }
 
     @Override
