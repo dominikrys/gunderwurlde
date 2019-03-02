@@ -5,9 +5,12 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -107,7 +110,24 @@ public class GameRenderer implements Runnable {
                 System.out.println("Error when loading image: " + entity.name() + " from directory: " + entity.getPath());
                 loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
             } else {
-                loadedSprites.put(entity, tempImage);
+                // Check if transformation necessary
+                if (entity.getColorAdjust() != null) {
+                    // Create new imageview and apply the color adjustment
+                    ImageView tempImageView = new ImageView(tempImage);
+                    tempImageView.setEffect(entity.getColorAdjust());
+
+                    // Convert from imageview and store  in the loaded sprites hashmap
+                    Platform.runLater(() -> {
+                        SnapshotParameters sp = new SnapshotParameters();
+                        sp.setFill(Color.TRANSPARENT);
+
+                        loadedSprites.put(entity, SwingFXUtils.toFXImage(
+                                SwingFXUtils.fromFXImage(tempImageView.snapshot(sp, null), null), null));
+                    });
+                } else {
+                    // No transformation necessary, just store in sprites hashmap
+                    loadedSprites.put(entity, tempImage);
+                }
             }
         }
 
@@ -304,29 +324,6 @@ public class GameRenderer implements Runnable {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
-            /*
-            // Get the correct sprite according to playerID, otherwise load the default player graphic
-            Image spriteToRender;
-            switch (currentPlayer.getTeam()) {
-                case RED:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
-                    break;
-                case GREEN:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
-                    break;
-                case YELLOW:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
-                    break;
-                case BLUE:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
-                    break;
-                default:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER);
-                    break;
-            }
-
-            renderEntity(currentPlayer, mapGC, spriteToRender);
-*/
             if (currentPlayer.isMoving()) {
                 //TODO have this go through a scale factor check
 
@@ -340,12 +337,29 @@ public class GameRenderer implements Runnable {
                 // Animation now in playerOnMap map so just render in appropriate location
                 AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
                 drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
-                        currentPlayer.getPose().getDirection(),currentPlayer.getPose().getX(),
+                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
                         currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
                         thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
             } else {
                 Image spriteToRender;
-                spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+                        break;
+                    case GREEN:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
+                        break;
+                    case YELLOW:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
+                        break;
+                    case BLUE:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
+                        break;
+                    default:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                        break;
+                }
                 renderEntity(currentPlayer, mapGC, spriteToRender);
             }
 
