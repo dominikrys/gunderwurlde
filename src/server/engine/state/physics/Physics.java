@@ -4,15 +4,14 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 
 public class Physics {
-    private static double MASS_PER_SIZE = 2;
     private static int TIME_PER_SECOND = 1000;
     private static int GRAVITY = 100;
     private static double TILE_BOUNCE = 0.7;
     private static double OBJECT_BOUNCE = 0.9;
 
     public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2) {
-        double e1Mass = getMass(e1.getSize());
-        double e2Mass = getMass(e2.getSize());
+        double e1Mass = e1.getMass();
+        double e2Mass = e1.getMass();
         Velocity e1Velocity = e1.getVelocity();
         Velocity e2Velocity = e2.getVelocity();
         double[] e1VelocityComponents = getComponents(e1Velocity.getDirection(), e1Velocity.getSpeed());
@@ -77,8 +76,8 @@ public class Physics {
         return e;
     }
 
-    public static Force getFrictionalForce(double frictionCoefficient, int size, int directionOfVelocity) {
-        double force = getFrictionalForce(frictionCoefficient, getMass(size));
+    public static Force getFrictionalForce(double frictionCoefficient, double mass, int directionOfVelocity) {
+        double force = getFrictionalForce(frictionCoefficient, mass);
         int direction = directionOfVelocity - 180;
         if (direction < 0)
             direction += 360;
@@ -90,7 +89,7 @@ public class Physics {
     }
 
     public static Force getDragForce(double fluidDensity, Velocity velocity, int size) {
-        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size));
+        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size) * 2);
         int direction = velocity.getDirection() - 180;
         if (direction < 0)
             direction += 360;
@@ -144,12 +143,12 @@ public class Physics {
         return new Force((int) result[0], result[1]);
     }
 
-    public static Force getForce(double acceleration, int direction, int size) {
-        return new Force(direction, acceleration * getMass(size));
+    public static Force getForce(double acceleration, int direction, double mass) {
+        return new Force(direction, acceleration * mass);
     }
 
-    public static double getAcceleration(Force f, int size) {
-        return f.getForce() / getMass(size);
+    public static double getAcceleration(Force f, double mass) {
+        return f.getForce() / mass;
     }
 
     private static double[] combineComponents(double[] c1, double[] c2) {
@@ -167,10 +166,6 @@ public class Physics {
 
     private static double normalise(double val) {
         return val / Tile.TILE_SIZE;
-    }
-
-    private static double getMass(int size) {
-        return normalise(size) * MASS_PER_SIZE;
     }
 
 }

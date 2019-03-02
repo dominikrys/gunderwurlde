@@ -261,7 +261,7 @@ public class ProcessGameState extends Thread {
 
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
-                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getSize()));
+                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getMass()));
                     }
 
                 }
@@ -722,7 +722,7 @@ public class ProcessGameState extends Thread {
         if (currentVelocity.getSpeed() == 0 && resultantForce.getForce() == 0)
             return e;
 
-        int size = e.getSize();
+        double mass = e.getMass();
         LinkedHashSet<int[]> tilesOn = tilesOn((Entity) e);
 
         double frictionCoefficient = 0;
@@ -734,7 +734,7 @@ public class ProcessGameState extends Thread {
                 frictionCoefficient += tileOn.getFrictionCoefficient();
                 density += tileOn.getDensity();
             } else {
-                System.out.println("WARNING: Object stuck in tile.");
+                System.out.println("WARNING: Object clipped in tile.");
             }
         }
 
@@ -742,17 +742,17 @@ public class ProcessGameState extends Thread {
         frictionCoefficient = frictionCoefficient / numOfTilesOn;
         density = density / numOfTilesOn;
 
-        Force frictionForce = Physics.getFrictionalForce(frictionCoefficient, size, currentVelocity.getDirection());
+        Force frictionForce = Physics.getFrictionalForce(frictionCoefficient, mass, currentVelocity.getDirection());
 
         if (resultantForce.getForce() == 0
-                && Physics.getAcceleration(frictionForce, size) * Physics.normaliseTime(timeDiff) > currentVelocity.getSpeed()) {
+                && Physics.getAcceleration(frictionForce, mass) * Physics.normaliseTime(timeDiff) > currentVelocity.getSpeed()) {
             e.setVelocity(new Velocity());
             return e;
         }
 
         if (currentVelocity.getSpeed() != 0) {
             e.addNewForce(frictionForce);
-            e.addNewForce(Physics.getDragForce(density, currentVelocity, size));
+            e.addNewForce(Physics.getDragForce(density, currentVelocity, e.getSize()));
             resultantForce = e.getResultantForce();
         } else if (resultantForce.getForce() > frictionForce.getForce()) {
             resultantForce = new Force(resultantForce.getDirection(), resultantForce.getForce() - frictionForce.getForce());
@@ -760,7 +760,7 @@ public class ProcessGameState extends Thread {
             return e; // force not great enough
         }
 
-        double acceleration = Physics.getAcceleration(resultantForce, size);
+        double acceleration = Physics.getAcceleration(resultantForce, mass);
         currentVelocity = Physics.getNewVelocity(acceleration, currentVelocity, resultantForce.getDirection(), timeDiff);
 
         e.setVelocity(currentVelocity);
@@ -772,10 +772,10 @@ public class ProcessGameState extends Thread {
 
         Location mostSigTileLoc = getMostSignificatTileLocation(newLocation, tilesOn, tileMap);
         if (mostSigTileLoc != null) {
-            e = (Player) Physics.tileCollision(e, mostSigTileLoc);
+            e = Physics.tileCollision(e, mostSigTileLoc);
         }
 
-        // TODO entity collisions
+        // TODO object collisions
 
         return e;
     }

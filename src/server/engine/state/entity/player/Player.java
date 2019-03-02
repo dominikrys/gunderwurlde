@@ -27,6 +27,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
+    public static final double DEFAULT_MASS = 3;
 
     private static int nextPlayerID = 0;
     protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
@@ -47,6 +48,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     protected boolean moving;
     protected Velocity velocity;
     protected Force resultantForce;
+    protected double mass;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE, EntityList.PLAYER);
@@ -70,6 +72,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         this.currentAction = ActionList.NONE;
         this.velocity = new Velocity();
         this.resultantForce = new Force();
+        this.mass = DEFAULT_MASS;
     }
 
     public ActionList getCurrentAction() {
@@ -289,6 +292,11 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     @Override
     public void addNewForce(Force f) {
         this.resultantForce = Physics.getNewForce(resultantForce, f);
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
     }
 
 }

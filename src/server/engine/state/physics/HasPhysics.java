@@ -16,4 +16,6 @@ public interface HasPhysics {
     public abstract void setLocation(Location location);
 
     public abstract int getSize();
+
+    public abstract double getMass();
 }
