@@ -1,7 +1,6 @@
 package shared.lists;
 
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.paint.Color;
 
 // List of all entities as well as renderable objects
 
@@ -18,6 +17,12 @@ public enum EntityList {
     PLAYER_GREEN("file:assets/img/entity/player/player.png", new ColorAdjust(0.5, 0, 0, 0)),
     PLAYER_YELLOW("file:assets/img/entity/player/player.png", new ColorAdjust(0.15, 0, 0, 0)),
 
+    // Player holding gun
+    PLAYER_WITH_GUN("file:assets/img/entity/player/player_gun.png"),
+    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", new ColorAdjust(-0.3, 0, 0, 0)),
+    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", new ColorAdjust(-0.75, 0, 0, 0)),
+    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", new ColorAdjust(0.5, 0, 0, 0)),
+    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", new ColorAdjust(0.15, 0, 0, 0)),
 
     // Enemy
     ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
@@ -41,7 +46,13 @@ public enum EntityList {
     CROSSHAIR("file:assets/img/gui/crosshair.png"),
 
     // Animations TODO: maybe move this out to another enum/class
-    PLAYER_WALK("file:assets/img/entity/player/player_walk.png");
+
+    // Walk
+    PLAYER_WALK("file:assets/img/entity/player/player_walk.png"),
+    PLAYER_WALK_RED("file:assets/img/entity/player/player_walk.png", new ColorAdjust(-0.3, 0, 0, 0)),
+    PLAYER_WALK_BLUE("file:assets/img/entity/player/player_walk.png", new ColorAdjust(-0.75, 0, 0, 0)),
+    PLAYER_WALK_GREEN("file:assets/img/entity/player/player_walk.png", new ColorAdjust(0.5, 0, 0, 0)),
+    PLAYER_WALK_YELLOW("file:assets/img/entity/player/player_walk.png", new ColorAdjust(0.15, 0, 0, 0));
 
     private final String spritePath;
     private ColorAdjust colorAdjust;

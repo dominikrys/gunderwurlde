@@ -330,9 +330,32 @@ public class GameRenderer implements Runnable {
 
                 // Check if in map of currently tracked players and if not, add it
                 if (!playersOnMap.containsKey(currentPlayer.getID())) {
-                    playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                            loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
-                            6, 75));
+                    switch(currentPlayer.getTeam()) {
+                        case RED:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
+                                    6, 75));
+                            break;
+                        case BLUE:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_BLUE), 32, 32,
+                                    6, 75));
+                            break;
+                        case GREEN:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_GREEN), 32, 32,
+                                    6, 75));
+                            break;
+                        case YELLOW:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_YELLOW), 32, 32,
+                                    6, 75));
+                            break;
+                        default:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
+                                    6, 75));
+                    }
                 }
 
                 // Animation now in playerOnMap map so just render in appropriate location
@@ -342,27 +365,57 @@ public class GameRenderer implements Runnable {
                         currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
                         thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
             }
-            // If standing, just render
+            // If standing, render standing image
             else {
-                Image spriteToRender;
+                // Check if player has item that takes bullets - if so, render player with a gun
+                boolean hasGun = false;
 
-                switch (currentPlayer.getTeam()) {
-                    case RED:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+                for (ItemView iv : currentPlayer.getItems()) {
+                    if (iv.getAmmoType() != AmmoList.NONE) {
+                        hasGun = true;
                         break;
-                    case GREEN:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
-                        break;
-                    case YELLOW:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
-                        break;
-                    case BLUE:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
-                        break;
-                    default:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER);
-                        break;
+                    }
                 }
+
+                Image spriteToRender;
+                if (hasGun) {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RED);
+                            break;
+                        case BLUE:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_BLUE);
+                            break;
+                        case GREEN:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_GREEN);
+                            break;
+                        case YELLOW:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_YELLOW);
+                            break;
+                        default:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN);
+                            break;
+                    }
+                } else {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+                            break;
+                        case GREEN:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
+                            break;
+                        case YELLOW:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
+                            break;
+                        case BLUE:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
+                            break;
+                        default:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                            break;
+                    }
+                }
+
                 renderEntity(currentPlayer, mapGC, spriteToRender);
             }
 
