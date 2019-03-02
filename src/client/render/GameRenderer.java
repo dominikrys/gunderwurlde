@@ -334,7 +334,7 @@ public class GameRenderer implements Runnable {
                 if (!playersOnMap.containsKey(currentPlayer.getID())) {
                     playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                             loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
-                            6, 100));
+                            6, 75));
                 }
 
                 // Animation now in playerOnMap map so just render in appropriate location

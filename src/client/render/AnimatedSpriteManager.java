@@ -33,21 +33,28 @@ public class AnimatedSpriteManager {
      */
 
     AnimatedSpriteManager(Image image, int individualImageHeight, int individualImageWidth, int frameCount, int timeBetweenFrames) {
+        // Initialise variables
         this.image = image;
         this.individualImageHeight = individualImageHeight;
         this.individualImageWidth = individualImageWidth;
         this.frameCount = frameCount;
         this.timeBetweenFrames = timeBetweenFrames;
         this.sy = 0;
+        this.sx = 0;
         this.currentFrame = 0;
 
+        // Check if animation - frame count has to be higher than 1
         if (frameCount != 1) {
+            // Create timeline that will loop over the parts of the spritesheet
             timeline = new Timeline(new KeyFrame(Duration.millis(timeBetweenFrames),
                     e -> {
+                        // Check if not reached end of frames
                         if (currentFrame < frameCount - 1) {
+                            // Increment position x of current frame with the frame width
                             sx += individualImageWidth;
                             currentFrame++;
                         } else {
+                            // Reached end of animation, reset sx and frame counter
                             sx = 0;
                             currentFrame = 0;
                         }
