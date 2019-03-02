@@ -1,6 +1,10 @@
 package shared.lists;
 
+import javafx.scene.effect.ColorAdjust;
+
 // List of all entities as well as renderable objects
+
+// For coloradjust: hue, saturation, brightness, contrast. All between -1 and 1
 public enum EntityList {
     // Item
     PISTOL("file:assets/img/entity/item/pistol.png"),
@@ -8,10 +12,10 @@ public enum EntityList {
 
     // Player
     PLAYER("file:assets/img/entity/player/player.png"),
-    PLAYER_RED("file:assets/img/entity/player/player_red.png"),
-    PLAYER_GREEN("file:assets/img/entity/player/player_green.png"),
-    PLAYER_YELLOW("file:assets/img/entity/player/player_yellow.png"),
-    PLAYER_BLUE("file:assets/img/entity/player/player_blue.png"),
+    PLAYER_RED("file:assets/img/entity/player/player", new ColorAdjust(0.5, 0, 0, 0)),
+    PLAYER_GREEN("file:assets/img/entity/player/player", new ColorAdjust(-0.5, 0, 0, 0)),
+    PLAYER_YELLOW("file:assets/img/entity/player/player", new ColorAdjust(1, 0, 0, 0)),
+    PLAYER_BLUE("file:assets/img/entity/player/player", new ColorAdjust(-1, 0, 0, 0)),
 
     // Enemy
     ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
@@ -38,10 +42,18 @@ public enum EntityList {
     PLAYER_WALK("file:assets/img/entity/player/player_walk.png");
 
     private final String spritePath;
+    private ColorAdjust colorAdjust;
 
     EntityList(String spritePath) {
         this.spritePath = spritePath;
+        colorAdjust = null;
     }
+
+    EntityList(String spritePath, ColorAdjust colorAdjust) {
+        this(spritePath);
+        this.colorAdjust = colorAdjust;
+    }
+
 
     public String getPath() {
         return spritePath;
