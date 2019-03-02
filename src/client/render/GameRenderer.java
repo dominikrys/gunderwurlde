@@ -149,11 +149,10 @@ public class GameRenderer implements Runnable {
             }
         }.start();
 
-        /*
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
-        */
+        // Alternative: use timeline. This way can also specify FPS
+//        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//        timeline.play();
     }
 
     // Set up the window for tha game
@@ -415,7 +414,7 @@ public class GameRenderer implements Runnable {
     private void drawRotatedImageFromSpritesheet(GraphicsContext gc, Image image, double angle, double tlpx,
                                                  double tlpy, double sx, double sy, double sw, double sh) {
         gc.save(); // Saves the current state on stack, including the current transform for later
-        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+        rotate(gc, angle, tlpx + sw / 2, tlpy + sh / 2);
         gc.drawImage(image, sx, sy, sw, sh, tlpx, tlpy, sw, sh);
         gc.restore(); // Back to original state (before rotation)
     }
