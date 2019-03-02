@@ -12,8 +12,8 @@ public class AnimatedSpriteManager {
     private int timeBetweenFrames;
     private Timeline timeline;
 
-    private int sx;
-    private int sy;
+    private double sx;
+    private double sy;
     private int individualImageWidth;
     private int individualImageHeight;
 
@@ -74,11 +74,11 @@ public class AnimatedSpriteManager {
         return image;
     }
 
-    public int getSx() {
+    public double getSx() {
         return sx;
     }
 
-    public int getSy() {
+    public double getSy() {
         return sy;
     }
 

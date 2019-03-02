@@ -32,7 +32,10 @@ public enum EntityList {
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
-    CROSSHAIR("file:assets/img/gui/crosshair.png");
+    CROSSHAIR("file:assets/img/gui/crosshair.png"),
+
+    // Animations TODO: maybe move this out to another enum/class
+    PLAYER_WALK("file:assets/img/entity/player/player_walk.png");
 
     private final String spritePath;
 

@@ -72,6 +72,8 @@ public class GameRenderer implements Runnable {
     // X and Y coordinates of the mouse
     private double mouseX;
     private double mouseY;
+    // Animation hashmaps
+    private Map<Integer, AnimatedSpriteManager> playersOnMap;
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -118,9 +120,12 @@ public class GameRenderer implements Runnable {
         // Initialise cursor pane
         cursorPane = new AnchorPane();
 
+        // Initialise players on map animation hashmap
+        playersOnMap = new HashMap<>();
+
         // Initialise mouse positions to not bug out camera
-        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - Constants.TILE_SIZE / 2;
-        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - Constants.TILE_SIZE / 2;
+        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
+        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
@@ -300,6 +305,7 @@ public class GameRenderer implements Runnable {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
+            /*
             // Get the correct sprite according to playerID, otherwise load the default player graphic
             Image spriteToRender;
             switch (currentPlayer.getTeam()) {
@@ -321,6 +327,28 @@ public class GameRenderer implements Runnable {
             }
 
             renderEntity(currentPlayer, mapGC, spriteToRender);
+*/
+            if (currentPlayer.isMoving()) {
+                //TODO have this go through a scale factor check
+
+                // Check if in map of currently tracked players and if not, add it
+                if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                    playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                            loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
+                            6, 100));
+                }
+
+                // Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentPlayer.getPose().getDirection(),currentPlayer.getPose().getX(),
+                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            } else {
+                Image spriteToRender;
+                spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+                renderEntity(currentPlayer, mapGC, spriteToRender);
+            }
 
             // Render healthbar
             renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(), mapGC);
@@ -374,6 +402,22 @@ public class GameRenderer implements Runnable {
         // Render entity to specified location on canvas
         drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
                 entity.getPose().getY());
+    }
+
+    // Draw rotated image
+    private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
+        gc.save(); // Saves the current state on stack, including the current transform for later
+        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+        gc.drawImage(image, tlpx, tlpy);
+        gc.restore(); // Back to original state (before rotation)
+    }
+
+    private void drawRotatedImageFromSpritesheet(GraphicsContext gc, Image image, double angle, double tlpx,
+                                                 double tlpy, double sx, double sy, double sw, double sh) {
+        gc.save(); // Saves the current state on stack, including the current transform for later
+        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+        gc.drawImage(image, sx, sy, sw, sh, tlpx, tlpy, sw, sh);
+        gc.restore(); // Back to original state (before rotation)
     }
 
     // Method for getting the current player
@@ -619,14 +663,6 @@ public class GameRenderer implements Runnable {
             System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
             return loadedSprites.get(EntityList.DEFAULT);
         }
-    }
-
-    // Draw rotated image
-    private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
-        gc.save(); // Saves the current state on stack, including the current transform for later
-        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
-        gc.drawImage(image, tlpx, tlpy);
-        gc.restore(); // Back to original state (before rotation)
     }
 
     // Create an Image object from specified colour
