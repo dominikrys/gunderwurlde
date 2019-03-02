@@ -7,6 +7,35 @@ public class Physics {
     private static double MASS_PER_SIZE = 2;
     private static int TIME_PER_SECOND = 1000;
     private static int GRAVITY = 100;
+    private static double TILE_BOUNCE = 0.7;
+    private static double OBJECT_BOUNCE = 0.9;
+
+    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2) {
+        double e1Mass = getMass(e1.getSize());
+        double e2Mass = getMass(e2.getSize());
+        Velocity e1Velocity = e1.getVelocity();
+        Velocity e2Velocity = e2.getVelocity();
+        double[] e1VelocityComponents = getComponents(e1Velocity.getDirection(), e1Velocity.getSpeed());
+        double[] e2VelocityComponents = getComponents(e2Velocity.getDirection(), e2Velocity.getSpeed());
+
+        double e1NewXvelocity = getNewVelocity(e1VelocityComponents[0], e2VelocityComponents[0], e1Mass, e2Mass);
+        double e2NewXvelocity = e1NewXvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[0] - e2VelocityComponents[0]));
+        double e1NewYvelocity = getNewVelocity(e1VelocityComponents[1], e2VelocityComponents[1], e1Mass, e2Mass);
+        double e2NewYvelocity = e1NewYvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[1] - e2VelocityComponents[1]));
+
+        e1VelocityComponents = fromComponents(e1NewXvelocity, e1NewYvelocity);
+        e2VelocityComponents = fromComponents(e2NewXvelocity, e2NewYvelocity);
+
+        e1.setVelocity(new Velocity((int) e1VelocityComponents[0], e1VelocityComponents[1]));
+        e2.setVelocity(new Velocity((int) e2VelocityComponents[0], e2VelocityComponents[1]));
+
+        HasPhysics[] result = {e1,e2};
+        return result;
+    }
+
+    private static double getNewVelocity(double e1Velocity, double e2Velocity, double e1Mass, double e2Mass) { // for e1
+        return ((e1Mass * e1Velocity) + (e2Mass * e2Velocity) + (e2Mass * OBJECT_BOUNCE * (e2Velocity - e1Velocity))) / (e1Mass + e2Mass);
+    }
 
     public static HasPhysics tileCollision(HasPhysics e, Location tileLoc) {
         int gapSize = e.getSize() + (Tile.TILE_SIZE / 2) + 1;
@@ -42,7 +71,7 @@ public class Physics {
         int newDirection = normal + (normal - currentVelocity.getDirection()) - 180;
         if (newDirection < 0)
             newDirection += 360;
-        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * 0.7);
+        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * TILE_BOUNCE);
         e.setVelocity(currentVelocity);
 
         return e;

@@ -696,9 +696,9 @@ public class ProcessGameState extends Thread {
     }
 
     private static double getDistanceMoved(long timeDiff, double speed) {
-        double distMoved = (timeDiff / 1000.0) * speed; // time in millis
+        double distMoved = Physics.normaliseTime(timeDiff) * speed; // time in millis
         if (distMoved >= Tile.TILE_SIZE)
-            System.out.println("WARNIG: Entity moving too fast!");
+            System.out.println("WARNING: Entity moving too fast!");
         return distMoved;
     }
 
