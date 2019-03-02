@@ -13,10 +13,10 @@ public enum EntityList {
 
     // Player
     PLAYER("file:assets/img/entity/player/player.png"),
-    PLAYER_RED("file:assets/img/entity/player/player.png", new ColorAdjust(-0.3, 0.25, 0, -0.1)),
-    PLAYER_BLUE("file:assets/img/entity/player/player.png", new ColorAdjust(-0.75, 0.25, 0, -0.1)),
-    PLAYER_GREEN("file:assets/img/entity/player/player.png", new ColorAdjust(0.5, 0.25, 0, -0.1)),
-    PLAYER_YELLOW("file:assets/img/entity/player/player.png", new ColorAdjust(0.15, 0.25, 0, -0.1)),
+    PLAYER_RED("file:assets/img/entity/player/player.png", new ColorAdjust(-0.3, 0, 0, 0)),
+    PLAYER_BLUE("file:assets/img/entity/player/player.png", new ColorAdjust(-0.75, 0, 0, 0)),
+    PLAYER_GREEN("file:assets/img/entity/player/player.png", new ColorAdjust(0.5, 0, 0, 0)),
+    PLAYER_YELLOW("file:assets/img/entity/player/player.png", new ColorAdjust(0.15, 0, 0, 0)),
 
 
     // Enemy

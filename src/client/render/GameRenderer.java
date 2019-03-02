@@ -324,6 +324,7 @@ public class GameRenderer implements Runnable {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
+            // Check correct animation
             if (currentPlayer.isMoving()) {
                 //TODO have this go through a scale factor check
 
@@ -340,7 +341,9 @@ public class GameRenderer implements Runnable {
                         currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
                         currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
                         thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
-            } else {
+            }
+            // If standing, just render
+            else {
                 Image spriteToRender;
 
                 switch (currentPlayer.getTeam()) {
