@@ -24,6 +24,7 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import shared.Constants;
 import shared.Pose;
+import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
@@ -330,7 +331,7 @@ public class GameRenderer implements Runnable {
 
                 // Check if in map of currently tracked players and if not, add it
                 if (!playersOnMap.containsKey(currentPlayer.getID())) {
-                    switch(currentPlayer.getTeam()) {
+                    switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
@@ -364,6 +365,30 @@ public class GameRenderer implements Runnable {
                         currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
                         currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
                         thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
+            // Check if player attacking
+            else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
+                Image spriteToRender;
+
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_RED);
+                        break;
+                    case GREEN:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN);
+                        break;
+                    case YELLOW:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW);
+                        break;
+                    case BLUE:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE);
+                        break;
+                    default:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL);
+                        break;
+                }
+
+                renderEntity(currentPlayer, mapGC, spriteToRender);
             }
             // If standing, render standing image
             else {
