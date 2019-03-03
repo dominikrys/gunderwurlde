@@ -12,14 +12,20 @@ public class ItemView implements Serializable {
     protected int clipSize;
     protected int ammoInClip;
     protected boolean autoFire;
+    int reloadTime;
 
-    public ItemView(ItemList name, AmmoList ammoType, int clipSize, int ammoInClip, boolean autoFire) {
+    public ItemView(ItemList name, AmmoList ammoType, int clipSize, int ammoInClip, boolean autoFire, int reloadTime) {
         this.name = name;
         this.ammoType = ammoType;
         this.clipSize = clipSize;
         this.ammoInClip = ammoInClip;
         this.autoFire = autoFire;
+        this.reloadTime = reloadTime;
 
+    }
+
+    public int getReloadTime() { // total reload time, not time left till reload!
+        return reloadTime;
     }
 
     public boolean isAutoFire() {

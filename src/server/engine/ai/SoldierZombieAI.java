@@ -7,6 +7,7 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.entity.projectile.SmallBullet;
+import server.engine.state.item.weapon.gun.Pistol;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Teams;
@@ -21,6 +22,7 @@ public class SoldierZombieAI extends EnemyAI{
     private long beginAttackTime;
     private Random rand = new Random();
     private Pose poseToGo;
+    private Pistol pistol = new Pistol();
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire){
         this.RANGE_TO_SHOOT = rangeToShoot;
@@ -67,12 +69,8 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            LinkedList<Projectile> projectiles = new LinkedList<>();
-            SmallBullet bulletUsed = new SmallBullet();
-            bulletUsed.setSpeed(SmallBullet.DEFAULT_SPEED / 4);
-//            projectiles.add(bulletUsed.createFor(pose, Teams.ENEMY));
-            projectiles.add(bulletUsed.createFor(new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY));
-            attacks.add(new ProjectileAttack(projectiles));
+            attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
+                    new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }

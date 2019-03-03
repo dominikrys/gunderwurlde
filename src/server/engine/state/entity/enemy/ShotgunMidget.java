@@ -10,7 +10,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class ShotgunMidget extends Enemy {
-    public static final int DEFAULT_HEALTH = 2;
+    public static final int DEFAULT_HEALTH = 1;
     public static final int DEFAULT_MOVESPEED = (Tile.TILE_SIZE / 3);
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 15;

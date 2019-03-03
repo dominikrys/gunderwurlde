@@ -9,6 +9,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -58,56 +59,40 @@
       <HBox alignment="CENTER" prefWidth="200.0" style="-fx-spacing: 10px; -fx-padding: 0px;">
          <children>
             <Button fx:id="teamRedButton" graphicTextGap="5.0" mnemonicParsing="false" onAction="#teamRedButtonPress" text="Red">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:assets\img\entity\player\player_red.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
+               <graphic>
+                  <Pane maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: red;" />
+               </graphic>
             </Button>
             <Button fx:id="teamBlueButton" mnemonicParsing="false" onAction="#teamBlueButtonPress" text="Blue">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:assets\img\entity\player\player_blue.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
+               <graphic>
+                  <Pane maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: blue;"/>
+               </graphic>
             </Button>
             <Button fx:id="teamGreenButton" mnemonicParsing="false" onAction="#teamGreenButtonPress" text="Green">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:assets\img\entity\player\player_green.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
+               <graphic>
+                  <Pane maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: green"/>
+               </graphic>
             </Button>
             <Button fx:id="teamYellowButton" graphicTextGap="5.0" mnemonicParsing="false" onAction="#teamYellowButtonPress" text="Yellow">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:assets\img\entity\player\player_yellow.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="teamButton" />
                </styleClass>
+               <graphic>
+                  <Pane maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: yellow;"/>
+               </graphic>
             </Button>
          </children>
       </HBox>

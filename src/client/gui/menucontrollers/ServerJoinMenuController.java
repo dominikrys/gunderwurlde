@@ -63,7 +63,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     @FXML
     void backButtonPress(ActionEvent event) {
         // Switch to play menu and clear this screen
-        (new PlayMenuController(stage, settings)).show();
+        (new PlayMenuController(stage, settings, playerName, selectedTeam)).show();
         this.getChildren().clear();
     }
 

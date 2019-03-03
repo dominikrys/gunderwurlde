@@ -3,10 +3,12 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -74,6 +76,13 @@
             </Button>
          </children>
       </GridPane>
+      <HBox fx:id="playerAmountBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
+         <children>
+            <Label styleClass="serverColon" text="Number of players:" />
+            <Slider fx:id="playerSlider" blockIncrement="1.0" max="4.0" minorTickCount="0" onMouseReleased="#playerSliderDragged" showTickMarks="true" snapToTicks="true" />
+            <Label fx:id="playerNumberLabel" styleClass="serverColon" text="0" />
+         </children>
+      </HBox>
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />
