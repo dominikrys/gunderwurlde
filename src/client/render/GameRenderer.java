@@ -335,27 +335,27 @@ public class GameRenderer implements Runnable {
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
-                                    6, 75));
+                                    6, 75, 0, AnimationType.WALK));
                             break;
                         case BLUE:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_BLUE), 32, 32,
-                                    6, 75));
+                                    6, 75, 0, AnimationType.WALK));
                             break;
                         case GREEN:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_GREEN), 32, 32,
-                                    6, 75));
+                                    6, 75, 0, AnimationType.WALK));
                             break;
                         case YELLOW:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_YELLOW), 32, 32,
-                                    6, 75));
+                                    6, 75, 0, AnimationType.WALK));
                             break;
                         default:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
-                                    6, 75));
+                                    6, 75, 0, AnimationType.WALK));
                     }
                 }
 
@@ -375,27 +375,27 @@ public class GameRenderer implements Runnable {
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
-                                    5, 200));
+                                    5, 200, 0, AnimationType.RELOAD));
                             break;
                         case BLUE:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
-                                    5, 200));
+                                    5, 200, 0, AnimationType.RELOAD));
                             break;
                         case GREEN:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
-                                    5, 200));
+                                    5, 200, 0, AnimationType.RELOAD));
                             break;
                         case YELLOW:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
-                                    5, 200));
+                                    5, 200, 0, AnimationType.RELOAD));
                             break;
                         default:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
-                                    5, 200));
+                                    5, 200, 0, AnimationType.RELOAD));
                     }
                 }
 

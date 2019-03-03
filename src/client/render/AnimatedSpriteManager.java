@@ -32,7 +32,7 @@ public class AnimatedSpriteManager {
      */
 
     AnimatedSpriteManager(Image image, int individualImageHeight, int individualImageWidth, int frameCount,
-                          int timeBetweenFrames, AnimationType animationType, int cycleCount) {
+                          int timeBetweenFrames, int cycleCount, AnimationType animationType) {
         // Initialise variables
         this.image = image;
         this.individualImageHeight = individualImageHeight;
@@ -57,8 +57,9 @@ public class AnimatedSpriteManager {
                             sx = 0;
                             currentFrame = 0;
                         }
-
                     }));
+
+            // Set amount of times for animation to cycle: 0 means indefinite
             if (cycleCount == 0) {
                 timeline.setCycleCount(Timeline.INDEFINITE);
             } else {
@@ -69,7 +70,7 @@ public class AnimatedSpriteManager {
         }
     }
 
-    //TODO: remove this constructor?
+    //TODO: remove this constructor completely?
     /*
     AnimatedSpriteManager(Image image) {
         this.image = image;
