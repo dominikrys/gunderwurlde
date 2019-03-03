@@ -17,6 +17,7 @@ import shared.view.entity.PlayerView;
 
 public class SoundView {
 	
+	protected int clientID;
 	protected PlayerView client;
 	protected GameView gameView;
 	protected Settings settings;
@@ -27,20 +28,27 @@ public class SoundView {
 	
 	
 	public SoundView(int clientID, GameView gameView, Settings settings) {
+		this.clientID = clientID;
 		for(PlayerView c : gameView.getPlayers()) {
-			if(c.getID() == clientID) {
+			if(c.getID() == this.clientID) {
 				this.client = c;
 			}
 		}
 		this.gameView = gameView;
 		this.settings = settings;
 		this.pPlaying = new HashMap<Integer, GameSound>();
+		this.ePlaying = new HashMap<Integer, GameSound>();
 		this.loadGameSounds();
 		this.t = null;
 	}
 	
 	public void setGameView(GameView gameView) {
 		this.gameView = gameView;
+		for(PlayerView c : gameView.getPlayers()) {
+			if(c.getID() == this.clientID) {
+				this.client = c;
+			}
+		}
 	}
 	
 	public void loadGameSounds() {
@@ -85,11 +93,10 @@ public class SoundView {
 				}
 			}
 			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
-				pPlaying.get(p.getID()).stop();
+				//pPlaying.get(p.getID()).stop();
 			}
 		}
 		
-		/*
 		for(EnemyView e : gameView.getEnemies()) {
 			if(!e.getCurrentAction().equals(ActionList.NONE) && !e.getCurrentAction().equals(ActionList.DEAD)) {
 				if(ePlaying.containsKey(e.getID())) {
@@ -105,14 +112,13 @@ public class SoundView {
 					}
 				}
 				else {
-					
+					ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
 			else if(e.getCurrentAction().equals(ActionList.DEAD)) {
 				ePlaying.get(e.getID()).stop();
 			}
 		}
-		*/
 	}
 	
 	// NOT USED

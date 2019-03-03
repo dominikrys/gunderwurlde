@@ -26,6 +26,8 @@ public class GameSound {
 	private Timer timer;
 	private TimerTask checkReplay;
 	private boolean replayable;
+	private long startDelay;
+	final double hearableDistance = 1000;
 	
 	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, EntityView entity, ActionList action, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
@@ -40,11 +42,19 @@ public class GameSound {
 				replayable = true;
 			}
 		};
+		this.startDelay = 0;
 		this.audio = getAudio(action);
 		if(this.audio != null) {
 			this.replayable = false;
-			this.audio.setVolume(volume/100);
-			this.audio.play();
+			//this.audio.setVolume(volume/100);
+			this.calculateSound(this.audio);
+			TimerTask play = new TimerTask() {
+				@Override
+				public void run() {
+					audio.play();
+				}
+			};
+			this.timer.schedule(play, startDelay);
 		}
 	}
 	
@@ -88,17 +98,36 @@ public class GameSound {
 		}
 	}
 	
-	private void playShellsFall() {
+	private void playShellsFall(long startDelay) {
 		Timer t = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				AudioClip shells = new AudioClip(SoundList.SHELLS_FALL.getPath());
-				shells.setVolume(volume/100);
+				calculateSound(shells);
 				shells.play();
 			}
 		};
-		t.schedule(task, 700);
+		t.schedule(task, 700 + startDelay);
+	}
+	
+	private void calculateSound(AudioClip audio) {
+		double distance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2) + Math.pow(this.entity.getPose().getY() - this.client.getPose().getY(), 2));
+		double panDistance = this.entity.getPose().getX() - this.client.getPose().getX();
+		if(panDistance < 0) {
+			panDistance *= -1;
+		}
+		
+		audio.setVolume(Math.max(0, 1 - Math.abs(distance / hearableDistance))*(Math.pow(this.volume/100, 2)));
+		//System.out.println(this.entity.getPose().getX() + " " + this.entity.getPose().getY());
+		//System.out.println(this.client.getPose().getX() + " " + this.client.getPose().getY());
+		//System.out.println(distance);
+		//System.out.println(panDistance);
+		//System.out.println(audio.getVolume());
+		audio.setPan((panDistance + 1) / hearableDistance);
+		if(entity.getPose().getX() < client.getPose().getX()) {
+			audio.setPan(this.audio.getPan()*-1);
+		}
 	}
 	
 	private AudioClip getAudio(ActionList action) {
@@ -128,12 +157,12 @@ public class GameSound {
 						case PISTOL:
 							audio = loadedGameSounds.get(SoundList.PISTOL);
 							this.timer.schedule(checkReplay, Pistol.DEFAULT_COOL_DOWN - 15);
-							this.playShellsFall();
+							this.playShellsFall(0);
 							break;
 						case SHOTGUN:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN);
 							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
-							this.playShellsFall();
+							this.playShellsFall(0);
 							break;
 					}
 				}
@@ -146,9 +175,10 @@ public class GameSound {
 						case SOLDIER:
 							break;
 						case MIDGET:
-							audio = loadedGameSounds.get(SoundList.SHOTGUN);
-							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
-							this.playShellsFall();
+							audio = loadedGameSounds.get(SoundList.SHOTGUN2);
+							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN);
+							this.startDelay = 200;
+							this.playShellsFall(startDelay);
 							break;
 					}
 				}
