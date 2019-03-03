@@ -164,7 +164,7 @@ public class GameRenderer implements Runnable {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: see if this causes issues
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -764,7 +764,7 @@ public class GameRenderer implements Runnable {
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-        HUDBox.setMaxHeight(350); // TODO: get rid of this when minimap added?
+        HUDBox.setMaxHeight(350);
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
