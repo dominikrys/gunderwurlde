@@ -78,6 +78,7 @@ public class GameRenderer implements Runnable {
     private double mouseY;
     // Animation hashmaps
     private Map<Integer, AnimatedSpriteManager> playersOnMap;
+    private Map<Integer, AnimatedSpriteManager> enemiesOnMap;
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -141,8 +142,9 @@ public class GameRenderer implements Runnable {
         // Initialise cursor pane
         cursorPane = new AnchorPane();
 
-        // Initialise players on map animation hashmap
+        // Initialise animation hashmaps
         playersOnMap = new HashMap<>();
+        enemiesOnMap = new HashMap<>();
 
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
@@ -325,12 +327,16 @@ public class GameRenderer implements Runnable {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
+            // Update animation hashmap to track entity
+            if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager());
+            }
+
             // Check correct animation
             if (currentPlayer.isMoving()) {
                 // TODO: have this go through a scale factor check
-
                 // Check if in map of currently tracked players and if not, add it
-                if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.WALK) {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
@@ -369,7 +375,7 @@ public class GameRenderer implements Runnable {
             // Check if player reloading
             else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
                 // Check if in map of currently tracked players and if not, add it
-                if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.RELOAD) {
                     switch (currentPlayer.getTeam()) {
                         //TODO: adjust timeBetweenFrames according to how much time it takes to reload gun
                         case RED:
@@ -490,6 +496,11 @@ public class GameRenderer implements Runnable {
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
+            // Update animation hashmap to track entity
+            if (!playersOnMap.containsKey(currentEnemy.getID())) {
+                playersOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager());
+            }
+            
             if (currentEnemy.isMoving()) {
                 switch(currentEnemy.getEntityListName()) {
                     case ZOMBIE:

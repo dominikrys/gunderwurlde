@@ -70,6 +70,11 @@ public class AnimatedSpriteManager {
         }
     }
 
+    // Blank constructor for initialising in hashmap in renderer
+    AnimatedSpriteManager() {
+        animationType = AnimationType.NONE;
+    }
+
     //TODO: remove this constructor completely?
     /*
     AnimatedSpriteManager(Image image) {
