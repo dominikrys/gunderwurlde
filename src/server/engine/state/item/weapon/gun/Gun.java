@@ -113,6 +113,10 @@ public abstract class Gun extends Weapon implements Limited {
         return reloading;
     }
 
+    public int getReloadTime() {
+        return reloadTime;
+    }
+
     @Override
     public void replenish() {
         ammoInClip = clipSize;
