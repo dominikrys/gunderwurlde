@@ -327,7 +327,7 @@ public class GameRenderer implements Runnable {
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Check correct animation
             if (currentPlayer.isMoving()) {
-                //TODO have this go through a scale factor check
+                // TODO: have this go through a scale factor check
 
                 // Check if in map of currently tracked players and if not, add it
                 if (!playersOnMap.containsKey(currentPlayer.getID())) {

@@ -7,10 +7,9 @@ import javafx.util.Duration;
 
 public class AnimatedSpriteManager {
     private Image image;
-    private int frameCount;
     private int currentFrame;
-    private int timeBetweenFrames;
     private Timeline timeline;
+    private AnimationType animationType;
 
     private double sx;
     private double sy;
@@ -32,15 +31,15 @@ public class AnimatedSpriteManager {
     dh - the destination rectangle's height.
      */
 
-    AnimatedSpriteManager(Image image, int individualImageHeight, int individualImageWidth, int frameCount, int timeBetweenFrames) {
+    AnimatedSpriteManager(Image image, int individualImageHeight, int individualImageWidth, int frameCount,
+                          int timeBetweenFrames, AnimationType animationType, int cycleCount) {
         // Initialise variables
         this.image = image;
         this.individualImageHeight = individualImageHeight;
         this.individualImageWidth = individualImageWidth;
-        this.frameCount = frameCount;
-        this.timeBetweenFrames = timeBetweenFrames;
         this.sy = 0;
         this.sx = 0;
+        this.animationType = animationType;
         this.currentFrame = 0;
 
         // Check if animation - frame count has to be higher than 1
@@ -60,11 +59,18 @@ public class AnimatedSpriteManager {
                         }
 
                     }));
-            timeline.setCycleCount(Timeline.INDEFINITE);
+            if (cycleCount == 0) {
+                timeline.setCycleCount(Timeline.INDEFINITE);
+            } else {
+                timeline.setCycleCount(cycleCount);
+            }
+
             timeline.play();
         }
     }
 
+    //TODO: remove this constructor?
+    /*
     AnimatedSpriteManager(Image image) {
         this.image = image;
         this.individualImageHeight = (int) image.getHeight();
@@ -76,6 +82,7 @@ public class AnimatedSpriteManager {
         this.sx = 0;
         this.sy = 0;
     }
+    */
 
     public Image getImage() {
         return image;
@@ -95,5 +102,9 @@ public class AnimatedSpriteManager {
 
     public int getImageHeight() {
         return individualImageHeight;
+    }
+
+    public AnimationType getAnimationType() {
+        return animationType;
     }
 }
