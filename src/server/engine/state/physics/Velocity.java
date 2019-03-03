@@ -14,4 +14,8 @@ public final class Velocity extends DirectionalValue {
         return value;
     }
 
+    public void add(Velocity v) {
+        addHelper(v);
+    }
+
 }

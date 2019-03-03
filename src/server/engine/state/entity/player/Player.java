@@ -14,7 +14,6 @@ import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
-import server.engine.state.physics.Physics;
 import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
@@ -291,7 +290,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
 
     @Override
     public void addNewForce(Force f) {
-        this.resultantForce = Physics.getNewForce(resultantForce, f);
+        this.resultantForce.add(f);
     }
 
     @Override

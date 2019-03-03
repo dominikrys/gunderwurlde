@@ -14,4 +14,8 @@ public final class Force extends DirectionalValue {
         return value;
     }
 
+    public void add(Force f) {
+        addHelper(f);
+    }
+
 }

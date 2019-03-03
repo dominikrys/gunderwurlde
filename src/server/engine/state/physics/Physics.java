@@ -9,27 +9,20 @@ public class Physics {
     private static double TILE_BOUNCE = 0.7;
     private static double OBJECT_BOUNCE = 0.9;
 
-    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2) {
+    public static HasPhysics objectCollision(HasPhysics e1, double e2Mass, Velocity e2Velocity) {
         double e1Mass = e1.getMass();
-        double e2Mass = e1.getMass();
         Velocity e1Velocity = e1.getVelocity();
-        Velocity e2Velocity = e2.getVelocity();
         double[] e1VelocityComponents = getComponents(e1Velocity.getDirection(), e1Velocity.getSpeed());
         double[] e2VelocityComponents = getComponents(e2Velocity.getDirection(), e2Velocity.getSpeed());
 
         double e1NewXvelocity = getNewVelocity(e1VelocityComponents[0], e2VelocityComponents[0], e1Mass, e2Mass);
-        double e2NewXvelocity = e1NewXvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[0] - e2VelocityComponents[0]));
         double e1NewYvelocity = getNewVelocity(e1VelocityComponents[1], e2VelocityComponents[1], e1Mass, e2Mass);
-        double e2NewYvelocity = e1NewYvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[1] - e2VelocityComponents[1]));
 
         e1VelocityComponents = fromComponents(e1NewXvelocity, e1NewYvelocity);
-        e2VelocityComponents = fromComponents(e2NewXvelocity, e2NewYvelocity);
 
         e1.setVelocity(new Velocity((int) e1VelocityComponents[0], e1VelocityComponents[1]));
-        e2.setVelocity(new Velocity((int) e2VelocityComponents[0], e2VelocityComponents[1]));
 
-        HasPhysics[] result = {e1,e2};
-        return result;
+        return e1;
     }
 
     private static double getNewVelocity(double e1Velocity, double e2Velocity, double e1Mass, double e2Mass) { // for e1
@@ -118,13 +111,13 @@ public class Physics {
         return new Impulse(direction, force * normaliseTime(time));
     }
 
-    public static double[] getComponents(int direction, double value) {
+    static double[] getComponents(int direction, double value) {
         double directionInRadians = Math.toRadians(direction);
         double[] components = { (double) value * Math.cos(directionInRadians), (double) value * Math.sin(directionInRadians) };
         return components;
     }
 
-    public static double[] fromComponents(double xComp, double yComp) {
+    static double[] fromComponents(double xComp, double yComp) {
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
         int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
 
@@ -137,12 +130,6 @@ public class Physics {
         return result;
     }
 
-    public static Force getNewForce(Force f1, Force f2) {
-        double[] result = combineComponents(getComponents(f1.getDirection(), f1.getForce()), getComponents(f2.getDirection(), f2.getForce()));
-        result = fromComponents(result[0], result[1]);
-        return new Force((int) result[0], result[1]);
-    }
-
     public static Force getForce(double acceleration, int direction, double mass) {
         return new Force(direction, acceleration * mass);
     }
@@ -151,7 +138,7 @@ public class Physics {
         return f.getForce() / mass;
     }
 
-    private static double[] combineComponents(double[] c1, double[] c2) {
+    static double[] combineComponents(double[] c1, double[] c2) {
         double[] result = { c1[0] + c2[0], c1[1] + c2[1] };
         return result;
     }

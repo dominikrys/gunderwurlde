@@ -1,6 +1,7 @@
 package server.engine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -332,7 +333,7 @@ public class ProcessGameState extends Thread {
 
                             for (int[] tileCords : tilesOn) {
                                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                                HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+                                LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
                                     Player playerBeingChecked = players.get(playerID);
@@ -423,7 +424,7 @@ public class ProcessGameState extends Thread {
                     if (!removed) {
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                            HashSet<Integer> enemiesOnTile = tileOn.getEnemiesOnTile();
+                            LinkedHashSet<Integer> enemiesOnTile = tileOn.getEnemiesOnTile();
 
                             for (Integer enemyID : enemiesOnTile) {
                                 Enemy enemyBeingChecked = enemies.get(enemyID);
@@ -472,7 +473,7 @@ public class ProcessGameState extends Thread {
                             }
 
                             if (!removed) {
-                                HashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
+                                LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
                                     Player playerBeingChecked = players.get(playerID);
@@ -504,6 +505,10 @@ public class ProcessGameState extends Thread {
             }
 
             // physics processing
+            // TODO refactor somehow?
+            HashMap<Integer, Velocity> newPlayerVelocities = new HashMap<>();
+            LinkedHashMap<Integer, Velocity> newEnemyVelocities = new LinkedHashMap<>();
+
             for (Player p : players.values()) {
                 Player currentPlayer = p;
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
@@ -515,12 +520,98 @@ public class ProcessGameState extends Thread {
                 currentPlayer = (Player) doPhysics(currentPlayer, tileMap, currentTimeDifference);
 
                 tilesOn = tilesOn(currentPlayer);
+                Velocity resultantVelocity = new Velocity();
+                double totalMass = 0;
+                LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
+                LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
+
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
+                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                    playersOnTile.addAll(tileOn.getPlayersOnTile());
+                    enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
+                }
+
+                for (int playerCheckedID : playersOnTile) {
+                    Player playerBeingChecked = players.get(playerCheckedID);
+                    if (playerID != playerCheckedID && haveCollided(currentPlayer, playerBeingChecked)) {
+                        resultantVelocity.add(playerBeingChecked.getVelocity());
+                        totalMass += playerBeingChecked.getMass();
+                    }
+                }
+
+                for (int enemyCheckedID : enemiesOnTile) {
+                    Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
+                    if (haveCollided(currentPlayer, enemyBeingChecked)) {
+                        resultantVelocity.add(enemyBeingChecked.getVelocity());
+                        totalMass += enemyBeingChecked.getMass();
+                    }
+                }
+
+                if (totalMass != 0)
+                    currentPlayer = (Player) Physics.objectCollision(currentPlayer, totalMass, resultantVelocity);
+                players.put(playerID, currentPlayer);
+            }
+
+            for (Enemy e : enemies.values()) {
+                Enemy currentEnemy = e;
+                LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
+                int enemyID = currentEnemy.getID();
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
+                }
+
+                currentEnemy = (Enemy) doPhysics(currentEnemy, tileMap, currentTimeDifference);
+
+                tilesOn = tilesOn(currentEnemy);
+                Velocity resultantVelocity = new Velocity();
+                double totalMass = 0;
+                LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
+                LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
+
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
+                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                    playersOnTile.addAll(tileOn.getPlayersOnTile());
+                    enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
+                }
+
+                for (int playerCheckedID : playersOnTile) {
+                    Player playerBeingChecked = players.get(playerCheckedID);
+                    if (haveCollided(currentEnemy, playerBeingChecked)) {
+                        resultantVelocity.add(playerBeingChecked.getVelocity());
+                        totalMass += playerBeingChecked.getMass();
+                    }
+                }
+
+                for (int enemyCheckedID : enemiesOnTile) {
+                    Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
+                    if (enemyID != enemyCheckedID && haveCollided(currentEnemy, enemyBeingChecked)) {
+                        resultantVelocity.add(enemyBeingChecked.getVelocity());
+                        totalMass += enemyBeingChecked.getMass();
+                    }
+                }
+
+                if (totalMass != 0)
+                    currentEnemy = (Enemy) Physics.objectCollision(currentEnemy, totalMass, resultantVelocity);
+                enemies.put(enemyID, currentEnemy);
+            }
+
+            for (Map.Entry<Integer, Velocity> newVelocity : newEnemyVelocities.entrySet()) {
+                enemies.get(newVelocity.getKey()).setVelocity(newVelocity.getValue());
+            }
+
+            // final player processing
+            for (Player p : players.values()) {
+                Player currentPlayer = p;
+                LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
+                int playerID = currentPlayer.getID();
+
+                if (newPlayerVelocities.containsKey(playerID))
+                    currentPlayer.setVelocity(newPlayerVelocities.get(playerID));
 
                 for (int[] tileCords : tilesOn) {
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-
-                    tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
-
                     // check for triggers
                     if (tileMap[tileCords[0]][tileCords[1]].hasTriggers()) {
                         LinkedHashSet<Integer> zonesTriggered = tileMap[tileCords[0]][tileCords[1]].triggered();
@@ -537,7 +628,7 @@ public class ProcessGameState extends Thread {
                     }
 
                     // check for item drops
-                    HashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
+                    LinkedHashSet<Integer> itemsOnTile = tileOn.getItemDropsOnTile();
                     LinkedList<Integer> dropsToRemove = new LinkedList<>();
 
                     for (Integer itemDropID : itemsOnTile) {
@@ -770,14 +861,13 @@ public class ProcessGameState extends Thread {
         double distanceMoved = getDistanceMoved(timeDiff, currentVelocity.getSpeed() * Tile.TILE_SIZE);
         Location newLocation = Location.calculateNewLocation(e.getLocation(), currentVelocity.getDirection(), distanceMoved);
         e.setLocation(newLocation);
-        tilesOn = tilesOn((Entity)e);
 
+        // tile collisions
+        tilesOn = tilesOn((Entity)e);
         Location mostSigTileLoc = getMostSignificatTileLocation(newLocation, tilesOn, tileMap);
         if (mostSigTileLoc != null) {
             e = Physics.tileCollision(e, mostSigTileLoc);
         }
-
-        // TODO object collisions
 
         return e;
     }

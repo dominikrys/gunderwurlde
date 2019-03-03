@@ -18,4 +18,11 @@ public abstract class DirectionalValue {
         return direction;
     }
 
+    protected void addHelper(DirectionalValue a) {
+        double[] result = Physics.combineComponents(Physics.getComponents(this.direction, this.value), Physics.getComponents(a.direction, a.value));
+        result = Physics.fromComponents(result[0], result[1]);
+        this.direction = (int) result[0];
+        this.value = result[1];
+    }
+
 }

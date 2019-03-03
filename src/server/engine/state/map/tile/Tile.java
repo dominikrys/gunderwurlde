@@ -1,6 +1,5 @@
 package server.engine.state.map.tile;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import shared.Constants;
@@ -20,9 +19,9 @@ public class Tile {
     // State of tile, e.g. solid or passable
     protected TileState tileState;
     
-    protected HashSet<Integer> itemDropsOnTile;
-    protected HashSet<Integer> enemiesOnTile;
-    protected HashSet<Integer> playersOnTile;
+    protected LinkedHashSet<Integer> itemDropsOnTile;
+    protected LinkedHashSet<Integer> enemiesOnTile;
+    protected LinkedHashSet<Integer> playersOnTile;
     protected LinkedHashSet<Integer> zoneTriggers;
     protected double frictionCoefficient;
     protected double density;
@@ -30,9 +29,9 @@ public class Tile {
     public Tile(TileTypes tileType, TileState tileState) {
         this.tileType = tileType;
         this.tileState = tileState;
-        this.itemDropsOnTile = new HashSet<>();
-        this.enemiesOnTile = new HashSet<>();
-        this.playersOnTile = new HashSet<>();
+        this.itemDropsOnTile = new LinkedHashSet<>();
+        this.enemiesOnTile = new LinkedHashSet<>();
+        this.playersOnTile = new LinkedHashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
         this.frictionCoefficient = DEFAULT_FRICTION;
         this.density = DEFAULT_DENSITY;
@@ -55,12 +54,12 @@ public class Tile {
     }
 
     public void clearOnTile() {
-        this.itemDropsOnTile = new HashSet<>();
-        this.enemiesOnTile = new HashSet<>();
-        this.playersOnTile = new HashSet<>();
+        this.itemDropsOnTile = new LinkedHashSet<>();
+        this.enemiesOnTile = new LinkedHashSet<>();
+        this.playersOnTile = new LinkedHashSet<>();
     }
 
-    public HashSet<Integer> getPlayersOnTile() {
+    public LinkedHashSet<Integer> getPlayersOnTile() {
         return playersOnTile;
     }
 
@@ -72,7 +71,7 @@ public class Tile {
         return playersOnTile.remove(playerID);
     }
 
-    public HashSet<Integer> getItemDropsOnTile() {
+    public LinkedHashSet<Integer> getItemDropsOnTile() {
         return itemDropsOnTile;
     }
 
@@ -84,7 +83,7 @@ public class Tile {
         return itemDropsOnTile.remove(itemID);
     }
 
-    public HashSet<Integer> getEnemiesOnTile() {
+    public LinkedHashSet<Integer> getEnemiesOnTile() {
         return enemiesOnTile;
     }
 
