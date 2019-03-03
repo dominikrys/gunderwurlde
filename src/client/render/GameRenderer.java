@@ -524,7 +524,7 @@ public class GameRenderer implements Runnable {
                         case MIDGET:
                             enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
-                                    6, 50, 0, AnimationType.MOVE));
+                                    6, 25, 0, AnimationType.MOVE));
                             break;
                         default:
                             break;
