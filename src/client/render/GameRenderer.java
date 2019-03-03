@@ -189,9 +189,6 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD();
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
-                new CornerRadii(0, 0, 140, 0, false),
-                new Insets(0, 0, 0, 0))));
 
         // Create pause overlay
         // "PAUSE" message
@@ -784,36 +781,6 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
-        // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
-        Label playerTeamText;
-        switch (currentPlayer.getTeam()) {
-            case RED:
-                playerTeamText = new Label("RED");
-                playerTeamText.setTextFill(Color.RED);
-                break;
-            case BLUE:
-                playerTeamText = new Label("BLUE");
-                playerTeamText.setTextFill(Color.BLUE);
-                break;
-            case GREEN:
-                playerTeamText = new Label("GREEN");
-                playerTeamText.setTextFill(Color.GREEN);
-                break;
-            case YELLOW:
-                playerTeamText = new Label("YELLOW");
-                playerTeamText.setTextFill(Color.YELLOW);
-                break;
-            case ENEMY:
-                playerTeamText = new Label("ENEMY");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-            default:
-                playerTeamText = new Label("NONE");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-        }
-        playerTeamText.setFont(fontManaspace28);
-
         // Player score
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
@@ -826,11 +793,35 @@ public class GameRenderer implements Runnable {
         // Iterate through held items list and add to the HUD
         heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
 
-        // Ammo vbox
+        // Declare ammo vbox - populated dynamically
         ammoBox = new VBox();
 
+        // Change background according to team
+        switch (currentPlayer.getTeam()) {
+            case RED:
+                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(20, Color.rgb(255, 0, 0)));
+                break;
+            case BLUE:
+                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(20, Color.rgb(66, 173, 244)));
+                break;
+            case GREEN:
+                HUDBox.setStyle("-fx-background-color: rgba(34, 165, 69, 0.5); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(20, Color.rgb(34, 165, 69)));
+                break;
+            case YELLOW:
+                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(20, Color.rgb(232, 232, 0)));
+                break;
+            default:
+                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.5); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(20, Color.rgb(178, 177, 169)));
+                break;
+        }
+
         // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
     }
