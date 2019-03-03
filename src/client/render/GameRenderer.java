@@ -336,32 +336,32 @@ public class GameRenderer implements Runnable {
             if (currentPlayer.isMoving()) {
                 // TODO: have this go through a scale factor check
                 // Check if in map of currently tracked players and if not, add it
-                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.WALK) {
+                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.MOVE) {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
-                                    6, 75, 0, AnimationType.WALK));
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                         case BLUE:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_BLUE), 32, 32,
-                                    6, 75, 0, AnimationType.WALK));
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                         case GREEN:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_GREEN), 32, 32,
-                                    6, 75, 0, AnimationType.WALK));
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                         case YELLOW:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK_YELLOW), 32, 32,
-                                    6, 75, 0, AnimationType.WALK));
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                         default:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.WALK));
+                                    6, 75, 0, AnimationType.MOVE));
                     }
                 }
 
@@ -497,24 +497,49 @@ public class GameRenderer implements Runnable {
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
             // Update animation hashmap to track entity
-            if (!playersOnMap.containsKey(currentEnemy.getID())) {
-                playersOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager());
+            if (!enemiesOnMap.containsKey(currentEnemy.getID())) {
+                enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager());
             }
-            
+
+            // Check if enemy moving and is so, choose right animation
             if (currentEnemy.isMoving()) {
-                switch(currentEnemy.getEntityListName()) {
-                    case ZOMBIE:
-                        break;
-                    case RUNNER:
-                        break;
-                    case SOLDIER:
-                        break;
-                    case MIDGET:
-                        break;
-                    default:
-                        break;
+                // Check if already in the hashmap for enemies on the map
+                if (enemiesOnMap.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
+                    switch (currentEnemy.getEntityListName()) {
+                        case ZOMBIE:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case RUNNER:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.RUNNER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case SOLDIER:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.SOLDIER_WALK), 32, 32,
+                                    6, 100, 0, AnimationType.MOVE));
+                            break;
+                        case MIDGET:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
+                                    6, 50, 0, AnimationType.MOVE));
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            } else {
+
+                // Render animation - Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = enemiesOnMap.get(currentEnemy.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentEnemy.getPose().getDirection(), currentEnemy.getPose().getX(),
+                        currentEnemy.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
+            // Enemy standing, render standing image
+            else {
                 renderEntityView(currentEnemy);
             }
 
