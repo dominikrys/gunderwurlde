@@ -40,7 +40,7 @@ public enum EntityList {
     PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.yellowPlayerColorAdjust),
 
     // Enemy
-    ZOMBIE("file:assets/img/entity/enemy/zombie.png", new ColorAdjust(0.6, 0, 0, 0)),
+    ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust),
     RUNNER("file:assets/img/entity/enemy/zombie.png"),
     SOLDIER("file:assets/img/entity/enemy/zombie.png"),
     MIDGET("file:assets/img/entity/enemy/zombie.png"),

@@ -22,4 +22,6 @@ public final class Constants {
     public static final ColorAdjust bluePlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
     public static final ColorAdjust greenPlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
     public static final ColorAdjust yellowPlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
+
+    public static final ColorAdjust zombieColorAdjust = new ColorAdjust(0.6, 0, 0, 0);
 }
