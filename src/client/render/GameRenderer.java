@@ -377,31 +377,35 @@ public class GameRenderer implements Runnable {
                 // Check if in map of currently tracked players and if not, add it
                 if (playersOnMap.get(playerID).getAnimationType() != AnimationType.RELOAD) {
                     switch (currentPlayer.getTeam()) {
-                        //TODO: adjust timeBetweenFrames according to how much time it takes to reload gun
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case BLUE:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case GREEN:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case YELLOW:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         default:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                     }
                 }
 
