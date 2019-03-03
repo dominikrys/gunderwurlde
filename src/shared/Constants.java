@@ -19,9 +19,9 @@ public final class Constants {
 
     // Constants for entities
     public static final ColorAdjust redPlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
-    public static final ColorAdjust bluePlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
-    public static final ColorAdjust greenPlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
-    public static final ColorAdjust yellowPlayerColorAdjust = new ColorAdjust(-0.3, 0, 0, 0);
+    public static final ColorAdjust bluePlayerColorAdjust = new ColorAdjust(-0.75, 0, 0, 0);
+    public static final ColorAdjust greenPlayerColorAdjust = new ColorAdjust(0.5, 0, 0, 0);
+    public static final ColorAdjust yellowPlayerColorAdjust = new ColorAdjust(0.15, 0, 0, 0);
 
     public static final ColorAdjust zombieColorAdjust = new ColorAdjust(0.6, 0, 0, 0);
 }
