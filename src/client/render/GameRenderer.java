@@ -718,7 +718,7 @@ public class GameRenderer implements Runnable {
             //Make label for total amount of ammo the current item uses
             Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
             totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.DARKSLATEGRAY);
+            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
 
             // Add info on current gun to the right element
             currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
@@ -761,7 +761,7 @@ public class GameRenderer implements Runnable {
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-        HUDBox.setMaxHeight(350);
+        HUDBox.setMaxHeight(300);
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
@@ -799,24 +799,24 @@ public class GameRenderer implements Runnable {
         // Change background according to team
         switch (currentPlayer.getTeam()) {
             case RED:
-                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(20, Color.rgb(255, 0, 0)));
+                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(255, 0, 0)));
                 break;
             case BLUE:
-                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(20, Color.rgb(66, 173, 244)));
+                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
-                HUDBox.setStyle("-fx-background-color: rgba(34, 165, 69, 0.5); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(20, Color.rgb(34, 165, 69)));
+                HUDBox.setStyle("-fx-background-color: rgba(34, 203, 86, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(34, 203, 86)));
                 break;
             case YELLOW:
-                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(20, Color.rgb(232, 232, 0)));
+                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(232, 232, 0)));
                 break;
             default:
-                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.5); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(20, Color.rgb(178, 177, 169)));
+                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(178, 177, 169)));
                 break;
         }
 
