@@ -490,7 +490,22 @@ public class GameRenderer implements Runnable {
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
-            renderEntityView(currentEnemy);
+            if (currentEnemy.isMoving()) {
+                switch(currentEnemy.getEntityListName()) {
+                    case ZOMBIE:
+                        break;
+                    case RUNNER:
+                        break;
+                    case SOLDIER:
+                        break;
+                    case MIDGET:
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                renderEntityView(currentEnemy);
+            }
 
             // Render healthbar
             renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(), mapGC);

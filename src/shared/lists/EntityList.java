@@ -1,6 +1,7 @@
 package shared.lists;
 
 import javafx.scene.effect.ColorAdjust;
+import shared.Constants;
 
 // List of all entities as well as renderable objects
 
@@ -12,34 +13,34 @@ public enum EntityList {
 
     // Player
     PLAYER("file:assets/img/entity/player/player.png"),
-    PLAYER_RED("file:assets/img/entity/player/player.png", new ColorAdjust(-0.3, 0, 0, 0)),
-    PLAYER_BLUE("file:assets/img/entity/player/player.png", new ColorAdjust(-0.75, 0, 0, 0)),
-    PLAYER_GREEN("file:assets/img/entity/player/player.png", new ColorAdjust(0.5, 0, 0, 0)),
-    PLAYER_YELLOW("file:assets/img/entity/player/player.png", new ColorAdjust(0.15, 0, 0, 0)),
+    PLAYER_RED("file:assets/img/entity/player/player.png", Constants.redPlayerColorAdjust),
+    PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.bluePlayerColorAdjust),
+    PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.greenPlayerColorAdjust),
+    PLAYER_YELLOW("file:assets/img/entity/player/player.png", Constants.yellowPlayerColorAdjust),
 
     // Player holding gun
     PLAYER_WITH_GUN("file:assets/img/entity/player/player_gun.png"),
-    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", new ColorAdjust(-0.3, 0, 0, 0)),
-    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", new ColorAdjust(-0.75, 0, 0, 0)),
-    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", new ColorAdjust(0.5, 0, 0, 0)),
-    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", new ColorAdjust(0.15, 0, 0, 0)),
+    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", Constants.redPlayerColorAdjust),
+    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", Constants.bluePlayerColorAdjust),
+    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", Constants.greenPlayerColorAdjust),
+    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", Constants.yellowPlayerColorAdjust),
 
     // Player holding gun recoil
     PLAYER_WITH_GUN_RECOIL("file:assets/img/entity/player/player_gun_recoil.png"),
-    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(-0.3, 0, 0, 0)),
-    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(-0.75, 0, 0, 0)),
-    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(0.5, 0, 0, 0)),
-    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", new ColorAdjust(0.15, 0, 0, 0)),
+    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", Constants.redPlayerColorAdjust),
+    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", Constants.bluePlayerColorAdjust),
+    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", Constants.greenPlayerColorAdjust),
+    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", Constants.yellowPlayerColorAdjust),
 
     // Player reload
     PLAYER_RELOAD("file:assets/img/entity/player/player_reload.png"),
-    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", new ColorAdjust(-0.3, 0, 0, 0)),
-    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", new ColorAdjust(-0.75, 0, 0, 0)),
-    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", new ColorAdjust(0.5, 0, 0, 0)),
-    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", new ColorAdjust(0.15, 0, 0, 0)),
+    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", Constants.redPlayerColorAdjust),
+    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", Constants.bluePlayerColorAdjust),
+    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", Constants.greenPlayerColorAdjust),
+    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.yellowPlayerColorAdjust),
 
     // Enemy
-    ZOMBIE("file:assets/img/entity/enemy/zombie.png"),
+    ZOMBIE("file:assets/img/entity/enemy/zombie.png", new ColorAdjust(0.6, 0, 0, 0)),
     RUNNER("file:assets/img/entity/enemy/zombie.png"),
     SOLDIER("file:assets/img/entity/enemy/zombie.png"),
     MIDGET("file:assets/img/entity/enemy/zombie.png"),
