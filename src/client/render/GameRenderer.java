@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -401,27 +402,28 @@ public class GameRenderer implements Runnable {
             }
             // Check if player attacking
             else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
-                Image spriteToRender;
-
                 switch (currentPlayer.getTeam()) {
                     case RED:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_RED);
+                        playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_RED), AnimationType.ATTACK));
                         break;
                     case GREEN:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN);
+                        playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN), AnimationType.ATTACK));
                         break;
                     case YELLOW:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW);
+                        playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW), AnimationType.ATTACK));
                         break;
                     case BLUE:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE);
+                        playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE), AnimationType.ATTACK));
                         break;
                     default:
-                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL);
+                        playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL), AnimationType.ATTACK));
                         break;
                 }
-
-                renderEntity(currentPlayer, mapGC, spriteToRender);
             }
             // If standing, render standing image
             else {
@@ -435,46 +437,53 @@ public class GameRenderer implements Runnable {
                     }
                 }
 
-                Image spriteToRender;
                 if (hasGun) {
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RED);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_RED), AnimationType.STAND));
                             break;
                         case BLUE:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_BLUE);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_BLUE), AnimationType.STAND));
                             break;
                         case GREEN:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_GREEN);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_GREEN), AnimationType.STAND));
                             break;
                         case YELLOW:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_YELLOW);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_YELLOW), AnimationType.STAND));
                             break;
                         default:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN), AnimationType.STAND));
                             break;
                     }
                 } else {
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
-                            break;
-                        case GREEN:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
-                            break;
-                        case YELLOW:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RED), AnimationType.STAND));
                             break;
                         case BLUE:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_BLUE), AnimationType.STAND));
+                            break;
+                        case GREEN:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_GREEN), AnimationType.STAND));
+                            break;
+                        case YELLOW:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_YELLOW), AnimationType.STAND));
                             break;
                         default:
-                            spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER), AnimationType.STAND));
                             break;
                     }
                 }
-
-                renderEntity(currentPlayer, mapGC, spriteToRender);
             }
 
             // Animation now in playerOnMap map so just render in appropriate location
@@ -794,24 +803,26 @@ public class GameRenderer implements Runnable {
         // Change background according to team
         switch (currentPlayer.getTeam()) {
             case RED:
-                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(35, Color.rgb(255, 0, 0)));
+                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 47, 0.4); -fx-background-radius: 0 0 165 0;");
+                DropShadow ds = new DropShadow(100, Color.rgb(255, 0, 47));
+                ds.setSpread(50);
+                HUDBox.setEffect(ds);
                 break;
             case BLUE:
                 HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(35, Color.rgb(66, 173, 244)));
+                HUDBox.setEffect(new DropShadow(50, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
                 HUDBox.setStyle("-fx-background-color: rgba(34, 203, 86, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(35, Color.rgb(34, 203, 86)));
+                HUDBox.setEffect(new DropShadow(50, Color.rgb(34, 203, 86)));
                 break;
             case YELLOW:
                 HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(35, Color.rgb(232, 232, 0)));
+                HUDBox.setEffect(new DropShadow(50, Color.rgb(232, 232, 0)));
                 break;
             default:
                 HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(35, Color.rgb(178, 177, 169)));
+                HUDBox.setEffect(new DropShadow(50, Color.rgb(178, 177, 169)));
                 break;
         }
 
