@@ -52,7 +52,7 @@ public class TestRenderer extends Application {
         }
         LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
         ArrayList<ItemView> playerItems = new ArrayList<>();
-        playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true));
+        playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true, 3000));
         LinkedHashMap<AmmoList, Integer> playerAmmo = new LinkedHashMap<AmmoList, Integer>();
         playerAmmo.put(AmmoList.BASIC_AMMO, 36);
         PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED, 128, false, Status.NONE,

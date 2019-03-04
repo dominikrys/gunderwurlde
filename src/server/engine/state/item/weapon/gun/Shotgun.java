@@ -21,6 +21,10 @@ public class Shotgun extends Gun {
         super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
                 DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, DEFAULT_SPREAD, DEFAULT_COOL_DOWN, DEFAULT_PROJECTILES_PER_SHOT, DEFAULT_ACCURACY);
     }
+    public Shotgun(int projectilesPerShot, int spread, int coolDown) {
+        super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,
+                DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, spread, coolDown, projectilesPerShot, DEFAULT_ACCURACY);
+    }
 
     @Override
     public int reload(int amountAvailable) {

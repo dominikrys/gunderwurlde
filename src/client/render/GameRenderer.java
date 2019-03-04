@@ -5,9 +5,12 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -20,6 +23,8 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import shared.Constants;
+import shared.Pose;
+import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.GameView;
@@ -71,6 +76,9 @@ public class GameRenderer implements Runnable {
     // X and Y coordinates of the mouse
     private double mouseX;
     private double mouseY;
+    // Animation hashmaps
+    private Map<Integer, AnimatedSpriteManager> playersOnMap;
+    private Map<Integer, AnimatedSpriteManager> enemiesOnMap;
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -104,7 +112,24 @@ public class GameRenderer implements Runnable {
                 System.out.println("Error when loading image: " + entity.name() + " from directory: " + entity.getPath());
                 loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
             } else {
-                loadedSprites.put(entity, tempImage);
+                // Check if transformation necessary
+                if (entity.getColorAdjust() != null) {
+                    // Create new imageview and apply the color adjustment
+                    ImageView tempImageView = new ImageView(tempImage);
+                    tempImageView.setEffect(entity.getColorAdjust());
+
+                    // Convert from imageview and store  in the loaded sprites hashmap
+                    Platform.runLater(() -> {
+                        SnapshotParameters sp = new SnapshotParameters();
+                        sp.setFill(Color.TRANSPARENT);
+
+                        loadedSprites.put(entity, SwingFXUtils.toFXImage(
+                                SwingFXUtils.fromFXImage(tempImageView.snapshot(sp, null), null), null));
+                    });
+                } else {
+                    // No transformation necessary, just store in sprites hashmap
+                    loadedSprites.put(entity, tempImage);
+                }
             }
         }
 
@@ -117,9 +142,13 @@ public class GameRenderer implements Runnable {
         // Initialise cursor pane
         cursorPane = new AnchorPane();
 
+        // Initialise animation hashmaps
+        playersOnMap = new HashMap<>();
+        enemiesOnMap = new HashMap<>();
+
         // Initialise mouse positions to not bug out camera
-        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - Constants.TILE_SIZE / 2;
-        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - Constants.TILE_SIZE / 2;
+        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
+        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
@@ -135,7 +164,7 @@ public class GameRenderer implements Runnable {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: see if this causes issues
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -143,11 +172,10 @@ public class GameRenderer implements Runnable {
             }
         }.start();
 
-        /*
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
-        */
+        // Alternative: use timeline. This way can also specify FPS
+//        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//        timeline.play();
     }
 
     // Set up the window for tha game
@@ -161,9 +189,6 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD();
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
-                new CornerRadii(0, 0, 140, 0, false),
-                new Insets(0, 0, 0, 0))));
 
         // Create pause overlay
         // "PAUSE" message
@@ -247,7 +272,7 @@ public class GameRenderer implements Runnable {
         this.soundView.setGameView(gameView);
     }
 
-    // Render gameView - KEEP PRIVATE
+    // Render gameView
     private void renderGameView() {
         // Render map
         renderMap();
@@ -303,32 +328,228 @@ public class GameRenderer implements Runnable {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
-            // Get the correct sprite according to playerID, otherwise load the default player graphic
-            Image spriteToRender;
-            switch (currentPlayer.getTeam()) {
-                case RED:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
-                    break;
-                case GREEN:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
-                    break;
-                case YELLOW:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
-                    break;
-                case BLUE:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
-                    break;
-                default:
-                    spriteToRender = loadedSprites.get(EntityList.PLAYER);
-                    break;
+            // Update animation hashmap to track entity
+            if (!playersOnMap.containsKey(currentPlayer.getID())) {
+                playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager());
             }
 
-            renderEntity(currentPlayer, mapGC, spriteToRender);
+            // Check correct animation
+            if (currentPlayer.isMoving()) {
+                // TODO: have this go through a scale factor check
+                // Check if in map of currently tracked players and if not, add it
+                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.MOVE) {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case BLUE:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_BLUE), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case GREEN:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_GREEN), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case YELLOW:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK_YELLOW), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        default:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                    }
+                }
+
+                // Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
+                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
+            // Check if player reloading
+            else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
+                // Check if in map of currently tracked players and if not, add it
+                if (playersOnMap.get(playerID).getAnimationType() != AnimationType.RELOAD) {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
+                            break;
+                        case BLUE:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
+                            break;
+                        case GREEN:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
+                            break;
+                        case YELLOW:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
+                            break;
+                        default:
+                            playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
+                    }
+                }
+
+                // Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
+                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
+            // Check if player attacking
+            else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
+                Image spriteToRender;
+
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_RED);
+                        break;
+                    case GREEN:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN);
+                        break;
+                    case YELLOW:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW);
+                        break;
+                    case BLUE:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE);
+                        break;
+                    default:
+                        spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL);
+                        break;
+                }
+
+                renderEntity(currentPlayer, mapGC, spriteToRender);
+            }
+            // If standing, render standing image
+            else {
+                // Check if player has item that takes bullets - if so, render player with a gun
+                boolean hasGun = false;
+
+                for (ItemView iv : currentPlayer.getItems()) {
+                    if (iv.getAmmoType() != AmmoList.NONE) {
+                        hasGun = true;
+                        break;
+                    }
+                }
+
+                Image spriteToRender;
+                if (hasGun) {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_RED);
+                            break;
+                        case BLUE:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_BLUE);
+                            break;
+                        case GREEN:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_GREEN);
+                            break;
+                        case YELLOW:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN_YELLOW);
+                            break;
+                        default:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_WITH_GUN);
+                            break;
+                    }
+                } else {
+                    switch (currentPlayer.getTeam()) {
+                        case RED:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_RED);
+                            break;
+                        case GREEN:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_GREEN);
+                            break;
+                        case YELLOW:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_YELLOW);
+                            break;
+                        case BLUE:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER_BLUE);
+                            break;
+                        default:
+                            spriteToRender = loadedSprites.get(EntityList.PLAYER);
+                            break;
+                    }
+                }
+
+                renderEntity(currentPlayer, mapGC, spriteToRender);
+            }
+
+            // Render healthbar
+            renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(), mapGC);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
-            renderEntityView(currentEnemy);
+            // Update animation hashmap to track entity
+            if (!enemiesOnMap.containsKey(currentEnemy.getID())) {
+                enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager());
+            }
+
+            // Check if enemy moving and is so, choose right animation
+            if (currentEnemy.isMoving()) {
+                // Check if already in the hashmap for enemies on the map
+                if (enemiesOnMap.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
+                    switch (currentEnemy.getEntityListName()) {
+                        case ZOMBIE:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case RUNNER:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.RUNNER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case SOLDIER:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.SOLDIER_WALK), 32, 32,
+                                    6, 100, 0, AnimationType.MOVE));
+                            break;
+                        case MIDGET:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
+                                    6, 25, 0, AnimationType.MOVE));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // Render animation - Animation now in playerOnMap map so just render in appropriate location
+                AnimatedSpriteManager thisSpriteManager = enemiesOnMap.get(currentEnemy.getID());
+                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                        currentEnemy.getPose().getDirection(), currentEnemy.getPose().getX(),
+                        currentEnemy.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+            }
+            // Enemy standing, render standing image
+            else {
+                renderEntityView(currentEnemy);
+            }
+
+            // Render healthbar
+            renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(), mapGC);
         }
 
         // Render projectiles
@@ -337,12 +558,56 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    // Render healthbar above entity
+    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, GraphicsContext gc) {
+        // Variables for calculations
+        int healthBarHeight = 5;
+        int verticalOffset = 12;
+        double healthLeftPercentage = (double) currentHealth / (double) maxHealth;
+
+        // Render current health portion
+        gc.setFill(Color.LIME);
+        gc.fillRect(pose.getX(), pose.getY() - verticalOffset, Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
+
+        // Render lost health portion
+        gc.setFill(Color.RED);
+        gc.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset, Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
+    }
+
     private void renderEntityView(EntityView entityView) {
         // Get image from loaded sprites
         Image imageToRender = loadedSprites.get(entityView.getEntityListName());
 
         // Render image
         renderEntity(entityView, mapGC, imageToRender);
+    }
+
+    // Render entity onto the map canas
+    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
+        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
+        if (entity.getSizeScaleFactor() != 1) {
+            image = resampleImage(image, entity.getSizeScaleFactor());
+        }
+
+        // Render entity to specified location on canvas
+        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
+                entity.getPose().getY());
+    }
+
+    // Draw rotated image
+    private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
+        gc.save(); // Saves the current state on stack, including the current transform for later
+        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
+        gc.drawImage(image, tlpx, tlpy);
+        gc.restore(); // Back to original state (before rotation)
+    }
+
+    private void drawRotatedImageFromSpritesheet(GraphicsContext gc, Image image, double angle, double tlpx,
+                                                 double tlpy, double sx, double sy, double sw, double sh) {
+        gc.save(); // Saves the current state on stack, including the current transform for later
+        rotate(gc, angle, tlpx + sw / 2, tlpy + sh / 2);
+        gc.drawImage(image, sx, sy, sw, sh, tlpx, tlpy, sw, sh);
+        gc.restore(); // Back to original state (before rotation)
     }
 
     // Method for getting the current player
@@ -460,7 +725,7 @@ public class GameRenderer implements Runnable {
             //Make label for total amount of ammo the current item uses
             Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
             totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.DARKSLATEGRAY);
+            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
 
             // Add info on current gun to the right element
             currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
@@ -503,7 +768,7 @@ public class GameRenderer implements Runnable {
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-        HUDBox.setMaxHeight(350); // TODO: get rid of this when minimap added?
+        HUDBox.setMaxHeight(300);
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
@@ -523,36 +788,6 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
-        // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
-        Label playerTeamText;
-        switch (currentPlayer.getTeam()) {
-            case RED:
-                playerTeamText = new Label("RED");
-                playerTeamText.setTextFill(Color.RED);
-                break;
-            case BLUE:
-                playerTeamText = new Label("BLUE");
-                playerTeamText.setTextFill(Color.BLUE);
-                break;
-            case GREEN:
-                playerTeamText = new Label("GREEN");
-                playerTeamText.setTextFill(Color.GREEN);
-                break;
-            case YELLOW:
-                playerTeamText = new Label("YELLOW");
-                playerTeamText.setTextFill(Color.YELLOW);
-                break;
-            case ENEMY:
-                playerTeamText = new Label("ENEMY");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-            default:
-                playerTeamText = new Label("NONE");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-        }
-        playerTeamText.setFont(fontManaspace28);
-
         // Player score
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
@@ -565,25 +800,37 @@ public class GameRenderer implements Runnable {
         // Iterate through held items list and add to the HUD
         heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
 
-        // Ammo vbox
+        // Declare ammo vbox - populated dynamically
         ammoBox = new VBox();
 
-        // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
-
-        return HUDBox;
-    }
-
-    // Render entity onto the map canas
-    private void renderEntity(EntityView entity, GraphicsContext gc, Image image) {
-        // If entity's sizeScaleFactor isn't zero, enlarge the graphic
-        if (entity.getSizeScaleFactor() != 1) {
-            image = resampleImage(image, entity.getSizeScaleFactor());
+        // Change background according to team
+        switch (currentPlayer.getTeam()) {
+            case RED:
+                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(255, 0, 0)));
+                break;
+            case BLUE:
+                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(66, 173, 244)));
+                break;
+            case GREEN:
+                HUDBox.setStyle("-fx-background-color: rgba(34, 203, 86, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(34, 203, 86)));
+                break;
+            case YELLOW:
+                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(232, 232, 0)));
+                break;
+            default:
+                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(178, 177, 169)));
+                break;
         }
 
-        // Render entity to specified location on canvas
-        drawRotatedImage(gc, image, entity.getPose().getDirection(), entity.getPose().getX(),
-                entity.getPose().getY());
+        // Add elements of HUD for player to HUD
+        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+
+        return HUDBox;
     }
 
     // Set transform for the GraphicsContext to rotate around a pivot point.
@@ -603,14 +850,6 @@ public class GameRenderer implements Runnable {
             System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
             return loadedSprites.get(EntityList.DEFAULT);
         }
-    }
-
-    // Draw rotated image
-    private void drawRotatedImage(GraphicsContext gc, Image image, double angle, double tlpx, double tlpy) {
-        gc.save(); // Saves the current state on stack, including the current transform for later
-        rotate(gc, angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
-        gc.drawImage(image, tlpx, tlpy);
-        gc.restore(); // Back to original state (before rotation)
     }
 
     // Create an Image object from specified colour
