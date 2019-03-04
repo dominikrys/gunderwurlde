@@ -6,7 +6,6 @@ import client.input.MouseHandler;
 import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,8 +36,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GameRenderer implements Runnable {
@@ -564,31 +561,65 @@ public class GameRenderer implements Runnable {
         }
 
         //
-        //COMMENT BELOW
+        //TODO: COMMENT BELOW
         //
 
-        Map<Integer, Pose> enemyPoses = new HashMap<>();
+        Map<Integer, Pose> gameViewEnemyPoses = new HashMap<>();
         for (EnemyView enemyView : gameView.getEnemies()) {
-            enemyPoses.put(enemyView.getID(), enemyView.getPose());
+            gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
         }
 
         for (Map.Entry<Integer, Pose> entry : enemyLocations.entrySet()) {
-            if (enemyPoses.get(entry.getKey()) == null) {
+            if (gameViewEnemyPoses.get(entry.getKey()) == null) {
                 new AnimationTimer() {
+                    Pose pose = entry.getValue();
+
+//                    long startTime = 0;
+
+                    int frameCount;
+
                     AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                             loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-                            32, 15, 1, AnimationType.NONE);
+                            frameCount, 50, 1, AnimationType.NONE);
+
+//                    @Override
+//                    public void start() {
+//                        startTime = System.nanoTime();
+//                        super.start();
+//                    }
 
                     @Override
                     public void handle(long now) {
-                        drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
-                                entry.getValue().getDirection(), entry.getValue().getX(),
-                                entry.getValue().getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
-                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
+                        System.out.println(deathSpriteManager.getCurrentFrame());
+                        if (deathSpriteManager.getCurrentFrame()  < frameCount) {
+                            drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
+                                    0, pose.getX(),
+                                    pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
+                                    deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
+                        } else {
+                            this.stop();
+                        }
                     }
                 }.start();
 
-                enemyLocations.remove(entry.getKey());
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Pose pose = entry.getValue();
+//
+//                        AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
+//                                loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
+//                                32, 15, 1, AnimationType.NONE);
+//
+//                        drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
+//                                0, pose.getX(),
+//                                pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
+//                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
+//                    }
+//                }).start();
+
+                gameViewEnemyPoses.remove(entry.getKey());
+//                enemyLocations.remove(entry.getKey());
             }
         }
 
@@ -624,11 +655,13 @@ public class GameRenderer implements Runnable {
 
         // Render current health portion
         gc.setFill(Color.LIME);
-        gc.fillRect(pose.getX(), pose.getY() - verticalOffset, Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
+        gc.fillRect(pose.getX(), pose.getY() - verticalOffset,
+                Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
 
         // Render lost health portion
         gc.setFill(Color.RED);
-        gc.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset, Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
+        gc.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset,
+                Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
     }
 
     private void renderEntityView(EntityView entityView) {

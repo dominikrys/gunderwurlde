@@ -96,4 +96,8 @@ public class AnimatedSpriteManager {
     public AnimationType getAnimationType() {
         return animationType;
     }
+
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
 }
