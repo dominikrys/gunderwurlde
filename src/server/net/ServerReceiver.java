@@ -150,7 +150,7 @@ public class ServerReceiver extends Thread {
             System.out.println("Part 1 is " + seperateData[0]);
             System.out.println("Part 2 is " + seperateData[1]);
             String playerName = seperateData[0];
-            Teams team = null;
+            Teams team;
             if(seperateData[1].equals("RED")){
                 team = Teams.RED;
             }

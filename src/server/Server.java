@@ -1,15 +1,15 @@
 package server;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
+import java.io.OutputStream;
+import java.net.*;
 import java.util.LinkedHashMap;
 
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
 import server.net.ServerReceiver;
 import server.net.ServerSender;
+import server.net.JoinGameThread;
 import shared.lists.MapList;
 import shared.lists.Teams;
 import shared.request.ClientRequests;
@@ -28,13 +28,17 @@ public class Server extends Thread implements HasEngine {
     InetAddress listenAddress = null;
     InetAddress senderAddress = null;
     // Ports to be sent and received on
-    static final int SENDPORT = 4444;
-    static final int LISTENPORT = 4445;
+    int senderPort;
+    int listenPort;
     Boolean multiplayer;
     int numOfPlayers;
     int joinedPlayers;
     LinkedHashMap<String, Teams> playersToAdd;
     MapList mapName;
+    static int lowestAvailableIP = 0;
+    static int lowestAvailablePort = 4444;
+    ServerSocket joinSocket;
+    int lowestAvailableID;
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
@@ -50,23 +54,34 @@ public class Server extends Thread implements HasEngine {
 
     public void run(){
         try {
-            listenSocket = new MulticastSocket(LISTENPORT);
+            senderPort = lowestAvailablePort;
+            listenPort = lowestAvailablePort+1;
+            lowestAvailablePort += 2;
+            listenSocket = new MulticastSocket(listenPort);
             senderSocket = new MulticastSocket();
-            listenAddress = InetAddress.getByName("230.0.0.1");
-            senderAddress = InetAddress.getByName("230.0.1.1");
+            listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableIP);
+            senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableIP);
+            lowestAvailableIP += 1;
             System.out.println("Server starting");
             // Create the initial GameView to be sent to the clients
 
             // Create the threads that will run as sender and receiver
-            sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
+            sender = new ServerSender(senderAddress, senderSocket, senderPort);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
             joinedPlayers = 1;
             if(multiplayer){
                 // loop until all players have joined
-                while(numOfPlayers > joinedPlayers){
-                    System.out.println("Current number of players" + joinedPlayers);
-                    Thread.sleep(5000);
-                    Thread.yield();
+                try {
+                    joinSocket = new ServerSocket(9999);
+                    while (numOfPlayers > joinedPlayers) {
+                        // For each connection spin off a new protocol instance.
+                        Socket connection = joinSocket.accept();
+                        Thread instance = new Thread(new JoinGameThread(connection));
+                        instance.start();
+                        JoinGameThread.increaseAvailableID();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Doh "+e);
                 }
 
                 System.out.println("All players have joined the game");
