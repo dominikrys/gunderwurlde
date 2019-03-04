@@ -361,13 +361,6 @@ public class GameRenderer implements Runnable {
                                     6, 75, 0, AnimationType.MOVE));
                     }
                 }
-
-                // Animation now in playerOnMap map so just render in appropriate location
-                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
-                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
-                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
-                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
             }
             // Check if player reloading
             else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
@@ -405,13 +398,6 @@ public class GameRenderer implements Runnable {
                                     0, AnimationType.RELOAD));
                     }
                 }
-
-                // Animation now in playerOnMap map so just render in appropriate location
-                AnimatedSpriteManager thisSpriteManager = playersOnMap.get(currentPlayer.getID());
-                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
-                        currentPlayer.getPose().getDirection(), currentPlayer.getPose().getX(),
-                        currentPlayer.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
             }
             // Check if player attacking
             else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
@@ -491,6 +477,9 @@ public class GameRenderer implements Runnable {
                 renderEntity(currentPlayer, mapGC, spriteToRender);
             }
 
+            // Animation now in playerOnMap map so just render in appropriate location
+            renderAnimationSpriteOnMap(playersOnMap, currentPlayer.getID(), currentPlayer.getPose());
+
             // Render healthbar
             renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(), mapGC);
         }
@@ -533,11 +522,7 @@ public class GameRenderer implements Runnable {
                 }
 
                 // Render animation - Animation now in playerOnMap map so just render in appropriate location
-                AnimatedSpriteManager thisSpriteManager = enemiesOnMap.get(currentEnemy.getID());
-                drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
-                        currentEnemy.getPose().getDirection(), currentEnemy.getPose().getX(),
-                        currentEnemy.getPose().getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                        thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+                renderAnimationSpriteOnMap(enemiesOnMap, currentEnemy.getID(), currentEnemy.getPose());
             }
             // Enemy standing, render standing image
             else {
@@ -552,6 +537,16 @@ public class GameRenderer implements Runnable {
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntityView(currentProjectile);
         }
+    }
+
+    // Render image according to info from its animation
+    private void renderAnimationSpriteOnMap(Map<Integer, AnimatedSpriteManager> entitiesOnMap, int id, Pose pose) {
+        AnimatedSpriteManager thisSpriteManager = entitiesOnMap.get(id);
+
+        drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
+                pose.getDirection(), pose.getX(),
+                pose.getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
+                thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
     }
 
     // Render healthbar above entity

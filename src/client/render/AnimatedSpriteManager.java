@@ -75,20 +75,17 @@ public class AnimatedSpriteManager {
         animationType = AnimationType.NONE;
     }
 
-    //TODO: remove this constructor completely?
-    /*
-    AnimatedSpriteManager(Image image) {
+    AnimatedSpriteManager(Image image, AnimationType animationType) {
         this.image = image;
-        this.individualImageHeight = (int) image.getHeight();
-        this.individualImageWidth = (int) image.getWidth();
-        this.frameCount = 1;
-        this.timeBetweenFrames = 0;
+        this.animationType = animationType;
+
         this.currentFrame = 0;
-        this.timeline = new Timeline();
+        this.timeline = null;
         this.sx = 0;
         this.sy = 0;
+        this.individualImageWidth = (int) image.getWidth();
+        this.individualImageHeight = (int) image.getHeight();
     }
-    */
 
     public Image getImage() {
         return image;
