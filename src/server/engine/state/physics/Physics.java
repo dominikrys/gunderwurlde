@@ -9,20 +9,30 @@ public class Physics {
     private static double TILE_BOUNCE = 0.7;
     private static double OBJECT_BOUNCE = 0.9;
 
-    public static HasPhysics objectCollision(HasPhysics e1, double e2Mass, Velocity e2Velocity) {
+
+    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2) {
         double e1Mass = e1.getMass();
+        double e2Mass = e1.getMass();
+
         Velocity e1Velocity = e1.getVelocity();
+        Velocity e2Velocity = e2.getVelocity();
+
         double[] e1VelocityComponents = getComponents(e1Velocity.getDirection(), e1Velocity.getSpeed());
         double[] e2VelocityComponents = getComponents(e2Velocity.getDirection(), e2Velocity.getSpeed());
 
         double e1NewXvelocity = getNewVelocity(e1VelocityComponents[0], e2VelocityComponents[0], e1Mass, e2Mass);
+        double e2NewXvelocity = e1NewXvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[0] - e2VelocityComponents[0]));
         double e1NewYvelocity = getNewVelocity(e1VelocityComponents[1], e2VelocityComponents[1], e1Mass, e2Mass);
+        double e2NewYvelocity = e1NewYvelocity + (OBJECT_BOUNCE * (e1VelocityComponents[1] - e2VelocityComponents[1]));
 
         e1VelocityComponents = fromComponents(e1NewXvelocity, e1NewYvelocity);
+        e2VelocityComponents = fromComponents(e2NewXvelocity, e2NewYvelocity);
 
         e1.setVelocity(new Velocity((int) e1VelocityComponents[0], e1VelocityComponents[1]));
+        e2.setVelocity(new Velocity((int) e2VelocityComponents[0], e2VelocityComponents[1]));
 
-        return e1;
+        HasPhysics[] result = { e1, e2 };
+        return result;
     }
 
     private static double getNewVelocity(double e1Velocity, double e2Velocity, double e1Mass, double e2Mass) { // for e1

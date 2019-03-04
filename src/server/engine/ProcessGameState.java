@@ -3,6 +3,7 @@ package server.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -509,8 +510,9 @@ public class ProcessGameState extends Thread {
             HashMap<Integer, Velocity> newPlayerVelocities = new HashMap<>();
             LinkedHashMap<Integer, Velocity> newEnemyVelocities = new LinkedHashMap<>();
 
-            for (Player p : players.values()) {
-                Player currentPlayer = p;
+            Iterator<Player> pIter = players.values().iterator();
+            while (pIter.hasNext()) {
+                Player currentPlayer = pIter.next();
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
                 int playerID = currentPlayer.getID();
                 for (int[] tileCords : tilesOn) {
@@ -520,8 +522,6 @@ public class ProcessGameState extends Thread {
                 currentPlayer = (Player) doPhysics(currentPlayer, tileMap, currentTimeDifference);
 
                 tilesOn = tilesOn(currentPlayer);
-                Velocity resultantVelocity = new Velocity();
-                double totalMass = 0;
                 LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
                 LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
 
@@ -531,25 +531,50 @@ public class ProcessGameState extends Thread {
                     playersOnTile.addAll(tileOn.getPlayersOnTile());
                     enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
                 }
+                
+                double closestThing = Double.MAX_VALUE;
+                int closestID = -1;
+                boolean isPlayer = false;
 
                 for (int playerCheckedID : playersOnTile) {
                     Player playerBeingChecked = players.get(playerCheckedID);
                     if (playerID != playerCheckedID && haveCollided(currentPlayer, playerBeingChecked)) {
-                        resultantVelocity.add(playerBeingChecked.getVelocity());
-                        totalMass += playerBeingChecked.getMass();
+                        double dist = getDistSqrd(currentPlayer.getLocation(), playerBeingChecked.getLocation());
+                        if (dist < closestThing) {
+                            closestThing = dist;
+                            isPlayer = true;
+                            closestID = playerCheckedID;
+                        }
                     }
                 }
 
                 for (int enemyCheckedID : enemiesOnTile) {
                     Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
                     if (haveCollided(currentPlayer, enemyBeingChecked)) {
-                        resultantVelocity.add(enemyBeingChecked.getVelocity());
-                        totalMass += enemyBeingChecked.getMass();
+                        double dist = getDistSqrd(currentPlayer.getLocation(), enemyBeingChecked.getLocation());
+                        if (dist < closestThing) {
+                            closestThing = dist;
+                            isPlayer = false;
+                            closestID = enemyCheckedID;
+                        }
                     }
                 }
 
-                if (totalMass != 0)
-                    currentPlayer = (Player) Physics.objectCollision(currentPlayer, totalMass, resultantVelocity);
+                if (closestID != -1) {
+                    HasPhysics e2;
+                    if (isPlayer) {
+                        e2 = players.get(closestID);
+                    } else {
+                        e2 = enemies.get(closestID);
+                    }
+                    HasPhysics result[] = Physics.objectCollision(currentPlayer, e2);
+                    if (isPlayer) {
+                        e2 = players.put(closestID, (Player) result[1]);
+                    } else {
+                        e2 = enemies.put(closestID, (Enemy) result[1]);
+                    }
+                    currentPlayer = (Player) result[0];
+                }
                 players.put(playerID, currentPlayer);
             }
 
@@ -564,8 +589,6 @@ public class ProcessGameState extends Thread {
                 currentEnemy = (Enemy) doPhysics(currentEnemy, tileMap, currentTimeDifference);
 
                 tilesOn = tilesOn(currentEnemy);
-                Velocity resultantVelocity = new Velocity();
-                double totalMass = 0;
                 LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
                 LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
 
@@ -576,24 +599,50 @@ public class ProcessGameState extends Thread {
                     enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
                 }
 
+                double closestThing = Double.MAX_VALUE;
+                int closestID = -1;
+                boolean isPlayer = false;
+
                 for (int playerCheckedID : playersOnTile) {
                     Player playerBeingChecked = players.get(playerCheckedID);
                     if (haveCollided(currentEnemy, playerBeingChecked)) {
-                        resultantVelocity.add(playerBeingChecked.getVelocity());
-                        totalMass += playerBeingChecked.getMass();
+                        double dist = getDistSqrd(currentEnemy.getLocation(), playerBeingChecked.getLocation());
+                        if (dist < closestThing) {
+                            closestThing = dist;
+                            isPlayer = true;
+                            closestID = playerCheckedID;
+                        }
                     }
                 }
 
                 for (int enemyCheckedID : enemiesOnTile) {
                     Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
                     if (enemyID != enemyCheckedID && haveCollided(currentEnemy, enemyBeingChecked)) {
-                        resultantVelocity.add(enemyBeingChecked.getVelocity());
-                        totalMass += enemyBeingChecked.getMass();
+                        double dist = getDistSqrd(currentEnemy.getLocation(), enemyBeingChecked.getLocation());
+                        if (dist < closestThing) {
+                            closestThing = dist;
+                            isPlayer = false;
+                            closestID = enemyCheckedID;
+                        }
                     }
                 }
 
-                if (totalMass != 0)
-                    currentEnemy = (Enemy) Physics.objectCollision(currentEnemy, totalMass, resultantVelocity);
+                if (closestID != -1) {
+                    HasPhysics e2;
+                    if (isPlayer) {
+                        e2 = players.get(closestID);
+                    } else {
+                        e2 = enemies.get(closestID);
+                    }
+                    HasPhysics result[] = Physics.objectCollision(currentEnemy, e2);
+                    if (isPlayer) {
+                        e2 = players.put(closestID, (Player) result[1]);
+                    } else {
+                        e2 = enemies.put(closestID, (Enemy) result[1]);
+                    }
+                    currentEnemy = (Enemy) result[0];
+                }
+
                 enemies.put(enemyID, currentEnemy);
             }
 
@@ -870,6 +919,14 @@ public class ProcessGameState extends Thread {
         }
 
         return e;
+    }
+    
+    private static double getDistSqrd(Location e1Loc, Location e2Loc) {
+        double xDiff = e1Loc.getX() - e2Loc.getX();
+        double yDiff = e1Loc.getY() - e2Loc.getY();
+        double distSqrd = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
+
+        return distSqrd;
     }
 
 }
