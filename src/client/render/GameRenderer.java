@@ -164,7 +164,7 @@ public class GameRenderer implements Runnable {
         // Set up GameView - change the stage
         setUpGameView(gameView, playerID);
 
-        // Update the HUD and game at intervals - animationtimer used for maximum frame rate TODO: see if this causes issues
+        // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -189,9 +189,6 @@ public class GameRenderer implements Runnable {
         // Create HUD
         VBox HUDBox = createHUD();
         HUDBox.setAlignment(Pos.TOP_LEFT);
-        HUDBox.setBackground(new Background(new BackgroundFill(Color.WHITE,
-                new CornerRadii(0, 0, 140, 0, false),
-                new Insets(0, 0, 0, 0))));
 
         // Create pause overlay
         // "PAUSE" message
@@ -377,31 +374,35 @@ public class GameRenderer implements Runnable {
                 // Check if in map of currently tracked players and if not, add it
                 if (playersOnMap.get(playerID).getAnimationType() != AnimationType.RELOAD) {
                     switch (currentPlayer.getTeam()) {
-                        //TODO: adjust timeBetweenFrames according to how much time it takes to reload gun
                         case RED:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case BLUE:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case GREEN:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         case YELLOW:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                             break;
                         default:
                             playersOnMap.put(currentPlayer.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
-                                    5, 200, 0, AnimationType.RELOAD));
+                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                                    0, AnimationType.RELOAD));
                     }
                 }
 
@@ -717,7 +718,7 @@ public class GameRenderer implements Runnable {
             //Make label for total amount of ammo the current item uses
             Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
             totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.DARKSLATEGRAY);
+            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
 
             // Add info on current gun to the right element
             currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
@@ -760,7 +761,7 @@ public class GameRenderer implements Runnable {
         VBox HUDBox = new VBox();
         HUDBox.setPadding(new Insets(5, 5, 5, 5));
         HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-        HUDBox.setMaxHeight(350); // TODO: get rid of this when minimap added?
+        HUDBox.setMaxHeight(300);
         HUDBox.setSpacing(5);
 
         // Get the current player from the player list
@@ -780,36 +781,6 @@ public class GameRenderer implements Runnable {
         playerLabel.setFont(fontManaspace28);
         playerLabel.setTextFill(Color.BLACK);
 
-        // Add player team to HUD TODO: change this with "TEAM: [colour square]"?
-        Label playerTeamText;
-        switch (currentPlayer.getTeam()) {
-            case RED:
-                playerTeamText = new Label("RED");
-                playerTeamText.setTextFill(Color.RED);
-                break;
-            case BLUE:
-                playerTeamText = new Label("BLUE");
-                playerTeamText.setTextFill(Color.BLUE);
-                break;
-            case GREEN:
-                playerTeamText = new Label("GREEN");
-                playerTeamText.setTextFill(Color.GREEN);
-                break;
-            case YELLOW:
-                playerTeamText = new Label("YELLOW");
-                playerTeamText.setTextFill(Color.YELLOW);
-                break;
-            case ENEMY:
-                playerTeamText = new Label("ENEMY");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-            default:
-                playerTeamText = new Label("NONE");
-                playerTeamText.setTextFill(Color.GREY);
-                break;
-        }
-        playerTeamText.setFont(fontManaspace28);
-
         // Player score
         Label playerScoreLabel = new Label("SCORE: ");
         playerScoreLabel.setFont(fontManaspace28);
@@ -822,11 +793,35 @@ public class GameRenderer implements Runnable {
         // Iterate through held items list and add to the HUD
         heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
 
-        // Ammo vbox
+        // Declare ammo vbox - populated dynamically
         ammoBox = new VBox();
 
+        // Change background according to team
+        switch (currentPlayer.getTeam()) {
+            case RED:
+                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(255, 0, 0)));
+                break;
+            case BLUE:
+                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(66, 173, 244)));
+                break;
+            case GREEN:
+                HUDBox.setStyle("-fx-background-color: rgba(34, 203, 86, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(34, 203, 86)));
+                break;
+            case YELLOW:
+                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(232, 232, 0)));
+                break;
+            default:
+                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
+                HUDBox.setEffect(new DropShadow(35, Color.rgb(178, 177, 169)));
+                break;
+        }
+
         // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, playerTeamText, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
 
         return HUDBox;
     }

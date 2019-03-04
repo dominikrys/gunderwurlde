@@ -21,7 +21,7 @@ public class Main extends Application {
         settings = loadSettingsFromFile(settings);
 
         // Set up stage
-        stage.setResizable(false); // Disable resizing of the window TODO: check how this behaves on linux!
+        stage.setResizable(false); // Disable resizing of the window
         stage.setFullScreen(false);
         stage.setFullScreenExitHint("");
         stage.centerOnScreen();
