@@ -163,7 +163,7 @@ public class GameRenderer implements Runnable {
     @Override
     public void run() {
         // Set up GameView - change the stage
-        setUpGameView(gameView, playerID);
+        setUpGameView(gameView);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -180,7 +180,7 @@ public class GameRenderer implements Runnable {
     }
 
     // Set up the window for tha game
-    private void setUpGameView(GameView inputGameView, int playerID) {
+    private void setUpGameView(GameView inputGameView) {
         // Initialise pane for map
         mapBox = new AnchorPane();
         mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
@@ -529,14 +529,15 @@ public class GameRenderer implements Runnable {
                             break;
                     }
                 }
-
-                // Render animation - Animation now in playerOnMap map so just render in appropriate location
-                renderAnimationSpriteOnMap(enemiesOnMap, currentEnemy.getID(), currentEnemy.getPose());
             }
             // Enemy standing, render standing image
             else {
-                renderEntityView(currentEnemy);
+                enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                        loadedSprites.get(currentEnemy.getEntityListName()), AnimationType.STAND));
             }
+
+            // Render animation - Animation now in playerOnMap map so just render in appropriate location
+            renderAnimationSpriteOnMap(enemiesOnMap, currentEnemy.getID(), currentEnemy.getPose());
 
             // Render healthbar
             renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(), mapGC);
