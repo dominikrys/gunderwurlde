@@ -569,9 +569,9 @@ public class ProcessGameState extends Thread {
                     }
                     HasPhysics result[] = Physics.objectCollision(currentPlayer, e2);
                     if (isPlayer) {
-                        e2 = players.put(closestID, (Player) result[1]);
+                        players.put(closestID, (Player) result[1]);
                     } else {
-                        e2 = enemies.put(closestID, (Enemy) result[1]);
+                        enemies.put(closestID, (Enemy) result[1]);
                     }
                     currentPlayer = (Player) result[0];
                 }
@@ -589,31 +589,16 @@ public class ProcessGameState extends Thread {
                 currentEnemy = (Enemy) doPhysics(currentEnemy, tileMap, currentTimeDifference);
 
                 tilesOn = tilesOn(currentEnemy);
-                LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
                 LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
 
                 for (int[] tileCords : tilesOn) {
                     tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                    playersOnTile.addAll(tileOn.getPlayersOnTile());
                     enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
                 }
 
                 double closestThing = Double.MAX_VALUE;
                 int closestID = -1;
-                boolean isPlayer = false;
-
-                for (int playerCheckedID : playersOnTile) {
-                    Player playerBeingChecked = players.get(playerCheckedID);
-                    if (haveCollided(currentEnemy, playerBeingChecked)) {
-                        double dist = getDistSqrd(currentEnemy.getLocation(), playerBeingChecked.getLocation());
-                        if (dist < closestThing) {
-                            closestThing = dist;
-                            isPlayer = true;
-                            closestID = playerCheckedID;
-                        }
-                    }
-                }
 
                 for (int enemyCheckedID : enemiesOnTile) {
                     Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
@@ -621,25 +606,15 @@ public class ProcessGameState extends Thread {
                         double dist = getDistSqrd(currentEnemy.getLocation(), enemyBeingChecked.getLocation());
                         if (dist < closestThing) {
                             closestThing = dist;
-                            isPlayer = false;
                             closestID = enemyCheckedID;
                         }
                     }
                 }
 
                 if (closestID != -1) {
-                    HasPhysics e2;
-                    if (isPlayer) {
-                        e2 = players.get(closestID);
-                    } else {
-                        e2 = enemies.get(closestID);
-                    }
+                    HasPhysics e2 = enemies.get(closestID);
                     HasPhysics result[] = Physics.objectCollision(currentEnemy, e2);
-                    if (isPlayer) {
-                        e2 = players.put(closestID, (Player) result[1]);
-                    } else {
-                        e2 = enemies.put(closestID, (Enemy) result[1]);
-                    }
+                    enemies.put(closestID, (Enemy) result[1]);
                     currentEnemy = (Enemy) result[0];
                 }
 
