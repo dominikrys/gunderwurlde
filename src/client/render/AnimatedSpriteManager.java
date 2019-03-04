@@ -16,21 +16,6 @@ public class AnimatedSpriteManager {
     private int individualImageWidth;
     private int individualImageHeight;
 
-    /*
-    For use with GraphicsContext::drawImage()
-
-    Parameters:
-    img - the image to be drawn or null.
-    sx - the source rectangle's X coordinate position.
-    sy - the source rectangle's Y coordinate position.
-    sw - the source rectangle's width.
-    sh - the source rectangle's height.
-    dx - the destination rectangle's X coordinate position.
-    dy - the destination rectangle's Y coordinate position.
-    dw - the destination rectangle's width.
-    dh - the destination rectangle's height.
-     */
-
     AnimatedSpriteManager(Image image, int individualImageHeight, int individualImageWidth, int frameCount,
                           int timeBetweenFrames, int cycleCount, AnimationType animationType) {
         // Initialise variables
@@ -75,6 +60,7 @@ public class AnimatedSpriteManager {
         animationType = AnimationType.NONE;
     }
 
+    // Constructor which takes image and animationtype for static images
     AnimatedSpriteManager(Image image, AnimationType animationType) {
         this.image = image;
         this.animationType = animationType;
