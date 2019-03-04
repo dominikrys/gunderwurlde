@@ -576,7 +576,7 @@ public class GameRenderer implements Runnable {
 
 //                    long startTime = 0;
 
-                    int frameCount;
+                    int frameCount = 32;
 
                     AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                             loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
@@ -591,6 +591,7 @@ public class GameRenderer implements Runnable {
                     @Override
                     public void handle(long now) {
                         System.out.println(deathSpriteManager.getCurrentFrame());
+                        System.out.println(frameCount);
                         if (deathSpriteManager.getCurrentFrame()  < frameCount) {
                             drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
                                     0, pose.getX(),
@@ -618,13 +619,9 @@ public class GameRenderer implements Runnable {
 //                    }
 //                }).start();
 
-                gameViewEnemyPoses.remove(entry.getKey());
-//                enemyLocations.remove(entry.getKey());
+                enemyLocations.remove(entry.getKey());
             }
         }
-
-        //check if not in list and if not, animate
-        //remove from tracked list
 
         /*
         AnimatedSpriteManager thisSpriteManager = entitiesOnMap.get(id);
