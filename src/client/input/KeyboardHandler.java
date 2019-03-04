@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import shared.Pose;
 import shared.lists.EntityList;
+import shared.lists.KeyActionList;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
@@ -77,37 +78,37 @@ public class KeyboardHandler extends UserInteraction {
                 if (!input.contains(pressed)) {
                     input.add(pressed);
                     // System.out.println(input.toString());
-                    if (settings.getKey("up").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.UP).equals(pressed)) {
                         upPressed = true;
                     }
-                    if (settings.getKey("left").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.LEFT).equals(pressed)) {
                         leftPressed = true;
                     }
-                    if (settings.getKey("down").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.DOWN).equals(pressed)) {
                         downPressed = true;
                     }
-                    if (settings.getKey("right").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.RIGHT).equals(pressed)) {
                         rightPressed = true;
                     }
-                    if (settings.getKey("reload").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.RELOAD).equals(pressed)) {
                         reloadPressed = true;
                     }
-                    if (settings.getKey("drop").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.DROP).equals(pressed)) {
                         dropPressed = true;
                     }
-                    if (settings.getKey("interact").equals(pressed)) {
+                    if (settings.getKey(KeyActionList.INTERACT).equals(pressed)) {
                         interactPressed = true;
                     }
-                    if(settings.getKey("item1").equals(pressed)) {
+                    if(settings.getKey(KeyActionList.ITEM1).equals(pressed)) {
                     	changeItem.changeTo(1);
                     }
-                    if(settings.getKey("item2").equals(pressed)) {
+                    if(settings.getKey(KeyActionList.ITEM2).equals(pressed)) {
                     	changeItem.changeTo(2);
                     }
-                    if(settings.getKey("item3").equals(pressed)) {
+                    if(settings.getKey(KeyActionList.ITEM3).equals(pressed)) {
                     	changeItem.changeTo(3);
                     }
-                    if(settings.getKey("esc").equals(pressed)) {
+                    if(settings.getKey(KeyActionList.ESC).equals(pressed)) {
                     	// TODO: escape menu
                     }
                 }
@@ -120,25 +121,25 @@ public class KeyboardHandler extends UserInteraction {
                 String released = event.getCode().toString();
                 input.remove(released);
                 // System.out.println(input.toString());
-                if (settings.getKey("up").equals(released)) {
+                if (settings.getKey(KeyActionList.UP).equals(released)) {
                     upPressed = false;
                 }
-                if (settings.getKey("left").equals(released)) {
+                if (settings.getKey(KeyActionList.LEFT).equals(released)) {
                     leftPressed = false;
                 }
-                if (settings.getKey("down").equals(released)) {
+                if (settings.getKey(KeyActionList.DOWN).equals(released)) {
                     downPressed = false;
                 }
-                if (settings.getKey("right").equals(released)) {
+                if (settings.getKey(KeyActionList.RIGHT).equals(released)) {
                     rightPressed = false;
                 }
-                if (settings.getKey("reload").equals(released)) {
+                if (settings.getKey(KeyActionList.RELOAD).equals(released)) {
                     reloadPressed = false;
                 }
-                if (settings.getKey("drop").equals(released)) {
+                if (settings.getKey(KeyActionList.DROP).equals(released)) {
                     dropPressed = false;
                 }
-                if (settings.getKey("interact").equals(released)) {
+                if (settings.getKey(KeyActionList.INTERACT).equals(released)) {
                     interactPressed = false;
                 }
             }

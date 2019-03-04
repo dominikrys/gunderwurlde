@@ -1,6 +1,6 @@
 package client.input;
 
-public enum ActionList {
+public enum CommandList {
 	ATTACK,
 	CHANGEITEM,
 	DROPITEM,

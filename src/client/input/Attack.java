@@ -24,7 +24,7 @@ public class Attack extends Action {
     public void shoot(ItemView itemView) {
         if (itemView.getAmmoInClip() != 0) {
             // TODO: send shooting request
-            handler.send(ActionList.ATTACK);
+            handler.send(CommandList.ATTACK);
         } else {
             //System.out.println("No ammo");
             // TODO: shooting fail stuff here (sound...)

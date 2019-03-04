@@ -17,7 +17,7 @@ public class DropItem extends Action{
 	public void drop() {
 		if(!playerView.getCurrentItem().equals(null)) {
 			// TODO: send drop request
-			handler.send(ActionList.DROPITEM);
+			handler.send(CommandList.DROPITEM);
 		}
 	}
 

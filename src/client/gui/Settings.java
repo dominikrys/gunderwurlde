@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import shared.lists.KeyActionList;
+
 // Object for storing game settings
 public class Settings implements Serializable {
     // Constants
@@ -20,7 +22,7 @@ public class Settings implements Serializable {
     private int screenWidth;
     private int screenHeight;
     // Key mapping
-    private HashMap<String,String> keyMapping;
+    private HashMap<KeyActionList,String> keyMapping;
 
     public Settings() {
         // Initialise sound settings
@@ -39,18 +41,18 @@ public class Settings implements Serializable {
     }
 
     public void mapDefaultKeys() {
-        keyMapping = new HashMap<String,String>();
-        keyMapping.put("up", "W");
-        keyMapping.put("down", "S");
-        keyMapping.put("left", "A");
-        keyMapping.put("right", "D");
-        keyMapping.put("reload", "R");
-        keyMapping.put("drop", "G");
-        keyMapping.put("interact", "E");
-        keyMapping.put("item1", "DIGIT1");
-        keyMapping.put("item2", "DIGIT2");
-        keyMapping.put("item3", "DIGIT3");
-        keyMapping.put("esc", "ESCAPE");
+        keyMapping = new HashMap<KeyActionList,String>();
+        keyMapping.put(KeyActionList.UP, "W");
+        keyMapping.put(KeyActionList.DOWN, "S");
+        keyMapping.put(KeyActionList.LEFT, "A");
+        keyMapping.put(KeyActionList.RIGHT, "D");
+        keyMapping.put(KeyActionList.RELOAD, "R");
+        keyMapping.put(KeyActionList.DROP, "G");
+        keyMapping.put(KeyActionList.INTERACT, "E");
+        keyMapping.put(KeyActionList.ITEM1, "DIGIT1");
+        keyMapping.put(KeyActionList.ITEM2, "DIGIT2");
+        keyMapping.put(KeyActionList.ITEM3, "DIGIT3");
+        keyMapping.put(KeyActionList.ESC, "ESCAPE");
     }
 
     public int getSoundVolume() {
@@ -128,13 +130,13 @@ public class Settings implements Serializable {
     }
 
     // Get key mapping as a key
-    public String getKey(String action) {
+    public String getKey(KeyActionList action) {
         return keyMapping.get(action);
     }
 
     // Get key action
-    public String getAction(String key) {
-        for(Map.Entry<String, String> entry : keyMapping.entrySet()) {
+    public KeyActionList getAction(String key) {
+        for(Map.Entry<KeyActionList, String> entry : keyMapping.entrySet()) {
             if(entry.getValue().equals(key)) {
                 return entry.getKey();
             }
@@ -143,7 +145,7 @@ public class Settings implements Serializable {
     }
 
     // Change key mapping
-    public void changeKey(String action, String newKey) {
+    public void changeKey(KeyActionList action, String newKey) {
         keyMapping.put(action, newKey);
     }
 

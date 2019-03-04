@@ -78,7 +78,7 @@ public class MouseHandler extends UserInteraction {
         playerDegree = mouseDegree;
         // System.out.println("playerDegree: " + playerDegree);
         // TODO: send changes(playerDegree) to server
-        handler.send(ActionList.TURN, (int) playerDegree - 90);
+        handler.send(CommandList.TURN, (int) playerDegree - 90);
 
     }
 

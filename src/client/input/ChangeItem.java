@@ -34,7 +34,7 @@ public class ChangeItem extends Action{
 		
 		newItemIndex = checkItemIndex(oldItemIndex, newItemIndex);
 		if(newItemIndex != -1) {
-			handler.send(ActionList.CHANGEITEM, newItemIndex);
+			handler.send(CommandList.CHANGEITEM, newItemIndex);
 		}
 		// no item to switch to
 	}
@@ -45,7 +45,7 @@ public class ChangeItem extends Action{
 		
 		newItemIndex = checkItemIndex(oldItemIndex, newItemIndex);
 		if(newItemIndex != -1) {
-			handler.send(ActionList.CHANGEITEM, newItemIndex);
+			handler.send(CommandList.CHANGEITEM, newItemIndex);
 		}
 		// no item to switch to
 	}
@@ -59,7 +59,7 @@ public class ChangeItem extends Action{
 			// do nothing
 		}
 		else {
-			handler.send(ActionList.CHANGEITEM, number - 1);
+			handler.send(CommandList.CHANGEITEM, number - 1);
 		}
 	}
 

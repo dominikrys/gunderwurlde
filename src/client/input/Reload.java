@@ -24,7 +24,7 @@ public class Reload extends Action {
     public void gunReload(ItemView itemView, AmmoList ammo) {
         if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().get(ammo) > 0) {
             // TODO: send reload request
-            handler.send(ActionList.RELOAD);
+            handler.send(CommandList.RELOAD);
         } else {
             //System.out.println("Reload failed");
             // TODO: reload fail stuff here (sound...)

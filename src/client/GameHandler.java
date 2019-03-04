@@ -1,7 +1,7 @@
 package client;
 
 import client.gui.Settings;
-import client.input.ActionList;
+import client.input.CommandList;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import server.Server;
@@ -87,7 +87,7 @@ public class GameHandler extends Thread {
         });
     }
 
-    public void send(ActionList action) {
+    public void send(CommandList action) {
         switch (action.toString()) {
             case "ATTACK": // 0
                 client.getClientSender().send(new Integer[]{0});
@@ -101,7 +101,7 @@ public class GameHandler extends Thread {
         }
     }
 
-    public void send(ActionList action, int parameter) {
+    public void send(CommandList action, int parameter) {
         switch (action.toString()) {
             case "CHANGEITEM": // 3
                 client.getClientSender().send(new Integer[]{3, parameter});

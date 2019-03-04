@@ -73,7 +73,7 @@ public class Movement extends Action{
 			        angle = 45;
 				break;
 		}
-		this.handler.send(ActionList.MOVEMENT, angle);
+		this.handler.send(CommandList.MOVEMENT, angle);
 		/*
 		if(collision.checkBoundary(pose.getX(), pose.getY())) {
 			//playerView.setPose(pose);
