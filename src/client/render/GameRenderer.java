@@ -567,25 +567,28 @@ public class GameRenderer implements Runnable {
         //COMMENT BELOW
         //
 
-        List<Pose> enemyPoses = new LinkedList<>();
+        Map<Integer, Pose> enemyPoses = new HashMap<>();
         for (EnemyView enemyView : gameView.getEnemies()) {
-            enemyPoses.add(enemyView.getID(), enemyView.getPose());
+            enemyPoses.put(enemyView.getID(), enemyView.getPose());
         }
 
         for (Map.Entry<Integer, Pose> entry : enemyLocations.entrySet()) {
-            if (!enemyPoses.contains(entry.getValue())) {
+            if (enemyPoses.get(entry.getKey()) == null) {
                 new AnimationTimer() {
                     AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                             loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
                             32, 15, 1, AnimationType.NONE);
+
                     @Override
                     public void handle(long now) {
                         drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
-                                pose.getDirection(), pose.getX(),
-                                pose.getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                                thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+                                entry.getValue().getDirection(), entry.getValue().getX(),
+                                entry.getValue().getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
+                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
                     }
                 }.start();
+
+                enemyLocations.remove(entry.getKey());
             }
         }
 
