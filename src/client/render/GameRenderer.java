@@ -664,10 +664,10 @@ public class GameRenderer implements Runnable {
 
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(25, Color.CORNFLOWERBLUE);
+                DropShadow dropShadow = new DropShadow(25, Color.HOTPINK);
                 dropShadow.setSpread(0.75);
                 itemImageView.setEffect(dropShadow);
-                itemPane.setBorder(new Border(new BorderStroke(Color.CORNFLOWERBLUE,
+                itemPane.setBorder(new Border(new BorderStroke(Color.HOTPINK,
                         BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
             } else {
                 // Not selected item, add black border
@@ -804,25 +804,23 @@ public class GameRenderer implements Runnable {
         switch (currentPlayer.getTeam()) {
             case RED:
                 HUDBox.setStyle("-fx-background-color: rgba(255, 0, 47, 0.4); -fx-background-radius: 0 0 165 0;");
-                DropShadow ds = new DropShadow(100, Color.rgb(255, 0, 47));
-                ds.setSpread(50);
-                HUDBox.setEffect(ds);
+                HUDBox.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
                 break;
             case BLUE:
                 HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(50, Color.rgb(66, 173, 244)));
+                HUDBox.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
                 HUDBox.setStyle("-fx-background-color: rgba(34, 203, 86, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(50, Color.rgb(34, 203, 86)));
+                HUDBox.setEffect(new DropShadow(25, Color.rgb(34, 203, 86)));
                 break;
             case YELLOW:
                 HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(50, Color.rgb(232, 232, 0)));
+                HUDBox.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
                 break;
             default:
                 HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(50, Color.rgb(178, 177, 169)));
+                HUDBox.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
                 break;
         }
 
