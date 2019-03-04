@@ -27,7 +27,7 @@ public class GameSound {
 	private TimerTask checkReplay;
 	private boolean replayable;
 	private long startDelay;
-	final double hearableDistance = 1000;
+	final double hearableDistance = 500	;
 	
 	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, EntityView entity, ActionList action, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
@@ -46,7 +46,6 @@ public class GameSound {
 		this.audio = getAudio(action);
 		if(this.audio != null) {
 			this.replayable = false;
-			//this.audio.setVolume(volume/100);
 			this.calculateSound(this.audio);
 			TimerTask play = new TimerTask() {
 				@Override
@@ -92,6 +91,17 @@ public class GameSound {
 		}
 	}
 	
+	// for debugging
+	public void setClient(PlayerView client) {
+		this.client = client;
+	}
+	
+	// for debugging
+	public void play() {
+		this.calculateSound(audio);
+		this.audio.play();
+	}
+	
 	public void stop() {
 		if(this.audio != null && !this.action.equals(ActionList.ATTACKING)) {
 			this.audio.stop();
@@ -99,7 +109,6 @@ public class GameSound {
 	}
 	
 	private void playShellsFall(long startDelay) {
-		Timer t = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
@@ -108,25 +117,17 @@ public class GameSound {
 				shells.play();
 			}
 		};
-		t.schedule(task, 700 + startDelay);
+		this.timer.schedule(task, 700 + startDelay);
 	}
 	
 	private void calculateSound(AudioClip audio) {
 		double distance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2) + Math.pow(this.entity.getPose().getY() - this.client.getPose().getY(), 2));
-		double panDistance = this.entity.getPose().getX() - this.client.getPose().getX();
-		if(panDistance < 0) {
-			panDistance *= -1;
-		}
+		double balanceDistance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2));
 		
-		audio.setVolume(Math.max(0, 1 - Math.abs(distance / hearableDistance))*(Math.pow(this.volume/100, 2)));
-		//System.out.println(this.entity.getPose().getX() + " " + this.entity.getPose().getY());
-		//System.out.println(this.client.getPose().getX() + " " + this.client.getPose().getY());
-		//System.out.println(distance);
-		//System.out.println(panDistance);
-		//System.out.println(audio.getVolume());
-		audio.setPan((panDistance + 1) / hearableDistance);
+		audio.setVolume(Math.max(0, 1 - Math.abs(distance/hearableDistance))*(Math.pow(this.volume/100, 2)));
+		audio.setBalance((balanceDistance + 1) / hearableDistance);
 		if(entity.getPose().getX() < client.getPose().getX()) {
-			audio.setPan(this.audio.getPan()*-1);
+			audio.setBalance(this.audio.getBalance()*-1);
 		}
 	}
 	

@@ -116,7 +116,7 @@ public class SoundView {
 				}
 			}
 			else if(e.getCurrentAction().equals(ActionList.DEAD)) {
-				ePlaying.get(e.getID()).stop();
+				//ePlaying.get(e.getID()).stop();
 			}
 		}
 	}
