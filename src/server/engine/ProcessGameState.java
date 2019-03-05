@@ -877,7 +877,7 @@ public class ProcessGameState extends Thread {
                 frictionCoefficient += tileOn.getFrictionCoefficient();
                 density += tileOn.getDensity();
             } else {
-                System.out.println("WARNING: Object clipped in tile.");
+                // System.out.println("INFO: Object clipped in tile.");
             }
         }
 
