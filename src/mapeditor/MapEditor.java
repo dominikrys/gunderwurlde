@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
+import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.MapEditorAssetList;
 import shared.lists.TileTypes;
@@ -37,20 +38,26 @@ public class MapEditor {
 	
 	private String fileName;
 	private Stage stage;
+	private StackPane root;
+	private Scene scene;
+	private GridPane background;
+	private GridPane mainViewer;
 	private Canvas mapCanvas;
+	private VBox info;
 	private Canvas resizeAnchorCanvas;
 	private Canvas resizeArrowsCanvas;
 	private TextField widthTextField;
 	private TextField heightTextField;
 	private int mapWidth;
 	private int mapHeight;
+	private GraphicsContext mapGc;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
 	private HashMap<EntityList, Image> tileSprite;
 	private HashMap<Integer, Image> rotatedArrows;
 	private int dotX;
 	private int dotY;
-	
+	private boolean keysActivated;
 	
 	// New map
 	public MapEditor() {
@@ -65,6 +72,7 @@ public class MapEditor {
 	
 	// Initialize
 	private void init() {
+		keysActivated = false;
 		loadAssets();
 		
 		stage = new Stage();
@@ -78,13 +86,13 @@ public class MapEditor {
 		stage.setFullScreen(false);
 		stage.centerOnScreen();
         
-        StackPane root = new StackPane();
-        Scene scene = new Scene(root, 800, 600);
+        root = new StackPane();
+        scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         root.setAlignment(Pos.CENTER);
 		
         // Background
-		GridPane background = new GridPane();
+		background = new GridPane();
 		root.getChildren().add(background);
 		background.setAlignment(Pos.CENTER);
 		
@@ -99,7 +107,7 @@ public class MapEditor {
 		background.add(infoBackground, 1, 0);
 		
 		// Main Viewer
-		GridPane mainViewer = new GridPane();
+		mainViewer = new GridPane();
 		root.getChildren().add(mainViewer);
 		mainViewer.setAlignment(Pos.CENTER);
 		ColumnConstraints col1 = new ColumnConstraints();
@@ -111,11 +119,12 @@ public class MapEditor {
 		mainViewer.getColumnConstraints().addAll(col1,col2);
 		
 		// > Map Viewer
-		mapCanvas = new Canvas(500, 600);
+		mapCanvas = new Canvas(0, 0);
 		mainViewer.add(mapCanvas, 0, 0);
+		mapCanvas.requestFocus();
 		
 		// > Info Viewer
-		VBox info = new VBox();
+		info = new VBox();
 		mainViewer.add(info, 1, 0);
 		info.setSpacing(10);
 		info.setAlignment(Pos.CENTER);
@@ -286,19 +295,25 @@ public class MapEditor {
 	
 	// NOT DONE
 	private void drawMapTiles() {
+		mainViewer.getChildren().remove(mapCanvas);
+		mapCanvas = new Canvas(mapWidth*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
+		mainViewer.add(mapCanvas, 0, 0);
+		
 		Tile[][] oldMapTiles;
-		GraphicsContext gc = mapCanvas.getGraphicsContext2D();
-		gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
-		gc.rect(0, 0, mapWidth*32, mapHeight*32);
-		gc.setFill(Color.BLACK);
-		gc.fill();
-		gc.setLineWidth(1);
-		gc.setStroke(Color.GREY);
+		mapGc = mapCanvas.getGraphicsContext2D();
+		mapGc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
+		mapGc.rect(0, 0, mapWidth*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
+		mapGc.setFill(Color.BLACK);
+		mapGc.fill();
+		mapGc.setLineWidth(1);
+		mapGc.setStroke(Color.GREY);
+		// Draw vertical grid lines
 		for(int i = 0 ; i < mapWidth ; i++) {
-			gc.strokeLine(i*32, 0, i*32, mapWidth*32);
+			mapGc.strokeLine(i*Constants.TILE_SIZE, 0, i*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
 		}
+		// Draw horizontal grid lines
 		for(int i = 0 ; i < mapHeight ; i++) {
-			gc.strokeLine(0, i*32, mapHeight*32, i*32);
+			mapGc.strokeLine(0, i*Constants.TILE_SIZE, mapWidth*Constants.TILE_SIZE, i*Constants.TILE_SIZE);
 		}
 		
 		if(mapTiles == null) {
@@ -322,6 +337,34 @@ public class MapEditor {
 			}
 		}
 		
+		if(!keysActivated()) {
+			activateKeys();
+		}
+		resetFocus();
+	}
+	
+	private boolean keysActivated() {
+		return keysActivated;
+	}
+	
+	private void activateKeys() {
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode().equals(KeyCode.D)) {
+					moveCamera();
+				}
+			}
+		});
+	}
+	
+	private void moveCamera() {
+		System.out.println("pressed");
+		mapGc.translate(Constants.TILE_SIZE, Constants.TILE_SIZE);
+	}
+	
+	private void resetFocus() {
+		mapCanvas.requestFocus();
 	}
 	
 	// Load needed assets
