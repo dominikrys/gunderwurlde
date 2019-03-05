@@ -5,8 +5,7 @@ import java.util.Random;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.entity.projectile.SmallBullet;
+import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import shared.Pose;
 import shared.lists.ActionList;
@@ -22,12 +21,21 @@ public class SoldierZombieAI extends EnemyAI{
     private long beginAttackTime;
     private Random rand = new Random();
     private Pose poseToGo;
-    private Pistol pistol = new Pistol();
+    private Gun gun;
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire){
         this.RANGE_TO_SHOOT = rangeToShoot;
         this.RATE_OF_FIRE = rateOfFire;
+        this.gun = new Pistol();
     }
+
+    public SoldierZombieAI(int rangeToShoot, int rateOfFire, Gun gun){
+        this.RANGE_TO_SHOOT = rangeToShoot;
+        this.RATE_OF_FIRE = rateOfFire;
+        this.gun = gun;
+        }
+
+
 
     @Override
     public AIAction getAction() {
@@ -69,7 +77,7 @@ public class SoldierZombieAI extends EnemyAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
+            attacks.add(new ProjectileAttack(gun.getShotProjectiles(
                     new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;

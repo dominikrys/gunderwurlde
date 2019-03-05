@@ -1,29 +1,17 @@
 package server.engine.state.map;
 
+import server.engine.state.entity.Entity;
+import server.engine.state.entity.enemy.*;
+import server.engine.state.map.tile.Door;
+import server.engine.state.map.tile.Tile;
+import shared.Location;
+import shared.lists.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.TreeSet;
-
-import server.engine.state.entity.Entity;
-import server.engine.state.entity.enemy.RunnerZombie;
-import server.engine.state.entity.enemy.ShotgunMidget;
-import server.engine.state.entity.enemy.SoldierZombie;
-import server.engine.state.entity.enemy.Zombie;
-import server.engine.state.map.tile.Door;
-import server.engine.state.map.tile.Tile;
-import shared.Location;
-import shared.lists.EntityList;
-import shared.lists.MapList;
-import shared.lists.Teams;
-import shared.lists.TileState;
-import shared.lists.TileTypes;
+import java.util.*;
 
 public class MapReader {
     private static String MAP_LOCATION = "maps";
@@ -79,22 +67,22 @@ public class MapReader {
                 entitySpawns.add(compToLocation(getComponents(line)));
                 line = file.removeFirst();
             }
-            
+
             LinkedHashSet<int[]> triggers = new LinkedHashSet<>();
             line = file.removeFirst();
             while (!line.isEmpty()) {
                 LinkedList<String> cords = getComponents(line);
-                int[] tileCords = { Integer.valueOf(cords.removeFirst()), Integer.valueOf(cords.removeFirst()) };
+                int[] tileCords = {Integer.valueOf(cords.removeFirst()), Integer.valueOf(cords.removeFirst())};
                 triggers.add(tileCords);
                 line = file.removeFirst();
             }
-            
+
             LinkedHashMap<int[], Door> doors = new LinkedHashMap<>();
             line = file.removeFirst();
             while (!line.isEmpty()) {
                 LinkedList<String> doorParams = getComponents(line);
                 Tile tileToReturn = tiles.get(doorParams.removeFirst().charAt(0)).getCopy();
-                int[] tileCords = { Integer.valueOf(doorParams.removeFirst()), Integer.valueOf(doorParams.removeFirst()) };
+                int[] tileCords = {Integer.valueOf(doorParams.removeFirst()), Integer.valueOf(doorParams.removeFirst())};
                 doors.put(tileCords, new Door(tileToReturn, Integer.valueOf(doorParams.removeFirst())));
                 line = file.removeFirst();
             }
@@ -117,7 +105,7 @@ public class MapReader {
             zones.put(zoneToAdd.getId(), zoneToAdd);
             line = file.removeFirst();
         }
-        
+
 
         return new GameMap(xDim, yDim, tileMap, teamSpawns, zones, mapName);
     }
@@ -126,17 +114,19 @@ public class MapReader {
     private static Entity getEntity(LinkedList<String> entityParams) {
         EntityList entity = EntityList.valueOf(entityParams.removeFirst());
         switch (entity) {
-        case ZOMBIE:
-            return new Zombie();
-        case RUNNER:
-            return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
-        case SOLDIER:
-            return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
-        case MIDGET:
-            return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
-        default:
-            System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
-            return new Zombie();
+            case ZOMBIE:
+                return new Zombie();
+            case RUNNER:
+                return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
+            case SOLDIER:
+                return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            case MIDGET:
+                return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            case GRENADER:
+            return new Grenader(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            default:
+                System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
+                return new Zombie();
         }
     }
 
@@ -167,5 +157,5 @@ public class MapReader {
         }
         return file;
     }
-    
+
 }
