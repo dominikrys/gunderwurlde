@@ -3,6 +3,7 @@ package server.engine.ai;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
@@ -40,6 +41,8 @@ public abstract class EnemyAI {
 
     protected abstract Pose generateNextPose();
 
+    protected abstract Force generateMovementForce();
+
     public abstract AIAction getAction();
 
     public ActionList getActionState() {
@@ -49,6 +52,11 @@ public abstract class EnemyAI {
     public Pose getNewPose(double maxDistanceToMove) {
         this.maxDistanceToMove = maxDistanceToMove;
         return generateNextPose();
+    }
+
+    public Force getMovementForce(double maxDistanceToMove){
+        this.maxDistanceToMove = maxDistanceToMove;
+        return generateMovementForce();
     }
 
     int getDistToPlayer(Pose player) {
@@ -167,7 +175,6 @@ public abstract class EnemyAI {
 
         if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
-            //TODO make this use maxDistanceToMove instead of just +1
             return new Pose(pose.getX() + maxDistanceToMove, pose.getY(), 90);
         }
 

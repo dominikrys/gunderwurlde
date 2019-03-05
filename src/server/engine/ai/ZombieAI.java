@@ -5,6 +5,8 @@ import java.util.Random;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Location;
 import shared.Pose;
@@ -67,8 +69,25 @@ public class ZombieAI extends EnemyAI {
         return pose;
     }
 
+    protected Force generateMovementForce(){
+        int[] tile = Tile.locationToTile(pose);
+
+        if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
+                || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
+            return new Force(90, maxDistanceToMove*4);
+        }
+
+        if ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)
+                || (tile[0] == mapXDim - 2 && tile[1] == (mapYDim - 2) / 2)) {
+            return new Force(270, maxDistanceToMove*4);
+
+        }
+
+        return new Force(90, 10);
+    }
+
     //Maybe needs some more balancing
-    double randomizePath(double angle) {
+    private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
         int r = rand.nextInt(500);
