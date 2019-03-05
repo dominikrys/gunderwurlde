@@ -40,11 +40,12 @@ public class MapEditor {
 	private Stage stage;
 	private StackPane root;
 	private Scene scene;
-	private GridPane background;
+	private StackPane background;
 	private Rectangle mapViewerBackground;
 	private Rectangle infoBackground;
 	private GridPane mainViewer;
 	private Canvas mapCanvas;
+	private StackPane infoViewer;
 	private VBox info;
 	private Canvas resizeAnchorCanvas;
 	private Canvas resizeArrowsCanvas;
@@ -94,19 +95,14 @@ public class MapEditor {
         root.setAlignment(Pos.CENTER);
 		
         // Background
-		background = new GridPane();
+		background = new StackPane();
 		root.getChildren().add(background);
 		background.setAlignment(Pos.CENTER);
 		
 		// > Map Viewer Background
-		mapViewerBackground = new Rectangle(500, 600);
+		mapViewerBackground = new Rectangle(scene.getWidth(), scene.getHeight());
 		mapViewerBackground.setFill(Color.GREY);
-		background.add(mapViewerBackground, 0, 0);
-		
-		// > Info Viewer Background
-		infoBackground = new Rectangle(300,600);
-		infoBackground.setFill(Color.DARKGRAY);
-		background.add(infoBackground, 1, 0);
+		background.getChildren().add(mapViewerBackground);
 		
 		// Main Viewer
 		mainViewer = new GridPane();
@@ -126,19 +122,28 @@ public class MapEditor {
 		mapCanvas.requestFocus();
 		
 		// > Info Viewer
+		infoViewer = new StackPane();
+		mainViewer.add(infoViewer, 1, 0);
+		
+		// > > Info Viewer Background
+		infoBackground = new Rectangle(mainViewer.getColumnConstraints().get(1).getPrefWidth(), scene.getHeight());
+		infoViewer.getChildren().add(infoBackground);
+		infoBackground.setFill(Color.DARKGRAY);
+		
+		// > > Info
 		info = new VBox();
-		mainViewer.add(info, 1, 0);
+		infoViewer.getChildren().add(info);
 		info.setSpacing(10);
 		info.setAlignment(Pos.CENTER);
 		
-		// > > Map Size:
+		// > > > Map Size:
 		HBox mapSizeHBox = new HBox();
 		info.getChildren().add(mapSizeHBox);
 		mapSizeHBox.setSpacing(10);
 		mapSizeHBox.setAlignment(Pos.CENTER);
 		Label mapSizeLabel = new Label("Map Size:");
 		
-		// > > W
+		// > > > W
 		widthTextField = new TextField();
 		widthTextField.setPrefWidth(75);
 		widthTextField.setPromptText("W");
@@ -158,7 +163,6 @@ public class MapEditor {
 							if(!heightTextField.getText().trim().isEmpty()) {
 								mapHeight = Integer.parseInt(heightTextField.getText());
 								drawMapTiles();
-								// TODO: draw tiles here
 							}
 						}
 					}
@@ -171,10 +175,10 @@ public class MapEditor {
 		});
 		widthTextField.setTooltip(new Tooltip("Width of map"));
 		
-		// > > X
+		// > > > X
 		Label mapSizeX = new Label("X");
 		
-		// > > H
+		// > > > H
 		heightTextField = new TextField();
 		heightTextField.setPrefWidth(75);
 		heightTextField.setPromptText("H");
@@ -193,7 +197,6 @@ public class MapEditor {
 							if(!widthTextField.getText().trim().isEmpty()) {
 								mapWidth = Integer.parseInt(widthTextField.getText());
 								drawMapTiles();
-								// TODO: draw tiles here
 							}
 						}
 					}
@@ -207,7 +210,7 @@ public class MapEditor {
 		heightTextField.setTooltip(new Tooltip("Height of map"));
 		mapSizeHBox.getChildren().addAll(mapSizeLabel, widthTextField, mapSizeX, heightTextField);
 		
-		// > > Resize anchor
+		// > > > Resize anchor
 		StackPane resizePane = new StackPane();
 		info.getChildren().add(resizePane);
 		resizePane.setAlignment(Pos.CENTER);
@@ -354,7 +357,7 @@ public class MapEditor {
 		return keysActivated;
 	}
 	
-	// NOT DONE
+	// Activate keyboard control
 	private void activateKeys() {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -364,30 +367,23 @@ public class MapEditor {
 		});
 	}
 	
-	// NOT DONE
+	// Move camera
 	private void moveCamera(KeyCode key) {
 		switch(key) {
 			case W:
-				//if(mapCanvas.getLayoutY() + (mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE) > 0) {
-					mapCanvas.setTranslateY(mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE);
-				//}
+				mapCanvas.setTranslateY(mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE);
 				break;
 			case A:
-				//if(mapCanvas.getLayoutX() + (mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE) > 0) {
-					mapCanvas.setTranslateX(mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE);
-				//}
+				mapCanvas.setTranslateX(mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE);
 				break;
 			case S:
-				//if(mapCanvas.getLayoutY() + (mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE*mapHeight) < mapViewerBackground.getHeight()) {
-					mapCanvas.setTranslateY(mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE);
-				//}
+				mapCanvas.setTranslateY(mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE);
 				break;
 			case D:
-				//if(mapCanvas.getLayoutX() + (mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE*mapWidth) < mapViewerBackground.getWidth()) {
-					mapCanvas.setTranslateX(mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE);
-				//}
+				mapCanvas.setTranslateX(mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE);
 				break;
 		}
+		infoViewer.toFront();
 	}
 	
 	private void resetFocus() {
