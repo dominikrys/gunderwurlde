@@ -14,6 +14,7 @@ public class Zombie extends Enemy {
     public static final int DEFAULT_MOVESPEED = (Tile.TILE_SIZE / 3) * 2;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 10;
+    public static final double DEFAULT_MASS = 2;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
     static {
@@ -22,20 +23,20 @@ public class Zombie extends Enemy {
     }
 
     public Zombie() {
-        this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI());
+        this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
     }
 
-    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
-        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, ai);
+    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
+        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, ai, mass);
     }
 
-    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type) {
-        super(maxHealth, moveSpeed, type, size, drops, scoreOnKill, ai);
+    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type, double mass) {
+        super(maxHealth, moveSpeed, type, size, drops, scoreOnKill, ai, mass);
     }
 
     @Override
     public Enemy makeCopy() {
-        return new Zombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ZombieAI());
+        return new Zombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
     }
 
 }
