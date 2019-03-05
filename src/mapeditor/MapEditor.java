@@ -41,6 +41,8 @@ public class MapEditor {
 	private StackPane root;
 	private Scene scene;
 	private GridPane background;
+	private Rectangle mapViewerBackground;
+	private Rectangle infoBackground;
 	private GridPane mainViewer;
 	private Canvas mapCanvas;
 	private VBox info;
@@ -97,12 +99,12 @@ public class MapEditor {
 		background.setAlignment(Pos.CENTER);
 		
 		// > Map Viewer Background
-		Rectangle mapViewerBackground = new Rectangle(500, 600);
+		mapViewerBackground = new Rectangle(500, 600);
 		mapViewerBackground.setFill(Color.GREY);
 		background.add(mapViewerBackground, 0, 0);
 		
 		// > Info Viewer Background
-		Rectangle infoBackground = new Rectangle(300,600);
+		infoBackground = new Rectangle(300,600);
 		infoBackground.setFill(Color.DARKGRAY);
 		background.add(infoBackground, 1, 0);
 		
@@ -324,15 +326,11 @@ public class MapEditor {
 			oldMapTiles = mapTiles;
 		}
 		
-		System.out.println(mapTiles.length);
-		System.out.println(mapTiles[0].length);
 		for(int i = 0 ; i < mapTiles.length - 1 ; i++) {
 			for(int j = 0 ; j < mapTiles[0].length - 1 ; j++) {
 				if(i < oldMapTiles.length - 1 && j < oldMapTiles.length - 1) {
-					System.out.println("here1");
 				}
 				else {
-					System.out.println("here2");
 				}
 			}
 		}
@@ -340,6 +338,15 @@ public class MapEditor {
 		if(!keysActivated()) {
 			activateKeys();
 		}
+		
+		mapCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				System.out.println(event.getX());
+				System.out.println(event.getY());
+			}
+		});
+		
 		resetFocus();
 	}
 	
@@ -347,20 +354,40 @@ public class MapEditor {
 		return keysActivated;
 	}
 	
+	// NOT DONE
 	private void activateKeys() {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				if(event.getCode().equals(KeyCode.D)) {
-					moveCamera();
-				}
+				moveCamera(event.getCode());
 			}
 		});
 	}
 	
-	private void moveCamera() {
-		System.out.println("pressed");
-		mapGc.translate(Constants.TILE_SIZE, Constants.TILE_SIZE);
+	// NOT DONE
+	private void moveCamera(KeyCode key) {
+		switch(key) {
+			case W:
+				//if(mapCanvas.getLayoutY() + (mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE) > 0) {
+					mapCanvas.setTranslateY(mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE);
+				//}
+				break;
+			case A:
+				//if(mapCanvas.getLayoutX() + (mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE) > 0) {
+					mapCanvas.setTranslateX(mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE);
+				//}
+				break;
+			case S:
+				//if(mapCanvas.getLayoutY() + (mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE*mapHeight) < mapViewerBackground.getHeight()) {
+					mapCanvas.setTranslateY(mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE);
+				//}
+				break;
+			case D:
+				//if(mapCanvas.getLayoutX() + (mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE*mapWidth) < mapViewerBackground.getWidth()) {
+					mapCanvas.setTranslateX(mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE);
+				//}
+				break;
+		}
 	}
 	
 	private void resetFocus() {
