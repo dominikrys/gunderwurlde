@@ -528,6 +528,9 @@ public class GameRenderer implements Runnable {
                                     6, 25, 0, AnimationType.MOVE));
                             break;
                         default:
+                            enemiesOnMap.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                     }
                 }
