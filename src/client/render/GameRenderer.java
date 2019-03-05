@@ -579,7 +579,7 @@ public class GameRenderer implements Runnable {
 
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                         loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-                        frameCount, 5, 0, AnimationType.NONE);
+                        frameCount, 30, 1, AnimationType.NONE);
 
                 @Override
                 public void handle(long now) {

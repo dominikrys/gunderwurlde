@@ -32,13 +32,12 @@ public class AnimatedSpriteManager {
             // Create timeline that will loop over the parts of the spritesheet
             timeline = new Timeline(new KeyFrame(Duration.millis(timeBetweenFrames),
                     e -> {
-                        // TODO: Doesn't take cyclecount into consideration - maybe change this
                         // Check if not reached end of frames
                         if (currentFrame < frameCount - 1) {
                             // Increment position x of current frame with the frame width
                             sx += individualImageWidth;
                             currentFrame++;
-                        } else if (cycleCount != 1) {
+                        } else {
                             // Reached end of animation, reset sx and frame counter
                             sx = 0;
                             currentFrame = 0;
@@ -49,7 +48,7 @@ public class AnimatedSpriteManager {
             if (cycleCount == 0) {
                 timeline.setCycleCount(Timeline.INDEFINITE);
             } else {
-                timeline.setCycleCount(cycleCount);
+                timeline.setCycleCount(cycleCount * frameCount);
             }
 
             timeline.play();
