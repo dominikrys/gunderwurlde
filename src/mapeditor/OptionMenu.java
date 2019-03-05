@@ -18,6 +18,7 @@ public class OptionMenu {
 		this.init();
 	}
 	
+	// Initialize
 	private void init() {
 		Stage stage = new Stage();
 		stage.setTitle("Option");
@@ -25,47 +26,55 @@ public class OptionMenu {
         stage.setFullScreen(false);
         stage.centerOnScreen();
 		
+        // root
 		VBox root = new VBox();
+		Scene scene = new Scene(root, 300, 250);
+        stage.setScene(scene);
 		root.setSpacing(50);
 		root.setAlignment(Pos.CENTER);
 		root.setPadding(new Insets(50));
 		
+		// > Resolution HBox
 		HBox resolution = new HBox();
+		root.getChildren().add(resolution);
 		resolution.setSpacing(20);
 		resolution.setAlignment(Pos.CENTER);
+		
+		// > > Resolution:
 		Label resolutionLabel = new Label("Resolution:");
+		
+		// > > resolutions drop down menu
 		ComboBox resolutions = new ComboBox();
 		resolutions.getItems().add("800x600");
 		resolutions.getSelectionModel().selectFirst();
 		resolution.getChildren().addAll(resolutionLabel, resolutions);
-		root.getChildren().add(resolution);
 		
+		// > Save and Cancel HBox
 		HBox hBox = new HBox();
+		root.getChildren().add(hBox);
 		hBox.setSpacing(50);
 		hBox.setAlignment(Pos.CENTER);
+		
+		// > > Save
 		Button save = new Button("Save");
+		hBox.getChildren().add(save);
 		save.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				
 			}
 		});
-		hBox.getChildren().add(save);
 		
+		// > > Cancel
 		Button cancel = new Button("Cancel");
+		hBox.getChildren().add(cancel);
 		cancel.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				stage.close();
 			}
 		});
-		hBox.getChildren().add(cancel);
 		
-		
-		root.getChildren().add(hBox);
-		Scene scene = new Scene(root, 300, 250);
-		
-        stage.setScene(scene);
         stage.show();
         
         stage.setOnCloseRequest(we -> {

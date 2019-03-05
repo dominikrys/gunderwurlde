@@ -38,14 +38,18 @@ public class MapEditor {
 	private String fileName;
 	private Stage stage;
 	private Canvas mapCanvas;
-	private Canvas resizePaneCanvas;
+	private Canvas resizeAnchorCanvas;
 	private Canvas resizeArrowsCanvas;
+	private TextField widthTextField;
+	private TextField heightTextField;
 	private int mapWidth;
 	private int mapHeight;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
 	private HashMap<EntityList, Image> tileSprite;
 	private HashMap<Integer, Image> rotatedArrows;
+	private int dotX;
+	private int dotY;
 	
 	
 	// New map
@@ -59,23 +63,24 @@ public class MapEditor {
 		this.init();
 	}
 	
-	
+	// Initialize
 	private void init() {
-		this.loadAssets();
+		loadAssets();
 		
-		this.stage = new Stage();
+		stage = new Stage();
 		if(fileName != null) {
-			this.stage.setTitle(fileName);
+			stage.setTitle(fileName);
 		}
 		else {
-			this.stage.setTitle("New Map");
+			stage.setTitle("New Map");
 		}
-		this.stage.setResizable(false);
-		this.stage.setFullScreen(false);
-		this.stage.centerOnScreen();
+		stage.setResizable(false);
+		stage.setFullScreen(false);
+		stage.centerOnScreen();
         
         StackPane root = new StackPane();
         Scene scene = new Scene(root, 800, 600);
+        stage.setScene(scene);
         root.setAlignment(Pos.CENTER);
 		
         // Background
@@ -106,8 +111,8 @@ public class MapEditor {
 		mainViewer.getColumnConstraints().addAll(col1,col2);
 		
 		// > Map Viewer
-		this.mapCanvas = new Canvas(500, 600);
-		mainViewer.add(this.mapCanvas, 0, 0);
+		mapCanvas = new Canvas(500, 600);
+		mainViewer.add(mapCanvas, 0, 0);
 		
 		// > Info Viewer
 		VBox info = new VBox();
@@ -115,49 +120,58 @@ public class MapEditor {
 		info.setSpacing(10);
 		info.setAlignment(Pos.CENTER);
 		
-		// > > Label("Map Size:")
+		// > > Map Size:
 		HBox mapSizeHBox = new HBox();
 		info.getChildren().add(mapSizeHBox);
 		mapSizeHBox.setSpacing(10);
 		mapSizeHBox.setAlignment(Pos.CENTER);
 		Label mapSizeLabel = new Label("Map Size:");
-		// > > TextField("W")
-		TextField widthTextField = new TextField();
+		
+		// > > W
+		widthTextField = new TextField();
 		widthTextField.setPrefWidth(75);
 		widthTextField.setPromptText("W");
 		widthTextField.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				if(event.getCode().equals(KeyCode.ENTER)) {
-					if(widthTextField.getText().matches("\\d*")) {
+					if(widthTextField.getText().matches("\\d*") && !widthTextField.getText().trim().isEmpty()) {
 						int newWidth = Integer.parseInt(widthTextField.getText());
 						if(newWidth < mapWidth) {
 							System.out.println("Cropping may occur");
+							// TODO: cropping warning, anchor arrowhead change
 						}
 						else {
 							mapWidth = newWidth;
 							System.out.println("Map width: " + mapWidth);
-							//drawMapTiles();
+							if(!heightTextField.getText().trim().isEmpty()) {
+								mapHeight = Integer.parseInt(heightTextField.getText());
+								drawMapTiles();
+								// TODO: draw tiles here
+							}
 						}
 					}
 					else {
+						widthTextField.clear();
 						sizeErrorPopup();
 					}
 				}
 			}
 		});
 		widthTextField.setTooltip(new Tooltip("Width of map"));
-		// > > Label("X")
+		
+		// > > X
 		Label mapSizeX = new Label("X");
-		// > > TextField("H")
-		TextField heightTextField = new TextField();
+		
+		// > > H
+		heightTextField = new TextField();
 		heightTextField.setPrefWidth(75);
 		heightTextField.setPromptText("H");
 		heightTextField.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				if(event.getCode().equals(KeyCode.ENTER)) {
-					if(heightTextField.getText().matches("\\d*")) {
+					if(heightTextField.getText().matches("\\d*") && !heightTextField.getText().trim().isEmpty()) {
 						int newHeight = Integer.parseInt(heightTextField.getText());
 						if(newHeight < mapHeight) {
 							System.out.println("Cropping may occur");
@@ -165,10 +179,15 @@ public class MapEditor {
 						else {
 							mapHeight = newHeight;
 							System.out.println("Map height: " + mapHeight);
-							//drawMapTiles();
+							if(!widthTextField.getText().trim().isEmpty()) {
+								mapWidth = Integer.parseInt(widthTextField.getText());
+								drawMapTiles();
+								// TODO: draw tiles here
+							}
 						}
 					}
 					else {
+						heightTextField.clear();
 						sizeErrorPopup();
 					}
 				}
@@ -177,31 +196,29 @@ public class MapEditor {
 		heightTextField.setTooltip(new Tooltip("Height of map"));
 		mapSizeHBox.getChildren().addAll(mapSizeLabel, widthTextField, mapSizeX, heightTextField);
 		
-		// Resize 9-grid
+		// > > Resize anchor
 		StackPane resizePane = new StackPane();
 		info.getChildren().add(resizePane);
 		resizePane.setAlignment(Pos.CENTER);
-		this.resizePaneCanvas = new Canvas(90, 90);
-		resizePane.getChildren().add(this.resizePaneCanvas);
-		this.drawResizePane();
-		this.resizeArrowsCanvas = new Canvas(90, 90);
-		resizePane.getChildren().add(this.resizeArrowsCanvas);
-		this.drawResizeArrows();
+		resizeAnchorCanvas = new Canvas(90, 90);
+		resizePane.getChildren().add(resizeAnchorCanvas);
+		drawResizeAnchorGrid();
+		resizeArrowsCanvas = new Canvas(90, 90);
+		resizePane.getChildren().add(resizeArrowsCanvas);
+		drawResizeArrows();
 		
-		
-		this.stage.setScene(scene);
-		this.stage.show();
+		stage.show();
         
-		this.stage.setOnCloseRequest(we -> {
-			this.stage.close();
+		stage.setOnCloseRequest(we -> {
+			stage.close();
         });
 	}
 	
-	// NOT DONE
-	private void drawResizePane() {
-		GraphicsContext gc = this.resizePaneCanvas.getGraphicsContext2D();
-		gc.clearRect(0, 0, this.resizePaneCanvas.getWidth(), this.resizePaneCanvas.getHeight());
-		gc.rect(0, 0, this.resizePaneCanvas.getWidth(), this.resizePaneCanvas.getHeight());
+	// Draw grid for resize anchor
+	private void drawResizeAnchorGrid() {
+		GraphicsContext gc = resizeAnchorCanvas.getGraphicsContext2D();
+		gc.clearRect(0, 0, resizeAnchorCanvas.getWidth(), resizeAnchorCanvas.getHeight());
+		gc.rect(0, 0, resizeAnchorCanvas.getWidth(), resizeAnchorCanvas.getHeight());
 		gc.setFill(Color.WHITE);
 		gc.fill();
 		gc.setLineWidth(1);
@@ -214,23 +231,14 @@ public class MapEditor {
 			gc.strokeLine(i, 0, i, 90);
 			i += 30;
 		}
-		
-		/*
-		this.resizePaneCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				System.out.println(event.getX());
-				System.out.println(event.getY());
-			}
-		});
-		*/
 	}
 	
+	// Draw arrows and dot on the anchor grid
 	private void drawResizeArrows() {
-		GraphicsContext gc = this.resizeArrowsCanvas.getGraphicsContext2D();
-		this.moveResizeArrows(gc, 45, 45);
+		GraphicsContext gc = resizeArrowsCanvas.getGraphicsContext2D();
+		moveResizeArrows(gc, 45, 45);
 		
-		this.resizeArrowsCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		resizeArrowsCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				moveResizeArrows(gc, event.getX(), event.getY());
@@ -238,10 +246,11 @@ public class MapEditor {
 		});
 	}
 	
+	// Move arrows and dot on the anchor grid based on mouse click
 	private void moveResizeArrows(GraphicsContext gc, double clickedX, double clickedY) {
-		int dotX = (int)clickedX/30;
-		int dotY = (int)clickedY/30;
-		gc.clearRect(0, 0, this.resizeArrowsCanvas.getWidth(), this.resizeArrowsCanvas.getHeight());
+		dotX = (int)clickedX/30;
+		dotY = (int)clickedY/30;
+		gc.clearRect(0, 0, resizeArrowsCanvas.getWidth(), resizeArrowsCanvas.getHeight());
 		gc.drawImage(mapEditorAssets.get(MapEditorAssetList.DOT), dotX*30, dotY*30);
 		for(int i = -1 ; i <= 1 ; i++) {
 			for(int j = -1 ; j <= 1 ; j++) {
@@ -277,44 +286,66 @@ public class MapEditor {
 	
 	// NOT DONE
 	private void drawMapTiles() {
-		Tile[][] oldMapTiles = mapTiles;
-		
-		if(mapTiles == null) {
-			mapTiles = new Tile[this.mapWidth][this.mapHeight];
+		Tile[][] oldMapTiles;
+		GraphicsContext gc = mapCanvas.getGraphicsContext2D();
+		gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
+		gc.rect(0, 0, mapWidth*32, mapHeight*32);
+		gc.setFill(Color.BLACK);
+		gc.fill();
+		gc.setLineWidth(1);
+		gc.setStroke(Color.GREY);
+		for(int i = 0 ; i < mapWidth ; i++) {
+			gc.strokeLine(i*32, 0, i*32, mapWidth*32);
+		}
+		for(int i = 0 ; i < mapHeight ; i++) {
+			gc.strokeLine(0, i*32, mapHeight*32, i*32);
 		}
 		
+		if(mapTiles == null) {
+			mapTiles = new Tile[mapWidth][mapHeight];
+			oldMapTiles = new Tile[0][0];
+		}
+		else {
+			oldMapTiles = mapTiles;
+		}
+		
+		System.out.println(mapTiles.length);
+		System.out.println(mapTiles[0].length);
 		for(int i = 0 ; i < mapTiles.length - 1 ; i++) {
 			for(int j = 0 ; j < mapTiles[0].length - 1 ; j++) {
 				if(i < oldMapTiles.length - 1 && j < oldMapTiles.length - 1) {
-					
+					System.out.println("here1");
 				}
 				else {
-					
+					System.out.println("here2");
 				}
 			}
 		}
 		
 	}
 	
-	// NOT DONE
+	// Load needed assets
 	private void loadAssets() {
-		this.loadMapEditorAssets();
-		this.loadTileSprite();
+		loadMapEditorAssets();
+		loadTileSprite();
 	}
 	
+	// Load assets used specifically for the editor
 	private void loadMapEditorAssets() {
-		this.mapEditorAssets = new HashMap<MapEditorAssetList, Image>();
+		mapEditorAssets = new HashMap<MapEditorAssetList, Image>();
 		EnumSet.allOf(MapEditorAssetList.class).forEach(MapEditorAssetList -> mapEditorAssets.put(MapEditorAssetList, new Image(MapEditorAssetList.getPath())));
-		this.rotateResizeArrows();
+		rotateResizeArrows();
 	}
 	
+	// Load tile sprites
 	private void loadTileSprite() {
-		this.tileSprite = new HashMap<EntityList, Image>();
+		tileSprite = new HashMap<EntityList, Image>();
 		EnumSet.allOf(TileTypes.class).forEach(TileTypes -> tileSprite.put(TileTypes.getEntityListName(), new Image(TileTypes.getEntityListName().getPath())));
 	}
 	
+	// Create images of rotated arrows and stored them in rotatedArrows
 	private void rotateResizeArrows() {
-		this.rotatedArrows = new HashMap<Integer, Image>();
+		rotatedArrows = new HashMap<Integer, Image>();
 		ImageView arrowView = new ImageView(mapEditorAssets.get(MapEditorAssetList.ARROW));
 		SnapshotParameters params = new SnapshotParameters();
 		params.setFill(Color.TRANSPARENT);
@@ -335,6 +366,7 @@ public class MapEditor {
 		rotatedArrows.put(315, arrowView.snapshot(params, null));
 	}
 	
+	// Error when a non-number is entered in size text field
 	private void sizeErrorPopup() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
