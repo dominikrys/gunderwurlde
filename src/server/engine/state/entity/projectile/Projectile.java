@@ -1,11 +1,14 @@
 package server.engine.state.entity.projectile;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Teams;
 
 public abstract class Projectile extends Entity {
+    private static final int FORCE_PER_DMG = 1000;
+
     protected int speed; // max ~1800
     protected int damage;
     protected EntityList entityListName;
@@ -67,5 +70,9 @@ public abstract class Projectile extends Entity {
     }
 
     public abstract Projectile createFor(Pose p, Teams team);
+
+    public Force getImpactForce() {
+        return new Force(pose.getDirection(), damage * FORCE_PER_DMG);
+    }
 
 }

@@ -427,8 +427,9 @@ public class ProcessGameState extends Thread {
                                 Location enemyLocation = enemyBeingChecked.getLocation();
 
                                 if (currentProjectile.getTeam() != Teams.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
-                                    // TODO add force to enemy
+                                    enemyBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                     removed = true;
+
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
                                         // TODO enemy death status here
                                         enemies.remove(enemyID);
@@ -475,7 +476,7 @@ public class ProcessGameState extends Thread {
                                     Player playerBeingChecked = players.get(playerID);
 
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
-                                        // TODO add force to player
+                                        playerBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                         removed = true;
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.damage(currentProjectile.getDamage());
@@ -552,7 +553,6 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (closestID != -1) {
-
                     HasPhysics e2;
                     if (isPlayer) {
                         e2 = players.get(closestID);
@@ -567,7 +567,9 @@ public class ProcessGameState extends Thread {
                             tileMap[tileCords[0]][tileCords[1]].removeEnemy(closestID);
                         }
                     }
+
                     HasPhysics result[] = Physics.objectCollision(currentPlayer, e2, tileMap);
+                    currentPlayer = (Player) result[0];
                     e2 = result[1];
 
                     if (isPlayer) {
@@ -583,8 +585,6 @@ public class ProcessGameState extends Thread {
                         }
                         enemies.put(closestID, (Enemy) e2);
                     }
-
-                    currentPlayer = (Player) result[0];
                 }
 
                 tilesOn = tilesOn(currentPlayer);
@@ -628,7 +628,6 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (closestID != -1) {
-
                     Enemy e2 = enemies.get(closestID);
                     tilesOn = tilesOn(e2);
                     for (int[] tileCords : tilesOn) {
@@ -636,10 +635,9 @@ public class ProcessGameState extends Thread {
                     }
 
                     HasPhysics result[] = Physics.objectCollision(currentEnemy, e2, tileMap);
-
                     currentEnemy = (Enemy) result[0];
-
                     e2 = (Enemy) result[1];
+
                     tilesOn = tilesOn(e2);
                     for (int[] tileCords : tilesOn) {
                         tileMap[tileCords[0]][tileCords[1]].addEnemy(closestID);
