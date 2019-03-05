@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class GameRenderer implements Runnable {
@@ -621,16 +623,18 @@ public class GameRenderer implements Runnable {
 
                 enemyLocations.remove(entry.getKey());
             }
+
         }
 
-        /*
-        AnimatedSpriteManager thisSpriteManager = entitiesOnMap.get(id);
+        //todo: do this for players
+    }
 
-        drawRotatedImageFromSpritesheet(mapGC, thisSpriteManager.getImage(),
-                pose.getDirection(), pose.getX(),
-                pose.getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
-         */
+    private <K, V> Map<K, V> mapDifference(Map<? extends K, ? extends V> left, Map<? extends K, ? extends V> right) {
+        Map<K, V> difference = new HashMap<>();
+        difference.putAll(left);
+        difference.putAll(right);
+        difference.entrySet().removeAll(right.entrySet());
+        return difference;
     }
 
     // Render image according to info from its animation
