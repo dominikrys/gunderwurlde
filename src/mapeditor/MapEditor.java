@@ -45,6 +45,7 @@ public class MapEditor {
 	private Rectangle infoBackground;
 	private GridPane mainViewer;
 	private Canvas mapCanvas;
+	private Image mapSnapshot;
 	private StackPane infoViewer;
 	private VBox info;
 	private Canvas resizeAnchorCanvas;
@@ -338,6 +339,10 @@ public class MapEditor {
 			}
 		}
 		
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		mapSnapshot = mapCanvas.snapshot(params, null);
+		
 		if(!keysActivated()) {
 			activateKeys();
 		}
@@ -345,8 +350,7 @@ public class MapEditor {
 		mapCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				System.out.println(event.getX());
-				System.out.println(event.getY());
+				selectTile((int)event.getX()/32, (int)event.getY()/32);
 			}
 		});
 		
@@ -407,6 +411,17 @@ public class MapEditor {
 	private void loadTileSprite() {
 		tileSprite = new HashMap<EntityList, Image>();
 		EnumSet.allOf(TileTypes.class).forEach(TileTypes -> tileSprite.put(TileTypes.getEntityListName(), new Image(TileTypes.getEntityListName().getPath())));
+	}
+	
+	// Tile selection
+	private void selectTile(int x, int y) {
+		System.out.println("x: " + x + " y: " + y);
+		mapGc.drawImage(mapSnapshot, 0, 0);
+		mapGc.setStroke(Color.YELLOW);
+		mapGc.strokeLine(x*Constants.TILE_SIZE, y*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, y*Constants.TILE_SIZE);
+		mapGc.strokeLine(x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
+		mapGc.strokeLine(x*Constants.TILE_SIZE, y*Constants.TILE_SIZE, x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
+		mapGc.strokeLine((x + 1)*Constants.TILE_SIZE, y*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
 	}
 	
 	// Create images of rotated arrows and stored them in rotatedArrows
