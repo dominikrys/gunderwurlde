@@ -7,7 +7,6 @@ import shared.lists.TileState;
 public class Physics {
     private static int TIME_PER_SECOND = 1000;
     private static int GRAVITY = 100;
-    private static double TILE_BOUNCE = 0.7;
     private static double OBJECT_BOUNCE = 0.9;
 
 
@@ -62,7 +61,7 @@ public class Physics {
         return ((e1Mass * e1Velocity) + (e2Mass * e2Velocity) + (e2Mass * OBJECT_BOUNCE * (e2Velocity - e1Velocity))) / (e1Mass + e2Mass);
     }
 
-    public static HasPhysics tileCollision(HasPhysics e, Location tileLoc) {
+    public static HasPhysics tileCollision(HasPhysics e, Location tileLoc, double tileBounce) {
         int gapSize = e.getSize() + (Tile.TILE_SIZE / 2) + 1;
         Location loc = e.getLocation();
         double xDiff = tileLoc.getX() - loc.getX();
@@ -96,7 +95,7 @@ public class Physics {
         int newDirection = normal + (normal - currentVelocity.getDirection()) - 180;
         if (newDirection < 0)
             newDirection += 360;
-        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * TILE_BOUNCE);
+        currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * tileBounce);
         e.setVelocity(currentVelocity);
 
         return e;

@@ -838,8 +838,8 @@ public class ProcessGameState extends Thread {
                 p.isMoving());
     }
 
-    private static Location getMostSignificatTileLocation(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {
-        Location mostSigTileLoc = null;
+    private static int[] getMostSignificatTile(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {
+        int[] mostSigTileCords = { -1, -1 };
         double mostSigDist = Double.MAX_VALUE;
         for (int[] tileCords : tilesOn) {
             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
@@ -850,12 +850,12 @@ public class ProcessGameState extends Thread {
                 double distSqrd = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 
                 if (distSqrd < mostSigDist) {
-                    mostSigTileLoc = tileLoc;
+                    mostSigTileCords = tileCords;
                     mostSigDist = distSqrd;
                 }
             }
         }
-        return mostSigTileLoc;
+        return mostSigTileCords;
     }
 
     private static HasPhysics doPhysics(HasPhysics e, Tile[][] tileMap, long timeDiff) {
@@ -914,9 +914,11 @@ public class ProcessGameState extends Thread {
 
         // tile collisions
         tilesOn = tilesOn((Entity)e);
-        Location mostSigTileLoc = getMostSignificatTileLocation(newLocation, tilesOn, tileMap);
-        if (mostSigTileLoc != null) {
-            e = Physics.tileCollision(e, mostSigTileLoc);
+        int[] mostSigTileCords = getMostSignificatTile(newLocation, tilesOn, tileMap);
+        if (mostSigTileCords[0] != -1) {
+            // TODO add hit sound to tile if velocity is high
+            Location mostSigTileLoc = Tile.tileToLocation(mostSigTileCords[0], mostSigTileCords[1]);
+            e = Physics.tileCollision(e, mostSigTileLoc, tileMap[mostSigTileCords[0]][mostSigTileCords[1]].getBounceCoefficient());
         }
 
         return e;

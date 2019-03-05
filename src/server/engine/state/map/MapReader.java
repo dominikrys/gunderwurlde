@@ -47,7 +47,8 @@ public class MapReader {
             char ID = tileComp.removeFirst().charAt(0);
             TileTypes type = TileTypes.valueOf(tileComp.removeFirst());
             TileState state = TileState.valueOf(tileComp.removeFirst());
-            tiles.put(ID, new Tile(type, state));
+            double value = Double.valueOf(tileComp.removeFirst());
+            tiles.put(ID, new Tile(type, state, value));
             line = file.removeFirst();
         }
 
