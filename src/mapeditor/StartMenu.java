@@ -21,6 +21,11 @@ public class StartMenu {
 	}
 	
 	private void init(Stage stage) {
+		stage.setTitle("Gunderwurlde Map Editor");
+        stage.setResizable(false);
+        stage.setFullScreen(false);
+        stage.centerOnScreen();
+		
 		VBox root = new VBox();
 		root.setSpacing(10);
 		root.setPadding(new Insets(10));
@@ -35,7 +40,7 @@ public class StartMenu {
         newMap.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				MapEditor.init(new Stage(), null);
+				MapEditor mapEditor = new MapEditor();
 			}
 		});
         root.getChildren().add(newMap);
@@ -52,7 +57,7 @@ public class StartMenu {
 				File map = fileChooser.showOpenDialog(stage);
 				if(map != null) {
 					//MapEditor.init(new Stage(), map.getName().substring(0, map.getName().lastIndexOf(".")));
-					MapEditor.init(new Stage(), map.getName());
+					MapEditor mapEditor = new MapEditor(map.getName());
 				}
 			}
 		});
@@ -62,9 +67,10 @@ public class StartMenu {
         option.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+				OptionMenu optionMenu = new OptionMenu();
 			}
 		});
+        root.getChildren().add(option);
         
         Button exit = new Button("Exit");
         exit.setOnAction(new EventHandler<ActionEvent>() {
@@ -75,10 +81,6 @@ public class StartMenu {
 		});
         root.getChildren().add(exit);
 
-        stage.setTitle("Gunderwurlde Map Editor");
-        stage.setResizable(false);
-        stage.setFullScreen(false);
-        stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
         
