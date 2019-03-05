@@ -13,7 +13,7 @@ public class SoldierZombie extends Enemy {
 
     public static final int DEFAULT_HEALTH = 2;
     public static final int DEFAULT_SCORE_ON_KILL = 30;
-    public static final int DEFAULT_MOVESPEED = (Tile.TILE_SIZE / 3) * 2;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.6;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final double DEFAULT_MASS = 2;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
@@ -27,20 +27,20 @@ public class SoldierZombie extends Enemy {
     }
 
     public SoldierZombie(int range_to_shoot, int rate_of_fire){
-        this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SoldierZombieAI(range_to_shoot, rate_of_fire),
+        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SoldierZombieAI(range_to_shoot, rate_of_fire),
                 DEFAULT_MASS);
         this.rangeToShoot = range_to_shoot;
         this.rateOfFire = rate_of_fire;
     }
 
 
-    private SoldierZombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
-        super(maxHealth, moveSpeed, EntityList.SOLDIER, size, drops, scoreOnKill, ai, mass);
+    private SoldierZombie(int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
+        super(maxHealth, acceleration, EntityList.SOLDIER, size, drops, scoreOnKill, ai, mass);
     }
 
     @Override
     public Enemy makeCopy() {
-        return new SoldierZombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new SoldierZombieAI(rangeToShoot, rateOfFire),
+        return new SoldierZombie(this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new SoldierZombieAI(rangeToShoot, rateOfFire),
                 this.mass);
     }
 

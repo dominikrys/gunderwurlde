@@ -25,18 +25,18 @@ public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsM
     protected int scoreOnKill;
     protected int health;
     protected int maxHealth;
-    protected int moveSpeed;
+    protected double acceleration;
     protected boolean takenDamage;
     protected boolean moving;
     protected Velocity velocity;
     protected Force resultantForce;
     protected double mass;
 
-    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
+    Enemy(int maxHealth, double acceleration, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
         super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.moveSpeed = moveSpeed;
+        this.acceleration = acceleration;
         this.drops = drops;
         this.entityListName = entityListName;
         this.id = nextID++;
@@ -98,12 +98,12 @@ public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsM
         this.moving = moving;
     }
 
-    public int getMoveSpeed() {
-        return moveSpeed;
+    public double getAcceleration() {
+        return acceleration;
     }
 
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
     }
 
     @Override

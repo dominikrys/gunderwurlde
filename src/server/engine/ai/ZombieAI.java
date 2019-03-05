@@ -74,12 +74,12 @@ public class ZombieAI extends EnemyAI {
 
         if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
-            return new Force(90, maxDistanceToMove*4);
+            return new Force(90, maxMovementForce);
         }
 
         if ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)
                 || (tile[0] == mapXDim - 2 && tile[1] == (mapYDim - 2) / 2)) {
-            return new Force(270, maxDistanceToMove*4);
+            return new Force(270, maxMovementForce);
 
         }
 

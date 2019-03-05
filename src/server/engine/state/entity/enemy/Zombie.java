@@ -11,7 +11,7 @@ import shared.lists.EntityList;
 
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
-    public static final int DEFAULT_MOVESPEED = (Tile.TILE_SIZE / 3) * 2;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.6;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 10;
     public static final double DEFAULT_MASS = 2;
@@ -23,20 +23,20 @@ public class Zombie extends Enemy {
     }
 
     public Zombie() {
-        this(DEFAULT_HEALTH, DEFAULT_MOVESPEED, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
+        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
     }
 
-    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
-        super(maxHealth, moveSpeed, EntityList.ZOMBIE, size, drops, scoreOnKill, ai, mass);
+    Zombie(int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
+        super(maxHealth, acceleration, EntityList.ZOMBIE, size, drops, scoreOnKill, ai, mass);
     }
 
-    Zombie(int maxHealth, int moveSpeed, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type, double mass) {
-        super(maxHealth, moveSpeed, type, size, drops, scoreOnKill, ai, mass);
+    Zombie(int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type, double mass) {
+        super(maxHealth, acceleration, type, size, drops, scoreOnKill, ai, mass);
     }
 
     @Override
     public Enemy makeCopy() {
-        return new Zombie(this.maxHealth, this.moveSpeed, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
+        return new Zombie(this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
     }
 
 }
