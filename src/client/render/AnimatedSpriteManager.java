@@ -32,12 +32,13 @@ public class AnimatedSpriteManager {
             // Create timeline that will loop over the parts of the spritesheet
             timeline = new Timeline(new KeyFrame(Duration.millis(timeBetweenFrames),
                     e -> {
+                        //TODO: this only supports once cycle - make it support more if necessary?
                         // Check if not reached end of frames
                         if (currentFrame < frameCount - 1) {
                             // Increment position x of current frame with the frame width
                             sx += individualImageWidth;
                             currentFrame++;
-                        } else {
+                        } else if (cycleCount == 0) {
                             // Reached end of animation, reset sx and frame counter
                             sx = 0;
                             currentFrame = 0;

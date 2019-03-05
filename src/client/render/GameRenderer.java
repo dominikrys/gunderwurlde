@@ -560,30 +560,36 @@ public class GameRenderer implements Runnable {
             renderEntityView(currentProjectile);
         }
 
-        //
-        //TODO: COMMENT BELOW
-        //
+        // Render enemy death animations
+        renderEnemyDeaths();
 
+        // TODO: render player deaths
+    }
+
+    private void renderEnemyDeaths() {
+        // Make a hashmap of all  enemies on map to ease calculations
         Map<Integer, Pose> gameViewEnemyPoses = new HashMap<>();
         for (EnemyView enemyView : gameView.getEnemies()) {
             gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
         }
 
+        // Find all dead enemies
         HashMap<Integer, Pose> deadEnemies = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEnemyPoses);
 
+        // Go through lit of dead enemies
         for (Map.Entry<Integer, Pose> entry : deadEnemies.entrySet()) {
+            // Set up an animationtimer with a one-off animation for every enemy
             new AnimationTimer() {
                 Pose pose = entry.getValue();
-
                 int frameCount = 32;
-
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                         loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-                        frameCount, 30, 1, AnimationType.NONE);
+                        frameCount, 25, 1, AnimationType.NONE);
 
                 @Override
                 public void handle(long now) {
-                    if (deathSpriteManager.getCurrentFrame()  < frameCount) {
+                    // Check if animation still running - if not, stop animation
+                    if (deathSpriteManager.getCurrentFrame()  < frameCount - 1) {
                         drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
                                 0, pose.getX(),
                                 pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
@@ -594,12 +600,12 @@ public class GameRenderer implements Runnable {
                 }
             }.start();
 
+            // Remove entry from last enemy locations so animation isn't played again
             lastEnemyLocations.remove(entry.getKey());
         }
-
-        //todo: do this for players
     }
 
+    // Find difference between two maps - first argument is the hashmap whose extras will be returned
     private <K, V> Map<K, V> mapDifference(Map<? extends K, ? extends V> left, Map<? extends K, ? extends V> right) {
         Map<K, V> difference = new HashMap<>();
         difference.putAll(left);
