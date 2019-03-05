@@ -31,7 +31,7 @@ public class PlayerView extends EntityView implements Serializable {
     protected boolean moving;
 
     public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
-            String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team, int moveSpeed, boolean cloaked, Status status,
+            String name, LinkedHashMap<AmmoList, Integer> ammo, int playerID, Teams team, boolean cloaked, Status status,
             ActionList currentAction, boolean takenDamage, boolean moving) {
         super(pose, sizeScaleFactor, EntityList.PLAYER, cloaked, status);
         this.health = health;
@@ -43,7 +43,6 @@ public class PlayerView extends EntityView implements Serializable {
         this.ammo = ammo;
         this.id = playerID;
         this.team = team;
-        this.moveSpeed = moveSpeed;
         this.takenDamage = takenDamage;
         this.moving = moving;
         this.currentAction = currentAction;
@@ -99,10 +98,6 @@ public class PlayerView extends EntityView implements Serializable {
 
     public Teams getTeam() {
         return team;
-    }
-    
-    public int getMoveSpeed() {
-    	return moveSpeed;
     }
 
 }

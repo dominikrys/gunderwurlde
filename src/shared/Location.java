@@ -44,9 +44,6 @@ public class Location implements Serializable {
         double x_dist = (double) distanceMoved * Math.cos(directionInRadians);
         double y_dist = (double) distanceMoved * Math.sin(directionInRadians);
 
-        // x_dist = Math.round(x_dist);
-        // y_dist = Math.round(y_dist);
-
         double x = l.getX() + x_dist;
         double y = l.getY() + y_dist;
 

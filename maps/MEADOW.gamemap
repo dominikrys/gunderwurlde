@@ -2,10 +2,10 @@
 #Dimensions X,Y:
 32 22
 #Tiles
-#TileID(Any unique char),TYPE,STATE
-W WOOD SOLID
-G GRASS PASSABLE
-D DOOR SOLID
+#TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
+W WOOD SOLID 0.7
+G GRASS PASSABLE 0.3
+D DOOR SOLID 0.9
 
 #Tile Map
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
@@ -18,7 +18,7 @@ W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
@@ -40,10 +40,10 @@ YELLOW 30 20
 #Zones TODO add doors
 #Zone1
 #EnemySpawns
-0 10
+1 10
 
 #Triggers
-31 10
+30 10
 
 #Optional Doors (Tile to return) (Location params) (Kills Required)
 G 1 2 5
@@ -56,10 +56,10 @@ SOLDIER 6 20
 
 #Zone2
 #EnemySpawns
-31 10
+30 10
 
 #Triggers
-0 10
+1 10
 
 
 #Rounds wave per line

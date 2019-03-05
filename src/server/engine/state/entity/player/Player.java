@@ -12,17 +12,21 @@ import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
+import server.engine.state.physics.HasPhysics;
+import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Teams;
 
-public class Player extends Entity implements HasHealth, IsMovable, HasID {
+public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPhysics {
     public static final int DEFAULT_HEALTH = 20;
-    public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE * 4;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
+    public static final double DEFAULT_MASS = 3;
 
     private static int nextPlayerID = 0;
     protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
@@ -36,17 +40,20 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
-    protected int moveSpeed;
+    protected double acceleration;
     protected int currentItem;
     protected int maxItems;
     protected boolean takenDamage;
     protected boolean moving;
+    protected Velocity velocity;
+    protected Force resultantForce;
+    protected double mass;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
-        this.moveSpeed = DEFAULT_MOVESPEED;
+        this.acceleration = DEFAULT_ACCELERATION;
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new Shotgun()); // TODO remove testing only
@@ -62,6 +69,9 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         this.takenDamage = false;
         this.moving = false;
         this.currentAction = ActionList.NONE;
+        this.velocity = new Velocity();
+        this.resultantForce = new Force();
+        this.mass = DEFAULT_MASS;
     }
 
     public ActionList getCurrentAction() {
@@ -189,6 +199,14 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         return ammo;
     }
 
+    public double getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
+    }
+
     @Override
     public int getID() {
         return playerID;
@@ -212,16 +230,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     @Override
     public void setMoving(boolean moving) {
         this.moving = moving;
-    }
-
-    @Override
-    public int getMoveSpeed() {
-        return moveSpeed;
-    }
-
-    @Override
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
     }
 
     @Override
@@ -262,6 +270,32 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     @Override
     public Entity makeCopy() {
         return new Player(team, name);
+    }
+
+    @Override
+    public Velocity getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public void setVelocity(Velocity v) {
+        this.velocity = v;
+        this.resultantForce = new Force();
+    }
+
+    @Override
+    public Force getResultantForce() {
+        return resultantForce;
+    }
+
+    @Override
+    public void addNewForce(Force f) {
+        this.resultantForce.add(f);
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
     }
 
 }
