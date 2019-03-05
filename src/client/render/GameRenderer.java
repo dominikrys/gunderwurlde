@@ -36,8 +36,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GameRenderer implements Runnable {
@@ -83,7 +81,7 @@ public class GameRenderer implements Runnable {
     private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
     // Last location of players and enemies hashmaps
     private Map<Integer, Pose> playerLocations;
-    private Map<Integer, Pose> enemyLocations;
+    private Map<Integer, Pose> lastEnemyLocations;
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -153,7 +151,7 @@ public class GameRenderer implements Runnable {
 
         // Initialise location hashmaps
         playerLocations = new HashMap<>();
-        enemyLocations = new HashMap<>();
+        lastEnemyLocations = new HashMap<>();
 
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
@@ -554,7 +552,7 @@ public class GameRenderer implements Runnable {
             renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(), mapGC);
 
             // Put enemy into enemy locations hashmap
-            enemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
+            lastEnemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
         }
 
         // Render projectiles
@@ -571,24 +569,47 @@ public class GameRenderer implements Runnable {
             gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
         }
 
-        for (Map.Entry<Integer, Pose> entry : enemyLocations.entrySet()) {
+        HashMap<Integer, Pose> deadEnemies = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEnemyPoses);
+
+        for (Map.Entry<Integer, Pose> entry : deadEnemies.entrySet()) {
+            new AnimationTimer() {
+                Pose pose = entry.getValue();
+
+                int frameCount = 32;
+
+                AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
+                        loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
+                        frameCount, 50, 1, AnimationType.NONE);
+
+                @Override
+                public void handle(long now) {
+//                    System.out.println(deathSpriteManager.getCurrentFrame());
+//                    System.out.println(frameCount);
+                    if (deathSpriteManager.getCurrentFrame()  < frameCount) {
+                        drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
+                                0, pose.getX(),
+                                pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
+                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
+                    } else {
+                        this.stop();
+                    }
+                }
+            }.start();
+
+            lastEnemyLocations.remove(entry.getKey());
+        }
+
+/*
+        for (Map.Entry<Integer, Pose> entry : lastEnemyLocations.entrySet()) {
             if (gameViewEnemyPoses.get(entry.getKey()) == null) {
                 new AnimationTimer() {
                     Pose pose = entry.getValue();
-
-//                    long startTime = 0;
 
                     int frameCount = 32;
 
                     AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                             loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
                             frameCount, 50, 1, AnimationType.NONE);
-
-//                    @Override
-//                    public void start() {
-//                        startTime = System.nanoTime();
-//                        super.start();
-//                    }
 
                     @Override
                     public void handle(long now) {
@@ -605,27 +626,11 @@ public class GameRenderer implements Runnable {
                     }
                 }.start();
 
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Pose pose = entry.getValue();
-//
-//                        AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-//                                loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-//                                32, 15, 1, AnimationType.NONE);
-//
-//                        drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
-//                                0, pose.getX(),
-//                                pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
-//                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
-//                    }
-//                }).start();
-
-                enemyLocations.remove(entry.getKey());
+                lastEnemyLocations.remove(entry.getKey());
             }
 
         }
-
+*/
         //todo: do this for players
     }
 
