@@ -1,14 +1,11 @@
 package server.engine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.EnemyAI;
@@ -104,7 +101,6 @@ public class ProcessGameState extends Thread {
     @Override
     public void run() {
         handler.updateGameView(view);
-        Random random = new Random();
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
 
@@ -375,7 +371,6 @@ public class ProcessGameState extends Thread {
                             System.out.println("WARNING: Enemy tried to move out of map.");
                         }
                     }
-                    // TODO include knock-back of player/enemies depending on some factor e.g. size.
                     break;
                 case WAIT:
                     break;
@@ -507,12 +502,9 @@ public class ProcessGameState extends Thread {
 
             // physics processing
             // TODO refactor somehow?
-            HashMap<Integer, Velocity> newPlayerVelocities = new HashMap<>();
-            LinkedHashMap<Integer, Velocity> newEnemyVelocities = new LinkedHashMap<>();
 
-            Iterator<Player> pIter = players.values().iterator();
-            while (pIter.hasNext()) {
-                Player currentPlayer = pIter.next();
+            for (Player p : players.values()) {
+                Player currentPlayer = p;
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
                 int playerID = currentPlayer.getID();
                 for (int[] tileCords : tilesOn) {
@@ -526,7 +518,6 @@ public class ProcessGameState extends Thread {
                 LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
 
                 for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                     playersOnTile.addAll(tileOn.getPlayersOnTile());
                     enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
@@ -561,20 +552,46 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (closestID != -1) {
+
                     HasPhysics e2;
                     if (isPlayer) {
                         e2 = players.get(closestID);
+                        tilesOn = tilesOn((Entity) e2);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].removePlayer(closestID);
+                        }
                     } else {
                         e2 = enemies.get(closestID);
+                        tilesOn = tilesOn((Entity) e2);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].removeEnemy(closestID);
+                        }
                     }
-                    HasPhysics result[] = Physics.objectCollision(currentPlayer, e2);
+                    HasPhysics result[] = Physics.objectCollision(currentPlayer, e2, tileMap);
+                    e2 = result[1];
+
                     if (isPlayer) {
-                        players.put(closestID, (Player) result[1]);
+                        tilesOn = tilesOn((Entity) e2);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].addPlayer(closestID);
+                        }
+                        players.put(closestID, (Player) e2);
                     } else {
-                        enemies.put(closestID, (Enemy) result[1]);
+                        tilesOn = tilesOn((Entity) e2);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].addEnemy(closestID);
+                        }
+                        enemies.put(closestID, (Enemy) e2);
                     }
+
                     currentPlayer = (Player) result[0];
                 }
+
+                tilesOn = tilesOn(currentPlayer);
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
+                }
+
                 players.put(playerID, currentPlayer);
             }
 
@@ -592,7 +609,6 @@ public class ProcessGameState extends Thread {
                 LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
 
                 for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                     enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
                 }
@@ -612,17 +628,32 @@ public class ProcessGameState extends Thread {
                 }
 
                 if (closestID != -1) {
-                    HasPhysics e2 = enemies.get(closestID);
-                    HasPhysics result[] = Physics.objectCollision(currentEnemy, e2);
-                    enemies.put(closestID, (Enemy) result[1]);
+
+                    Enemy e2 = enemies.get(closestID);
+                    tilesOn = tilesOn(e2);
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].removeEnemy(closestID);
+                    }
+
+                    HasPhysics result[] = Physics.objectCollision(currentEnemy, e2, tileMap);
+
                     currentEnemy = (Enemy) result[0];
+
+                    e2 = (Enemy) result[1];
+                    tilesOn = tilesOn(e2);
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].addEnemy(closestID);
+                    }
+
+                    enemies.put(closestID, e2);
+                }
+
+                tilesOn = tilesOn(currentEnemy);
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
                 }
 
                 enemies.put(enemyID, currentEnemy);
-            }
-
-            for (Map.Entry<Integer, Velocity> newVelocity : newEnemyVelocities.entrySet()) {
-                enemies.get(newVelocity.getKey()).setVelocity(newVelocity.getValue());
             }
 
             // final player processing
@@ -630,9 +661,6 @@ public class ProcessGameState extends Thread {
                 Player currentPlayer = p;
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
                 int playerID = currentPlayer.getID();
-
-                if (newPlayerVelocities.containsKey(playerID))
-                    currentPlayer.setVelocity(newPlayerVelocities.get(playerID));
 
                 for (int[] tileCords : tilesOn) {
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];

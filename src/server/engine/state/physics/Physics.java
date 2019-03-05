@@ -2,6 +2,7 @@ package server.engine.state.physics;
 
 import server.engine.state.map.tile.Tile;
 import shared.Location;
+import shared.lists.TileState;
 
 public class Physics {
     private static int TIME_PER_SECOND = 1000;
@@ -10,7 +11,7 @@ public class Physics {
     private static double OBJECT_BOUNCE = 0.9;
 
 
-    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2) {
+    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2, Tile[][] tileMap) {
         double e1Mass = e1.getMass();
         double e2Mass = e1.getMass();
 
@@ -30,6 +31,28 @@ public class Physics {
 
         e1.setVelocity(new Velocity((int) e1VelocityComponents[0], e1VelocityComponents[1]));
         e2.setVelocity(new Velocity((int) e2VelocityComponents[0], e2VelocityComponents[1]));
+
+        Location e1Loc = e1.getLocation();
+        Location e2Loc = e2.getLocation();
+        double dist = e1.getSize() + e2.getSize() + 1;
+
+        if (e1Mass < e2Mass) {
+            int direction = (int) fromComponents(e1Loc.getX() - e2Loc.getX(), e1Loc.getY() - e2Loc.getY())[0];
+            double[] newLoc = getComponents(direction, dist);
+            Location newLocation = new Location(e2Loc.getX() + newLoc[0], e2Loc.getY() + newLoc[1]);
+            int[] tileCords = Tile.locationToTile(newLocation);
+            if (tileCords[0] >= 0 && tileCords[1] >= 0 && tileCords[0] < tileMap.length && tileCords[1] < tileMap[0].length
+                    && tileMap[tileCords[0]][tileCords[1]].getState() != TileState.SOLID)
+                e1.setLocation(newLocation);
+        } else {
+            int direction = (int) fromComponents(e2Loc.getX() - e1Loc.getX(), e2Loc.getY() - e1Loc.getY())[0];
+            double[] newLoc = getComponents(direction, dist);
+            Location newLocation = new Location(e1Loc.getX() + newLoc[0], e1Loc.getY() + newLoc[1]);
+            int[] tileCords = Tile.locationToTile(newLocation);
+            if (tileCords[0] >= 0 && tileCords[1] >= 0 && tileCords[0] < tileMap.length && tileCords[1] < tileMap[0].length
+                    && tileMap[tileCords[0]][tileCords[1]].getState() != TileState.SOLID)
+                e2.setLocation(newLocation);
+        }
 
         HasPhysics[] result = { e1, e2 };
         return result;
