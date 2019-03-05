@@ -80,7 +80,7 @@ public class GameRenderer implements Runnable {
     private Map<Integer, AnimatedSpriteManager> playersOnMapAnimations;
     private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
     // Last location of players and enemies hashmaps
-    private Map<Integer, Pose> playerLocations;
+    private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
 
     // Constructor
@@ -150,7 +150,7 @@ public class GameRenderer implements Runnable {
         enemiesOnMapAnimations = new HashMap<>();
 
         // Initialise location hashmaps
-        playerLocations = new HashMap<>();
+        lastPlayerLocations = new HashMap<>();
         lastEnemyLocations = new HashMap<>();
 
         // Initialise mouse positions to not bug out camera
@@ -499,7 +499,7 @@ public class GameRenderer implements Runnable {
             renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(), mapGC);
 
             // Put player into player locations hashmap
-            playerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
+            lastPlayerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
         }
 
         // Render enemies
@@ -579,12 +579,10 @@ public class GameRenderer implements Runnable {
 
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
                         loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-                        frameCount, 50, 1, AnimationType.NONE);
+                        frameCount, 5, 0, AnimationType.NONE);
 
                 @Override
                 public void handle(long now) {
-//                    System.out.println(deathSpriteManager.getCurrentFrame());
-//                    System.out.println(frameCount);
                     if (deathSpriteManager.getCurrentFrame()  < frameCount) {
                         drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
                                 0, pose.getX(),
@@ -599,38 +597,6 @@ public class GameRenderer implements Runnable {
             lastEnemyLocations.remove(entry.getKey());
         }
 
-/*
-        for (Map.Entry<Integer, Pose> entry : lastEnemyLocations.entrySet()) {
-            if (gameViewEnemyPoses.get(entry.getKey()) == null) {
-                new AnimationTimer() {
-                    Pose pose = entry.getValue();
-
-                    int frameCount = 32;
-
-                    AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-                            loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
-                            frameCount, 50, 1, AnimationType.NONE);
-
-                    @Override
-                    public void handle(long now) {
-                        System.out.println(deathSpriteManager.getCurrentFrame());
-                        System.out.println(frameCount);
-                        if (deathSpriteManager.getCurrentFrame()  < frameCount) {
-                            drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
-                                    0, pose.getX(),
-                                    pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
-                                    deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
-                        } else {
-                            this.stop();
-                        }
-                    }
-                }.start();
-
-                lastEnemyLocations.remove(entry.getKey());
-            }
-
-        }
-*/
         //todo: do this for players
     }
 
