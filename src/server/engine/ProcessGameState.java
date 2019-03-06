@@ -685,7 +685,6 @@ public class ProcessGameState extends Thread {
                         ItemDrop currentItemDrop = items.get(itemDropID);
 
                         if (haveCollided(currentPlayer, currentItemDrop)) {
-                            boolean removed = false;
                             int dropQuantity = currentItemDrop.getQuantity();
                             ArrayList<Item> playerItems = currentPlayer.getItems();
 
@@ -693,13 +692,6 @@ public class ProcessGameState extends Thread {
                             case AMMO:
                                 AmmoList ammoType = currentItemDrop.getItemName().toAmmoList();
                                 dropQuantity -= currentPlayer.addAmmo(ammoType, dropQuantity);
-
-                                if (dropQuantity != 0) {
-                                    currentItemDrop.setQuantity(dropQuantity);
-                                    items.put(itemDropID, currentItemDrop);
-                                } else {
-                                    removed = true;
-                                }
                                 break;
                             case GUN: // TODO change case to include melee as well
                                 if (playerItems.stream().anyMatch((i) -> i.getItemListName() == currentItemDrop.getItemName())) {
@@ -708,18 +700,14 @@ public class ProcessGameState extends Thread {
                                         && (lastProcessTime - currentItemDrop.getDropTime()) > ItemDrop.DROP_FREEZE) {
                                     playerItems.add(currentItemDrop.getItem());
                                     dropQuantity -= 1;
-
-                                    if (dropQuantity != 0) {
-                                        currentItemDrop.setQuantity(dropQuantity);
-                                        items.put(itemDropID, currentItemDrop);
-                                    } else {
-                                        removed = true;
-                                    }
                                 }
                                 break;
                             }
 
-                            if (removed) {
+                            if (dropQuantity != 0) {
+                                currentItemDrop.setQuantity(dropQuantity);
+                                items.put(itemDropID, currentItemDrop);
+                            } else {
                                 dropsToRemove.add(itemDropID);
                             }
                         }
