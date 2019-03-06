@@ -128,8 +128,6 @@ public class MapSizeOption {
 				}
 			}
 		});
-		
-		
 		heightTextField.setTooltip(new Tooltip("Height of map"));
 		mapSizeHBox.getChildren().addAll(mapSizeLabel, widthTextField, mapSizeX, heightTextField);
 

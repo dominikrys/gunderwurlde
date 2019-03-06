@@ -12,6 +12,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,6 +30,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.MapEditorAssetList;
+import shared.lists.TileState;
 import shared.lists.TileTypes;
 
 public class MapEditor {
@@ -45,20 +48,28 @@ public class MapEditor {
 	private Image mapSnapshot;
 	private StackPane infoViewer;
 	private VBox info;
+	//private HBox tileIDInfo;
+	//private Label tileIDLabel1;
+	//private Label tileIDLabel2;
+	private HBox tileTypeInfo;
+	private Label tileTypeLabel1;
+	private Label tileTypeLabel2;
+	private HBox tileStateInfo;
+	private Label tileStateLabel1;
+	private Label tileStateLabel2;
+	private HBox frictionInfo;
+	private Label frictionLabel1;
+	private Label frictionLabel2;
+	private HBox bounceInfo;
+	private Label bounceLabel1;
+	private Label bounceLabel2;
 	private MapSizeOption mapSizeOption;
-	//private Canvas resizeAnchorCanvas;
-	//private Canvas resizeArrowsCanvas;
-	//private TextField widthTextField;
-	//private TextField heightTextField;
 	private int mapWidth;
 	private int mapHeight;
 	private GraphicsContext mapGc;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
 	private HashMap<EntityList, Image> tileSprite;
-	//private HashMap<Integer, Image> rotatedArrows;
-	//private int dotX;
-	//private int dotY;
 	private boolean keysActivated;
 	
 	// New map
@@ -137,11 +148,63 @@ public class MapEditor {
 		infoViewer.getChildren().add(infoBackground);
 		infoBackground.setFill(Color.DARKGRAY);
 		
-		// > > Info
+		// > > Info VBox
 		info = new VBox();
 		infoViewer.getChildren().add(info);
 		info.setSpacing(10);
 		info.setAlignment(Pos.CENTER);
+		
+		/*
+		// > > Tile ID
+		tileIDInfo = new HBox();
+		info.getChildren().add(tileIDInfo);
+		tileIDInfo.setSpacing(10);
+		tileIDInfo.setAlignment(Pos.CENTER);
+		tileIDLabel1 = new Label("Tile ID:");
+		tileIDInfo.getChildren().add(tileIDLabel1);
+		tileIDLabel2 = new Label();
+		tileIDInfo.getChildren().add(tileIDLabel2);
+		*/
+		
+		// > > Tile Type
+		tileTypeInfo = new HBox();
+		info.getChildren().add(tileTypeInfo);
+		tileTypeInfo.setSpacing(10);
+		tileTypeInfo.setAlignment(Pos.CENTER);
+		tileTypeLabel1 = new Label("Tile Type:");
+		tileTypeInfo.getChildren().add(tileTypeLabel1);
+		tileTypeLabel2 = new Label();
+		tileTypeInfo.getChildren().add(tileTypeLabel2);
+		
+		// > > Tile State
+		tileStateInfo = new HBox();
+		info.getChildren().add(tileStateInfo);
+		tileStateInfo.setSpacing(10);
+		tileStateInfo.setAlignment(Pos.CENTER);
+		tileStateLabel1 = new Label("Tile State:");
+		tileStateInfo.getChildren().add(tileStateLabel1);
+		tileStateLabel2 = new Label();
+		tileStateInfo.getChildren().add(tileStateLabel2);
+		
+		// > > Friction
+		frictionInfo = new HBox();
+		info.getChildren().add(frictionInfo);
+		frictionInfo.setSpacing(10);
+		frictionInfo.setAlignment(Pos.CENTER);
+		frictionLabel1 = new Label("Friction Coefficient:");
+		frictionInfo.getChildren().add(frictionLabel1);
+		frictionLabel2 = new Label();
+		frictionInfo.getChildren().add(frictionLabel2);
+		
+		// > > Bounce
+		bounceInfo = new HBox();
+		info.getChildren().add(bounceInfo);
+		bounceInfo.setSpacing(10);
+		bounceInfo.setAlignment(Pos.CENTER);
+		bounceLabel1 = new Label("Bounce Coefficient");
+		bounceInfo.getChildren().add(bounceLabel1);
+		bounceLabel2 = new Label();
+		bounceInfo.getChildren().add(bounceLabel2);
 		
 		// > > > Map Size Option Button
 		Button mapSizeOptionButton = new Button("Map Size");
@@ -282,6 +345,23 @@ public class MapEditor {
 		mapGc.strokeLine(x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
 		mapGc.strokeLine(x*Constants.TILE_SIZE, y*Constants.TILE_SIZE, x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
 		mapGc.strokeLine((x + 1)*Constants.TILE_SIZE, y*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
+		displayTileInfo(x, y);
+	}
+	
+	// Display tile info on the right
+	private void displayTileInfo(int x, int y) {
+		Tile tile = mapTiles[x][y];
+		if(tile != null) {
+			setDisplayTileInfo(tile.getType(), tile.getState(), tile.getFrictionCoefficient(), tile.getBounceCoefficient());
+		}
+	}
+	
+	private void setDisplayTileInfo(TileTypes tileType, TileState tileState, double frictionCoefficient, double bounceCoefficient) {
+		//tileIDLabel2.setText(Character.toString(tileID));
+		tileTypeLabel2.setText(tileType.getEntityListName().toString());
+		tileStateLabel2.setText(tileState.toString());
+		frictionLabel2.setText(Double.toString(frictionCoefficient));
+		bounceLabel2.setText(Double.toString(bounceCoefficient));
 	}
 	
 }
