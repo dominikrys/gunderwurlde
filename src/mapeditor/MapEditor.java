@@ -302,11 +302,27 @@ public class MapEditor {
 	protected void drawTile(int tileX, int tileY, Tile tile) {
 		mapGc.drawImage(mapSnapshot, 0, 0);
 		mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+		drawEdge(tileX, tileY, Color.GREY);
 		SnapshotParameters params = new SnapshotParameters();
 		params.setFill(Color.TRANSPARENT);
 		mapSnapshot = mapCanvas.snapshot(params, null);
 		mapTiles[tileX][tileY] = tile;
 		selectTile(tileX, tileY);
+	}
+	
+	// Tile remove
+	protected void removeTile(int tileX, int tileY) {
+		if(mapTiles[tileX][tileY] != null) {
+			mapGc.drawImage(mapSnapshot, 0, 0);
+			mapGc.drawImage(mapEditorAssets.get(MapEditorAssetList.VOID), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+			drawEdge(tileX, tileY, Color.BLACK);
+			drawEdge(tileX, tileY, Color.GREY);
+			SnapshotParameters params = new SnapshotParameters();
+			params.setFill(Color.TRANSPARENT);
+			mapSnapshot = mapCanvas.snapshot(params, null);
+			mapTiles[tileX][tileY] = null;
+			selectTile(tileX, tileY);
+		}
 	}
 	
 	private boolean keysActivated() {
@@ -365,15 +381,18 @@ public class MapEditor {
 	}
 	
 	// Tile selection
-	private void selectTile(int x, int y) {
-		System.out.println("x: " + x + " y: " + y);
+	private void selectTile(int tileX, int tileY) {
 		mapGc.drawImage(mapSnapshot, 0, 0);
-		mapGc.setStroke(Color.YELLOW);
-		mapGc.strokeLine(x*Constants.TILE_SIZE, y*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, y*Constants.TILE_SIZE);
-		mapGc.strokeLine(x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
-		mapGc.strokeLine(x*Constants.TILE_SIZE, y*Constants.TILE_SIZE, x*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
-		mapGc.strokeLine((x + 1)*Constants.TILE_SIZE, y*Constants.TILE_SIZE, (x + 1)*Constants.TILE_SIZE, (y + 1)*Constants.TILE_SIZE);
-		displayTileInfo(x, y);
+		drawEdge(tileX, tileY, Color.YELLOW);
+		displayTileInfo(tileX, tileY);
+	}
+	
+	private void drawEdge(int tileX, int tileY, Color color) {
+		mapGc.setStroke(color);
+		mapGc.strokeLine(tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+		mapGc.strokeLine(tileX*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
+		mapGc.strokeLine(tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, tileX*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
+		mapGc.strokeLine((tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
 	}
 	
 	// Display tile info on the right

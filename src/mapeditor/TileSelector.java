@@ -49,8 +49,9 @@ public class TileSelector {
 	private HBox bounceInfo;
 	private Label bounceLabel1;
 	private Label bounceLabel2;
-	private HBox saveAndCancel;
+	private HBox saveDeleteCancel;
 	private Button saveButton;
+	private Button deleteButton;
 	private Button cancelButton;
 	
 	public TileSelector(MapEditor mapEditor, int tileX, int tileY) {
@@ -71,7 +72,7 @@ public class TileSelector {
 		
 		// root
 		root = new StackPane();
-		scene = new Scene(root, 300, 300);
+		scene = new Scene(root, 400, 300);
 		stage.setScene(scene);
 		root.setAlignment(Pos.CENTER);
 		
@@ -164,13 +165,13 @@ public class TileSelector {
 		
 		// TODO: special settings (e.g. DOOR)
 		
-		// > > > Save and Cancel
-		saveAndCancel = new HBox();
-		vBox.getChildren().add(saveAndCancel);
-		saveAndCancel.setSpacing(30);
-		saveAndCancel.setAlignment(Pos.CENTER);
+		// > > > Save Delete and Cancel
+		saveDeleteCancel = new HBox();
+		vBox.getChildren().add(saveDeleteCancel);
+		saveDeleteCancel.setSpacing(30);
+		saveDeleteCancel.setAlignment(Pos.CENTER);
 		saveButton = new Button("Save");
-		saveAndCancel.getChildren().add(saveButton);
+		saveDeleteCancel.getChildren().add(saveButton);
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -182,8 +183,17 @@ public class TileSelector {
 				stage.close();
 			}
 		});
+		deleteButton = new Button("Delete");
+		saveDeleteCancel.getChildren().add(deleteButton);
+		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				mapEditor.removeTile(tileX, tileY);
+				stage.close();
+			}
+		});
 		cancelButton = new Button("Cancel");
-		saveAndCancel.getChildren().add(cancelButton);
+		saveDeleteCancel.getChildren().add(cancelButton);
 		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
