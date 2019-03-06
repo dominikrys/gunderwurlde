@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -64,7 +65,7 @@ public class MapReader {
             line = file.removeFirst();
         }
 
-        HashMap<Teams, Location> teamSpawns = new HashMap<>();
+        EnumMap<Teams, Location> teamSpawns = new EnumMap<>(Teams.class);
         line = file.removeFirst();
         while (!line.isEmpty()) {
             LinkedList<String> teamComp = getComponents(line);
