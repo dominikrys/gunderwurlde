@@ -1,8 +1,7 @@
 package server.engine.state.entity.player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
 
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
@@ -30,14 +29,14 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
     public static final double DEFAULT_MASS = 3;
 
-    private static final HashMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new HashMap<>();
+    private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
     static {
         DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
         DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
     }
 
-    protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
+    protected static EnumMap<Teams, Integer> teamScore = new EnumMap<>(Teams.class);
 
     private static int nextPlayerID = 0;
 
@@ -46,8 +45,8 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList, Integer> ammo;
-    protected HashMap<AmmoList, Integer> maxAmmo;
+    protected EnumMap<AmmoList, Integer> ammo;
+    protected EnumMap<AmmoList, Integer> maxAmmo;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
@@ -75,7 +74,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         changeScore(team, DEFAULT_SCORE);
         this.name = name;
         this.maxAmmo = DEFAULT_MAX_AMMO;
-        this.ammo = new LinkedHashMap<>();
+        this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.playerID = nextPlayerID++;
@@ -147,7 +146,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         return amountTaken;
     }
 
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+    public EnumMap<AmmoList, Integer> getAmmoList() {
         return ammo;
     }
 
