@@ -1,6 +1,7 @@
 package server.engine.state.entity.player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import server.engine.state.entity.Entity;
@@ -28,15 +29,24 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
     public static final double DEFAULT_MASS = 3;
 
-    private static int nextPlayerID = 0;
+    private static final HashMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new HashMap<>();
+
+    static {
+        DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
+        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
+    }
+
     protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
+
+    private static int nextPlayerID = 0;
 
     protected final int playerID;
     protected final Teams team;
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList, Integer> ammo; // TODO add cap to ammo stored
+    protected LinkedHashMap<AmmoList, Integer> ammo;
+    protected HashMap<AmmoList, Integer> maxAmmo;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
@@ -62,6 +72,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         this.team = team;
         changeScore(team, DEFAULT_SCORE);
         this.name = name;
+        this.maxAmmo = DEFAULT_MAX_AMMO;
         this.ammo = new LinkedHashMap<>();
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
@@ -114,8 +125,28 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         }
     }
 
-    public void setAmmo(AmmoList type, int amount) {
+    public void setAmmo(AmmoList type, int amount) { // ignores maxammo
         ammo.put(type, amount);
+    }
+
+    public int addAmmo(AmmoList ammoType, int amountAvailable) {
+        int amount = ammo.getOrDefault(ammoType, 0);
+        int maxVal = maxAmmo.getOrDefault(ammoType, -1);
+        int amountTaken = amountAvailable;
+
+        if (maxVal != -1 && amount + amountAvailable > maxVal) {
+            amountTaken = maxVal - amount;
+            amount = maxVal;
+        } else {
+            amount += amountAvailable;
+        }
+
+        ammo.put(ammoType, amount);
+        return amountTaken;
+    }
+
+    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
     }
 
     public ArrayList<Item> getItems() {
@@ -193,10 +224,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
 
     public String getName() {
         return name;
-    }
-
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
-        return ammo;
     }
 
     public double getAcceleration() {

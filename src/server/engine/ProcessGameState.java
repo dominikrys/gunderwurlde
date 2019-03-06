@@ -692,9 +692,14 @@ public class ProcessGameState extends Thread {
                             switch (currentItemDrop.getItemType()) {
                             case AMMO:
                                 AmmoList ammoType = currentItemDrop.getItemName().toAmmoList();
-                                currentPlayer.setAmmo(ammoType, currentPlayer.getAmmo(ammoType) + dropQuantity);
-                                // As there is no max ammo player takes it all and itemdrop is removed
-                                removed = true;
+                                dropQuantity -= currentPlayer.addAmmo(ammoType, dropQuantity);
+
+                                if (dropQuantity != 0) {
+                                    currentItemDrop.setQuantity(dropQuantity);
+                                    items.put(itemDropID, currentItemDrop);
+                                } else {
+                                    removed = true;
+                                }
                                 break;
                             case GUN: // TODO change case to include melee as well
                                 if (playerItems.stream().anyMatch((i) -> i.getItemListName() == currentItemDrop.getItemName())) {
