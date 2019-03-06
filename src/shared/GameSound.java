@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import javafx.scene.media.AudioClip;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
@@ -148,6 +149,10 @@ public class GameSound {
 								this.timer.schedule(checkReplay, Shotgun.DEFAULT_RELOAD_TIME + 50);
 							}
 							break;
+						case SMG:
+							audio = loadedGameSounds.get(SoundList.RELOAD_MAG);
+							this.timer.schedule(checkReplay, Smg.DEFAULT_RELOAD_TIME + 50);
+							break;
 					}
 				}
 				break;
@@ -163,6 +168,11 @@ public class GameSound {
 						case SHOTGUN:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN);
 							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN - 15);
+							this.playShellsFall(0);
+							break;
+						case SMG:
+							audio = loadedGameSounds.get(SoundList.SMG);
+							this.timer.schedule(checkReplay, Smg.DEFAULT_COOL_DOWN - 5);
 							this.playShellsFall(0);
 							break;
 					}
