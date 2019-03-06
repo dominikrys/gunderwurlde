@@ -51,6 +51,7 @@ public class MapEditor {
 	//private HBox tileIDInfo;
 	//private Label tileIDLabel1;
 	//private Label tileIDLabel2;
+	private ImageView tileImageView;
 	private HBox tileTypeInfo;
 	private Label tileTypeLabel1;
 	private Label tileTypeLabel2;
@@ -69,7 +70,7 @@ public class MapEditor {
 	private GraphicsContext mapGc;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
-	private HashMap<EntityList, Image> tileSprite;
+	private HashMap<TileTypes, Image> tileSprite;
 	private boolean keysActivated;
 	
 	// New map
@@ -81,6 +82,14 @@ public class MapEditor {
 	public MapEditor(String fileName) {
 		this.fileName = fileName;
 		this.init();
+	}
+	
+	public Tile[][] getMapTiles() {
+		return this.mapTiles;
+	}
+	
+	public HashMap<TileTypes, Image> getTileSprite() {
+		return this.tileSprite;
 	}
 	
 	public void setMapWidth(int mapWidth) {
@@ -165,6 +174,10 @@ public class MapEditor {
 		tileIDLabel2 = new Label();
 		tileIDInfo.getChildren().add(tileIDLabel2);
 		*/
+		
+		// > > Tile Image
+		tileImageView = new ImageView();
+		info.getChildren().add(tileImageView);
 		
 		// > > Tile Type
 		tileTypeInfo = new HBox();
@@ -275,6 +288,9 @@ public class MapEditor {
 			@Override
 			public void handle(MouseEvent event) {
 				selectTile((int)event.getX()/32, (int)event.getY()/32);
+				if(event.getClickCount() == 2) {
+					TileSelector tileSelector = new TileSelector(mapEditor, (int)event.getX()/32, (int)event.getY()/32);
+				}
 			}
 		});
 		
@@ -332,8 +348,8 @@ public class MapEditor {
 	
 	// Load tile sprites
 	private void loadTileSprite() {
-		tileSprite = new HashMap<EntityList, Image>();
-		EnumSet.allOf(TileTypes.class).forEach(TileTypes -> tileSprite.put(TileTypes.getEntityListName(), new Image(TileTypes.getEntityListName().getPath())));
+		tileSprite = new HashMap<TileTypes, Image>();
+		EnumSet.allOf(TileTypes.class).forEach(TileTypes -> tileSprite.put(TileTypes, new Image(TileTypes.getEntityListName().getPath())));
 	}
 	
 	// Tile selection
@@ -358,6 +374,7 @@ public class MapEditor {
 	
 	private void setDisplayTileInfo(TileTypes tileType, TileState tileState, double frictionCoefficient, double bounceCoefficient) {
 		//tileIDLabel2.setText(Character.toString(tileID));
+		tileImageView.setImage(tileSprite.get(tileType));
 		tileTypeLabel2.setText(tileType.getEntityListName().toString());
 		tileStateLabel2.setText(tileState.toString());
 		frictionLabel2.setText(Double.toString(frictionCoefficient));

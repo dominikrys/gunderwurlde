@@ -29,6 +29,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import shared.lists.MapEditorAssetList;
 
@@ -77,6 +78,7 @@ public class MapSizeOption {
 		stage.setResizable(false);
 		stage.setFullScreen(false);
 		stage.centerOnScreen();
+		stage.initModality(Modality.APPLICATION_MODAL);
 		
 		// root
 		root = new StackPane();

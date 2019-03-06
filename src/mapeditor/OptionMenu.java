@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class OptionMenu {
@@ -25,6 +26,7 @@ public class OptionMenu {
         stage.setResizable(false);
         stage.setFullScreen(false);
         stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
 		
         // root
 		VBox root = new VBox();
