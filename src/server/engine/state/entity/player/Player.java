@@ -12,6 +12,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
@@ -67,6 +68,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new Shotgun()); // TODO remove testing only
+        items.add(new Smg()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
