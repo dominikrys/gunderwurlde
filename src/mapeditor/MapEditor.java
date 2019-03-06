@@ -288,14 +288,25 @@ public class MapEditor {
 		mapCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				selectTile((int)event.getX()/32, (int)event.getY()/32);
+				selectTile((int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
 				if(event.getClickCount() == 2) {
-					TileSelector tileSelector = new TileSelector(mapEditor, (int)event.getX()/32, (int)event.getY()/32);
+					TileSelector tileSelector = new TileSelector(mapEditor, (int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
 				}
 			}
 		});
 		
 		resetFocus();
+	}
+	
+	// Draw a tile
+	protected void drawTile(int tileX, int tileY, Tile tile) {
+		mapGc.drawImage(mapSnapshot, 0, 0);
+		mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		mapSnapshot = mapCanvas.snapshot(params, null);
+		mapTiles[tileX][tileY] = tile;
+		selectTile(tileX, tileY);
 	}
 	
 	private boolean keysActivated() {
@@ -369,9 +380,10 @@ public class MapEditor {
 	private void displayTileInfo(int x, int y) {
 		Tile tile = mapTiles[x][y];
 		if(tile != null) {
-			setDisplayTileInfo(tile.getType(), tile.getState(), tile.getFrictionCoefficient(), tile.getBounceCoefficient());
+			setDisplayTileInfo(tile);
 		}
 		else {
+			tileImageView.setImage(null);
 			tileTypeLabel2.setText("-");
 			tileStateLabel2.setText("-");
 			frictionLabel2.setText("-");
@@ -379,13 +391,13 @@ public class MapEditor {
 		}
 	}
 	
-	private void setDisplayTileInfo(TileTypes tileType, TileState tileState, double frictionCoefficient, double bounceCoefficient) {
+	private void setDisplayTileInfo(Tile tile) {
 		//tileIDLabel2.setText(Character.toString(tileID));
-		tileImageView.setImage(tileSprite.get(tileType));
-		tileTypeLabel2.setText(tileType.getEntityListName().toString());
-		tileStateLabel2.setText(tileState.toString());
-		frictionLabel2.setText(Double.toString(frictionCoefficient));
-		bounceLabel2.setText(Double.toString(bounceCoefficient));
+		tileImageView.setImage(tileSprite.get(tile.getType()));
+		tileTypeLabel2.setText(tile.getType().toString());
+		tileStateLabel2.setText(tile.getState().toString());
+		frictionLabel2.setText(Double.toString(tile.getFrictionCoefficient()));
+		bounceLabel2.setText(Double.toString(tile.getBounceCoefficient()));
 	}
 	
 }

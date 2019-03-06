@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -48,6 +49,9 @@ public class TileSelector {
 	private HBox bounceInfo;
 	private Label bounceLabel1;
 	private Label bounceLabel2;
+	private HBox saveAndCancel;
+	private Button saveButton;
+	private Button cancelButton;
 	
 	public TileSelector(MapEditor mapEditor, int tileX, int tileY) {
 		this.mapEditor = mapEditor;
@@ -67,7 +71,7 @@ public class TileSelector {
 		
 		// root
 		root = new StackPane();
-		scene = new Scene(root, 500, 500);
+		scene = new Scene(root, 300, 300);
 		stage.setScene(scene);
 		root.setAlignment(Pos.CENTER);
 		
@@ -157,6 +161,35 @@ public class TileSelector {
 		bounceInfo.getChildren().add(bounceLabel1);
 		bounceLabel2 = new Label();
 		bounceInfo.getChildren().add(bounceLabel2);
+		
+		// TODO: special settings (e.g. DOOR)
+		
+		// > > > Save and Cancel
+		saveAndCancel = new HBox();
+		vBox.getChildren().add(saveAndCancel);
+		saveAndCancel.setSpacing(30);
+		saveAndCancel.setAlignment(Pos.CENTER);
+		saveButton = new Button("Save");
+		saveAndCancel.getChildren().add(saveButton);
+		saveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				for(Map.Entry<TileTypes, Tile> entry : tileSettings.entrySet()) {
+					if(entry.getKey().toString().equals(tileMenu.getValue())) {
+						mapEditor.drawTile(tileX, tileY, entry.getValue());
+					}
+				}
+				stage.close();
+			}
+		});
+		cancelButton = new Button("Cancel");
+		saveAndCancel.getChildren().add(cancelButton);
+		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				stage.close();
+			}
+		});
 		
 		// Initialize displayed info
 		changeTileSelection();
