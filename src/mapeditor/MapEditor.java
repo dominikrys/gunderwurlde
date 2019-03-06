@@ -156,6 +156,7 @@ public class MapEditor {
 		infoBackground = new Rectangle(mainViewer.getColumnConstraints().get(1).getPrefWidth(), scene.getHeight());
 		infoViewer.getChildren().add(infoBackground);
 		infoBackground.setFill(Color.DARKGRAY);
+		infoBackground.setOpacity(0.75);
 		
 		// > > Info VBox
 		info = new VBox();
@@ -186,7 +187,7 @@ public class MapEditor {
 		tileTypeInfo.setAlignment(Pos.CENTER);
 		tileTypeLabel1 = new Label("Tile Type:");
 		tileTypeInfo.getChildren().add(tileTypeLabel1);
-		tileTypeLabel2 = new Label();
+		tileTypeLabel2 = new Label("-");
 		tileTypeInfo.getChildren().add(tileTypeLabel2);
 		
 		// > > Tile State
@@ -196,7 +197,7 @@ public class MapEditor {
 		tileStateInfo.setAlignment(Pos.CENTER);
 		tileStateLabel1 = new Label("Tile State:");
 		tileStateInfo.getChildren().add(tileStateLabel1);
-		tileStateLabel2 = new Label();
+		tileStateLabel2 = new Label("-");
 		tileStateInfo.getChildren().add(tileStateLabel2);
 		
 		// > > Friction
@@ -206,7 +207,7 @@ public class MapEditor {
 		frictionInfo.setAlignment(Pos.CENTER);
 		frictionLabel1 = new Label("Friction Coefficient:");
 		frictionInfo.getChildren().add(frictionLabel1);
-		frictionLabel2 = new Label();
+		frictionLabel2 = new Label("-");
 		frictionInfo.getChildren().add(frictionLabel2);
 		
 		// > > Bounce
@@ -216,7 +217,7 @@ public class MapEditor {
 		bounceInfo.setAlignment(Pos.CENTER);
 		bounceLabel1 = new Label("Bounce Coefficient");
 		bounceInfo.getChildren().add(bounceLabel1);
-		bounceLabel2 = new Label();
+		bounceLabel2 = new Label("-");
 		bounceInfo.getChildren().add(bounceLabel2);
 		
 		// > > > Map Size Option Button
@@ -343,13 +344,13 @@ public class MapEditor {
 	// Load assets used specifically for the editor
 	private void loadMapEditorAssets() {
 		mapEditorAssets = new HashMap<MapEditorAssetList, Image>();
-		EnumSet.allOf(MapEditorAssetList.class).forEach(MapEditorAssetList -> mapEditorAssets.put(MapEditorAssetList, new Image(MapEditorAssetList.getPath())));
+		EnumSet.allOf(MapEditorAssetList.class).forEach(mapEditorAssetList -> mapEditorAssets.put(mapEditorAssetList, new Image(mapEditorAssetList.getPath())));
 	}
 	
 	// Load tile sprites
 	private void loadTileSprite() {
 		tileSprite = new HashMap<TileTypes, Image>();
-		EnumSet.allOf(TileTypes.class).forEach(TileTypes -> tileSprite.put(TileTypes, new Image(TileTypes.getEntityListName().getPath())));
+		EnumSet.allOf(TileTypes.class).forEach(tileTypes -> tileSprite.put(tileTypes, new Image(tileTypes.getEntityListName().getPath())));
 	}
 	
 	// Tile selection
@@ -369,6 +370,12 @@ public class MapEditor {
 		Tile tile = mapTiles[x][y];
 		if(tile != null) {
 			setDisplayTileInfo(tile.getType(), tile.getState(), tile.getFrictionCoefficient(), tile.getBounceCoefficient());
+		}
+		else {
+			tileTypeLabel2.setText("-");
+			tileStateLabel2.setText("-");
+			frictionLabel2.setText("-");
+			bounceLabel2.setText("-");
 		}
 	}
 	

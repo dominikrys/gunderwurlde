@@ -1,12 +1,10 @@
 package mapeditor;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.naming.TimeLimitExceededException;
-
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,10 +15,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import shared.lists.EntityList;
+import server.engine.state.map.tile.Tile;
+import shared.lists.TileState;
 import shared.lists.TileTypes;
 
 public class TileSelector {
@@ -29,6 +27,7 @@ public class TileSelector {
 	private int tileX;
 	private int tileY;
 	private HashMap<TileTypes, Image> tileSprite;
+	private HashMap<TileTypes, Tile> tileSettings;
 	private Stage stage;
 	private StackPane root;
 	private Scene scene;
@@ -42,6 +41,7 @@ public class TileSelector {
 	private HBox tileStateInfo;
 	private Label tileStateLabel1;
 	private Label tileStateLabel2;
+	//private ComboBox<String> tileStateComboBox;
 	private HBox frictionInfo;
 	private Label frictionLabel1;
 	private Label frictionLabel2;
@@ -90,9 +90,8 @@ public class TileSelector {
 		// > > > Drop Down Menu
 		tileMenu = new ComboBox<String>();
 		vBox.getChildren().add(tileMenu);
-		for(TileTypes key : tileSprite.keySet()) {
-			tileMenu.getItems().add(key.toString());
-		}
+		// Initialize tile settings
+		getTileSettings();
 		tileMenu.getSelectionModel().selectFirst();
 		tileMenu.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -120,6 +119,24 @@ public class TileSelector {
 		tileStateInfo.getChildren().add(tileStateLabel1);
 		tileStateLabel2 = new Label();
 		tileStateInfo.getChildren().add(tileStateLabel2);
+		/*
+		tileStateComboBox = new ComboBox<String>();
+		tileStateInfo.getChildren().add(tileStateComboBox);
+		EnumSet.allOf(TileState.class).forEach(tileState -> tileStateComboBox.getItems().add(tileState.toString()));
+		tileStateComboBox.getSelectionModel().select(TileState.PASSABLE.toString());
+		tileStateComboBox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				EnumSet.allOf(TileTypes.class).forEach(tileType -> {
+					if(tileType.toString().equals(tileMenu.getValue())) {
+						Tile tile = tileSettings.get(tileType);
+						tile.setTileState(tileStateComboBox.getValue());
+						saveTileSettings(tileType, tile);
+					}
+				});
+			}
+		});
+		*/
 		
 		// > > > Fraction Coefficient
 		frictionInfo = new HBox();
@@ -141,6 +158,7 @@ public class TileSelector {
 		bounceLabel2 = new Label();
 		bounceInfo.getChildren().add(bounceLabel2);
 		
+		// Initialize displayed info
 		changeTileSelection();
 		
 		stage.show();
@@ -150,16 +168,35 @@ public class TileSelector {
         });
 	}
 	
+	// Display info of selected tile
 	private void changeTileSelection() {
-		for(Map.Entry<TileTypes, Image> entry : tileSprite.entrySet()) {
+		for(Map.Entry<TileTypes, Tile> entry : tileSettings.entrySet()) {
 			if(entry.getKey().toString().equals(tileMenu.getValue())) {
 				tileImageView.setImage(tileSprite.get(entry.getKey()));
 				tileTypeLabel2.setText(entry.getKey().toString());
-				//tileStateLabel2.setText(entry.getKey().getEntityListName().get);
-				//frictionLabel2.setText(Double.toString(frictionCoefficient));
-				//bounceLabel2.setText(Double.toString(bounceCoefficient));
+				tileStateLabel2.setText(entry.getValue().getState().toString());
+				frictionLabel2.setText(Double.toString(entry.getValue().getFrictionCoefficient()));
+				bounceLabel2.setText(Double.toString(entry.getValue().getBounceCoefficient()));
 			}
 		}
 	}
-
+	
+	// Get default settings for tiles
+	private void getTileSettings() {
+		tileSettings = new HashMap<TileTypes, Tile>();
+		EnumSet.allOf(TileTypes.class).forEach(tileType -> {
+			switch(tileType) {
+				case WOOD:
+					tileSettings.put(tileType, new Tile(tileType, TileState.SOLID, 0.7));
+					break;
+				case GRASS:
+					tileSettings.put(tileType, new Tile(tileType, TileState.PASSABLE, 0.3));
+					break;
+				case DOOR:
+					tileSettings.put(tileType, new Tile(tileType, TileState.SOLID, 0.9));
+					break;
+			}
+			tileMenu.getItems().add(tileType.toString());
+		});
+	}
 }
