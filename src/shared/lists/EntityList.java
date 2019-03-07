@@ -10,7 +10,7 @@ public enum EntityList {
     // Item
     PISTOL("file:assets/img/entity/item/pistol.png"),
     SHOTGUN("file:assets/img/entity/item/shotgun.png"),
-    SMG("file:assets/img/entity/item/pistol.png"), // TODO
+    SMG("file:assets/img/entity/item/smg.png"),
 
     // Player
     PLAYER("file:assets/img/entity/player/player.png"),
