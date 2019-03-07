@@ -223,7 +223,7 @@ public class ProcessGameState extends Thread {
                             LinkedList<Projectile> shotProjectiles = currentGun.getShotProjectiles(playerPose, currentPlayer.getTeam());
                             for (Projectile p : shotProjectiles) {
                                 newProjectiles.add(p);
-                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                                projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
                         }
                     }
@@ -309,7 +309,6 @@ public class ProcessGameState extends Thread {
                 // TODO process status (Make method for this?)
 
                 int enemyID = currentEnemy.getID();
-                //double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
                 double maxMovementForce = Physics.getForce(currentEnemy.getAcceleration(), 0, currentEnemy.getMass()).getForce();
                 EnemyAI ai = currentEnemy.getAI();
 
@@ -322,6 +321,7 @@ public class ProcessGameState extends Thread {
                 switch (enemyAction) {
                 case ATTACK:
                     LinkedList<Attack> attacks = ai.getAttacks();
+                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
 
                     for (Attack a : attacks) {
                         switch (a.getAttackType()) {
@@ -343,35 +343,21 @@ public class ProcessGameState extends Thread {
                                 }
                             }
                             break;
-                            case PROJECTILE:
-                                ProjectileAttack projectileAttack = (ProjectileAttack) a;
-                                for (Projectile p : projectileAttack.getProjectiles()) {
-                                    newProjectiles.add(p);
-                                    projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
-                                }
-                                break;
+                        case PROJECTILE:
+                            ProjectileAttack projectileAttack = (ProjectileAttack) a;
+                            for (Projectile p : projectileAttack.getProjectiles()) {
+                                newProjectiles.add(p);
+                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                            }
+                            break;
                         }
                     }
-                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
                     break;
                 case MOVE:
                     currentEnemy.setMoving(true);
-                    LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
-
-                    for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
-                    }
-
-                    currentEnemy.addNewForce(ai.getMovementForce(maxMovementForce));
-
-                    tilesOn = tilesOn(currentEnemy);
-                    for (int[] tileCords : tilesOn) {
-                        try {
-                            tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
-                        }catch(ArrayIndexOutOfBoundsException ex){
-                            System.out.println("WARNING: Enemy tried to move out of map.");
-                        }
-                    }
+                    Force movementForce = ai.getMovementForce(maxMovementForce);
+                    currentEnemy.addNewForce(movementForce);
+                    currentEnemy.setPose(new Pose(currentEnemy.getLocation(), movementForce.getDirection()));
                     break;
                 case WAIT:
                     break;
