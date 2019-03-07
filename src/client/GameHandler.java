@@ -10,6 +10,7 @@ import shared.lists.Teams;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -108,7 +109,8 @@ public class GameHandler extends Thread {
     public int requestplayerID(){
         int clientID = -1;
         try {
-            Socket connection = new Socket("localhost", 9999);
+            System.out.println("Attempting to listen to port");
+            Socket connection = new Socket(InetAddress.getLocalHost(), port);
             InputStream inputStream = connection.getInputStream();
             byte[] clientIDBytes = new byte[4];
             inputStream.read(clientIDBytes);

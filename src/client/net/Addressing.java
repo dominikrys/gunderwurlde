@@ -21,11 +21,10 @@ public class Addressing {
                 // if that interface has an address that is for the ethernet port then add it to the socket
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
-                    System.out.println(iface.getDisplayName());
                     InetAddress addr = addresses.nextElement();
                     if (iface.getDisplayName().equals("Realtek PCIe GBE Family Controller") ||
                             iface.getDisplayName().equals("Realtek Gaming GbE Family Controller")) {
-                        System.out.println("Setting interface");
+                        System.out.println("Setting interface: " + iface.getDisplayName());
                         listenSocket.setInterface(addr);
                     }
                     break;

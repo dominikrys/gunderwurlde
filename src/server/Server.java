@@ -38,7 +38,6 @@ public class Server extends Thread implements HasEngine {
     static int lowestAvailableIP = 0;
     static int lowestAvailablePort = 4444;
     ServerSocket joinSocket;
-    int lowestAvailableID;
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
@@ -72,7 +71,8 @@ public class Server extends Thread implements HasEngine {
             if(multiplayer){
                 // loop until all players have joined
                 try {
-                    joinSocket = new ServerSocket(9999);
+                    joinSocket = new ServerSocket(senderPort);
+                    System.out.println("Server listenting on port: 9999");
                     while (numOfPlayers > joinedPlayers) {
                         // For each connection spin off a new protocol instance.
                         Socket connection = joinSocket.accept();

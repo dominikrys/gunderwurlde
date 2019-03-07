@@ -75,8 +75,8 @@ public class MapSelectionController extends VBox implements MenuController {
         if (connectionType == ConnectionType.MULTI_PLAYER_HOST) {
             playerAmountBox.setManaged(true);
             playerSlider.setMax(Constants.MAX_PLAYERS);
-            playerSlider.setMin(1);
-            playerSlider.setValue(1);
+            playerSlider.setMin(2);
+            playerSlider.setValue(2);
             playerSlider.setMajorTickUnit(1);
             playerNumberLabel.setText(Long.toString(Math.round(playerSlider.getValue())));
         } else {
