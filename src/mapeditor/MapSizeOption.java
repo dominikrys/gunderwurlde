@@ -168,8 +168,6 @@ public class MapSizeOption {
 						mapHeight = newHeight;
 						mapEditor.setMapWidth(mapWidth);
 						mapEditor.setMapHeight(mapHeight);
-						System.out.println("Map width: " + mapWidth);
-						System.out.println("Map height: " + mapHeight);
 						mapEditor.drawMapTiles();
 					}
 				}
@@ -232,8 +230,6 @@ public class MapSizeOption {
 	private void moveResizeArrows(GraphicsContext gc, double clickedX, double clickedY) {
 		dotX = (int) clickedX / 30;
 		dotY = (int) clickedY / 30;
-		System.out.println(dotX);
-		System.out.println(dotY);
 		gc.clearRect(0, 0, resizeArrowsCanvas.getWidth(), resizeArrowsCanvas.getHeight());
 		gc.drawImage(mapEditorAssets.get(MapEditorAssetList.DOT), dotX * 30, dotY * 30);
 		for (int i = -1 ; i <= 1 ; i++) {

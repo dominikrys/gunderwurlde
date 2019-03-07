@@ -65,6 +65,15 @@ public class MapEditor {
 	private Label bounceLabel1;
 	private Label bounceLabel2;
 	private MapSizeOption mapSizeOption;
+	private GridPane teamSpawnInfo;
+	private Label redTeamSpawnLabel1;
+	private Label redTeamSpawnLabel2;
+	private Label blueTeamSpawnLabel1;
+	private Label blueTeamSpawnLabel2;
+	private Label greenTeamSpawnLabel1;
+	private Label greenTeamSpawnLabel2;
+	private Label yellowTeamSpawnLabel1;
+	private Label yellowTeamSpawnLabel2;
 	private int mapWidth;
 	private int mapHeight;
 	private GraphicsContext mapGc;
@@ -72,6 +81,8 @@ public class MapEditor {
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
 	private HashMap<TileTypes, Image> tileSprite;
 	private boolean keysActivated;
+	private int selectedX;
+	private int selectedY;
 	
 	// New map
 	public MapEditor() {
@@ -230,6 +241,36 @@ public class MapEditor {
 			}
 		});
 		
+		// > > > Team spawns
+		teamSpawnInfo = new GridPane();
+		info.getChildren().add(teamSpawnInfo);
+		teamSpawnInfo.setHgap(10);
+		teamSpawnInfo.setAlignment(Pos.CENTER);
+		
+		// > > > > Red Team
+		redTeamSpawnLabel1 = new Label("Red Team:");
+		teamSpawnInfo.add(redTeamSpawnLabel1, 0, 0);
+		redTeamSpawnLabel2 = new Label("-");
+		teamSpawnInfo.add(redTeamSpawnLabel2, 1, 0);
+		
+		// > > > > Blue Team
+		blueTeamSpawnLabel1 = new Label("Blue Team:");
+		teamSpawnInfo.add(blueTeamSpawnLabel1, 0, 1);
+		blueTeamSpawnLabel2 = new Label("-");
+		teamSpawnInfo.add(blueTeamSpawnLabel2, 1, 1);
+		
+		// > > > > Green Team
+		greenTeamSpawnLabel1 = new Label("Green Team:");
+		teamSpawnInfo.add(greenTeamSpawnLabel1, 0, 2);
+		greenTeamSpawnLabel2 = new Label("-");
+		teamSpawnInfo.add(greenTeamSpawnLabel2, 1, 2);
+		
+		// > > > > Yellow Team
+		yellowTeamSpawnLabel1 = new Label("Yellow Team:");
+		teamSpawnInfo.add(yellowTeamSpawnLabel1, 0, 3);
+		yellowTeamSpawnLabel2 = new Label("-");
+		teamSpawnInfo.add(yellowTeamSpawnLabel2, 1, 3);
+		
 		stage.show();
         
 		stage.setOnCloseRequest(we -> {
@@ -382,6 +423,8 @@ public class MapEditor {
 	
 	// Tile selection
 	private void selectTile(int tileX, int tileY) {
+		selectedX = tileX;
+		selectedY = tileY;
 		mapGc.drawImage(mapSnapshot, 0, 0);
 		drawEdge(tileX, tileY, Color.YELLOW);
 		displayTileInfo(tileX, tileY);
