@@ -85,29 +85,29 @@ public class ServerReceiver extends Thread {
 
                     // Based on the request perform the specified action
                     switch(received[0]) {
-                    	case 0 : // ATTACK
-                    		//request.requestShoot();
-                    		handler.getClientRequests().playerRequestShoot(playerID);
-                    		break;
-                    	case 1 : // DROPITEM
-                    		//request.requestDrop();
-                    		handler.getClientRequests().playerRequestDrop(playerID);
-                    		break;
-                    	case 2 : // RELOAD
-                    		//request.requestReload();
-                    		handler.getClientRequests().playerRequestReload(playerID);
-                    		break;
-                    	case 3 : // CHANGEITEM
-                    		//request.setSelectItem(received[1]);
-                    		handler.getClientRequests().playerRequestSelectItem(playerID, received[1]);
-                    		break;
-                    	case 4 : // MOVEMENT
-                    		//request.setMovementDirection(received[1]);
-                    		handler.getClientRequests().playerRequestMovement(playerID, received[1]);
-                    		break;
-                    	case 5 : // TURN
-                    		//request.setFacing(received[1]);
-                    		handler.getClientRequests().playerRequestFacing(playerID, received[1]);
+                        case 0 : // ATTACK
+                            //request.requestShoot();
+                            handler.getClientRequests().playerRequestShoot(playerID);
+                            break;
+                        case 1 : // DROPITEM
+                            //request.requestDrop();
+                            handler.getClientRequests().playerRequestDrop(playerID);
+                            break;
+                        case 2 : // RELOAD
+                            //request.requestReload();
+                            handler.getClientRequests().playerRequestReload(playerID);
+                            break;
+                        case 3 : // CHANGEITEM
+                            //request.setSelectItem(received[1]);
+                            handler.getClientRequests().playerRequestSelectItem(playerID, received[1]);
+                            break;
+                        case 4 : // MOVEMENT
+                            //request.setMovementDirection(received[1]);
+                            handler.getClientRequests().playerRequestMovement(playerID, received[1]);
+                            break;
+                        case 5 : // TURN
+                            //request.setFacing(received[1]);
+                            handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                     }
                     /*
                     // Send the request to the Engine
@@ -150,7 +150,7 @@ public class ServerReceiver extends Thread {
             System.out.println("Part 1 is " + seperateData[0]);
             System.out.println("Part 2 is " + seperateData[1]);
             String playerName = seperateData[0];
-            Teams team;
+            Teams team = null;
             if(seperateData[1].equals("RED")){
                 team = Teams.RED;
             }

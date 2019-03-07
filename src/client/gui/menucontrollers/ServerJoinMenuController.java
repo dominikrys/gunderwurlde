@@ -90,7 +90,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     @FXML
     void joinServerButtonPress(ActionEvent event) {
         // Grab the specified map from the server attempting to connect to
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW, "1", IPField.getText(), portField.getText())).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW, "1")).start();
         // TODO: Clear screen, add joining message + start gamehandler with IP and port + ADD TEAM TO THIS
     }
 

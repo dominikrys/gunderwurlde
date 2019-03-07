@@ -8,12 +8,6 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Teams;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-
 public class GameHandler extends Thread {
     // Server variables
     private ConnectionType connectionType;
@@ -30,8 +24,6 @@ public class GameHandler extends Thread {
     private MapList map;
     private Teams team;
     private int numPlayers;
-    private String ipAddress;
-    private int port;
 
     public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers) {
         this.stage = stage;
@@ -41,18 +33,6 @@ public class GameHandler extends Thread {
         this.map = map;
         this.team = team;
         this.numPlayers = Integer.parseInt(numOfPlayers);
-    }
-
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers, String ipAddress, String port) {
-        this.stage = stage;
-        this.connectionType = connectionType;
-        this.settings = settings;
-        this.playerName = name;
-        this.map = map;
-        this.team = team;
-        this.numPlayers = Integer.parseInt(numOfPlayers);
-        this.ipAddress = ipAddress;
-        this.port = Integer.parseInt(port);
     }
 
     public void run() {
@@ -79,8 +59,7 @@ public class GameHandler extends Thread {
                 // TODO: Potential menu for choosing host address and port number?
                 if(!serverStarted) {
                     serverStarted = true;
-                    int ID = requestplayerID();
-                    client = new Client(stage, playerName, this, settings, ID, ipAddress, port);
+                    client = new Client(stage, playerName, this, settings, 1);
                     client.start();
                     while(!client.isThreadsup()){
                         Thread.yield();
@@ -106,21 +85,7 @@ public class GameHandler extends Thread {
         // TODO: handle the game closing once all stuff is running as is supposed to
     }
 
-    public int requestplayerID(){
-        int clientID = -1;
-        try {
-            System.out.println("Attempting to listen to port");
-            Socket connection = new Socket(InetAddress.getLocalHost(), port);
-            InputStream inputStream = connection.getInputStream();
-            byte[] clientIDBytes = new byte[4];
-            inputStream.read(clientIDBytes);
-            ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
-             clientID = wrappedCommand.getInt();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return clientID;
-    }
+
 
     public void end() {
         // End server if running/exists
@@ -170,4 +135,5 @@ public class GameHandler extends Thread {
                 client.getClientSender().send(new Integer[]{5, parameter});
         }
     }
+
 }

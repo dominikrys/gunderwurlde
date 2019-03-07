@@ -51,17 +51,17 @@ public class ClientSender extends Thread {
             //Create streams that will turn the data into a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out;
-               try {
-                   // pass the ByteArray stream into the object stream
-                   out = new ObjectOutputStream(bos);
-                   // Write the actions to be performed followed by the client performing them to the byte array
-                   out.writeObject(action);
-                   out.writeInt(playerID);
-                   out.flush();
-                   // set the buffer to the array and send to the server
-                   buffer = bos.toByteArray();
-                   packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-                   senderSocket.send(packet);
+            try {
+                // pass the ByteArray stream into the object stream
+                out = new ObjectOutputStream(bos);
+                // Write the actions to be performed followed by the client performing them to the byte array
+                out.writeObject(action);
+                out.writeInt(playerID);
+                out.flush();
+                // set the buffer to the array and send to the server
+                buffer = bos.toByteArray();
+                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                senderSocket.send(packet);
             } finally {
                 try {
                     bos.close();

@@ -117,7 +117,7 @@ public class ClientReceiver extends Thread {
             }
             System.out.println("Ending client receiver");
         }
-          catch (SocketException e) {
+        catch (SocketException e) {
             System.out.println("Socket closed unexpectedly");
         } catch (IOException e) {
             e.printStackTrace();

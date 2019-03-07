@@ -1,23 +1,23 @@
 package server;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
 
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
 import server.net.ServerReceiver;
 import server.net.ServerSender;
-import server.net.JoinGameThread;
 import shared.lists.MapList;
 import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
 public class Server extends Thread implements HasEngine {
-	protected ClientRequests clientRequests;
-	protected ProcessGameState engine;
+    protected ClientRequests clientRequests;
+    protected ProcessGameState engine;
     private final String hostName;
     ServerSender sender;
     ServerReceiver receiver;
@@ -28,16 +28,13 @@ public class Server extends Thread implements HasEngine {
     InetAddress listenAddress = null;
     InetAddress senderAddress = null;
     // Ports to be sent and received on
-    int senderPort;
-    int listenPort;
+    static final int SENDPORT = 4444;
+    static final int LISTENPORT = 4445;
     Boolean multiplayer;
     int numOfPlayers;
     int joinedPlayers;
     LinkedHashMap<String, Teams> playersToAdd;
     MapList mapName;
-    static int lowestAvailableIP = 0;
-    static int lowestAvailablePort = 4444;
-    ServerSocket joinSocket;
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
@@ -53,35 +50,23 @@ public class Server extends Thread implements HasEngine {
 
     public void run(){
         try {
-            senderPort = lowestAvailablePort;
-            listenPort = lowestAvailablePort+1;
-            lowestAvailablePort += 2;
-            listenSocket = new MulticastSocket(listenPort);
+            listenSocket = new MulticastSocket(LISTENPORT);
             senderSocket = new MulticastSocket();
-            listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableIP);
-            senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableIP);
-            lowestAvailableIP += 1;
+            listenAddress = InetAddress.getByName("230.0.0.1");
+            senderAddress = InetAddress.getByName("230.0.1.1");
             System.out.println("Server starting");
             // Create the initial GameView to be sent to the clients
 
             // Create the threads that will run as sender and receiver
-            sender = new ServerSender(senderAddress, senderSocket, senderPort);
+            sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
             joinedPlayers = 1;
             if(multiplayer){
                 // loop until all players have joined
-                try {
-                    joinSocket = new ServerSocket(senderPort);
-                    System.out.println("Server listenting on port: 9999");
-                    while (numOfPlayers > joinedPlayers) {
-                        // For each connection spin off a new protocol instance.
-                        Socket connection = joinSocket.accept();
-                        Thread instance = new Thread(new JoinGameThread(connection));
-                        instance.start();
-                        JoinGameThread.increaseAvailableID();
-                    }
-                } catch (Exception e) {
-                    System.out.println("Doh "+e);
+                while(numOfPlayers > joinedPlayers){
+                    System.out.println("Current number of players" + joinedPlayers);
+                    Thread.sleep(5000);
+                    Thread.yield();
                 }
 
                 System.out.println("All players have joined the game");
@@ -91,7 +76,7 @@ public class Server extends Thread implements HasEngine {
             System.out.println("Threads up");
 
             this.clientRequests = new ClientRequests(numOfPlayers);
-            
+
             // Server will join with receiver when termination is requested
             // Only joins with receiver as receiver waits for sender to join
             sender.join();
@@ -113,7 +98,7 @@ public class Server extends Thread implements HasEngine {
 
     @Override
     public void updateGameView(GameView view) {
-        sender.send(view);     
+        sender.send(view);
     }
 
     @Override
@@ -129,11 +114,11 @@ public class Server extends Thread implements HasEngine {
     @Override
     public void requestClientRequests() {
         if (clientRequests != null) {
-        	engine.setClientRequests(clientRequests);
-        	 this.clearClientRequests(numOfPlayers);
+            engine.setClientRequests(clientRequests);
+            this.clearClientRequests(numOfPlayers);
         }
     }
-    
+
     public ClientRequests getClientRequests() {
         return this.clientRequests;
     }

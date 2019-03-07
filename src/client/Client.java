@@ -20,8 +20,8 @@ public class Client extends Thread {
     private MulticastSocket sendSocket;
     private InetAddress listenAddress;
     private InetAddress senderAddress;
-    int listenPort;
-    int senderPort;
+    private static final int LISTENPORT = 4444;
+    private static final int SENDPORT = 4445;
     private GameView view;
     private GameRenderer renderer;
     private String playerName;
@@ -33,11 +33,8 @@ public class Client extends Thread {
     private Settings settings;
     int playerID;
     boolean threadsup;
-    static int lowestAvailableIP = 0;
-    static int lowestAvailablePort = 4444;
 
 
-    // Host constructor
     public Client(Stage stage, String playerName, GameHandler handler, Settings settings, int playerID) {
         this.stage = stage;
         this.playerName = playerName;
@@ -46,43 +43,17 @@ public class Client extends Thread {
         this.playerID = playerID;
         firstView = true;
         threadsup = false;
-        senderPort = lowestAvailablePort+1;
-        listenPort = lowestAvailablePort;
-        lowestAvailablePort += 2;
-        try {
-            listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableIP);
-            senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableIP);
-            lowestAvailableIP += 1;
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Joiner Constructor
-    public Client(Stage stage, String playerName, GameHandler handler, Settings settings, int playerID, String ipAddress, int port) {
-        this.stage = stage;
-        this.playerName = playerName;
-        this.handler = handler;
-        this.settings = settings;
-        this.playerID = playerID;
-        firstView = true;
-        threadsup = false;
-        senderPort = port;
-        listenPort = port+1;
-        try {
-            listenAddress = InetAddress.getByName(ipAddress);
-            senderAddress = InetAddress.getByName(ipAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
     }
 
     public void run(){
         try{
-            listenSocket = new MulticastSocket(listenPort);
-            sendSocket = new MulticastSocket();
 
-            sender = new ClientSender(senderAddress, sendSocket, senderPort, playerID);
+            listenSocket = new MulticastSocket(LISTENPORT);
+            sendSocket = new MulticastSocket();
+            listenAddress = InetAddress.getByName("230.0.1.1");
+            senderAddress = InetAddress.getByName("230.0.0.1");
+
+            sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             threadsup = true;
 
@@ -116,9 +87,9 @@ public class Client extends Thread {
             renderer.updateGameView(this.view);
         }
     }
-    
+
     public ClientSender getClientSender() {
-    	return this.sender;
+        return this.sender;
     }
 
     public void joinGame(String playerName, Teams team){
