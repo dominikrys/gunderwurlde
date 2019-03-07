@@ -33,6 +33,7 @@ public class ZombieAI extends EnemyAI {
         if (attacking) {
             return AIAction.ATTACK;
         } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE) {
+//            System.out.println("Move");
             return AIAction.MOVE;
         } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE) {
             this.actionState = ActionList.ATTACKING;
@@ -57,33 +58,21 @@ public class ZombieAI extends EnemyAI {
         return attacks;
     }
 
-    @Override
-    protected Pose generateNextPose() {
-        pose = checkIfInSpawn();
-
-        if (outOfSpawn) {
-            double angle = getAngle(pose, closestPlayer);
-            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-        }
-
-        return pose;
-    }
+//    @Override
+//    protected Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//
+//        if (outOfSpawn) {
+//            double angle = getAngle(pose, closestPlayer);
+//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
+//        }
+//
+//        return pose;
+//    }
 
     protected Force generateMovementForce(){
-        int[] tile = Tile.locationToTile(pose);
-
-        if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
-                || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
-            return new Force(90, maxMovementForce);
-        }
-
-        if ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)
-                || (tile[0] == mapXDim - 2 && tile[1] == (mapYDim - 2) / 2)) {
-            return new Force(270, maxMovementForce);
-
-        }
-
-        return new Force(90, 10);
+        int angleToMove = (int) getAngle(pose, closestPlayer);
+        return new Force((int) randomizePath(angleToMove), maxMovementForce);
     }
 
     //Maybe needs some more balancing

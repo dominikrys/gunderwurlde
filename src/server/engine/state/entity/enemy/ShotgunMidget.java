@@ -11,7 +11,7 @@ import shared.lists.EntityList;
 
 public class ShotgunMidget extends Enemy {
     public static final int DEFAULT_HEALTH = 1;
-    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.8;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE;
     public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 15;
     public static final double DEFAULT_MASS = 1;
@@ -25,7 +25,7 @@ public class ShotgunMidget extends Enemy {
     }
 
     public ShotgunMidget(int speed, int knockbackAmount) {
-        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ShotgunMidgetAI(knockbackAmount),
+        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION * 0.5 * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ShotgunMidgetAI(knockbackAmount),
                 DEFAULT_MASS);
 
         this.knockbackAmount = knockbackAmount;

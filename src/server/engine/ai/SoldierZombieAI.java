@@ -1,18 +1,17 @@
 package server.engine.ai;
 
-import java.util.LinkedList;
-import java.util.Random;
-
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.entity.projectile.SmallBullet;
 import server.engine.state.item.weapon.gun.Pistol;
+import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Teams;
 
-public class SoldierZombieAI extends EnemyAI{
+import java.util.LinkedList;
+import java.util.Random;
+
+public class SoldierZombieAI extends EnemyAI {
 
     private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
@@ -24,15 +23,13 @@ public class SoldierZombieAI extends EnemyAI{
     private Pose poseToGo;
     private Pistol pistol = new Pistol();
 
-    public SoldierZombieAI(int rangeToShoot, int rateOfFire){
+    public SoldierZombieAI(int rangeToShoot, int rateOfFire) {
         this.RANGE_TO_SHOOT = rangeToShoot;
         this.RATE_OF_FIRE = rateOfFire;
     }
 
     @Override
     public AIAction getAction() {
-        if(outOfSpawn) {                                    //Check if in spawn and if so, move out
-
             if (attacking) {                                //If attacking, continue to attack
                 return AIAction.ATTACK;
             } else if (moving) {                            //If moving, continue to move
@@ -58,10 +55,9 @@ public class SoldierZombieAI extends EnemyAI{
                 }
             }
             return AIAction.WAIT;
-        }else{
-            return AIAction.MOVE;
         }
-    }
+
+
 
     @Override
     public LinkedList<Attack> getAttacks() {
@@ -77,38 +73,64 @@ public class SoldierZombieAI extends EnemyAI{
         return attacks;
     }
 
-    @Override
-    protected synchronized Pose generateNextPose() {
-        pose = checkIfInSpawn();
-        //if out of spawn
-        if(outOfSpawn) {
-            //if does not have pose to go
-            if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
-                moving = false;
-                //if not already generating a new pose to go
-                if(!isProcessing()) {
-                    setProcessing(true);
-                    new RandomPoseGen(this, pose).start();
-                }else{
-                    //if has a pose generated
-                    moving = true;
-                    double angle = getAngle(pose, poseToGo);
-                    pose = poseFromAngle(angle, angle, maxDistanceToMove);
-                }
-            } else {
-                //if has a pose to go
-                moving = true;
-                double angle = getAngle(pose, poseToGo);
-                pose = poseFromAngle(angle, angle, maxDistanceToMove);
-            }
-        }
-
-        return pose;
-    }
+//    protected synchronized Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//        //if out of spawn
+//        if(outOfSpawn) {
+//            //if does not have pose to go
+//            if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
+//                moving = false;
+//                //if not already generating a new pose to go
+//                if(!isProcessing()) {
+//                    setProcessing(true);
+//                    new RandomPoseGen(this, pose).start();
+//                }else{
+//                    //if has a pose generated
+//                    moving = true;
+//                    double angle = getAngle(pose, poseToGo);
+//                    pose = poseFromAngle(angle, angle, maxDistanceToMove);
+//                }
+//            } else {
+//                //if has a pose to go
+//                moving = true;
+//                double angle = getAngle(pose, poseToGo);
+//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
+//            }
+//        }
+//
+//        return pose;
+//    }
 
 
     synchronized void setPoseToGo(Pose pose) {
         poseToGo = pose;
         setProcessing(false);
     }
+
+    protected Force generateMovementForce() {
+        //if does not have pose to go
+        if (poseToGo == null || poseToGo.compareLocation(pose, 20)) {
+            moving = false;
+            //if not already generating a new pose to go
+            if (!isProcessing()) {
+                setProcessing(true);
+                new RandomPoseGen(this, pose).start();
+            } else {
+                //if has a pose generated
+                moving = true;
+                int angleToMove = (int) getAngle(pose, poseToGo);
+//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
+                return new Force(angleToMove, maxMovementForce);
+            }
+        } else {
+            //if has a pose to go
+            moving = true;
+            int angleToMove = (int) getAngle(pose, poseToGo);
+//            pose = poseFromAngle(angle, angle, maxDistanceToMove);
+            return new Force(angleToMove, maxMovementForce);
+        }
+
+        return new Force();
+    }
+
 }

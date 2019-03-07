@@ -39,7 +39,7 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
-    protected abstract Pose generateNextPose();
+//    protected abstract Pose generateNextPose();
 
     protected abstract Force generateMovementForce();
 
@@ -49,10 +49,10 @@ public abstract class EnemyAI {
         return actionState;
     }
 
-    public Pose getNewPose(double maxDistanceToMove) {
-        this.maxDistanceToMove = maxDistanceToMove;
-        return generateNextPose();
-    }
+//    public Pose getNewPose(double maxDistanceToMove) {
+//        this.maxDistanceToMove = maxDistanceToMove;
+//        return generateNextPose();
+//    }
 
     public Force getMovementForce(double maxMovementForce) {
         this.maxMovementForce = maxMovementForce;
@@ -202,8 +202,6 @@ public abstract class EnemyAI {
     }
 
     public Force getForceFromAttack(double maxMovementForce) {
-        this.maxMovementForce = maxMovementForce;
-        // TODO Auto-generated method stub
         return new Force(0, 0);
     }
 

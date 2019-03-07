@@ -321,7 +321,6 @@ public class ProcessGameState extends Thread {
 
                 switch (enemyAction) {
                 case ATTACK:
-                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
                     LinkedList<Attack> attacks = ai.getAttacks();
 
                     for (Attack a : attacks) {
@@ -344,16 +343,16 @@ public class ProcessGameState extends Thread {
                                 }
                             }
                             break;
-                        case PROJECTILE:
-                            ProjectileAttack projectileAttack = (ProjectileAttack) a;
-                            for (Projectile p : projectileAttack.getProjectiles()) {
-                                newProjectiles.add(p);
-                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
-                            }
-                            break;
+                            case PROJECTILE:
+                                ProjectileAttack projectileAttack = (ProjectileAttack) a;
+                                for (Projectile p : projectileAttack.getProjectiles()) {
+                                    newProjectiles.add(p);
+                                    projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                                }
+                                break;
                         }
                     }
-
+                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
                     break;
                 case MOVE:
                     currentEnemy.setMoving(true);
