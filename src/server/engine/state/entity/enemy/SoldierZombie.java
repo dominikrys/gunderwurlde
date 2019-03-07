@@ -14,7 +14,7 @@ public class SoldierZombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
     public static final int DEFAULT_SCORE_ON_KILL = 30;
     public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.98;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
+    public static final int DEFAULT_SIZE = EntityList.SOLDIER.getSize() / 2;
     public static final double DEFAULT_MASS = 2;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 

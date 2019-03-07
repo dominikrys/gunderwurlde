@@ -9,7 +9,7 @@ import shared.lists.Teams;
 public class SmallBullet extends Projectile {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = 1;
+    public static final int DEFAULT_SIZE = EntityList.BASIC_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
 
     public SmallBullet() {
