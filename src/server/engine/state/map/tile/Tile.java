@@ -11,8 +11,6 @@ public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
     public static final double DEFAULT_DENSITY = 200;
 
-    private static final double DEFAULT_FRICTION = 0.3;
-
     // Type of tile
     protected TileTypes tileType;
 

@@ -4,11 +4,7 @@ import client.gui.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import shared.lists.Teams;
@@ -49,7 +45,6 @@ public class MainMenuController extends VBox implements MenuController {
                 IOException exception) {
             throw new RuntimeException(exception);
         }
-        //
     }
 
     public void show() {

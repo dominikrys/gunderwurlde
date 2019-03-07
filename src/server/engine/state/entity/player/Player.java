@@ -1,7 +1,7 @@
 package server.engine.state.entity.player;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
 
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
@@ -11,6 +11,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
@@ -28,15 +29,24 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
     public static final double DEFAULT_MASS = 3;
 
+    private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
+
+    static {
+        DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
+        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
+    }
+
+    protected static EnumMap<Teams, Integer> teamScore = new EnumMap<>(Teams.class);
+
     private static int nextPlayerID = 0;
-    protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
 
     protected final int playerID;
     protected final Teams team;
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList, Integer> ammo; // TODO add cap to ammo stored
+    protected EnumMap<AmmoList, Integer> ammo;
+    protected EnumMap<AmmoList, Integer> maxAmmo;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
@@ -57,12 +67,14 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new Shotgun()); // TODO remove testing only
+        items.add(new Smg()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
         changeScore(team, DEFAULT_SCORE);
         this.name = name;
-        this.ammo = new LinkedHashMap<>();
+        this.maxAmmo = DEFAULT_MAX_AMMO;
+        this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.playerID = nextPlayerID++;
@@ -114,8 +126,28 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         }
     }
 
-    public void setAmmo(AmmoList type, int amount) {
+    public void setAmmo(AmmoList type, int amount) { // ignores maxammo
         ammo.put(type, amount);
+    }
+
+    public int addAmmo(AmmoList ammoType, int amountAvailable) {
+        int amount = ammo.getOrDefault(ammoType, 0);
+        int maxVal = maxAmmo.getOrDefault(ammoType, -1);
+        int amountTaken = amountAvailable;
+
+        if (maxVal != -1 && amount + amountAvailable > maxVal) {
+            amountTaken = maxVal - amount;
+            amount = maxVal;
+        } else {
+            amount += amountAvailable;
+        }
+
+        ammo.put(ammoType, amount);
+        return amountTaken;
+    }
+
+    public EnumMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
     }
 
     public ArrayList<Item> getItems() {
@@ -193,10 +225,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
 
     public String getName() {
         return name;
-    }
-
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
-        return ammo;
     }
 
     public double getAcceleration() {
