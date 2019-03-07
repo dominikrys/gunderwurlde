@@ -279,7 +279,8 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
             LinkedList<Integer> itemsToRemove = new LinkedList<>();
             for (ItemDrop i : items.values()) {
-                if ((lastProcessTime - i.getDropTime()) > ItemDrop.DECAY_LENGTH) {
+                int timeLeft = (int) (ItemDrop.DECAY_LENGTH - (lastProcessTime - i.getDropTime()));
+                if (timeLeft <= 0) {
                     itemsToRemove.add(i.getID());
                     LinkedHashSet<int[]> tilesOn = tilesOn(i);
                     for (int[] tileCords : tilesOn) {
@@ -287,7 +288,7 @@ public class ProcessGameState extends Thread {
                     }
                     // TODO itemdrop decay status here
                 } else {
-                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName(), i.isCloaked(), i.getStatus()));
+                    itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName(), i.isCloaked(), i.getStatus(), timeLeft));
                 }
             }
             itemsToRemove.stream().forEach((i) -> items.remove(i));
@@ -439,7 +440,7 @@ public class ProcessGameState extends Thread {
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO spawned itemdrop status? is this needed?
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
-                                                        newDrop.isCloaked(), newDrop.getStatus()));
+                                                        newDrop.isCloaked(), newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
 
                                                 LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
                                                 for (int[] itemTileCords : itemTilesOn) {
