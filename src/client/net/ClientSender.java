@@ -10,8 +10,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;

@@ -21,11 +21,9 @@ public class Addressing {
                 // if that interface has an address that is for the ethernet port then add it to the socket
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
-                    System.out.println(iface.getDisplayName());
                     InetAddress addr = addresses.nextElement();
                     if (iface.getDisplayName().equals("Realtek PCIe GBE Family Controller") ||
                             iface.getDisplayName().equals("Realtek Gaming GbE Family Controller")) {
-                        System.out.println("Setting interface");
                         listenSocket.setInterface(addr);
                     }
                     break;
@@ -34,5 +32,31 @@ public class Addressing {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+    }
+
+    public static InetAddress getAddress(){
+        Enumeration<NetworkInterface> interfaces;
+        try {
+            //check for interfaces that arent loopbacks
+            interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                if (iface.isLoopback())
+                    continue;
+                // if that interface has an address that is for the ethernet port then add it to the socket
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (iface.getDisplayName().equals("Realtek PCIe GBE Family Controller") ||
+                            iface.getDisplayName().equals("Realtek Gaming GbE Family Controller")) {
+                        return addr;
+                    }
+                    break;
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

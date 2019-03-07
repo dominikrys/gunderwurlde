@@ -8,6 +8,12 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Teams;
 
+import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 public class GameHandler extends Thread {
     // Server variables
     private ConnectionType connectionType;
@@ -26,6 +32,15 @@ public class GameHandler extends Thread {
     private int numPlayers;
 
     public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers) {
+        this.stage = stage;
+        this.connectionType = connectionType;
+        this.settings = settings;
+        this.playerName = name;
+        this.map = map;
+        this.team = team;
+        this.numPlayers = Integer.parseInt(numOfPlayers);
+    }
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers, String ipValue, String portValue) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
@@ -59,12 +74,13 @@ public class GameHandler extends Thread {
                 // TODO: Potential menu for choosing host address and port number?
                 if(!serverStarted) {
                     serverStarted = true;
-                    client = new Client(stage, playerName, this, settings, 1);
+                    client = new Client(stage, playerName, this, settings);
                     client.start();
                     while(!client.isThreadsup()){
                         Thread.yield();
                     }
                     client.joinGame(playerName, team);
+                    System.out.println("Client officialy joining game");
                     // Code for joining some server
                 }
                 break;
@@ -84,6 +100,7 @@ public class GameHandler extends Thread {
 
         // TODO: handle the game closing once all stuff is running as is supposed to
     }
+
 
 
 

@@ -149,6 +149,7 @@ public class ServerReceiver extends Thread {
             String[] seperateData = data.split(" ");
             System.out.println("Part 1 is " + seperateData[0]);
             System.out.println("Part 2 is " + seperateData[1]);
+            System.out.println("Player name");
             String playerName = seperateData[0];
             Teams team = null;
             if(seperateData[1].equals("RED")){
@@ -168,6 +169,7 @@ public class ServerReceiver extends Thread {
             }
             // call add player from the server
             handler.addPlayer(playerName, team);
+            System.out.println("Player added to game");
         }
         catch(Exception e){
             e.printStackTrace();

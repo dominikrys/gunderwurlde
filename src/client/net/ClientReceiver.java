@@ -65,9 +65,7 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
-                System.out.println("Receiver packet");
                 if(packet.getLength() == 8){
-                    System.out.println("Updating buffer size");
                     byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
                     byte[] ValueBytes = Arrays.copyOfRange(packet.getData(), 4, 8);
                     ByteBuffer wrappedCommand = ByteBuffer.wrap(commandBytes);
@@ -78,14 +76,9 @@ public class ClientReceiver extends Thread {
                         System.out.println("Updating buffersize");
                         buffer = new byte[value];
                     }
-                    else if(command == 2){
-                        System.out.println("Setting playerID");
-                        //client.setPlayerID(value);
-                    }
                     continue;
                 }
                 else {
-
                     // System.out.println("Size of received packet" + packet.getData().length);
                     // Creates a bytearrayinputstream from the received packets data
                     ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
