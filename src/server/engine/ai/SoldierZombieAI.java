@@ -35,8 +35,8 @@ public class SoldierZombieAI extends EnemyAI {
             } else if (moving) {                            //If moving, continue to move
                 return AIAction.MOVE;
             } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
-                //1 in 50 change it will decide to move
-                if (rand.nextInt(50) == 0) {
+                //1 in 80 change it will decide to move
+                if (rand.nextInt(80) == 0) {
                     return AIAction.MOVE;
                 } else {
                     return AIAction.WAIT;
