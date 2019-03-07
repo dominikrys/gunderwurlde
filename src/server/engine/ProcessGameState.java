@@ -309,7 +309,8 @@ public class ProcessGameState extends Thread {
                 // TODO process status (Make method for this?)
 
                 int enemyID = currentEnemy.getID();
-                double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                //double maxDistanceMoved = getDistanceMoved(currentTimeDifference, currentEnemy.getMoveSpeed());
+                double maxMovementForce = Physics.getForce(currentEnemy.getAcceleration(), 0, currentEnemy.getMass()).getForce();
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
@@ -342,16 +343,16 @@ public class ProcessGameState extends Thread {
                                 }
                             }
                             break;
-                        case PROJECTILE:
-                            ProjectileAttack projectileAttack = (ProjectileAttack) a;
-                            for (Projectile p : projectileAttack.getProjectiles()) {
-                                newProjectiles.add(p);
-                                projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
-                            }
-                            break;
+                            case PROJECTILE:
+                                ProjectileAttack projectileAttack = (ProjectileAttack) a;
+                                for (Projectile p : projectileAttack.getProjectiles()) {
+                                    newProjectiles.add(p);
+                                    projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                                }
+                                break;
                         }
                     }
-
+                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
                     break;
                 case MOVE:
                     currentEnemy.setMoving(true);
@@ -361,7 +362,7 @@ public class ProcessGameState extends Thread {
                         tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
                     }
 
-                    currentEnemy.setPose(ai.getNewPose(maxDistanceMoved));
+                    currentEnemy.addNewForce(ai.getMovementForce(maxMovementForce));
 
                     tilesOn = tilesOn(currentEnemy);
                     for (int[] tileCords : tilesOn) {

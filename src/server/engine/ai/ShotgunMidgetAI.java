@@ -5,6 +5,7 @@ import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.entity.projectile.SmallBullet;
 import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
@@ -15,15 +16,14 @@ import java.util.LinkedList;
 public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUT;
-    private int knockback;
-    private double knockbackAgnle;
+//    private int knockback;
+    private int knockbackAngle;
     private boolean knockbackState = false;
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
         super();
         this.KNOCKBACK_AMOUT = knockbackAmount;
-        this.knockback = KNOCKBACK_AMOUT;
     }
 
     @Override
@@ -47,36 +47,24 @@ public class ShotgunMidgetAI extends ZombieAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
+            knockbackAngle = (int) getAngle(pose, closestPlayer);
             attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(
-                    new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
+                    new Pose(pose, knockbackAngle), Teams.ENEMY)));
             attacking = false;
-            knockbackState = true;
             this.actionState = ActionList.NONE;
         }
         return attacks;
     }
 
     @Override
-    protected Pose generateNextPose() {
-        pose = checkIfInSpawn();
-
-        if (outOfSpawn) {
-            double angle = getAngle(pose, closestPlayer);
-            if(!knockbackState) {
-                pose = poseFromAngle(angle, angle, maxDistanceToMove);
-            }else{
-                knockbackAgnle = angle;
-                if(knockback > 0) {
-                    pose = poseFromAngle(Pose.normaliseDirection((int) knockbackAgnle + 180), angle, maxDistanceToMove + 1.5);
-                    knockback--;
-                }else{
-                knockback = KNOCKBACK_AMOUT;
-                knockbackState = false;
-                }
-            }
-        }
-
-        return pose;
+    public Force getForceFromAttack(double maxMovementForce) {
+        knockbackAngle = (int) getAngle(pose, closestPlayer);
+        return new Force(Pose.normaliseDirection(knockbackAngle + 180), maxMovementForce + KNOCKBACK_AMOUT);
     }
 
+    @Override
+    protected Force generateMovementForce(){
+        int angleToMove = (int) getAngle(pose, closestPlayer);
+        return new Force(angleToMove, maxMovementForce);
+    }
 }
