@@ -50,7 +50,7 @@ G 1 2 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-ZOMBIE
+MIDGET 13 50
 0 1000 1 1
 
 

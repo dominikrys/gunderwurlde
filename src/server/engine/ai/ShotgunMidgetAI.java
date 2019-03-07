@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUT;
-    private int knockback;
+//    private int knockback;
     private int knockbackAngle;
     private boolean knockbackState = false;
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
@@ -58,6 +58,7 @@ public class ShotgunMidgetAI extends ZombieAI{
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
+        knockbackAngle = (int) getAngle(pose, closestPlayer);
         return new Force(Pose.normaliseDirection(knockbackAngle + 180), maxMovementForce + KNOCKBACK_AMOUT);
     }
 
