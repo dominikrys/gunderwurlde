@@ -12,7 +12,7 @@ import shared.lists.EntityList;
 public class ShotgunMidget extends Enemy {
     public static final int DEFAULT_HEALTH = 1;
     public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE;
-    public static final int DEFAULT_SIZE = Tile.TILE_SIZE / 2;
+    public static final int DEFAULT_SIZE = EntityList.MIDGET.getSize() / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 15;
     public static final double DEFAULT_MASS = 1;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
