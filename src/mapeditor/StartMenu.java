@@ -21,6 +21,8 @@ public class StartMenu {
 	private int resHeight;
 	
 	public StartMenu(Stage stage) {
+		this.resWidth = 800;
+		this.resHeight = 600;
 		this.init(stage);
 	}
 	

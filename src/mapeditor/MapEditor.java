@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -29,7 +30,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
@@ -339,12 +342,30 @@ public class MapEditor {
 		mapCanvas = new Canvas(mapWidth*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
 		mainViewer.add(mapCanvas, 0, 0);
 		
-		Tile[][] oldMapTiles;
 		mapGc = mapCanvas.getGraphicsContext2D();
 		mapGc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 		mapGc.rect(0, 0, mapWidth*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
 		mapGc.setFill(Color.BLACK);
 		mapGc.fill();
+		
+		if(mapTiles == null) {
+			mapTiles = new Tile[mapWidth][mapHeight];
+		}
+		else {
+			Tile[][] oldMapTiles = mapTiles;
+			mapTiles = new Tile[mapWidth][mapHeight];
+			for(int i = 0 ; i < mapTiles.length - 1 ; i++) {
+				for(int j = 0 ; j < mapTiles[0].length - 1 ; j++) {
+					if(i < oldMapTiles.length - 1 && j < oldMapTiles.length - 1) {
+						mapTiles[i][j] = oldMapTiles[i][j];
+						if(mapTiles[i][j] != null) {
+							mapGc.drawImage(tileSprite.get(mapTiles[i][j].getType()), i*Constants.TILE_SIZE, j*Constants.TILE_SIZE);
+						}
+					}
+				}
+			}
+		}
+		
 		mapGc.setLineWidth(1);
 		mapGc.setStroke(Color.GREY);
 		// Draw vertical grid lines
@@ -354,23 +375,6 @@ public class MapEditor {
 		// Draw horizontal grid lines
 		for(int i = 0 ; i < mapHeight ; i++) {
 			mapGc.strokeLine(0, i*Constants.TILE_SIZE, mapWidth*Constants.TILE_SIZE, i*Constants.TILE_SIZE);
-		}
-		
-		if(mapTiles == null) {
-			mapTiles = new Tile[mapWidth][mapHeight];
-			oldMapTiles = new Tile[0][0];
-		}
-		else {
-			oldMapTiles = mapTiles;
-		}
-		
-		for(int i = 0 ; i < mapTiles.length - 1 ; i++) {
-			for(int j = 0 ; j < mapTiles[0].length - 1 ; j++) {
-				if(i < oldMapTiles.length - 1 && j < oldMapTiles.length - 1) {
-				}
-				else {
-				}
-			}
 		}
 		
 		SnapshotParameters params = new SnapshotParameters();
@@ -396,6 +400,7 @@ public class MapEditor {
 		setYellowSpawn.setDisable(false);
 		setGreenSpawn.setDisable(false);
 		
+		selectTile(selectedX, selectedY);
 		infoViewer.toFront();
 		resetFocus();
 	}
@@ -502,6 +507,37 @@ public class MapEditor {
 		mapGc.strokeLine((tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
 	}
 	
+	private void drawSpawnLetter(int tileX, int tileY, Teams team) {
+		mapGc.drawImage(mapSnapshot, 0, 0);
+		Paint p = Color.TRANSPARENT;
+		String s = "";
+		switch(team) {
+			case RED:
+				p = Color.RED;
+				s = "R";
+				break;
+			case BLUE:
+				p = Color.BLUE;
+				s = "B";
+				break;
+			case GREEN:
+				p = Color.GREEN;
+				s = "G";
+				break;
+			case YELLOW:
+				p = Color.YELLOW;
+				s = "Y";
+				break;
+		}
+		mapGc.setFill(p);
+		mapGc.setTextAlign(TextAlignment.CENTER);
+		mapGc.setTextBaseline(VPos.CENTER);
+		mapGc.fillText(s, tileX*Constants.TILE_SIZE + Constants.TILE_SIZE/2, tileY*Constants.TILE_SIZE + Constants.TILE_SIZE/2);
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		mapSnapshot = mapCanvas.snapshot(params, null);
+	}
+	
 	// Display tile info on the right
 	private void displayTileInfo(int x, int y) {
 		Tile tile = mapTiles[x][y];
@@ -522,8 +558,20 @@ public class MapEditor {
 		if(mapTiles[tileX][tileY] != null && !mapTiles[tileX][tileY].getState().equals(TileState.SOLID)) {
 			// Check here so no invalid spawn popup
 			if(checkTile(tileX, tileY)) {
+				if(teamSpawns.containsKey(team)) {
+					if(teamSpawns.get(team)[0] != -1) {
+						mapGc.drawImage(tileSprite.get(mapTiles[teamSpawns.get(team)[0]][teamSpawns.get(team)[1]].getType()), teamSpawns.get(team)[0]*Constants.TILE_SIZE, teamSpawns.get(team)[1]*Constants.TILE_SIZE);
+						drawEdge(tileX, tileY, Color.GREY);
+						SnapshotParameters params = new SnapshotParameters();
+						params.setFill(Color.TRANSPARENT);
+						mapSnapshot = mapCanvas.snapshot(params, null);
+					}
+				}
+				drawEdge(tileX, tileY, Color.GREY);
 				teamSpawns.put(team, new int[] {tileX, tileY});
 				setTeamSpawnInfo(Integer.toString(tileX), Integer.toString(tileY), team);
+				drawSpawnLetter(tileX, tileY, team);
+				selectTile(tileX, tileY);
 			}
 		}
 		else {
