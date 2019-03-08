@@ -2,6 +2,8 @@ package mapeditor;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,8 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -30,6 +35,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.MapEditorAssetList;
+import shared.lists.Teams;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
 
@@ -83,6 +89,11 @@ public class MapEditor {
 	private boolean keysActivated;
 	private int selectedX;
 	private int selectedY;
+	private Button setRedSpawn;
+	private Button setBlueSpawn;
+	private Button setGreenSpawn;
+	private Button setYellowSpawn;
+	private HashMap<Teams,int[]> teamSpawns;
 	
 	// New map
 	public MapEditor() {
@@ -242,6 +253,8 @@ public class MapEditor {
 		});
 		
 		// > > > Team spawns
+		teamSpawns = new HashMap<Teams, int[]>();
+		
 		teamSpawnInfo = new GridPane();
 		info.getChildren().add(teamSpawnInfo);
 		teamSpawnInfo.setHgap(10);
@@ -250,26 +263,62 @@ public class MapEditor {
 		// > > > > Red Team
 		redTeamSpawnLabel1 = new Label("Red Team:");
 		teamSpawnInfo.add(redTeamSpawnLabel1, 0, 0);
-		redTeamSpawnLabel2 = new Label("-");
+		redTeamSpawnLabel2 = new Label("(-, -)");
 		teamSpawnInfo.add(redTeamSpawnLabel2, 1, 0);
+		setRedSpawn = new Button("Set");
+		teamSpawnInfo.add(setRedSpawn, 2, 0);
+		setRedSpawn.setDisable(true);
+		setRedSpawn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				setTeamSpawn(selectedX, selectedY, Teams.RED);
+			}
+		});
 		
 		// > > > > Blue Team
 		blueTeamSpawnLabel1 = new Label("Blue Team:");
 		teamSpawnInfo.add(blueTeamSpawnLabel1, 0, 1);
-		blueTeamSpawnLabel2 = new Label("-");
-		teamSpawnInfo.add(blueTeamSpawnLabel2, 1, 1);
+		blueTeamSpawnLabel2 = new Label("(-, -)");
+		teamSpawnInfo.add(blueTeamSpawnLabel2, 1, 1);	
+		setBlueSpawn = new Button("Set");
+		teamSpawnInfo.add(setBlueSpawn, 2, 1);
+		setBlueSpawn.setDisable(true);
+		setBlueSpawn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				setTeamSpawn(selectedX, selectedY, Teams.BLUE);
+			}
+		});
 		
 		// > > > > Green Team
 		greenTeamSpawnLabel1 = new Label("Green Team:");
 		teamSpawnInfo.add(greenTeamSpawnLabel1, 0, 2);
-		greenTeamSpawnLabel2 = new Label("-");
+		greenTeamSpawnLabel2 = new Label("(-, -)");
 		teamSpawnInfo.add(greenTeamSpawnLabel2, 1, 2);
+		setGreenSpawn = new Button("Set");
+		teamSpawnInfo.add(setGreenSpawn, 2, 2);
+		setGreenSpawn.setDisable(true);
+		setGreenSpawn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				setTeamSpawn(selectedX, selectedY, Teams.GREEN);
+			}
+		});
 		
 		// > > > > Yellow Team
 		yellowTeamSpawnLabel1 = new Label("Yellow Team:");
 		teamSpawnInfo.add(yellowTeamSpawnLabel1, 0, 3);
-		yellowTeamSpawnLabel2 = new Label("-");
+		yellowTeamSpawnLabel2 = new Label("(-, -)");
 		teamSpawnInfo.add(yellowTeamSpawnLabel2, 1, 3);
+		setYellowSpawn = new Button("Set");
+		teamSpawnInfo.add(setYellowSpawn, 2, 3);
+		setYellowSpawn.setDisable(true);
+		setYellowSpawn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				setTeamSpawn(selectedX, selectedY, Teams.YELLOW);
+			}
+		});
 		
 		stage.show();
         
@@ -336,24 +385,31 @@ public class MapEditor {
 			}
 		});
 		
+		setRedSpawn.setDisable(false);
+		setBlueSpawn.setDisable(false);
+		setYellowSpawn.setDisable(false);
+		setGreenSpawn.setDisable(false);
+		
 		resetFocus();
 	}
 	
 	// Draw a tile
 	protected void drawTile(int tileX, int tileY, Tile tile) {
-		mapGc.drawImage(mapSnapshot, 0, 0);
-		mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
-		drawEdge(tileX, tileY, Color.GREY);
-		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.TRANSPARENT);
-		mapSnapshot = mapCanvas.snapshot(params, null);
-		mapTiles[tileX][tileY] = tile;
-		selectTile(tileX, tileY);
+		if(checkTile(tileX, tileY)) {
+			mapGc.drawImage(mapSnapshot, 0, 0);
+			mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+			drawEdge(tileX, tileY, Color.GREY);
+			SnapshotParameters params = new SnapshotParameters();
+			params.setFill(Color.TRANSPARENT);
+			mapSnapshot = mapCanvas.snapshot(params, null);
+			mapTiles[tileX][tileY] = tile;
+			selectTile(tileX, tileY);
+		}
 	}
 	
 	// Tile remove
 	protected void removeTile(int tileX, int tileY) {
-		if(mapTiles[tileX][tileY] != null) {
+		if(mapTiles[tileX][tileY] != null && checkTile(tileX, tileY)) {
 			mapGc.drawImage(mapSnapshot, 0, 0);
 			mapGc.drawImage(mapEditorAssets.get(MapEditorAssetList.VOID), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
 			drawEdge(tileX, tileY, Color.BLACK);
@@ -430,6 +486,7 @@ public class MapEditor {
 		displayTileInfo(tileX, tileY);
 	}
 	
+	// I made this before learning about strokeRect
 	private void drawEdge(int tileX, int tileY, Color color) {
 		mapGc.setStroke(color);
 		mapGc.strokeLine(tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
@@ -453,6 +510,56 @@ public class MapEditor {
 		}
 	}
 	
+	// Set team spawn tile
+	private void setTeamSpawn(int tileX, int tileY, Teams team) {
+		if(mapTiles[tileX][tileY] != null && mapTiles[tileX][tileY].getState().equals(TileState.PASSABLE)) {
+			// Check here so no invalid spawn popup
+			if(checkTile(tileX, tileY)) {
+				teamSpawns.put(team, new int[] {tileX, tileY});
+				setTeamSpawnInfo(Integer.toString(tileX), Integer.toString(tileY), team);
+			}
+		}
+		else {
+			invalidSpawnLocationErrorPopUp();
+		}
+	}
+	
+	// Set team spawn info
+	private void setTeamSpawnInfo(String tileX, String tileY, Teams team) {
+		String s = "(" + tileX + ", " + tileY + ")";
+		switch(team) {
+			case RED:
+				redTeamSpawnLabel2.setText(s);
+				break;
+			case BLUE:
+				blueTeamSpawnLabel2.setText(s);
+				break;
+			case GREEN:
+				greenTeamSpawnLabel2.setText(s);
+				break;
+			case YELLOW:
+				yellowTeamSpawnLabel2.setText(s);
+				break;
+		}
+	}
+	
+	// Check if tile is a spawn etc.
+	private boolean checkTile(int tileX, int tileY) {
+		for(Map.Entry<Teams, int[]> entry : teamSpawns.entrySet()) {
+			if(entry.getValue()[0] == tileX && entry.getValue()[1] == tileY) {
+				if(tileOverWritePopUp(entry.getKey().toString() + " spawn")) {
+					setTeamSpawnInfo("-", "-", entry.getKey());
+					entry.setValue(new int[] {-1, -1});
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	// Display tile info
 	private void setDisplayTileInfo(Tile tile) {
 		//tileIDLabel2.setText(Character.toString(tileID));
 		tileImageView.setImage(tileSprite.get(tile.getType()));
@@ -460,6 +567,26 @@ public class MapEditor {
 		tileStateLabel2.setText(tile.getState().toString());
 		frictionLabel2.setText(Double.toString(tile.getFrictionCoefficient()));
 		bounceLabel2.setText(Double.toString(tile.getBounceCoefficient()));
+	}
+	
+	// Error when selected spawn location is invalid
+	private void invalidSpawnLocationErrorPopUp() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Invalid spawn location");
+		alert.show();
+	}
+	
+	// Overwrite alert
+	private boolean tileOverWritePopUp(String s) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Alert");
+		alert.setHeaderText("Overwrite " + s + "?");
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		}
+		return false;
 	}
 	
 }
