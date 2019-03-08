@@ -16,8 +16,20 @@ import javafx.stage.Stage;
 
 public class StartMenu {
 	
+	private StartMenu startMenu = this;
+	private int resWidth;
+	private int resHeight;
+	
 	public StartMenu(Stage stage) {
 		this.init(stage);
+	}
+	
+	public void setResWidth(int resWidth) {
+		this.resWidth = resWidth;
+	}
+	
+	public void setResHeight(int resHeight) {
+		this.resHeight = resHeight;
 	}
 	
 	// Initialize
@@ -45,7 +57,7 @@ public class StartMenu {
         newMap.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				MapEditor mapEditor = new MapEditor();
+				MapEditor mapEditor = new MapEditor(resWidth, resHeight);
 			}
 		});
         
@@ -63,7 +75,7 @@ public class StartMenu {
 				File map = fileChooser.showOpenDialog(stage);
 				if(map != null) {
 					//MapEditor.init(new Stage(), map.getName().substring(0, map.getName().lastIndexOf(".")));
-					MapEditor mapEditor = new MapEditor(map.getName());
+					MapEditor mapEditor = new MapEditor(map.getName(), resWidth, resHeight);
 				}
 			}
 		});
@@ -74,7 +86,7 @@ public class StartMenu {
         option.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				OptionMenu optionMenu = new OptionMenu();
+				OptionMenu optionMenu = new OptionMenu(startMenu);
 			}
 		});
         

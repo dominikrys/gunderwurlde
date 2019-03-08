@@ -12,10 +12,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import shared.Constants;
 
 public class OptionMenu {
 	
-	public OptionMenu() {
+	private StartMenu startMenu;
+	
+	public OptionMenu(StartMenu startMenu) {
+		this.startMenu = startMenu;
 		this.init();
 	}
 	
@@ -30,7 +34,7 @@ public class OptionMenu {
 		
         // root
 		VBox root = new VBox();
-		Scene scene = new Scene(root, 300, 250);
+		Scene scene = new Scene(root, 350, 250);
         stage.setScene(scene);
 		root.setSpacing(50);
 		root.setAlignment(Pos.CENTER);
@@ -46,8 +50,10 @@ public class OptionMenu {
 		Label resolutionLabel = new Label("Resolution:");
 		
 		// > > resolutions drop down menu
-		ComboBox resolutions = new ComboBox();
-		resolutions.getItems().add("800x600");
+		ComboBox<String> resolutions = new ComboBox<String>();
+		for (int[] res : Constants.SCREEN_RESOLUTIONS) {
+            resolutions.getItems().add(res[0] + "x" + res[1]);
+        }
 		resolutions.getSelectionModel().selectFirst();
 		resolution.getChildren().addAll(resolutionLabel, resolutions);
 		
@@ -63,7 +69,10 @@ public class OptionMenu {
 		save.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+				String[] res = resolutions.getValue().split("x");
+				startMenu.setResWidth(Integer.parseInt(res[0]));
+				startMenu.setResHeight(Integer.parseInt(res[1]));
+				stage.close();
 			}
 		});
 		

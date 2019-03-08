@@ -41,6 +41,8 @@ import shared.lists.TileTypes;
 
 public class MapEditor {
 	
+	private int resWidth;
+	private int resHeight;
 	private MapEditor mapEditor = this;
 	private String fileName;
 	private Stage stage;
@@ -96,13 +98,17 @@ public class MapEditor {
 	private HashMap<Teams,int[]> teamSpawns;
 	
 	// New map
-	public MapEditor() {
+	public MapEditor(int resWidth, int resHeight) {
+		this.resWidth = resWidth;
+		this.resHeight = resHeight;
 		this.init();
 	}
 	
 	// Open map
-	public MapEditor(String fileName) {
+	public MapEditor(String fileName, int resWidth, int resHeight) {
 		this.fileName = fileName;
+		this.resWidth = resWidth;
+		this.resHeight = resHeight;
 		this.init();
 	}
 	
@@ -139,7 +145,7 @@ public class MapEditor {
 		stage.centerOnScreen();
         
         root = new StackPane();
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, resWidth, resHeight);
         stage.setScene(scene);
         root.setAlignment(Pos.CENTER);
 		
@@ -158,7 +164,7 @@ public class MapEditor {
 		root.getChildren().add(mainViewer);
 		mainViewer.setAlignment(Pos.CENTER);
 		ColumnConstraints col1 = new ColumnConstraints();
-		col1.setPrefWidth(500);
+		col1.setPrefWidth(scene.getWidth() - 300);
 		col1.setHalignment(HPos.CENTER);
 		ColumnConstraints col2 = new ColumnConstraints();
 		col2.setPrefWidth(300);
@@ -253,7 +259,7 @@ public class MapEditor {
 		});
 		
 		// > > > Team spawns
-		teamSpawns = new HashMap<Teams, int[]>();
+		teamSpawns = new HashMap<Teams, int[]>(); // {-1, -1} means unset
 		
 		teamSpawnInfo = new GridPane();
 		info.getChildren().add(teamSpawnInfo);
@@ -390,6 +396,7 @@ public class MapEditor {
 		setYellowSpawn.setDisable(false);
 		setGreenSpawn.setDisable(false);
 		
+		infoViewer.toFront();
 		resetFocus();
 	}
 	
@@ -512,7 +519,7 @@ public class MapEditor {
 	
 	// Set team spawn tile
 	private void setTeamSpawn(int tileX, int tileY, Teams team) {
-		if(mapTiles[tileX][tileY] != null && mapTiles[tileX][tileY].getState().equals(TileState.PASSABLE)) {
+		if(mapTiles[tileX][tileY] != null && !mapTiles[tileX][tileY].getState().equals(TileState.SOLID)) {
 			// Check here so no invalid spawn popup
 			if(checkTile(tileX, tileY)) {
 				teamSpawns.put(team, new int[] {tileX, tileY});

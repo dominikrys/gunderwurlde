@@ -53,6 +53,8 @@ public class TileSelector {
 	private Button saveButton;
 	private Button deleteButton;
 	private Button cancelButton;
+	// TODO:
+	private VBox doorSettingsVBox;
 	
 	public TileSelector(MapEditor mapEditor, int tileX, int tileY) {
 		this.mapEditor = mapEditor;
