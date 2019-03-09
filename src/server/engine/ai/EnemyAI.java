@@ -31,6 +31,7 @@ public abstract class EnemyAI {
     ActionList actionState;
     boolean outOfSpawn = false;
     protected double maxMovementForce;
+    protected int timeBetweenAttacks;
 
     protected EnemyAI() {
         isProcessing = false;

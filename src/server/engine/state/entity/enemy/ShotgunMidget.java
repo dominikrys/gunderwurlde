@@ -25,7 +25,7 @@ public class ShotgunMidget extends Enemy {
     }
 
     public ShotgunMidget(int speed, int knockbackAmount) {
-        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION * 0.1 * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ShotgunMidgetAI(knockbackAmount),
+        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ShotgunMidgetAI(knockbackAmount),
                 DEFAULT_MASS);
 
         this.knockbackAmount = knockbackAmount;
