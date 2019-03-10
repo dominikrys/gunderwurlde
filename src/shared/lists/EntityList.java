@@ -13,7 +13,7 @@ public enum EntityList {
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
 
     // Player
-    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 6), // TODO why separate sizes for everything?
+    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 3), // TODO: remove the -3?
     PLAYER_RED("file:assets/img/entity/player/player.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
     PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
     PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
