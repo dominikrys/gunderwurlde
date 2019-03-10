@@ -323,9 +323,7 @@ public class ProcessGameState extends Thread {
                 case ATTACK:
                     LinkedList<Attack> attacks = ai.getAttacks();
                     currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
-                    System.out.println("new attacks " + attacks.size());
                     for (Attack a : attacks) {
-                        System.out.println("new attack: " + a.getAttackType());
                         switch (a.getAttackType()) {
                         case AOE:
                             AoeAttack aoeAttack = (AoeAttack) a;
@@ -346,7 +344,6 @@ public class ProcessGameState extends Thread {
                             }
                             break;
                         case PROJECTILE:
-                            System.out.println("Adding projectiles.");
                             ProjectileAttack projectileAttack = (ProjectileAttack) a;
                             for (Projectile p : projectileAttack.getProjectiles()) {
                                 newProjectiles.add(p);

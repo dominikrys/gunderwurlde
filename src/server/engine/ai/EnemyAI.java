@@ -78,7 +78,7 @@ public abstract class EnemyAI {
                     !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
                             ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
-            System.out.println("enemy wants to go out of map");
+            System.out.println("enemy wants to go out of map"); //todo: have this not print?
             return false;
         }
 
