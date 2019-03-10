@@ -596,7 +596,7 @@ public class GameRenderer implements Runnable {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-                        loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
+                        loadedSprites.get(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
                 @Override

@@ -77,7 +77,10 @@ public enum EntityList {
     PLAYER_WALK_YELLOW("file:assets/img/entity/player/player_walk.png", new ColorAdjust(0.15, 0, 0, 0)),
 
     // Smoke cloud
-    SMOKE_CLOUD("file:assets/img/misc_animations/smoke.png");
+    SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
+
+    // Blood explosion
+    BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png");
 
     private final String spritePath;
     private final ColorAdjust colorAdjust;
