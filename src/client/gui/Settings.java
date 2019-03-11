@@ -155,8 +155,8 @@ public class Settings implements Serializable {
                 ObjectOutput output = new ObjectOutputStream(buffer)
         ) {
             output.writeObject(this);
-        } catch (IOException ex) {
-            System.out.println("Cannot perform output." + ex.getMessage());
+        } catch (IOException e) {
+            System.out.println("Can't write settings to disk:" + e.getMessage());
         }
     }
 }

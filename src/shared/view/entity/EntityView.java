@@ -18,7 +18,7 @@ public abstract class EntityView implements Serializable {
     protected EntityView(Pose pose, int size, EntityList entityListName, Boolean cloaked, Status status) {
         int radius = size;
         this.pose = new Pose(pose.getX() - radius, pose.getY() - radius, pose.getDirection());
-        this.sizeScaleFactor = 1; // TODO sort out scaling
+        this.sizeScaleFactor = 1; // TODO have size scaling support for entities
         this.entityListName = entityListName;
         this.cloaked = cloaked;
         this.status = status;

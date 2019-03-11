@@ -1,6 +1,6 @@
 package server.engine.state;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -20,7 +20,7 @@ public class GameState {
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashMap<Integer, Player> players;
     protected LinkedHashMap<Integer, ItemDrop> items;
-    protected HashMap<Teams, Location> teamSpawns;
+    protected EnumMap<Teams, Location> teamSpawns;
 
     public GameState(GameMap currentMap, LinkedHashMap<Integer, Player> players) {
         this.players = players;

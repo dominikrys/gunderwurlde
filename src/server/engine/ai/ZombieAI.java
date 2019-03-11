@@ -5,6 +5,8 @@ import java.util.Random;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Location;
 import shared.Pose;
@@ -31,6 +33,7 @@ public class ZombieAI extends EnemyAI {
         if (attacking) {
             return AIAction.ATTACK;
         } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE) {
+//            System.out.println("Move");
             return AIAction.MOVE;
         } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE) {
             this.actionState = ActionList.ATTACKING;
@@ -55,20 +58,25 @@ public class ZombieAI extends EnemyAI {
         return attacks;
     }
 
-    @Override
-    protected Pose generateNextPose() {
-        pose = checkIfInSpawn();
+//    @Override
+//    protected Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//
+//        if (outOfSpawn) {
+//            double angle = getAngle(pose, closestPlayer);
+//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
+//        }
+//
+//        return pose;
+//    }
 
-        if (outOfSpawn) {
-            double angle = getAngle(pose, closestPlayer);
-            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-        }
-
-        return pose;
+    protected Force generateMovementForce(){
+        int angleToMove = (int) getAngle(pose, closestPlayer);
+        return new Force((int) randomizePath(angleToMove), maxMovementForce);
     }
 
     //Maybe needs some more balancing
-    double randomizePath(double angle) {
+    private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
         int r = rand.nextInt(500);

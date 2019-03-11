@@ -1,5 +1,17 @@
 package server.engine.state.map;
 
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.TreeSet;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.enemy.*;
 import server.engine.state.map.tile.Door;
@@ -35,7 +47,8 @@ public class MapReader {
             char ID = tileComp.removeFirst().charAt(0);
             TileTypes type = TileTypes.valueOf(tileComp.removeFirst());
             TileState state = TileState.valueOf(tileComp.removeFirst());
-            tiles.put(ID, new Tile(type, state));
+            double value = Double.valueOf(tileComp.removeFirst());
+            tiles.put(ID, new Tile(type, state, value));
             line = file.removeFirst();
         }
 
@@ -51,7 +64,7 @@ public class MapReader {
             line = file.removeFirst();
         }
 
-        HashMap<Teams, Location> teamSpawns = new HashMap<>();
+        EnumMap<Teams, Location> teamSpawns = new EnumMap<>(Teams.class);
         line = file.removeFirst();
         while (!line.isEmpty()) {
             LinkedList<String> teamComp = getComponents(line);

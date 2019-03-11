@@ -1,18 +1,18 @@
 package server.engine.ai;
 
-import server.engine.state.entity.attack.Attack;
-import server.engine.state.entity.enemy.Enemy;
-import server.engine.state.map.tile.Tile;
-import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.TileState;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.enemy.Enemy;
+import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
+import shared.Pose;
+import shared.lists.ActionList;
+import shared.lists.TileState;
 
 public abstract class EnemyAI {
 
@@ -30,6 +30,8 @@ public abstract class EnemyAI {
     private boolean isProcessing;
     ActionList actionState;
     boolean outOfSpawn = false;
+    protected double maxMovementForce;
+    protected int timeBetweenAttacks;
 
     protected EnemyAI() {
         isProcessing = false;
@@ -38,7 +40,9 @@ public abstract class EnemyAI {
 
     public abstract LinkedList<Attack> getAttacks();
 
-    protected abstract Pose generateNextPose();
+//    protected abstract Pose generateNextPose();
+
+    protected abstract Force generateMovementForce();
 
     public abstract AIAction getAction();
 
@@ -46,9 +50,14 @@ public abstract class EnemyAI {
         return actionState;
     }
 
-    public Pose getNewPose(double maxDistanceToMove) {
-        this.maxDistanceToMove = maxDistanceToMove;
-        return generateNextPose();
+//    public Pose getNewPose(double maxDistanceToMove) {
+//        this.maxDistanceToMove = maxDistanceToMove;
+//        return generateNextPose();
+//    }
+
+    public Force getMovementForce(double maxMovementForce) {
+        this.maxMovementForce = maxMovementForce;
+        return generateMovementForce();
     }
 
     int getDistToPlayer(Pose player) {
@@ -69,7 +78,7 @@ public abstract class EnemyAI {
                     !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
                             ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
-            System.out.println("enemy wants to go out of map");
+            System.out.println("enemy wants to go out of map"); //todo: have this not print?
             return false;
         }
 
@@ -153,7 +162,12 @@ public abstract class EnemyAI {
 
 
     double getAngle(Pose enemy, Pose player) {
-        double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
+        double angle = 0;
+        try {
+            angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
+        }catch (Exception e){
+            System.out.println("angle null");
+        }
 
         if (angle < 0) {
             angle += 360;
@@ -167,7 +181,6 @@ public abstract class EnemyAI {
 
         if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
                 || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
-            //TODO make this use maxDistanceToMove instead of just +1
             return new Pose(pose.getX() + maxDistanceToMove, pose.getY(), 90);
         }
 
@@ -192,6 +205,10 @@ public abstract class EnemyAI {
             }
         }
         return nextPose;
+    }
+
+    public Force getForceFromAttack(double maxMovementForce) {
+        return new Force(0, 0);
     }
 
 }

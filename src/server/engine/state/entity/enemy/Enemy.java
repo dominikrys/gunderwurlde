@@ -7,10 +7,13 @@ import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
 import server.engine.state.entity.IsMovable;
+import server.engine.state.physics.Force;
+import server.engine.state.physics.HasPhysics;
+import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
 
-public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasID {
+public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
 
     protected final LinkedHashSet<Drop> drops;
@@ -22,15 +25,18 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     protected int scoreOnKill;
     protected int health;
     protected int maxHealth;
-    protected int moveSpeed;
+    protected double acceleration;
     protected boolean takenDamage;
     protected boolean moving;
+    protected Velocity velocity;
+    protected Force resultantForce;
+    protected double mass;
 
-    Enemy(int maxHealth, int moveSpeed, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai) {
+    Enemy(int maxHealth, double acceleration, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
         super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.moveSpeed = moveSpeed;
+        this.acceleration = acceleration;
         this.drops = drops;
         this.entityListName = entityListName;
         this.id = nextID++;
@@ -39,6 +45,9 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.takenDamage = false;
         this.moving = false;
         this.currentAction = ActionList.NONE;
+        this.velocity = new Velocity();
+        this.resultantForce = new Force();
+        this.mass = mass;
     }
 
     public ActionList getCurrentAction() {
@@ -89,14 +98,12 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
         this.moving = moving;
     }
 
-    @Override
-    public int getMoveSpeed() {
-        return moveSpeed;
+    public double getAcceleration() {
+        return acceleration;
     }
 
-    @Override
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
     }
 
     @Override
@@ -137,6 +144,32 @@ public abstract class Enemy extends Entity implements HasHealth, IsMovable, HasI
     @Override
     public int getID() {
         return id;
+    }
+
+    @Override
+    public Velocity getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public void setVelocity(Velocity v) {
+        this.velocity = v;
+        this.resultantForce = new Force();
+    }
+
+    @Override
+    public Force getResultantForce() {
+        return resultantForce;
+    }
+
+    @Override
+    public void addNewForce(Force f) {
+        this.resultantForce.add(f);
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
     }
 
 }

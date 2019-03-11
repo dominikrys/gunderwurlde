@@ -1,6 +1,5 @@
 package server.engine.state.map.tile;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import shared.Constants;
@@ -10,6 +9,7 @@ import shared.lists.TileTypes;
 
 public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
+    public static final double DEFAULT_DENSITY = 200;
 
     // Type of tile
     protected TileTypes tileType;
@@ -17,18 +17,27 @@ public class Tile {
     // State of tile, e.g. solid or passable
     protected TileState tileState;
     
-    protected HashSet<Integer> itemDropsOnTile;
-    protected HashSet<Integer> enemiesOnTile;
-    protected HashSet<Integer> playersOnTile;
+    protected LinkedHashSet<Integer> itemDropsOnTile;
+    protected LinkedHashSet<Integer> enemiesOnTile;
+    protected LinkedHashSet<Integer> playersOnTile;
     protected LinkedHashSet<Integer> zoneTriggers;
+    protected double frictionCoefficient;
+    protected double bounceCoefficient;
 
-    public Tile(TileTypes tileType, TileState tileState) {
+    public Tile(TileTypes tileType, TileState tileState, double value) {
         this.tileType = tileType;
         this.tileState = tileState;
-        this.itemDropsOnTile = new HashSet<>();
-        this.enemiesOnTile = new HashSet<>();
-        this.playersOnTile = new HashSet<>();
+        this.itemDropsOnTile = new LinkedHashSet<>();
+        this.enemiesOnTile = new LinkedHashSet<>();
+        this.playersOnTile = new LinkedHashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
+        if (tileState == TileState.SOLID) {
+            this.bounceCoefficient = value;
+            this.frictionCoefficient = 0;
+        } else {
+            this.frictionCoefficient = value;
+            this.bounceCoefficient = 0;
+        }
     }
     
     public void addTrigger(int zoneID) {
@@ -48,12 +57,12 @@ public class Tile {
     }
 
     public void clearOnTile() {
-        this.itemDropsOnTile = new HashSet<>();
-        this.enemiesOnTile = new HashSet<>();
-        this.playersOnTile = new HashSet<>();
+        this.itemDropsOnTile = new LinkedHashSet<>();
+        this.enemiesOnTile = new LinkedHashSet<>();
+        this.playersOnTile = new LinkedHashSet<>();
     }
 
-    public HashSet<Integer> getPlayersOnTile() {
+    public LinkedHashSet<Integer> getPlayersOnTile() {
         return playersOnTile;
     }
 
@@ -65,7 +74,7 @@ public class Tile {
         return playersOnTile.remove(playerID);
     }
 
-    public HashSet<Integer> getItemDropsOnTile() {
+    public LinkedHashSet<Integer> getItemDropsOnTile() {
         return itemDropsOnTile;
     }
 
@@ -77,7 +86,7 @@ public class Tile {
         return itemDropsOnTile.remove(itemID);
     }
 
-    public HashSet<Integer> getEnemiesOnTile() {
+    public LinkedHashSet<Integer> getEnemiesOnTile() {
         return enemiesOnTile;
     }
 
@@ -97,6 +106,14 @@ public class Tile {
         return tileState;
     }
 
+    public double getFrictionCoefficient() {
+        return frictionCoefficient;
+    }
+
+    public double getBounceCoefficient() {
+        return bounceCoefficient;
+    }
+
     public static Location tileToLocation(int x, int y) {
         int tileMid = TILE_SIZE / 2;
         return new Location((x * TILE_SIZE) + tileMid, (y * TILE_SIZE) + tileMid);
@@ -108,7 +125,11 @@ public class Tile {
     }
 
     public Tile getCopy() {
-        return new Tile(this.tileType, this.tileState);
+        return new Tile(this.tileType, this.tileState, this.bounceCoefficient + this.frictionCoefficient);
+    }
+
+    public double getDensity() {
+        return DEFAULT_DENSITY;
     }
 
 }

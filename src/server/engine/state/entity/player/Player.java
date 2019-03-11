@@ -1,7 +1,7 @@
 package server.engine.state.entity.player;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
 
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
@@ -11,57 +11,79 @@ import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.map.tile.Tile;
+import server.engine.state.physics.Force;
+import server.engine.state.physics.HasPhysics;
+import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Teams;
 
-public class Player extends Entity implements HasHealth, IsMovable, HasID {
+public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPhysics {
     public static final int DEFAULT_HEALTH = 20;
-    public static final int DEFAULT_MOVESPEED = Tile.TILE_SIZE * 4;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
-    public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
+    public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
+    public static final double DEFAULT_MASS = 3;
+
+    private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
+
+    static {
+        DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
+        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
+    }
+
+    protected static EnumMap<Teams, Integer> teamScore = new EnumMap<>(Teams.class);
 
     private static int nextPlayerID = 0;
-    protected static LinkedHashMap<Teams, Integer> teamScore = new LinkedHashMap<>();
 
     protected final int playerID;
     protected final Teams team;
     protected final String name;
 
     protected ArrayList<Item> items;
-    protected LinkedHashMap<AmmoList, Integer> ammo; // TODO add cap to ammo stored
+    protected EnumMap<AmmoList, Integer> ammo;
+    protected EnumMap<AmmoList, Integer> maxAmmo;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
-    protected int moveSpeed;
+    protected double acceleration;
     protected int currentItem;
     protected int maxItems;
     protected boolean takenDamage;
     protected boolean moving;
+    protected Velocity velocity;
+    protected Force resultantForce;
+    protected double mass;
 
     public Player(Teams team, String name) {
         super(DEFAULT_SIZE, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
-        this.moveSpeed = DEFAULT_MOVESPEED;
+        this.acceleration = DEFAULT_ACCELERATION;
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new Shotgun()); // TODO remove testing only
+        items.add(new Smg()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
         changeScore(team, DEFAULT_SCORE);
         this.name = name;
-        this.ammo = new LinkedHashMap<>();
+        this.maxAmmo = DEFAULT_MAX_AMMO;
+        this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.playerID = nextPlayerID++;
         this.takenDamage = false;
         this.moving = false;
         this.currentAction = ActionList.NONE;
+        this.velocity = new Velocity();
+        this.resultantForce = new Force();
+        this.mass = DEFAULT_MASS;
     }
 
     public ActionList getCurrentAction() {
@@ -104,8 +126,28 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         }
     }
 
-    public void setAmmo(AmmoList type, int amount) {
+    public void setAmmo(AmmoList type, int amount) { // ignores maxammo
         ammo.put(type, amount);
+    }
+
+    public int addAmmo(AmmoList ammoType, int amountAvailable) {
+        int amount = ammo.getOrDefault(ammoType, 0);
+        int maxVal = maxAmmo.getOrDefault(ammoType, -1);
+        int amountTaken = amountAvailable;
+
+        if (maxVal != -1 && amount + amountAvailable > maxVal) {
+            amountTaken = maxVal - amount;
+            amount = maxVal;
+        } else {
+            amount += amountAvailable;
+        }
+
+        ammo.put(ammoType, amount);
+        return amountTaken;
+    }
+
+    public EnumMap<AmmoList, Integer> getAmmoList() {
+        return ammo;
     }
 
     public ArrayList<Item> getItems() {
@@ -185,8 +227,12 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
         return name;
     }
 
-    public LinkedHashMap<AmmoList, Integer> getAmmoList() {
-        return ammo;
+    public double getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
     }
 
     @Override
@@ -212,16 +258,6 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     @Override
     public void setMoving(boolean moving) {
         this.moving = moving;
-    }
-
-    @Override
-    public int getMoveSpeed() {
-        return moveSpeed;
-    }
-
-    @Override
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
     }
 
     @Override
@@ -262,6 +298,32 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID {
     @Override
     public Entity makeCopy() {
         return new Player(team, name);
+    }
+
+    @Override
+    public Velocity getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public void setVelocity(Velocity v) {
+        this.velocity = v;
+        this.resultantForce = new Force();
+    }
+
+    @Override
+    public Force getResultantForce() {
+        return resultantForce;
+    }
+
+    @Override
+    public void addNewForce(Force f) {
+        this.resultantForce.add(f);
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
     }
 
 }

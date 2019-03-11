@@ -5,7 +5,9 @@ public enum ItemList {
     BASIC_AMMO(EntityList.AMMO_CLIP), 
     SHOTGUN(EntityList.SHOTGUN),
     SHOTGUN_ROUND(EntityList.AMMO_CLIP),
-    GRENADE_LAUNCHER(EntityList.GRENADE_LAUNCHER);
+    GRENADE_LAUNCHER(EntityList.GRENADE_LAUNCHER),
+    SMG(EntityList.SMG);
+
     
     private String spritePath;
     private EntityList entityListName;
