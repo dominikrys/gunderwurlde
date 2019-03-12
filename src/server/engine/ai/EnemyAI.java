@@ -108,8 +108,8 @@ public abstract class EnemyAI {
         return closestPlayer;
     }
 
-    double getAngle(Pose enemy, Pose player) {
-        double angle = Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
+    int getAngle(Pose enemy, Pose player) {
+        int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
         if (angle < 0) {
             angle += 360;

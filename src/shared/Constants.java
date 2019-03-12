@@ -26,4 +26,6 @@ public final class Constants {
     public static final ColorAdjust zombieColorAdjust = new ColorAdjust(0.6, 0, 0, 0);
     public static final ColorAdjust soldierColorAdjust = new ColorAdjust(-1, 0, 0, 0);
     public static final ColorAdjust midgetColorAdjust = new ColorAdjust(-0.5, 0, 0, 0);
+    public static final ColorAdjust boomerColorAdjust = new ColorAdjust(0.12, 0, 0, 0);
+    public static final ColorAdjust machineGunnerColorAdjust = new ColorAdjust(0.8, 0, 0, 0);
 }

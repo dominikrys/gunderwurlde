@@ -66,7 +66,7 @@ public class SoldierZombieAI extends EnemyAI {
 
         if ((now - beginAttackTime) >= attackDelay) {
             attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                    new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
+                    new Pose(pose, getAngle(pose, closestPlayer)), Teams.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -89,14 +89,14 @@ public class SoldierZombieAI extends EnemyAI {
             } else {
                 //if has a pose generated
                 moving = true;
-                int angleToMove = (int) getAngle(pose, poseToGo);
+                int angleToMove = getAngle(pose, poseToGo);
 //                pose = poseFromAngle(angle, angle, maxDistanceToMove);
                 return new Force(angleToMove, maxMovementForce);
             }
         } else {
             //if has a pose to go
             moving = true;
-            int angleToMove = (int) getAngle(pose, poseToGo);
+            int angleToMove = getAngle(pose, poseToGo);
 //            pose = poseFromAngle(angle, angle, maxDistanceToMove);
             return new Force(angleToMove, maxMovementForce);
         }

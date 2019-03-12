@@ -123,8 +123,10 @@ public class MapReader {
             return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         case MIDGET:
             return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
-            case BOOMER:
-                return new Boomer();
+        case BOOMER:
+            return new Boomer();
+        case MACHINE_GUNNER:
+            return new MachineGunner();
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();

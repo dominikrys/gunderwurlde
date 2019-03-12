@@ -547,6 +547,16 @@ public class GameRenderer implements Runnable {
                                     loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
                                     6, 25, 0, AnimationType.MOVE));
                             break;
+                        case BOOMER:
+                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.BOOMER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case MACHINE_GUNNER:
+                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.MACHINE_GUNNER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
                         default:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
                                     loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,

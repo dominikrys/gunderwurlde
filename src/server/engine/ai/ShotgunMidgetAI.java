@@ -28,7 +28,7 @@ public class ShotgunMidgetAI extends ZombieAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            int attackAngle = (int) getAngle(pose, closestPlayer);
+            int attackAngle = getAngle(pose, closestPlayer);
             attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Teams.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
@@ -39,7 +39,7 @@ public class ShotgunMidgetAI extends ZombieAI{
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
         if (!attacking) {
-            int knockbackAngle = Pose.normaliseDirection((int) getAngle(pose, closestPlayer) + 180);
+            int knockbackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) + 180);
             return new Force(knockbackAngle, maxMovementForce + KNOCKBACK_AMOUNT);
         }else{
             return new Force(0, 0);

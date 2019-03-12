@@ -46,12 +46,15 @@ public enum EntityList {
     SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust, Constants.TILE_SIZE),
     MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust, Constants.TILE_SIZE),
     BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
+    MACHINE_GUNNER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
 
     // Enemy walking
     ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.zombieColorAdjust),
     RUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png"),
     SOLDIER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.soldierColorAdjust),
     MIDGET_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.midgetColorAdjust),
+    BOOMER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.boomerColorAdjust),
+    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.machineGunnerColorAdjust),
 
     // Projectile
     BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4),

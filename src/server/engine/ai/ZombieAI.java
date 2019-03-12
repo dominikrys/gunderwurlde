@@ -55,7 +55,7 @@ public class ZombieAI extends EnemyAI {
 
 
     protected Force generateMovementForce(){
-        int angleToMove = (int) getAngle(pose, closestPlayer);
+        int angleToMove = getAngle(pose, closestPlayer);
         if(randomizePath) {
             return new Force((int) randomizePath(angleToMove), maxMovementForce);
         }else{

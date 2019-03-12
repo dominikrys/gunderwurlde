@@ -64,8 +64,8 @@ MIDGET 1 2000
 
 #Rounds wave per line
 #Round1
-ZOMBIE
-0 1000 5 20
+MACHINE_GUNNER
+0 1000 1 1
 
 
 
