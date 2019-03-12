@@ -58,7 +58,7 @@ public class SoldierZombieAI extends EnemyAI {
         }
 
 
-
+    //TODO this method could probably live in EnemyAI
     @Override
     public LinkedList<Attack> getAttacks() {
         LinkedList<Attack> attacks = new LinkedList<>();
@@ -72,35 +72,6 @@ public class SoldierZombieAI extends EnemyAI {
         }
         return attacks;
     }
-
-//    protected synchronized Pose generateNextPose() {
-//        pose = checkIfInSpawn();
-//        //if out of spawn
-//        if(outOfSpawn) {
-//            //if does not have pose to go
-//            if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
-//                moving = false;
-//                //if not already generating a new pose to go
-//                if(!isProcessing()) {
-//                    setProcessing(true);
-//                    new RandomPoseGen(this, pose).start();
-//                }else{
-//                    //if has a pose generated
-//                    moving = true;
-//                    double angle = getAngle(pose, poseToGo);
-//                    pose = poseFromAngle(angle, angle, maxDistanceToMove);
-//                }
-//            } else {
-//                //if has a pose to go
-//                moving = true;
-//                double angle = getAngle(pose, poseToGo);
-//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
-//            }
-//        }
-//
-//        return pose;
-//    }
-
 
     synchronized void setPoseToGo(Pose pose) {
         poseToGo = pose;
@@ -132,5 +103,33 @@ public class SoldierZombieAI extends EnemyAI {
 
         return new Force();
     }
+
+    //    protected synchronized Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//        //if out of spawn
+//        if(outOfSpawn) {
+//            //if does not have pose to go
+//            if (poseToGo == null || poseToGo.compareLocation(pose, 1)) {
+//                moving = false;
+//                //if not already generating a new pose to go
+//                if(!isProcessing()) {
+//                    setProcessing(true);
+//                    new RandomPoseGen(this, pose).start();
+//                }else{
+//                    //if has a pose generated
+//                    moving = true;
+//                    double angle = getAngle(pose, poseToGo);
+//                    pose = poseFromAngle(angle, angle, maxDistanceToMove);
+//                }
+//            } else {
+//                //if has a pose to go
+//                moving = true;
+//                double angle = getAngle(pose, poseToGo);
+//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
+//            }
+//        }
+//
+//        return pose;
+//    }
 
 }
