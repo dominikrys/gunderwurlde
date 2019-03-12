@@ -1,15 +1,15 @@
 package server.engine.state.entity.enemy;
 
-import java.util.LinkedHashSet;
-
-import server.engine.ai.EnemyAI;
+import server.engine.ai.BoomerAI;
 import server.engine.ai.ZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
-public class Zombie extends Enemy {
+import java.util.LinkedHashSet;
+
+public class Boomer extends  Zombie{
     public static final int DEFAULT_HEALTH = 2;
     public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.95;
     public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize() / 2;
@@ -22,18 +22,13 @@ public class Zombie extends Enemy {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
     }
 
-    public Zombie() {
-        this(EntityList.ZOMBIE, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
+    public Boomer() {
+        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new BoomerAI(), DEFAULT_MASS);
     }
 
-    Zombie(EntityList enemyType, int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
-        super(maxHealth, acceleration, enemyType, size, drops, scoreOnKill, ai, mass);
-    }
-
-    //TODO get rid of makeCopy somehow
     @Override
     public Enemy makeCopy() {
-        return new Zombie(EntityList.ZOMBIE, this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
+        return new Zombie(EntityList.BOOMER, this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new BoomerAI(), this.mass);
     }
 
 }

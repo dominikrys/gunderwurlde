@@ -14,17 +14,17 @@ import shared.lists.ActionList;
 
 public class ZombieAI extends EnemyAI {
 
-    long attackDelay;
     long beginAttackTime;
     boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     private Location attackLocation;
+    boolean randomizePath = true;
+    int distanceToPlayerForAttack = Constants.TILE_SIZE;
 
     public ZombieAI() {
         super();
         this.beginAttackTime = System.currentTimeMillis();
-        this.attackDelay = DEFAULT_DELAY;
         this.attacking = false;
     }
 
@@ -32,10 +32,9 @@ public class ZombieAI extends EnemyAI {
     public AIAction getAction() {
         if (attacking) {
             return AIAction.ATTACK;
-        } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE) {
-//            System.out.println("Move");
+        } else if (getDistToPlayer(closestPlayer) >= distanceToPlayerForAttack) {
             return AIAction.MOVE;
-        } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE) {
+        } else if (getDistToPlayer(closestPlayer) < distanceToPlayerForAttack) {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
@@ -72,7 +71,11 @@ public class ZombieAI extends EnemyAI {
 
     protected Force generateMovementForce(){
         int angleToMove = (int) getAngle(pose, closestPlayer);
-        return new Force((int) randomizePath(angleToMove), maxMovementForce);
+        if(randomizePath) {
+            return new Force((int) randomizePath(angleToMove), maxMovementForce);
+        }else{
+            return new Force(angleToMove, maxMovementForce);
+        }
     }
 
     //Maybe needs some more balancing

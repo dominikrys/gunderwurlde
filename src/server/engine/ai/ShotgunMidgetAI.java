@@ -14,13 +14,13 @@ import shared.lists.Teams;
 public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUT;
-//    private int knockback;
     private int knockbackAngle;
     private boolean knockbackState = false;
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
         super();
+        randomizePath = false;
         this.KNOCKBACK_AMOUT = knockbackAmount;
         this.timeBetweenAttacks = 1500;
     }
@@ -57,11 +57,5 @@ public class ShotgunMidgetAI extends ZombieAI{
     public Force getForceFromAttack(double maxMovementForce) {
         knockbackAngle = (int) getAngle(pose, closestPlayer);
         return new Force(Pose.normaliseDirection(knockbackAngle + 180), maxMovementForce + KNOCKBACK_AMOUT);
-    }
-
-    @Override
-    protected Force generateMovementForce(){
-        int angleToMove = (int) getAngle(pose, closestPlayer);
-        return new Force(angleToMove, maxMovementForce);
     }
 }

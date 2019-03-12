@@ -45,6 +45,7 @@ public enum EntityList {
     RUNNER("file:assets/img/entity/enemy/zombie.png", Constants.TILE_SIZE),
     SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust, Constants.TILE_SIZE),
     MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust, Constants.TILE_SIZE),
+    BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
 
     // Enemy walking
     ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.zombieColorAdjust),

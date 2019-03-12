@@ -12,7 +12,7 @@ public class RunnerZombie extends Zombie {
     public static final double DEFAULT_MASS = 1;
 
     public RunnerZombie(int speed){
-        super(DEFAULT_HEALTH, DEFAULT_ACCELERATION * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), EntityList.RUNNER,
+        super(EntityList.RUNNER, DEFAULT_HEALTH, DEFAULT_ACCELERATION * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(),
                 DEFAULT_MASS);
     }
 

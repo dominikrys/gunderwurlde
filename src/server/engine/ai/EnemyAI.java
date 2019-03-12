@@ -17,8 +17,9 @@ import shared.lists.TileState;
 public abstract class EnemyAI {
 
     Enemy enemy;
+    long attackDelay;
     static long DEFAULT_DELAY = 380;
-//    static long LONG_DELAY = 1000;
+    static long LONG_DELAY = 1000;
     protected Pose pose;
     double maxDistanceToMove;
     private int enemSize;
@@ -34,6 +35,7 @@ public abstract class EnemyAI {
     protected int timeBetweenAttacks;
 
     protected EnemyAI() {
+        this.attackDelay = DEFAULT_DELAY;
         isProcessing = false;
         actionState = ActionList.NONE;
     }

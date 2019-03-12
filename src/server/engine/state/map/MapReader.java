@@ -13,10 +13,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 
 import server.engine.state.entity.Entity;
-import server.engine.state.entity.enemy.RunnerZombie;
-import server.engine.state.entity.enemy.ShotgunMidget;
-import server.engine.state.entity.enemy.SoldierZombie;
-import server.engine.state.entity.enemy.Zombie;
+import server.engine.state.entity.enemy.*;
 import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
@@ -136,6 +133,8 @@ public class MapReader {
             return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         case MIDGET:
             return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            case BOOMER:
+                return new Boomer();
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
