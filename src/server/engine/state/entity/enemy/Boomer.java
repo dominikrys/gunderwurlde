@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 
 public class Boomer extends  Zombie{
     public static final int DEFAULT_HEALTH = 2;
-    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.95;
+    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.7;
     public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize() / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 10;
     public static final double DEFAULT_MASS = 2;

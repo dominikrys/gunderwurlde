@@ -2,8 +2,6 @@ package server.engine.ai;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
-import server.engine.state.entity.enemy.Zombie;
-import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.lists.ActionList;
 
@@ -27,8 +25,8 @@ public class BoomerAI extends ZombieAI {
             attacks.add(new AoeAttack(pose, 50, 3));
             attacking = false;
             this.actionState = ActionList.NONE;
+            enemy.damage(5);
         }
-        enemy.damage(5);
         return attacks;
     }
 
