@@ -14,7 +14,7 @@ import java.util.LinkedList;
 public class MachineGunnerAI extends ZombieAI {
 
     //Probably needs a better name
-    //The +- of degrees the enemy shoots
+    //The angle the enemy shoots
     private final int ATTACK_WIDTH = 120;
     private int attackAngleOffset = 0;
     private int startOfAttackAngle;
@@ -25,22 +25,8 @@ public class MachineGunnerAI extends ZombieAI {
         super();
         distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
         attackDelay = LONG_DELAY;
+        randomizePath = false;
     }
-
-//    @Override
-//    public AIAction getAction() {
-//        if (attacking) {
-//            return AIAction.ATTACK;
-//        } else if (getDistToPlayer(closestPlayer) >= distanceToPlayerForAttack) {
-//            return AIAction.MOVE;
-//        } else if (getDistToPlayer(closestPlayer) < distanceToPlayerForAttack) {
-//            this.actionState = ActionList.ATTACKING;
-//            attacking = true;
-//            beginAttackTime = System.currentTimeMillis();
-//            return AIAction.ATTACK;
-//        }
-//        return AIAction.WAIT;
-//    }
 
     @Override
     public LinkedList<Attack> getAttacks() {
@@ -52,7 +38,7 @@ public class MachineGunnerAI extends ZombieAI {
             if(attackAngleOffset != ATTACK_WIDTH) {
                 attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
                         new Pose(pose, startOfAttackAngle + attackAngleOffset), Teams.ENEMY)));
-                attackAngleOffset++;
+                attackAngleOffset += 3;
             }else{
                 this.actionState = ActionList.NONE;
                 attacking = false;
