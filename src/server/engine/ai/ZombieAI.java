@@ -16,7 +16,6 @@ public class ZombieAI extends EnemyAI {
     boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
-    private Location attackLocation;
     boolean randomizePath = true;
     int distanceToPlayerForAttack = Constants.TILE_SIZE;
 
@@ -36,7 +35,6 @@ public class ZombieAI extends EnemyAI {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
-            attackLocation = closestPlayer;
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
@@ -48,24 +46,13 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(attackLocation, 24, 1));
+            attacks.add(new AoeAttack(closestPlayer, 24, 1));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
         return attacks;
     }
 
-//    @Override
-//    protected Pose generateNextPose() {
-//        pose = checkIfInSpawn();
-//
-//        if (outOfSpawn) {
-//            double angle = getAngle(pose, closestPlayer);
-//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-//        }
-//
-//        return pose;
-//    }
 
     protected Force generateMovementForce(){
         int angleToMove = (int) getAngle(pose, closestPlayer);
@@ -76,7 +63,7 @@ public class ZombieAI extends EnemyAI {
         }
     }
 
-    //Maybe needs some more balancing
+    //TODO Maybe needs some more balancing
     private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
@@ -104,4 +91,16 @@ public class ZombieAI extends EnemyAI {
 
         return angle;
     }
+
+    //    @Override
+//    protected Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//
+//        if (outOfSpawn) {
+//            double angle = getAngle(pose, closestPlayer);
+//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
+//        }
+//
+//        return pose;
+//    }
 }

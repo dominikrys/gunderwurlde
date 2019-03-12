@@ -1,5 +1,6 @@
 package server.engine.ai;
 
+import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Shotgun;
@@ -14,48 +15,36 @@ import java.util.LinkedList;
 public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUT;
-    private int knockbackAngle;
-    private boolean knockbackState = false;
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
         super();
         randomizePath = false;
         this.KNOCKBACK_AMOUT = knockbackAmount;
-        this.timeBetweenAttacks = 1500;
-    }
-
-    @Override
-    public AIAction getAction() {
-        long now = System.currentTimeMillis();
-        if (attacking) {
-            if ((now - beginAttackTime) >= attackDelay) {
-                return AIAction.ATTACK;  
-            }
-        } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE * 3 || knockbackState) {
-            return AIAction.MOVE;
-        } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE * 3 && (now - beginAttackTime) >= (timeBetweenAttacks + attackDelay)) {
-            this.actionState = ActionList.ATTACKING;
-            attacking = true;
-            beginAttackTime = System.currentTimeMillis();
-            return AIAction.WAIT;
-        }
-        return AIAction.WAIT;
+        attackDelay = MEDIUM_DELAY;
     }
 
     @Override
     public LinkedList<Attack> getAttacks() {
         LinkedList<Attack> attacks = new LinkedList<>();
-        knockbackAngle = (int) getAngle(pose, closestPlayer);
-        attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, knockbackAngle), Teams.ENEMY)));
-        attacking = false;
-        this.actionState = ActionList.NONE;
+        long now = System.currentTimeMillis();
+
+        if ((now - beginAttackTime) >= attackDelay) {
+            int attackAngle = (int) getAngle(pose, closestPlayer);
+            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Teams.ENEMY)));
+            attacking = false;
+            this.actionState = ActionList.NONE;
+        }
         return attacks;
     }
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
-        knockbackAngle = (int) getAngle(pose, closestPlayer);
-        return new Force(Pose.normaliseDirection(knockbackAngle + 180), maxMovementForce + KNOCKBACK_AMOUT);
+        if (!attacking) {
+            int knockbackAngle = Pose.normaliseDirection((int) getAngle(pose, closestPlayer) + 180);
+            return new Force(knockbackAngle, maxMovementForce + KNOCKBACK_AMOUT);
+        }else{
+            return new Force(0, 0);
+        }
     }
 }
