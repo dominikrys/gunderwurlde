@@ -1,11 +1,11 @@
 package server.engine.state.map.tile;
 
-import java.util.LinkedHashSet;
-
 import shared.Constants;
 import shared.Location;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
+
+import java.util.LinkedHashSet;
 
 public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;

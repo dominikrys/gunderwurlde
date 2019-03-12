@@ -1,27 +1,17 @@
 package server.engine.state.map;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.TreeSet;
-
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.enemy.*;
 import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
-import shared.lists.EntityList;
-import shared.lists.MapList;
-import shared.lists.Teams;
-import shared.lists.TileState;
-import shared.lists.TileTypes;
+import shared.lists.*;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class MapReader {
     private static String MAP_LOCATION = "maps";

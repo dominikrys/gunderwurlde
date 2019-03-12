@@ -1,8 +1,5 @@
 package server.engine;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 import client.gui.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
@@ -13,6 +10,9 @@ import shared.lists.MapList;
 import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class TestEngine extends Application implements HasEngine {
     private static final int LOOPS = 1000;

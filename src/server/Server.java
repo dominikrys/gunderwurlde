@@ -1,10 +1,5 @@
 package server;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
-
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
 import server.net.ServerReceiver;
@@ -13,6 +8,11 @@ import shared.lists.MapList;
 import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 
 public class Server extends Thread implements HasEngine {
 	protected ClientRequests clientRequests;

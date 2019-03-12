@@ -1,8 +1,8 @@
 package shared.request;
 
-import java.io.Serializable;
-
 import shared.Pose;
+
+import java.io.Serializable;
 
 public class Request implements Serializable {
     private static final long serialVersionUID = 1L;

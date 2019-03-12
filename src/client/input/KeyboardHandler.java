@@ -1,9 +1,5 @@
 package client.input;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import client.GameHandler;
 import client.gui.Settings;
 import javafx.animation.AnimationTimer;
@@ -15,6 +11,10 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class KeyboardHandler extends UserInteraction {
     private int playerID;

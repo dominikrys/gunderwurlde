@@ -1,16 +1,12 @@
 package server.net;
 
+import shared.view.GameView;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Enumeration;
-
-import shared.view.GameView;
 
 
 public class ServerSender extends Thread {

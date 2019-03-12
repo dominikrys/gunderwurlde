@@ -1,12 +1,5 @@
 package server.engine;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-
 import server.engine.ai.AIAction;
 import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
@@ -31,13 +24,7 @@ import server.engine.state.physics.Physics;
 import server.engine.state.physics.Velocity;
 import shared.Location;
 import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.ItemType;
-import shared.lists.MapList;
-import shared.lists.Status;
-import shared.lists.Teams;
-import shared.lists.TileState;
+import shared.lists.*;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
@@ -47,6 +34,8 @@ import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
+
+import java.util.*;
 
 public class ProcessGameState extends Thread {
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).

@@ -1,9 +1,5 @@
 package shared;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javafx.scene.media.AudioClip;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
@@ -13,6 +9,10 @@ import shared.lists.ItemList;
 import shared.lists.SoundList;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
+
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameSound {
 	

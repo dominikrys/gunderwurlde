@@ -1,8 +1,5 @@
 package server.engine.state.item.weapon.gun;
 
-import java.util.LinkedList;
-import java.util.Random;
-
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Limited;
 import server.engine.state.item.weapon.Weapon;
@@ -10,6 +7,9 @@ import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Teams;
+
+import java.util.LinkedList;
+import java.util.Random;
 
 public abstract class Gun extends Weapon implements Limited {
 

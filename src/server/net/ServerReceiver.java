@@ -1,16 +1,12 @@
 package server.net;
 
+import server.Server;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Enumeration;
-
-import server.Server;
 
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour

@@ -1,7 +1,5 @@
 package server.engine.ai;
 
-import java.util.LinkedList;
-
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Shotgun;
@@ -10,6 +8,8 @@ import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Teams;
+
+import java.util.LinkedList;
 
 public class ShotgunMidgetAI extends ZombieAI{
 

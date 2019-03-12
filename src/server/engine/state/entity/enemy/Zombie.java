@@ -1,13 +1,13 @@
 package server.engine.state.entity.enemy;
 
-import java.util.LinkedHashSet;
-
 import server.engine.ai.EnemyAI;
 import server.engine.ai.ZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+
+import java.util.LinkedHashSet;
 
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
@@ -30,10 +30,9 @@ public class Zombie extends Enemy {
         super(maxHealth, acceleration, enemyType, size, drops, scoreOnKill, ai, mass);
     }
 
-    //TODO get rid of makeCopy somehow
     @Override
-    public Enemy makeCopy() {
-        return new Zombie(EntityList.ZOMBIE, this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
+    EnemyAI getNewAI() {
+        return new ZombieAI();
     }
 
 }

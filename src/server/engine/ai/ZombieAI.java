@@ -1,16 +1,14 @@
 package server.engine.ai;
 
-import java.util.LinkedList;
-import java.util.Random;
-
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
-import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Location;
-import shared.Pose;
 import shared.lists.ActionList;
+
+import java.util.LinkedList;
+import java.util.Random;
 
 public class ZombieAI extends EnemyAI {
 

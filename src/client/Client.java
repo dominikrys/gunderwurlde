@@ -1,17 +1,17 @@
 package client;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import client.gui.Settings;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
 import shared.view.GameView;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Client extends Thread {
     private MulticastSocket listenSocket;

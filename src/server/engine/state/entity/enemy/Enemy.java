@@ -1,8 +1,7 @@
 package server.engine.state.entity.enemy;
 
-import java.util.LinkedHashSet;
-
 import server.engine.ai.EnemyAI;
+import server.engine.ai.ZombieAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
@@ -13,12 +12,13 @@ import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
 
+import java.util.LinkedHashSet;
+
 public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
 
     protected final LinkedHashSet<Drop> drops;
     protected final int id;
-
     protected EntityList entityListName;
     protected ActionList currentAction;
     protected EnemyAI ai;
@@ -50,6 +50,8 @@ public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsM
         this.mass = mass;
     }
 
+    abstract EnemyAI getNewAI();
+
     public ActionList getCurrentAction() {
         return currentAction;
     }
@@ -76,6 +78,11 @@ public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsM
 
     public EntityList getEntityListName() {
         return entityListName;
+    }
+
+    @Override
+    public Entity makeCopy(){
+        return new Zombie(entityListName, maxHealth, acceleration, size, drops, scoreOnKill, getNewAI(), mass);
     }
 
     @Override

@@ -1,14 +1,11 @@
 package client.input;
 
-import client.GameHandler;
 import javafx.animation.AnimationTimer;
-import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.util.Duration;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 

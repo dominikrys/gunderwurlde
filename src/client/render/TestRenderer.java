@@ -1,12 +1,5 @@
 package client.render;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.LinkedHashSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import client.gui.Settings;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,16 +9,14 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.ItemList;
-import shared.lists.MapList;
-import shared.lists.Status;
-import shared.lists.Teams;
+import shared.lists.*;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRenderer extends Application {
 

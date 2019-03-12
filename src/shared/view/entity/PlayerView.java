@@ -1,16 +1,12 @@
 package shared.view.entity;
 
+import shared.Pose;
+import shared.lists.*;
+import shared.view.ItemView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
-
-import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.EntityList;
-import shared.lists.Status;
-import shared.lists.Teams;
-import shared.view.ItemView;
 
 public class PlayerView extends EntityView implements Serializable {
     private static final long serialVersionUID = 1L;

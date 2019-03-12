@@ -1,16 +1,12 @@
 package server.engine.state.map;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-
 import server.engine.state.entity.Entity;
 import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
+
+import java.util.*;
 
 public class Zone {
     private static int nextZoneID = 0;
