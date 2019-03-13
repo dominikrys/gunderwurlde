@@ -28,6 +28,9 @@ public class MainMenuController extends VBox implements MenuController {
     private Button quitButton;
 
     @FXML
+    private Button creditsButton;
+
+    @FXML
     private Button highScoreButton;
 
     public MainMenuController(Stage stage, Settings settings) {
@@ -82,6 +85,13 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     void highScoreButtonPress(ActionEvent event) {
 
+    }
+
+    @FXML
+    void creditsButtonPress(ActionEvent event) {
+        // Switch to credits screen and clear this object
+        (new CreditsMenuController(stage, settings)).show();
+        this.getChildren().clear();
     }
 
     @FXML
