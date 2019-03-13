@@ -55,14 +55,16 @@ public class GameRenderer implements Runnable {
     private FlowPane heldItems;
     private FlowPane heartBox;
     private VBox ammoBox;
-    // Pane and imageview for cursor
+    // Variables for changing cursor + camera
     private AnchorPane cursorPane;
     private ImageView cursorImage;
+    private double mouseX;
+    private double mouseY;
     // Current player info
     private int playerID;
     // GameView object which is to be updated
     private GameView gameView;
-    // Stage to render to
+    // Stage to set render to
     private Stage stage;
     // Whether the game is paused or not
     private boolean paused;
@@ -73,9 +75,6 @@ public class GameRenderer implements Runnable {
     // Settings object
     private Settings settings;
     private SoundView soundView;
-    // X and Y coordinates of the mouse
-    private double mouseX;
-    private double mouseY;
     // Animation hashmaps
     private Map<Integer, AnimatedSpriteManager> playersOnMapAnimations;
     private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
@@ -889,19 +888,6 @@ public class GameRenderer implements Runnable {
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
     }
 
-    // Get image from the HashMap of loaded images according to the entity name
-    private Image getImageFromEntity(EntityList entityName) {
-        // Try to get the correct sprite, if not found then return default
-        Image image = spriteLoader.getSprite(entityName);
-
-        if (image != null && !image.isError()) {
-            return image;
-        } else {
-            System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
-            return spriteLoader.getSprite(EntityList.DEFAULT);
-        }
-    }
-
     // Create an Image object from specified colour
     private Image createImageFromColor(Color color) {
         WritableImage image = new WritableImage(1, 1);
@@ -938,10 +924,6 @@ public class GameRenderer implements Runnable {
 
     public void setClientSender(ClientSender sender) {
         this.sender = sender;
-    }
-
-    public GameView getView() {
-        return this.gameView;
     }
 
     public KeyboardHandler getKeyboardHandler() {
