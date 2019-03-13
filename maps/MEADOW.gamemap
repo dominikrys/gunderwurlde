@@ -10,23 +10,23 @@ D DOOR SOLID 0.9
 #Tile Map
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W D G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G W G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G W W W G G G G G G G G G G G G G G G G W G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G W G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G W W W G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G W W W W W W W W W G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
@@ -59,12 +59,12 @@ MIDGET 1 2000
 30 10
 
 #Triggers
-1 10
+1 20
 
 
 #Rounds wave per line
 #Round1
-MACHINE_GUNNER
+MACHINE_GUNNER 120 240
 0 1000 1 1
 
 

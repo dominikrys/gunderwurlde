@@ -15,14 +15,19 @@ public class MachineGunnerAI extends ZombieAI {
 
     //Probably needs a better name
     //The angle the enemy shoots
-    private final int ATTACK_WIDTH = 120;
-    private int attackAngleOffset = 0;
+    private final int ATTACK_WIDTH;
+    private final int BULLETS_PER_ATTACK;
+    private boolean addToAngle = false;
     private int startOfAttackAngle;
+    private int attackAngle;
+    private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
     private Pistol pistol = new Pistol();
 
-    public MachineGunnerAI(){
+    public MachineGunnerAI(int attackWidth, int bulletsPerAttack) {
         super();
+        this.ATTACK_WIDTH = attackWidth;
+        this.BULLETS_PER_ATTACK = bulletsPerAttack;
         distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
         attackDelay = LONG_DELAY;
         randomizePath = false;
@@ -35,17 +40,32 @@ public class MachineGunnerAI extends ZombieAI {
         delayPast = (now - beginAttackTime) >= attackDelay;
 
         if (delayPast) {
-            if(attackAngleOffset != ATTACK_WIDTH) {
+            if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                        new Pose(pose, startOfAttackAngle + attackAngleOffset), Teams.ENEMY)));
-                attackAngleOffset += 3;
-            }else{
+                        new Pose(pose, attackAngle), Teams.ENEMY)));
+
+                bulletsShotInThisAttack++;
+
+                if (attackAngle == startOfAttackAngle + ATTACK_WIDTH) {
+                    addToAngle = false;
+                } else if (attackAngle == startOfAttackAngle) {
+                    addToAngle = true;
+                }
+
+                if(addToAngle){
+                    attackAngle++;
+                }else{
+                    attackAngle--;
+                }
+
+            } else {
                 this.actionState = ActionList.NONE;
                 attacking = false;
-                attackAngleOffset = 0;
+                bulletsShotInThisAttack = 0;
             }
-        }else{
+        } else {
             startOfAttackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) - ATTACK_WIDTH / 2);
+            attackAngle = startOfAttackAngle;
         }
 
         return attacks;
@@ -53,9 +73,9 @@ public class MachineGunnerAI extends ZombieAI {
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
-        if(delayPast) {
-            return new Force(attackAngleOffset, 0);
-        }else{
+        if (delayPast) {
+            return new Force(attackAngle, 0.00001);
+        } else {
             return new Force(0, 0);
         }
     }
