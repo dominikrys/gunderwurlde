@@ -74,9 +74,10 @@ public class MachineGunnerAI extends ZombieAI {
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
         if (delayPast) {
-            return new Force(attackAngle, 0.00001);
+            return new Force(attackAngle, 0);
         } else {
-            return new Force(0, 0);
+            //TODO maybe make it slowly get to the start attack position?
+            return new Force(pose.getDirection(), 0);
         }
     }
 }

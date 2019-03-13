@@ -311,7 +311,9 @@ public class ProcessGameState extends Thread {
                 switch (enemyAction) {
                 case ATTACK:
                     LinkedList<Attack> attacks = ai.getAttacks();
-                    currentEnemy.addNewForce(ai.getForceFromAttack(maxMovementForce));
+                    Force movementForce = ai.getForceFromAttack(maxMovementForce);
+                    currentEnemy.addNewForce(movementForce);
+                    currentEnemy.setPose(new Pose(currentEnemy.getLocation(), movementForce.getDirection()));
                     for (Attack a : attacks) {
                         switch (a.getAttackType()) {
                         case AOE:
@@ -344,7 +346,7 @@ public class ProcessGameState extends Thread {
                     break;
                 case MOVE:
                     currentEnemy.setMoving(true);
-                    Force movementForce = ai.getMovementForce(maxMovementForce);
+                    movementForce = ai.getMovementForce(maxMovementForce);
                     currentEnemy.addNewForce(movementForce);
                     currentEnemy.setPose(new Pose(currentEnemy.getLocation(), movementForce.getDirection()));
                     break;
