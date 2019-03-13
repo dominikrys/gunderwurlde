@@ -18,6 +18,7 @@ public class MachineGunnerAI extends ZombieAI {
     private final int ATTACK_WIDTH;
     private final int BULLETS_PER_ATTACK;
     private boolean addToAngle = false;
+    private boolean shootingPathUnobstructed = false;
     private int startOfAttackAngle;
     private int attackAngle;
     private int bulletsShotInThisAttack = 0;
@@ -39,7 +40,7 @@ public class MachineGunnerAI extends ZombieAI {
         long now = System.currentTimeMillis();
         delayPast = (now - beginAttackTime) >= attackDelay;
 
-        if (delayPast) {
+        if (delayPast && shootingPathUnobstructed) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
                         new Pose(pose, attackAngle), Teams.ENEMY)));
@@ -62,10 +63,12 @@ public class MachineGunnerAI extends ZombieAI {
                 this.actionState = ActionList.NONE;
                 attacking = false;
                 bulletsShotInThisAttack = 0;
+                shootingPathUnobstructed = false;
             }
         } else {
             startOfAttackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) - ATTACK_WIDTH / 2);
             attackAngle = startOfAttackAngle;
+            shootingPathUnobstructed = pathUnobstructed(pose, closestPlayer, tileMap);
         }
 
         return attacks;

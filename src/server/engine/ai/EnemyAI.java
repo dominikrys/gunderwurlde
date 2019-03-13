@@ -10,6 +10,7 @@ import shared.lists.TileState;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -27,8 +28,8 @@ public abstract class EnemyAI {
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
     protected Tile[][] tileMap;
-    protected int mapXDim;
-    protected int mapYDim;
+//    protected int mapXDim;
+//    protected int mapYDim;
     private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
@@ -84,8 +85,8 @@ public abstract class EnemyAI {
 //        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = tileMap;
-        this.mapXDim = tileMap.length;
-        this.mapYDim = tileMap[0].length;
+//        this.mapXDim = tileMap.length;
+//        this.mapYDim = tileMap[0].length;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
@@ -108,7 +109,7 @@ public abstract class EnemyAI {
         return closestPlayer;
     }
 
-    int getAngle(Pose enemy, Pose player) {
+    static int getAngle(Pose enemy, Pose player) {
         int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
         if (angle < 0) {
@@ -122,6 +123,92 @@ public abstract class EnemyAI {
         return new Force(0, 0);
     }
 
+    public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap){
+        int[] currentTile;
+        int[] endTile = Tile.locationToTile(endPose);
+        int directionToTheEndPose = getAngle(startPose, endPose);
+        System.out.println("\n\n\ndirection to shoot: "  + directionToTheEndPose);
+        Pose currentPose = startPose;
+//        System.out.println("startPose:" + currentPose);
+        do {
+            int angleToPlayer = getAngle(currentPose, endPose);
+            System.out.println("angle to player: " + angleToPlayer);
+            currentPose = poseInDistance(currentPose, directionToTheEndPose, 15);
+            currentTile = Tile.locationToTile(currentPose);
+
+            System.out.println("Current pose: " + currentPose);
+            System.out.println("current tile: " + currentTile[0] + " " + currentTile[1]);
+            System.out.println("player tile: " + endTile[0] + " " + endTile[1]);
+            System.out.println("NotSolid? - " + tileNotSolid(currentTile, tileMap));
+
+            if(!tileNotSolid(currentTile, tileMap)) {
+                System.out.println("Return false");
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                return false;
+            }
+
+        }while(!Pose.compareLocation(currentPose, endPose, 15));
+
+        System.out.println("Return true");
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        return true;
+    }
+
+    private static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
+        double vecI = Math.cos(angleToPose) * distanceToPose;
+        double vecJ = Math.sin(angleToPose) * distanceToPose;
+
+        return new Pose((int) vecI + startingPose.getX(), (int) vecJ + startingPose.getY());
+    }
+
+//    static Pose poseFromAngle(Pose currentPose, double angleToMove, double distToMove) {
+//        Pose newPose = null;
+//
+//        //east
+//        if (angleToMove > 337.5 || angleToMove <= 22.5) {
+//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY());
+//
+//            //north-east
+//        } else if (angleToMove > 22.5 && angleToMove <= 67.5) {
+//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY() + distToMove);
+//
+//            //north
+//        } else if (angleToMove > 67.5 && angleToMove <= 112.5) {
+//            newPose = new Pose(currentPose.getX(), currentPose.getY() + distToMove);
+//
+//            //north-west
+//        } else if (angleToMove > 112.5 && angleToMove <= 157.5) {
+//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY() + distToMove);
+//
+//            //west
+//        } else if (angleToMove > 157.5 && angleToMove <= 202.5) {
+//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY());
+//
+//            //south-west
+//        } else if (angleToMove > 202.5 && angleToMove <= 247.5) {
+//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY() - distToMove);
+//
+//            //south
+//        } else if (angleToMove > 247.5 && angleToMove <= 292.5) {
+//            newPose = new Pose(currentPose.getX(), currentPose.getY() - distToMove);
+//
+//            //south-east
+//        } else if (angleToMove > 292.5 && angleToMove <= 337.5) {
+//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY() - distToMove);
+//        }
+//
+//        return newPose;
+//    }
+
 
 //    protected abstract Pose generateNextPose();
 
@@ -130,6 +217,7 @@ public abstract class EnemyAI {
 //        return generateNextPose();
 
 //    }
+
 
 //    Pose poseFromAngle(double angleToMove, double angleToFace, double distToMove) {
 //        Pose newPose = null;
@@ -173,9 +261,8 @@ public abstract class EnemyAI {
 //            }
 //        }
 //
-
 //        return pose;
-
+//
 //    }
 
 //    private Pose moveOutOfSpawn(Pose pose) {

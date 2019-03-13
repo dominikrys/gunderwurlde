@@ -67,9 +67,9 @@ public class Pose extends Location implements Serializable {
         // Compare the data members and return accordingly
         return (this.direction == c.getDirection() && this.x == c.getX() && this.y == c.getY());
     }
-
-    public boolean compareLocation(Pose p, double range) {
-        return (Math.abs(this.x - p.getX()) <= range) && (Math.abs(this.y - p.getY()) <= range);
+    //Are the absolute differences between x and y coordinates of the poses less than the range?
+    public static boolean compareLocation(Pose firstPose, Pose secondPose, double range) {
+        return (Math.abs(firstPose.getX() - secondPose.getX()) <= range) && (Math.abs(firstPose.getY() - secondPose.getY()) <= range);
     }
 
     @Override

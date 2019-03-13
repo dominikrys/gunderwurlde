@@ -80,7 +80,7 @@ public class SoldierZombieAI extends EnemyAI {
 
     protected Force generateMovementForce() {
         //if does not have pose to go
-        if (poseToGo == null || poseToGo.compareLocation(pose, 20)) {
+        if (poseToGo == null || Pose.compareLocation(pose, poseToGo, 20)) {
             moving = false;
             //if not already generating a new pose to go
             if (!isProcessing()) {
