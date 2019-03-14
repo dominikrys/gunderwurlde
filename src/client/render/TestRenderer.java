@@ -46,13 +46,13 @@ public class TestRenderer extends Application {
         playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true, 3000));
         EnumMap<AmmoList, Integer> playerAmmo = new EnumMap<AmmoList, Integer>(AmmoList.class);
         playerAmmo.put(AmmoList.BASIC_AMMO, 36);
-        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED, false, Status.NONE,
+        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED, false, EntityStatus.NONE,
                 ActionList.NONE, false, false);
         playersView.add(playerView);
         GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
         playersView = new LinkedHashSet<>();
         playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new EnumMap<AmmoList, Integer>(AmmoList.class), 0, Teams.RED,
-                false, Status.NONE, ActionList.NONE, false, false);
+                false, EntityStatus.NONE, ActionList.NONE, false, false);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 

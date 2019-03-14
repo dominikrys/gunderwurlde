@@ -2,7 +2,7 @@ package shared.view.entity;
 
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.Status;
+import shared.lists.EntityStatus;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ public class ItemDropView extends EntityView implements Serializable {
 
     protected int timeLeft;
 
-    public ItemDropView(Pose pose, int sizeScaleFactor, EntityList name, boolean cloaked, Status status, int timeLeft) {
+    public ItemDropView(Pose pose, int sizeScaleFactor, EntityList name, boolean cloaked, EntityStatus status, int timeLeft) {
         super(pose, sizeScaleFactor, name, cloaked, status);
         this.timeLeft = timeLeft;
     }

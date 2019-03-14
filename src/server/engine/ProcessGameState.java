@@ -1,5 +1,13 @@
 package server.engine;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Random;
+
 import server.engine.ai.AIAction;
 import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
@@ -24,7 +32,13 @@ import server.engine.state.physics.Physics;
 import server.engine.state.physics.Velocity;
 import shared.Location;
 import shared.Pose;
-import shared.lists.*;
+import shared.lists.ActionList;
+import shared.lists.AmmoList;
+import shared.lists.EntityStatus;
+import shared.lists.ItemType;
+import shared.lists.MapList;
+import shared.lists.Teams;
+import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
@@ -35,10 +49,10 @@ import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
 
-import java.util.*;
-
 public class ProcessGameState extends Thread {
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
+
+    private static Random random = new Random();
 
     private final HasEngine handler;
 
@@ -173,7 +187,7 @@ public class ProcessGameState extends Thread {
                     continue;
 
                 if (currentPlayer.getHealth() <= 0) {
-                    currentPlayer.setStatus(Status.DEAD);
+                    currentPlayer.setStatus(EntityStatus.DEAD);
                     currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
@@ -220,7 +234,7 @@ public class ProcessGameState extends Thread {
 
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
                     currentPlayer.setCurrentAction(ActionList.THROW);
-                    ItemDrop itemDropped = new ItemDrop(currentItem, playerPose);
+                    ItemDrop itemDropped = new ItemDrop(currentItem, playerPose, new Velocity(playerPose.getDirection(), 15)); // TODO tweak
                     // TODO add force & add damage if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
 
@@ -268,15 +282,20 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
             LinkedList<Integer> itemsToRemove = new LinkedList<>();
             for (ItemDrop i : items.values()) {
+                LinkedHashSet<int[]> tilesOn = tilesOn(i);
+                for (int[] tileCords : tilesOn) {
+                    tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
+                }
+
                 int timeLeft = (int) (ItemDrop.DECAY_LENGTH - (lastProcessTime - i.getDropTime()));
                 if (timeLeft <= 0) {
                     itemsToRemove.add(i.getID());
-                    LinkedHashSet<int[]> tilesOn = tilesOn(i);
-                    for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
-                    }
-                    // TODO itemdrop decay status here
                 } else {
+                    i = (ItemDrop) doPhysics(i, tileMap, currentTimeDifference);
+                    tilesOn = tilesOn(i);
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].addItemDrop(i.getID());
+                    }
                     itemDropsView.add(new ItemDropView(i.getPose(), i.getSize(), i.getEntityListName(), i.isCloaked(), i.getStatus(), timeLeft));
                 }
             }
@@ -306,6 +325,7 @@ public class ProcessGameState extends Thread {
                     ai.setInfo(currentEnemy, playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
+                currentEnemy = ai.getUpdatedEnemy();
                 currentEnemy.setCurrentAction(ai.getActionState());
 
                 switch (enemyAction) {
@@ -353,11 +373,13 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 default:
-                    System.out.println("AIAction " + enemyAction.toString() + " not known!");
+                    System.out.println("ERROR: AIAction " + enemyAction.toString() + " not known!");
                     break;
                 }
 
-                enemies.put(enemyID, currentEnemy);
+                if (currentEnemy.getHealth() > 0)
+                    enemies.put(enemyID, currentEnemy);
+
                 enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(),
                         currentEnemy.getEntityListName(), currentEnemy.isCloaked(), currentEnemy.getStatus(),
                         currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
@@ -425,8 +447,11 @@ public class ProcessGameState extends Thread {
                                             int dropAmount = d.getDrop();
                                             if (dropAmount != 0) {
                                                 Item itemToDrop = d.getItem();
-                                                // TODO have itemdrops of the same type stack?
-                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, dropAmount);
+                                                // TODO tweak values
+                                                int dropDirection = enemyBeingChecked.getVelocity().getDirection() + random.nextInt(80) - 40;
+                                                double dropSpeed = enemyBeingChecked.getVelocity().getSpeed() + 25 + random.nextInt(5);
+                                                Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
+                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, itemDropVelocity, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO spawned itemdrop status? is this needed?
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
@@ -489,7 +514,6 @@ public class ProcessGameState extends Thread {
                 for (int[] tileCords : tilesOn) {
                     tileMap[tileCords[0]][tileCords[1]].removePlayer(playerID);
                 }
-                
                 currentPlayer = (Player) doPhysics(currentPlayer, tileMap, currentTimeDifference);
 
                 tilesOn = tilesOn(currentPlayer);
@@ -857,21 +881,16 @@ public class ProcessGameState extends Thread {
         density = density / numOfTilesOn;
 
         Force frictionForce = Physics.getFrictionalForce(frictionCoefficient, mass, currentVelocity.getDirection());
-
-        if (resultantForce.getForce() == 0
-                && Physics.getAcceleration(frictionForce, mass) * Physics.normaliseTime(timeDiff) > currentVelocity.getSpeed()) {
+        Force dragForce = Physics.getDragForce(density, currentVelocity, e.getSize());
+        frictionForce.add(dragForce);
+        
+        if (resultantForce.getForce() <= frictionForce.getForce()
+                && (Physics.getAcceleration(frictionForce, mass) * Physics.normaliseTime(timeDiff)) > currentVelocity.getSpeed()) {
             e.setVelocity(new Velocity());
+            System.out.println("stopped");
             return e;
-        }
-
-        if (currentVelocity.getSpeed() != 0) {
-            e.addNewForce(frictionForce);
-            e.addNewForce(Physics.getDragForce(density, currentVelocity, e.getSize()));
-            resultantForce = e.getResultantForce();
-        } else if (resultantForce.getForce() > frictionForce.getForce()) {
-            resultantForce = new Force(resultantForce.getDirection(), resultantForce.getForce() - frictionForce.getForce());
         } else {
-            return e; // force not great enough
+            resultantForce.add(frictionForce);
         }
 
         double acceleration = Physics.getAcceleration(resultantForce, mass);
