@@ -745,6 +745,7 @@ public class ProcessGameState extends Thread {
             }
 
             // TODO process tiles?
+            LinkedList<Integer> zonesToRemove = new LinkedList<>();
 
             for (Zone z : activeZones.values()) {
                 for (Entity e : z.getEntitysToSpawn()) {
@@ -760,8 +761,12 @@ public class ProcessGameState extends Thread {
                     tileMap[cords[0]][cords[1]] = newTile;
                     tileMapView[cords[0]][cords[1]] = new TileView(newTile.getType(), newTile.getState());
                 }
+
+                if (!z.isActive())
+                    zonesToRemove.add(z.getId());
             }
 
+            zonesToRemove.stream().forEach((z) -> activeZones.remove(z));
 
             gameState.setPlayers(players);
             gameState.setProjectiles(newProjectiles);
