@@ -16,6 +16,7 @@ public class MachineGunnerAI extends ZombieAI {
 
     //Probably needs a better name
     //The angle the enemy shoots
+    private final int TURN_RATE;
     private final int ATTACK_WIDTH;
     private final int BULLETS_PER_ATTACK;
     private boolean addToAngle = false;
@@ -25,11 +26,14 @@ public class MachineGunnerAI extends ZombieAI {
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
     private Gun smg = new Smg();
+    private boolean isInAttackPosition = false;
+    private int currentAndStartAngDiff;
 
-    public MachineGunnerAI(int attackWidth, int bulletsPerAttack) {
+    public MachineGunnerAI(int attackWidth, int bulletsPerAttack, int turnRate) {
         super();
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
+        this.TURN_RATE = turnRate;
         distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
         attackDelay = LONG_DELAY;
         randomizePath = false;
@@ -41,7 +45,7 @@ public class MachineGunnerAI extends ZombieAI {
         long now = System.currentTimeMillis();
         delayPast = (now - beginAttackTime) >= attackDelay;
 
-        if (delayPast && shootingPathUnobstructed) {
+        if (delayPast && shootingPathUnobstructed && isInAttackPosition) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(smg.getShotProjectiles(
                         new Pose(pose, attackAngle), Teams.ENEMY)));
@@ -62,12 +66,14 @@ public class MachineGunnerAI extends ZombieAI {
 
             } else {
                 this.actionState = ActionList.NONE;
-                attacking = false;
                 bulletsShotInThisAttack = 0;
+                attacking = false;
                 shootingPathUnobstructed = false;
+                isInAttackPosition = false;
             }
         } else {
             startOfAttackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) - ATTACK_WIDTH / 2);
+            currentAndStartAngDiff = Pose.getDifferenceBetweenAngles(startOfAttackAngle, pose.getDirection());
             attackAngle = startOfAttackAngle;
             shootingPathUnobstructed = pathUnobstructed(pose, closestPlayer, tileMap);
         }
@@ -77,16 +83,18 @@ public class MachineGunnerAI extends ZombieAI {
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
-        if (delayPast) {
+        System.out.println(currentAndStartAngDiff);
+        if (delayPast && isInAttackPosition) {
             return new Force(attackAngle, 0);
         } else {
-            //TODO maybe make it slowly get to the start attack position?
-            return new Force(pose.getDirection(), 0);
+            if(currentAndStartAngDiff > 0){
+                return new Force(pose.getDirection() + TURN_RATE, 0);
+            }else if(currentAndStartAngDiff < 0){
+                return new Force(pose.getDirection() - TURN_RATE, 0);
+            }else {
+                isInAttackPosition = true;
+                return new Force(pose.getDirection(), 0);
+            }
         }
-    }
-
-    @Override
-    protected Force generateMovementForce(){
-    return new Force(0,0);
     }
 }

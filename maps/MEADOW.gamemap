@@ -64,8 +64,8 @@ MIDGET 1 2000
 
 #Rounds wave per line
 #Round1
-MACHINE_GUNNER 60 120
-0 1000 1 1
+MACHINE_GUNNER 20 1 1
+0 1000 20 1
 
 
 

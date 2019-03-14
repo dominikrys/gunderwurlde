@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Pose extends Location implements Serializable {
     private static final long serialVersionUID = 1L;
     protected int direction;
-    
+
     public Pose() { //workaround for template enemies
         this(0, 0, 0);
     }
@@ -34,13 +34,24 @@ public class Pose extends Location implements Serializable {
     public void setDirection(int direction) {
         this.direction = normaliseDirection(direction);
     }
-    
+
     public static int normaliseDirection(int direction) {
         if (direction > 360)
             direction = direction % 360;
         else if (direction < 0)
             direction = 360 + (direction % -360);
         return direction;
+    }
+    //a - target, b - source
+    public static int getDifferenceBetweenAngles(int a, int b) {
+        int d = Math.abs(a - b) % 360;
+        int r = d > 180 ? 360 - d : d;
+
+        //calculate sign
+        int sign = (a - b >= 0 && a - b <= 180) || (a - b <=-180 && a- b>= -360) ? 1 : -1;
+        r *= sign;
+
+        return r;
     }
 
     @Override
@@ -67,13 +78,14 @@ public class Pose extends Location implements Serializable {
         // Compare the data members and return accordingly
         return (this.direction == c.getDirection() && this.x == c.getX() && this.y == c.getY());
     }
+
     //Are the absolute differences between x and y coordinates of the poses less than the range?
     public static boolean compareLocation(Pose firstPose, Pose secondPose, double range) {
         return (Math.abs(firstPose.getX() - secondPose.getX()) <= range) && (Math.abs(firstPose.getY() - secondPose.getY()) <= range);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Coordinates: " + x + ", " + y + "; Direction: " + direction;
     }
 }
