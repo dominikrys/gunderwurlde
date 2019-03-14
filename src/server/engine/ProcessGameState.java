@@ -7,6 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.EnemyAI;
@@ -50,7 +52,12 @@ import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
 
 public class ProcessGameState extends Thread {
+    private static final Logger LOGGER = Logger.getLogger(ProcessGameState.class.getName());
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
+
+    static {
+        LOGGER.setLevel(Level.WARNING);
+    }
 
     private static Random random = new Random();
 
@@ -139,7 +146,7 @@ public class ProcessGameState extends Thread {
                     break;
                 currentTimeDifference = MIN_TIME_DIFFERENCE;
             } else {
-                System.out.println("Can't keep up!");
+                LOGGER.warning("Can't keep up!");
             }
             lastProcessTime = System.currentTimeMillis();
 
@@ -166,7 +173,7 @@ public class ProcessGameState extends Thread {
                 Player currentPlayer = players.get(playerID);
 
                 if (currentPlayer == null) {
-                    System.out.println("WARNING: Request from non-existent player. Was the player added/removed properly in handler?");
+                    LOGGER.warning("Request from non-existent player. Was the player added/removed properly in handler?");
                     continue;
                 }
 
@@ -372,7 +379,7 @@ public class ProcessGameState extends Thread {
                     currentEnemy = ai.getUpdatedEnemy();
                     break;
                 default:
-                    System.out.println("ERROR: AIAction " + enemyAction.toString() + " not known!");
+                    LOGGER.severe("AIAction " + enemyAction.toString() + " not known!");
                     break;
                 }
 
@@ -408,7 +415,7 @@ public class ProcessGameState extends Thread {
                             tileOn = tileMap[tileCords[0]][tileCords[1]];
                         } catch (ArrayIndexOutOfBoundsException e) {
                             removed = true;
-                            System.out.println("WARNING: Projectile went out of bounds. Is the map complete?");
+                            LOGGER.warning("Projectile went out of bounds. Is the map complete?");
                             break;
                         }
                         if (tileOn.getState() == TileState.SOLID) {
@@ -767,19 +774,19 @@ public class ProcessGameState extends Thread {
     }
 
     private void printPerformanceInfo(long totalTimeProcessing, long numOfProcesses, long longestTimeProcessing) {
-        System.out.println("LongestTimeProcessing: " + longestTimeProcessing);
+        LOGGER.info("LongestTimeProcessing: " + longestTimeProcessing);
         double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
-        System.out.println("TimeProcessing: " + totalTimeProcessing);
-        System.out.println("NumOfProcesses: " + numOfProcesses);
-        System.out.println("AverageTimeProcessing: " + avgTimeProcessing);
-        System.out.println("ProjectileCount: " + gameState.getProjectiles().size());
-        System.out.println("EnemyCount: " + gameState.getEnemies().size());
+        LOGGER.info("TimeProcessing: " + totalTimeProcessing);
+        LOGGER.info("NumOfProcesses: " + numOfProcesses);
+        LOGGER.info("AverageTimeProcessing: " + avgTimeProcessing);
+        LOGGER.info("ProjectileCount: " + gameState.getProjectiles().size());
+        LOGGER.info("EnemyCount: " + gameState.getEnemies().size());
     }
 
     private static double getDistanceMoved(long timeDiff, double speed) {
         double distMoved = Physics.normaliseTime(timeDiff) * speed; // time in millis
         if (distMoved >= Tile.TILE_SIZE)
-            System.out.println("WARNING: Entity moving too fast!");
+            LOGGER.warning("Entity moving too fast!");
         return distMoved;
     }
 
@@ -873,7 +880,7 @@ public class ProcessGameState extends Thread {
                 frictionCoefficient += tileOn.getFrictionCoefficient();
                 density += tileOn.getDensity();
             } else {
-                // System.out.println("INFO: Object clipped in tile.");
+                // logger.info("Object clipped in tile.");
             }
         }
 
@@ -890,7 +897,7 @@ public class ProcessGameState extends Thread {
         if (resultantForce.getForce() <= frictionForce.getForce()
                 && (Physics.getAcceleration(newResultantForce, mass) * Physics.normaliseTime(timeDiff)) > currentVelocity.getSpeed()) {
             e.setVelocity(new Velocity());
-            System.out.println("INFO: Entity stopped by physics.");
+            LOGGER.info("Entity stopped by physics.");
             return e;
         } else {
             resultantForce = newResultantForce;
