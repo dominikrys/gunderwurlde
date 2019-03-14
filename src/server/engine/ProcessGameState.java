@@ -54,6 +54,7 @@ import shared.view.entity.ProjectileView;
 public class ProcessGameState extends Thread {
     private static final Logger LOGGER = Logger.getLogger(ProcessGameState.class.getName());
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
+    private static final int TICKS_TILL_INFO = 3600;
 
     static {
         LOGGER.setLevel(Level.WARNING);
@@ -118,6 +119,8 @@ public class ProcessGameState extends Thread {
         long totalTimeProcessing = 0;
         long numOfProcesses = -1;
         long longestTimeProcessing = 0;
+        int ticksLeft = TICKS_TILL_INFO;
+
 
         // Zones
         LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
@@ -132,7 +135,10 @@ public class ProcessGameState extends Thread {
                 totalTimeProcessing += currentTimeDifference;
                 if (currentTimeDifference > longestTimeProcessing)
                     longestTimeProcessing = currentTimeDifference;
-                //if (numOfProcesses % 3600 == 0) printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing); //uncomment for regular performance info
+                if (--ticksLeft == 0) {
+                    printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
+                    ticksLeft = TICKS_TILL_INFO;
+                }
             }
 
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
@@ -774,13 +780,10 @@ public class ProcessGameState extends Thread {
     }
 
     private void printPerformanceInfo(long totalTimeProcessing, long numOfProcesses, long longestTimeProcessing) {
-        LOGGER.info("LongestTimeProcessing: " + longestTimeProcessing);
         double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
-        LOGGER.info("TimeProcessing: " + totalTimeProcessing);
-        LOGGER.info("NumOfProcesses: " + numOfProcesses);
-        LOGGER.info("AverageTimeProcessing: " + avgTimeProcessing);
-        LOGGER.info("ProjectileCount: " + gameState.getProjectiles().size());
-        LOGGER.info("EnemyCount: " + gameState.getEnemies().size());
+        LOGGER.info("LongestTimeProcessing: " + longestTimeProcessing + "\n" + "TimeProcessing: " + totalTimeProcessing + "\n" + "NumOfProcesses: "
+                + numOfProcesses + "\n" + "AverageTimeProcessing: " + avgTimeProcessing + "\n" + "ProjectileCount: " + gameState.getProjectiles().size() + "\n"
+                + "EnemyCount: " + gameState.getEnemies().size());
     }
 
     private static double getDistanceMoved(long timeDiff, double speed) {
@@ -880,7 +883,7 @@ public class ProcessGameState extends Thread {
                 frictionCoefficient += tileOn.getFrictionCoefficient();
                 density += tileOn.getDensity();
             } else {
-                // logger.info("Object clipped in tile.");
+                LOGGER.info("Object clipped in tile.");
             }
         }
 
