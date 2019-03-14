@@ -10,23 +10,23 @@ D DOOR SOLID 0.9
 #Tile Map
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G W G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G W W W G G G G G G G G G G G G G G G G W G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G W G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G W W W G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G W G G G G G G W
+W G G G G G G G W W W W W W W W W W W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
+W G G G G G G G W W W W W W W W W W W G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G W W W W W W W W W G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
@@ -34,7 +34,7 @@ W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 #Team Spawns
 RED 1 1
 BLUE 30 1
-GREEN 1 20
+GREEN 1 10
 YELLOW 30 20
 
 #Zones TODO add doors
@@ -56,10 +56,10 @@ MIDGET 1 2000
 
 #Zone2
 #EnemySpawns
-30 10
+10 10
 
 #Triggers
-1 20
+1 10
 
 
 #Rounds wave per line

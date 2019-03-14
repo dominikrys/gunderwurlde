@@ -123,49 +123,43 @@ public abstract class EnemyAI {
         return new Force(0, 0);
     }
 
+    //TODO might be able to make this a bit more efficient with less steps to the enemy
+    // and wider acceptance range. But this would make it less precise. But maybe that's ok.
+    
+    // Left the prints for debugging if it's ever needed
     public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap){
         int[] currentTile;
-        int[] endTile = Tile.locationToTile(endPose);
-        int directionToTheEndPose = getAngle(startPose, endPose);
-        System.out.println("\n\n\ndirection to shoot: "  + directionToTheEndPose);
         Pose currentPose = startPose;
-//        System.out.println("startPose:" + currentPose);
+//        System.out.println("\n\n\n\n\nstartPose:" + currentPose);
+//        System.out.println("endPose:" + endPose);
         do {
             int angleToPlayer = getAngle(currentPose, endPose);
-            System.out.println("angle to player: " + angleToPlayer);
-            currentPose = poseInDistance(currentPose, directionToTheEndPose, 15);
+//            System.out.println("angle to player: " + angleToPlayer);
+            currentPose = poseInDistance(currentPose, angleToPlayer, 25);
             currentTile = Tile.locationToTile(currentPose);
 
-            System.out.println("Current pose: " + currentPose);
-            System.out.println("current tile: " + currentTile[0] + " " + currentTile[1]);
-            System.out.println("player tile: " + endTile[0] + " " + endTile[1]);
-            System.out.println("NotSolid? - " + tileNotSolid(currentTile, tileMap));
-
-            if(!tileNotSolid(currentTile, tileMap)) {
-                System.out.println("Return false");
+//            System.out.println("Current pose: " + currentPose);
 //                try {
-//                    Thread.sleep(10000);
+//                    Thread.sleep(500);
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
+
+            if(!tileNotSolid(currentTile, tileMap)) {
                 return false;
             }
 
         }while(!Pose.compareLocation(currentPose, endPose, 15));
 
-        System.out.println("Return true");
-//        try {
-//            Thread.sleep(10000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         return true;
     }
 
+    // vec = dist * (cos(angle)i + sin(angle)j)
     private static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
-        double vecI = Math.cos(angleToPose) * distanceToPose;
-        double vecJ = Math.sin(angleToPose) * distanceToPose;
+        double vecI = Math.cos(Math.toRadians(angleToPose)) * distanceToPose;
+        double vecJ = Math.sin(Math.toRadians(angleToPose)) * distanceToPose;
+
+//        System.out.println("VecI : " + vecI + " " + Math.cos(Math.toRadians(angleToPose)) + " vecJ : " + vecJ + " " + Math.sin(Math.toRadians(angleToPose)));
 
         return new Pose((int) vecI + startingPose.getX(), (int) vecJ + startingPose.getY());
     }

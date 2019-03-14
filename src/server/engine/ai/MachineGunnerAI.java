@@ -24,13 +24,15 @@ public class MachineGunnerAI extends ZombieAI {
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
     private Pistol pistol = new Pistol();
+    int counter = 0;
 
     public MachineGunnerAI(int attackWidth, int bulletsPerAttack) {
         super();
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
         distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
-        attackDelay = LONG_DELAY;
+        attackDelay = 200;
+//        attackDelay = LONG_DELAY;
         randomizePath = false;
     }
 
@@ -42,6 +44,8 @@ public class MachineGunnerAI extends ZombieAI {
 
         if (delayPast && shootingPathUnobstructed) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
+//                counter++;
+//                System.out.println("Shoots " + counter);
                 attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
                         new Pose(pose, attackAngle), Teams.ENEMY)));
 
@@ -60,15 +64,22 @@ public class MachineGunnerAI extends ZombieAI {
                 }
 
             } else {
+//                System.out.println("End of attack");
                 this.actionState = ActionList.NONE;
                 attacking = false;
                 bulletsShotInThisAttack = 0;
                 shootingPathUnobstructed = false;
+//                counter = 0;
             }
         } else {
             startOfAttackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) - ATTACK_WIDTH / 2);
             attackAngle = startOfAttackAngle;
             shootingPathUnobstructed = pathUnobstructed(pose, closestPlayer, tileMap);
+//            System.out.println(shootingPathUnobstructed);
+//            if(shootingPathUnobstructed) {
+//                System.out.println(shootingPathUnobstructed + " " + counter);
+//                counter++;
+//            }
         }
 
         return attacks;
@@ -82,5 +93,10 @@ public class MachineGunnerAI extends ZombieAI {
             //TODO maybe make it slowly get to the start attack position?
             return new Force(pose.getDirection(), 0);
         }
+    }
+
+    @Override
+    protected Force generateMovementForce(){
+    return new Force(0,0);
     }
 }
