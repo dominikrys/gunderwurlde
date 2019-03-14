@@ -164,46 +164,6 @@ public abstract class EnemyAI {
         return new Pose((int) vecI + startingPose.getX(), (int) vecJ + startingPose.getY());
     }
 
-//    static Pose poseFromAngle(Pose currentPose, double angleToMove, double distToMove) {
-//        Pose newPose = null;
-//
-//        //east
-//        if (angleToMove > 337.5 || angleToMove <= 22.5) {
-//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY());
-//
-//            //north-east
-//        } else if (angleToMove > 22.5 && angleToMove <= 67.5) {
-//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY() + distToMove);
-//
-//            //north
-//        } else if (angleToMove > 67.5 && angleToMove <= 112.5) {
-//            newPose = new Pose(currentPose.getX(), currentPose.getY() + distToMove);
-//
-//            //north-west
-//        } else if (angleToMove > 112.5 && angleToMove <= 157.5) {
-//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY() + distToMove);
-//
-//            //west
-//        } else if (angleToMove > 157.5 && angleToMove <= 202.5) {
-//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY());
-//
-//            //south-west
-//        } else if (angleToMove > 202.5 && angleToMove <= 247.5) {
-//            newPose = new Pose(currentPose.getX() - distToMove, currentPose.getY() - distToMove);
-//
-//            //south
-//        } else if (angleToMove > 247.5 && angleToMove <= 292.5) {
-//            newPose = new Pose(currentPose.getX(), currentPose.getY() - distToMove);
-//
-//            //south-east
-//        } else if (angleToMove > 292.5 && angleToMove <= 337.5) {
-//            newPose = new Pose(currentPose.getX() + distToMove, currentPose.getY() - distToMove);
-//        }
-//
-//        return newPose;
-//    }
-
-
 //    protected abstract Pose generateNextPose();
 
 //    public Pose getNewPose(double maxDistanceToMove) {
