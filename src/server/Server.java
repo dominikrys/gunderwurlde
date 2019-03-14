@@ -128,6 +128,7 @@ public class Server extends Thread implements HasEngine {
                     // this request is meant for this game so send back the address of the server
                     if(recievedString.equals(senderAddress.toString())){
                         String message = senderAddress.toString() + tcpAddress.toString();
+                        System.out.println("");
                         buffer = message.getBytes();
                         packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
                         joinGameSocket.send(packet);

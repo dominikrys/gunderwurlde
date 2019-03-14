@@ -185,7 +185,7 @@ public class Client extends Thread {
                     String messageReceived = new String(recievedBytes);
                     String[] split = messageReceived.split("/");
                     if (("/" + split[1]).equals(listenAddress.toString())) {
-                        tcpAddress = InetAddress.getByName(split[0]);
+                        tcpAddress = InetAddress.getByName(split[2]);
                         waiting = false;
                     } else {
                         continue;
