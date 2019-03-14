@@ -1,5 +1,8 @@
 package server.engine.state.entity.player;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;
@@ -17,9 +20,6 @@ import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Teams;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPhysics {
     public static final int DEFAULT_HEALTH = 20;
