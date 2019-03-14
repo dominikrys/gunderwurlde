@@ -10,8 +10,7 @@ import java.util.LinkedList;
 public class BoomerAI extends ZombieAI {
 
     public BoomerAI(){
-        super();
-        distanceToPlayerForAttack = Constants.TILE_SIZE * 2;
+        super(Constants.TILE_SIZE * 2);
         randomizePath = false;
         attackDelay = LONG_DELAY;
     }

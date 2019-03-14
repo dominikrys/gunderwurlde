@@ -35,15 +35,15 @@ W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 RED 1 1
 BLUE 30 1
 GREEN 3 10
-YELLOW 30 20
+YELLOW 27 10
 
 #Zones TODO add doors
 #Zone1
 #EnemySpawns
-1 10
+10 10
 
 #Triggers
-30 10
+27 10
 
 #Optional Doors (Tile to return) (Location params) (Kills Required)
 G 1 2 5

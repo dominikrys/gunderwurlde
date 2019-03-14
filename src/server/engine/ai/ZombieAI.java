@@ -4,7 +4,6 @@ import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.physics.Force;
 import shared.Constants;
-import shared.Location;
 import shared.lists.ActionList;
 
 import java.util.LinkedList;
@@ -17,21 +16,29 @@ public class ZombieAI extends EnemyAI {
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     boolean randomizePath = true;
-    int distanceToPlayerForAttack = Constants.TILE_SIZE;
+    private final int DISTANCE_TO_PLAYER_FOR_ATTACK;
 
     public ZombieAI() {
         super();
+        this.DISTANCE_TO_PLAYER_FOR_ATTACK = Constants.TILE_SIZE;
         this.beginAttackTime = System.currentTimeMillis();
         this.attacking = false;
+    }
+
+    public ZombieAI(int distanceToPlayerForAttack) {
+        super();
+        this.beginAttackTime = System.currentTimeMillis();
+        this.attacking = false;
+        this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
     }
 
     @Override
     public AIAction getAction() {
         if (attacking) {
             return AIAction.ATTACK;
-        } else if (getDistToPlayer(closestPlayer) >= distanceToPlayerForAttack) {
+        } else if (getDistToPlayer(closestPlayer) >= DISTANCE_TO_PLAYER_FOR_ATTACK) {
             return AIAction.MOVE;
-        } else if (getDistToPlayer(closestPlayer) < distanceToPlayerForAttack) {
+        } else if (getDistToPlayer(closestPlayer) < DISTANCE_TO_PLAYER_FOR_ATTACK) {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();

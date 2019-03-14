@@ -4,6 +4,7 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.physics.Force;
+import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Teams;
@@ -16,7 +17,7 @@ public class ShotgunMidgetAI extends ZombieAI{
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
-        super();
+        super(Constants.TILE_SIZE * 3);
         randomizePath = false;
         this.KNOCKBACK_AMOUNT = knockbackAmount;
         attackDelay = MEDIUM_DELAY;
@@ -42,7 +43,7 @@ public class ShotgunMidgetAI extends ZombieAI{
             int knockbackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) + 180);
             return new Force(knockbackAngle, maxMovementForce + KNOCKBACK_AMOUNT);
         }else{
-            return new Force(0, 0);
+            return new Force(pose.getDirection(), 0);
         }
     }
 }

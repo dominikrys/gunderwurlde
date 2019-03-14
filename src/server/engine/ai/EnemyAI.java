@@ -118,7 +118,7 @@ public abstract class EnemyAI {
     }
 
     public Force getForceFromAttack(double maxMovementForce) {
-        return new Force(0, 0);
+        return new Force(pose.getDirection(), 0);
     }
 
     //TODO might be able to make this a bit more efficient with less steps to the enemy

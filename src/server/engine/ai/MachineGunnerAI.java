@@ -30,11 +30,10 @@ public class MachineGunnerAI extends ZombieAI {
     private int currentAndStartAngDiff;
 
     public MachineGunnerAI(int attackWidth, int bulletsPerAttack, int turnRate) {
-        super();
+        super(Constants.TILE_SIZE * 10);
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
         this.TURN_RATE = turnRate;
-        distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
         attackDelay = LONG_DELAY;
         randomizePath = false;
     }
