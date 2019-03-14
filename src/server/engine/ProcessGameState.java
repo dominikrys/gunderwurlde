@@ -881,14 +881,16 @@ public class ProcessGameState extends Thread {
         Force frictionForce = Physics.getFrictionalForce(frictionCoefficient, mass, currentVelocity.getDirection());
         Force dragForce = Physics.getDragForce(density, currentVelocity, e.getSize());
         frictionForce.add(dragForce);
-        
+        Force newResultantForce = new Force(resultantForce.getDirection(), resultantForce.getForce());
+        newResultantForce.add(frictionForce);
+
         if (resultantForce.getForce() <= frictionForce.getForce()
-                && (Physics.getAcceleration(frictionForce, mass) * Physics.normaliseTime(timeDiff)) > currentVelocity.getSpeed()) {
+                && (Physics.getAcceleration(newResultantForce, mass) * Physics.normaliseTime(timeDiff)) > currentVelocity.getSpeed()) {
             e.setVelocity(new Velocity());
-            System.out.println("stopped");
+            System.out.println("INFO: Entity stopped by physics.");
             return e;
         } else {
-            resultantForce.add(frictionForce);
+            resultantForce = newResultantForce;
         }
 
         double acceleration = Physics.getAcceleration(resultantForce, mass);
