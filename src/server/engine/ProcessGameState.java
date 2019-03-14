@@ -325,8 +325,6 @@ public class ProcessGameState extends Thread {
                     ai.setInfo(currentEnemy, playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
-                currentEnemy = ai.getUpdatedEnemy();
-                currentEnemy.setCurrentAction(ai.getActionState());
 
                 switch (enemyAction) {
                 case ATTACK:
@@ -370,10 +368,15 @@ public class ProcessGameState extends Thread {
                     break;
                 case WAIT:
                     break;
+                case UPDATE:
+                    currentEnemy = ai.getUpdatedEnemy();
+                    break;
                 default:
                     System.out.println("ERROR: AIAction " + enemyAction.toString() + " not known!");
                     break;
                 }
+
+                currentEnemy.setCurrentAction(ai.getActionState());
 
                 if (currentEnemy.getHealth() > 0)
                     enemies.put(enemyID, currentEnemy);
