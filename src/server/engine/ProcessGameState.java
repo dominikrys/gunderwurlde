@@ -325,6 +325,7 @@ public class ProcessGameState extends Thread {
                     ai.setInfo(currentEnemy, playerPoses, tileMap);
 
                 AIAction enemyAction = ai.getAction();
+                currentEnemy = ai.getUpdatedEnemy();
                 currentEnemy.setCurrentAction(ai.getActionState());
 
                 switch (enemyAction) {
@@ -370,11 +371,13 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 default:
-                    System.out.println("AIAction " + enemyAction.toString() + " not known!");
+                    System.out.println("ERROR: AIAction " + enemyAction.toString() + " not known!");
                     break;
                 }
 
-                enemies.put(enemyID, currentEnemy);
+                if (currentEnemy.getHealth() > 0)
+                    enemies.put(enemyID, currentEnemy);
+
                 enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(),
                         currentEnemy.getEntityListName(), currentEnemy.isCloaked(), currentEnemy.getStatus(),
                         currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),

@@ -1,5 +1,11 @@
 package server.engine.ai;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
@@ -7,12 +13,6 @@ import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 
 public abstract class EnemyAI {
 
@@ -120,6 +120,10 @@ public abstract class EnemyAI {
 
     public Force getForceFromAttack(double maxMovementForce) {
         return new Force(0, 0);
+    }
+
+    public Enemy getUpdatedEnemy() {
+        return enemy;
     }
 
 
