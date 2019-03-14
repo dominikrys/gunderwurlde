@@ -173,7 +173,7 @@ public class ProcessGameState extends Thread {
                     continue;
 
                 if (currentPlayer.getHealth() <= 0) {
-                    currentPlayer.setStatus(Status.DEAD);
+                    currentPlayer.setStatus(EntityStatus.DEAD);
                     currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {

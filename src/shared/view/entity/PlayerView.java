@@ -27,7 +27,7 @@ public class PlayerView extends EntityView implements Serializable {
     protected boolean moving;
 
     public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
-            String name, EnumMap<AmmoList, Integer> ammo, int playerID, Teams team, boolean cloaked, Status status,
+            String name, EnumMap<AmmoList, Integer> ammo, int playerID, Teams team, boolean cloaked, EntityStatus status,
             ActionList currentAction, boolean takenDamage, boolean moving) {
         super(pose, sizeScaleFactor, EntityList.PLAYER, cloaked, status);
         this.health = health;

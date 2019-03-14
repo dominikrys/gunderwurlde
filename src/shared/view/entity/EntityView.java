@@ -2,7 +2,7 @@ package shared.view.entity;
 
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.Status;
+import shared.lists.EntityStatus;
 
 import java.io.Serializable;
 
@@ -11,11 +11,11 @@ public abstract class EntityView implements Serializable {
 
     protected Pose pose;
     protected EntityList entityListName;
-    protected Status status;
+    protected EntityStatus status;
     protected int sizeScaleFactor;
     protected boolean cloaked;
 
-    protected EntityView(Pose pose, int size, EntityList entityListName, Boolean cloaked, Status status) {
+    protected EntityView(Pose pose, int size, EntityList entityListName, Boolean cloaked, EntityStatus status) {
         int radius = size;
         this.pose = new Pose(pose.getX() - radius, pose.getY() - radius, pose.getDirection());
         this.sizeScaleFactor = 1; // TODO have size scaling support for entities
@@ -24,7 +24,7 @@ public abstract class EntityView implements Serializable {
         this.status = status;
     }
 
-    public Status getStatus() {
+    public EntityStatus getStatus() {
         return status;
     }
 
