@@ -533,6 +533,7 @@ public class MapEditor {
 		mapGc.setTextAlign(TextAlignment.CENTER);
 		mapGc.setTextBaseline(VPos.CENTER);
 		mapGc.fillText(s, tileX*Constants.TILE_SIZE + Constants.TILE_SIZE/2, tileY*Constants.TILE_SIZE + Constants.TILE_SIZE/2);
+		drawEdge(tileX, tileY, Color.GREY);
 		SnapshotParameters params = new SnapshotParameters();
 		params.setFill(Color.TRANSPARENT);
 		mapSnapshot = mapCanvas.snapshot(params, null);
