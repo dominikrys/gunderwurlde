@@ -20,7 +20,7 @@ public class RandomPoseGen extends Thread {
         Random rand = new Random();
         do{
             //Go in any direction between 10 and 100 poses
-            pose = poseInDistance(startingPose, rand.nextInt(360), rand.nextInt(100) + 10);
+            pose = poseInDistance(startingPose, rand.nextInt(360), rand.nextInt(150) + 40);
         }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), ai.tileMap));
 
         ai.setPoseToGo(pose);

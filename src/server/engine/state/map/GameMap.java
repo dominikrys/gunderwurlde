@@ -1,12 +1,12 @@
 package server.engine.state.map;
 
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
 import shared.lists.Teams;
+
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
 
 public class GameMap {
     protected final int DEFAULT_X_DIM;

@@ -26,7 +26,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
-    public static final int DEFAULT_SIZE = (Tile.TILE_SIZE - 6) / 2;
+    public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
     public static final double DEFAULT_MASS = 3;
 
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);

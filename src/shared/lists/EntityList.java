@@ -8,57 +8,61 @@ import shared.Constants;
 // For coloradjust: hue, saturation, brightness, contrast. All between -1 and 1
 public enum EntityList {
     // Item
-    PISTOL("file:assets/img/entity/item/pistol.png"),
-    SHOTGUN("file:assets/img/entity/item/shotgun.png"),
-    SMG("file:assets/img/entity/item/smg.png"),
+    PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
+    SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
 
     // Player
-    PLAYER("file:assets/img/entity/player/player.png"),
-    PLAYER_RED("file:assets/img/entity/player/player.png", Constants.redPlayerColorAdjust),
-    PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.bluePlayerColorAdjust),
-    PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.greenPlayerColorAdjust),
-    PLAYER_YELLOW("file:assets/img/entity/player/player.png", Constants.yellowPlayerColorAdjust),
+    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 3), // TODO: remove the -3?
+    PLAYER_RED("file:assets/img/entity/player/player.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_YELLOW("file:assets/img/entity/player/player.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
 
     // Player holding gun
     PLAYER_WITH_GUN("file:assets/img/entity/player/player_gun.png"),
-    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", Constants.redPlayerColorAdjust),
-    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", Constants.bluePlayerColorAdjust),
-    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", Constants.greenPlayerColorAdjust),
-    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", Constants.yellowPlayerColorAdjust),
+    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
 
     // Player holding gun recoil
-    PLAYER_WITH_GUN_RECOIL("file:assets/img/entity/player/player_gun_recoil.png"),
-    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", Constants.redPlayerColorAdjust),
-    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", Constants.bluePlayerColorAdjust),
-    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", Constants.greenPlayerColorAdjust),
-    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", Constants.yellowPlayerColorAdjust),
+    PLAYER_WITH_GUN_RECOIL("file:assets/img/entity/player/player_gun_recoil.png", Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
 
     // Player reload
-    PLAYER_RELOAD("file:assets/img/entity/player/player_reload.png"),
-    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", Constants.redPlayerColorAdjust),
-    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", Constants.bluePlayerColorAdjust),
-    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", Constants.greenPlayerColorAdjust),
-    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.yellowPlayerColorAdjust),
+    PLAYER_RELOAD("file:assets/img/entity/player/player_reload.png", Constants.TILE_SIZE),
+    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
 
     // Enemy
-    ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust),
-    RUNNER("file:assets/img/entity/enemy/zombie.png"),
-    SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust),
-    MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust),
+    ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
+    RUNNER("file:assets/img/entity/enemy/zombie.png", Constants.TILE_SIZE),
+    SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust, Constants.TILE_SIZE),
+    MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust, Constants.TILE_SIZE),
+    BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
+    MACHINE_GUNNER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
 
     // Enemy walking
     ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.zombieColorAdjust),
     RUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png"),
     SOLDIER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.soldierColorAdjust),
     MIDGET_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.midgetColorAdjust),
+    BOOMER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.boomerColorAdjust),
+    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.machineGunnerColorAdjust),
 
     // Projectile
-    BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png"),
+    BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4),
 
     // Tiles
-    GRASS_TILE("file:assets/img/tiles/grass.png"),
-    WOOD_TILE("file:assets/img/tiles/wood.png"),
-    DEFAULT("file:assets/img/tiles/default.png"),
+    GRASS_TILE("file:assets/img/tiles/grass.png", Constants.TILE_SIZE),
+    WOOD_TILE("file:assets/img/tiles/wood.png", Constants.TILE_SIZE),
+    DEFAULT("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
 
     // Other/Not real entities - some applicable to Item
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
@@ -77,21 +81,32 @@ public enum EntityList {
     PLAYER_WALK_YELLOW("file:assets/img/entity/player/player_walk.png", new ColorAdjust(0.15, 0, 0, 0)),
 
     // Smoke cloud
-    SMOKE_CLOUD("file:assets/img/misc_animations/smoke.png");
+    SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
+
+    // Blood explosion
+    BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png");
 
     private final String spritePath;
-    private ColorAdjust colorAdjust;
+    private final ColorAdjust colorAdjust;
+    private final int size;
+
+    EntityList(String spritePath, ColorAdjust colorAdjust, int size) {
+        this.spritePath = spritePath;
+        this.colorAdjust = colorAdjust;
+        this.size = size;
+    }
 
     EntityList(String spritePath) {
-        this.spritePath = spritePath;
-        colorAdjust = null;
+        this(spritePath, null, 0);
+    }
+
+    EntityList(String spritePath, int size) {
+        this(spritePath, null, size);
     }
 
     EntityList(String spritePath, ColorAdjust colorAdjust) {
-        this(spritePath);
-        this.colorAdjust = colorAdjust;
+        this (spritePath, colorAdjust, 0);
     }
-
 
     public String getPath() {
         return spritePath;
@@ -99,5 +114,9 @@ public enum EntityList {
 
     public ColorAdjust getColorAdjust() {
         return colorAdjust;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

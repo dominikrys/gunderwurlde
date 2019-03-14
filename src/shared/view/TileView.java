@@ -1,11 +1,11 @@
 package shared.view;
 
-import java.io.Serializable;
-
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.TileState;
 import shared.lists.TileTypes;
+
+import java.io.Serializable;
 
 public class TileView implements Serializable {
     private static final long serialVersionUID = 1L;

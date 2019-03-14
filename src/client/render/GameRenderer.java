@@ -108,30 +108,43 @@ public class GameRenderer implements Runnable {
         loadedSprites = new HashMap<>();
         for (EntityList entity : EntityList.values()) {
             // Load image
-            Image tempImage = new Image(entity.getPath());
+            Image loadedImage = new Image(entity.getPath());
 
-            // Check if loaded properly, and if loaded properly then store in the loaded sprites hashmap
-            if (tempImage.isError()) {
-                System.out.println("Error when loading image: " + entity.name() + " from directory: " + entity.getPath());
+            // Check if loaded properly
+            if (loadedImage.isError()) {
+                System.out.println("Couldn't load image: " + entity.name() + " from directory: " + entity.getPath());
                 loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
             } else {
-                // Check if transformation necessary
+                // Check if loaded image dimensions consistent with dim:ensions in EntityList (if the entity has a specified size)
+                if (entity.getSize() != 0) {
+                    /*
+                    TODO: add width check back in?
+                    if (loadedImage.getWidth() != entity.getSize()) {
+                        System.out.println("Error when loading " + entity.name() + ": width incorrect! Should be: " + entity.getSize());
+                    }
+                    */
+                    if (loadedImage.getHeight() != entity.getSize()) {
+                        System.out.println("Image " + entity.name() + ": loaded with incorrect height, should be: " + entity.getSize());
+                    }
+                }
+
+                // Check if transformation necessary, and if so perform it
                 if (entity.getColorAdjust() != null) {
                     // Create new imageview and apply the color adjustment
-                    ImageView tempImageView = new ImageView(tempImage);
-                    tempImageView.setEffect(entity.getColorAdjust());
+                    ImageView loadedImageView = new ImageView(loadedImage);
+                    loadedImageView.setEffect(entity.getColorAdjust());
 
-                    // Convert from imageview and store  in the loaded sprites hashmap
+                    // Convert loaded image from imageview and store  in the loaded sprites hashmap
                     Platform.runLater(() -> {
                         SnapshotParameters sp = new SnapshotParameters();
                         sp.setFill(Color.TRANSPARENT);
 
                         loadedSprites.put(entity, SwingFXUtils.toFXImage(
-                                SwingFXUtils.fromFXImage(tempImageView.snapshot(sp, null), null), null));
+                                SwingFXUtils.fromFXImage(loadedImageView.snapshot(sp, null), null), null));
                     });
                 } else {
                     // No transformation necessary, just store in sprites hashmap
-                    loadedSprites.put(entity, tempImage);
+                    loadedSprites.put(entity, loadedImage);
                 }
             }
         }
@@ -538,7 +551,20 @@ public class GameRenderer implements Runnable {
                                     loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
                                     6, 25, 0, AnimationType.MOVE));
                             break;
+                        case BOOMER:
+                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.BOOMER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
+                        case MACHINE_GUNNER:
+                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.MACHINE_GUNNER_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
+                            break;
                         default:
+                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
+                                    6, 75, 0, AnimationType.MOVE));
                             break;
                     }
                 }
@@ -587,13 +613,13 @@ public class GameRenderer implements Runnable {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-                        loadedSprites.get(EntityList.SMOKE_CLOUD), 32, 32,
+                        loadedSprites.get(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (deathSpriteManager.getCurrentFrame()  < frameCount - 1) {
+                    if (deathSpriteManager.getCurrentFrame() < frameCount - 1) {
                         drawRotatedImageFromSpritesheet(mapGC, deathSpriteManager.getImage(),
                                 0, pose.getX(),
                                 pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),

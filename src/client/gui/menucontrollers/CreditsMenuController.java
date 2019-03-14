@@ -10,19 +10,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelpMenuController extends VBox implements MenuController {
+public class CreditsMenuController extends VBox implements MenuController {
     private Stage stage;
     private Settings settings;
 
     @FXML
     private Button backButton;
 
-    public HelpMenuController(Stage stage, Settings settings) {
+    public CreditsMenuController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
 
         // Load FXML and set appropriate methods
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/help_menu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/credits_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

@@ -16,6 +16,10 @@ import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
+
 public class Server extends Thread implements HasEngine {
     // Requests for the engine to handle
     protected ClientRequests clientRequests;

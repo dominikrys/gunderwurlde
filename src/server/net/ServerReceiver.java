@@ -1,5 +1,7 @@
 package server.net;
 
+import server.Server;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,9 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.net.Addressing;
-import server.Server;
 import shared.lists.Teams;
-
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 

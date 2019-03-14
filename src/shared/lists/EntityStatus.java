@@ -1,5 +1,5 @@
 package shared.lists;
 
-public enum Status {
+public enum EntityStatus {
     NONE, SLOWED, FROZEN, BURNING, FUSED, SPAWNING, DEAD;
 }

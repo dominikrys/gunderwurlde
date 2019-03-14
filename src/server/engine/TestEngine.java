@@ -3,7 +3,6 @@ package server.engine;
 import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
 import client.gui.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;

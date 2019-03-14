@@ -1,12 +1,5 @@
 package client.render;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.LinkedHashSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import client.gui.Settings;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,16 +9,14 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.ItemList;
-import shared.lists.MapList;
-import shared.lists.Status;
-import shared.lists.Teams;
+import shared.lists.*;
 import shared.view.GameView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRenderer extends Application {
 
@@ -55,13 +46,13 @@ public class TestRenderer extends Application {
         playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true, 3000));
         EnumMap<AmmoList, Integer> playerAmmo = new EnumMap<AmmoList, Integer>(AmmoList.class);
         playerAmmo.put(AmmoList.BASIC_AMMO, 36);
-        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED, false, Status.NONE,
+        PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Teams.RED, false, EntityStatus.NONE,
                 ActionList.NONE, false, false);
         playersView.add(playerView);
         GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
         playersView = new LinkedHashSet<>();
         playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new EnumMap<AmmoList, Integer>(AmmoList.class), 0, Teams.RED,
-                false, Status.NONE, ActionList.NONE, false, false);
+                false, EntityStatus.NONE, ActionList.NONE, false, false);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
 

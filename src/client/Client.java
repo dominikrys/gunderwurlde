@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
 import client.gui.Settings;
 import client.net.Addressing;
 import client.net.ClientReceiver;
@@ -15,6 +14,10 @@ import client.render.GameRenderer;
 import javafx.stage.Stage;
 import shared.lists.Teams;
 import shared.view.GameView;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Client extends Thread {
 

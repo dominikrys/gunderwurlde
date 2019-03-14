@@ -1,30 +1,17 @@
 package server.engine.state.map;
 
+import server.engine.state.entity.Entity;
+import server.engine.state.entity.enemy.*;
+import server.engine.state.map.tile.Door;
+import server.engine.state.map.tile.Tile;
+import shared.Location;
+import shared.lists.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.TreeSet;
-
-import server.engine.state.entity.Entity;
-import server.engine.state.entity.enemy.RunnerZombie;
-import server.engine.state.entity.enemy.ShotgunMidget;
-import server.engine.state.entity.enemy.SoldierZombie;
-import server.engine.state.entity.enemy.Zombie;
-import server.engine.state.map.tile.Door;
-import server.engine.state.map.tile.Tile;
-import shared.Location;
-import shared.lists.EntityList;
-import shared.lists.MapList;
-import shared.lists.Teams;
-import shared.lists.TileState;
-import shared.lists.TileTypes;
+import java.util.*;
 
 public class MapReader {
     private static String MAP_LOCATION = "maps";
@@ -136,6 +123,10 @@ public class MapReader {
             return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         case MIDGET:
             return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+        case BOOMER:
+            return new Boomer();
+        case MACHINE_GUNNER:
+            return new MachineGunner();
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();

@@ -1,9 +1,5 @@
 package server.engine.state;
 
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
@@ -13,6 +9,10 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.Teams;
+
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class GameState {
     protected GameMap currentMap;

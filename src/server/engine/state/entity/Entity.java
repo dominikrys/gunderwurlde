@@ -4,7 +4,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.Status;
+import shared.lists.EntityStatus;
 
 // Class for renderable entities
 public abstract class Entity {
@@ -12,7 +12,7 @@ public abstract class Entity {
     
     protected Pose pose;
     protected EntityList entityListName;
-    protected Status status;
+    protected EntityStatus status;
     protected int size;
     protected boolean cloaked; // "invisible"
     protected int zoneID;
@@ -22,7 +22,7 @@ public abstract class Entity {
         this.size = size;
         this.entityListName = entityListName;
         this.cloaked = false;
-        this.status = Status.NONE;
+        this.status = EntityStatus.NONE;
         this.zoneID = -1;
     }
     
@@ -52,11 +52,11 @@ public abstract class Entity {
         this.cloaked = cloaked;
     }
 
-    public Status getStatus() {
+    public EntityStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(EntityStatus status) {
         this.status = status;
     }
 
