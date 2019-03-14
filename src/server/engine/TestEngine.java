@@ -48,7 +48,7 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob", Teams.RED);
+        this.engine = new ProcessGameState(this, MapList.MEADOWWITHWALLS, "Bob", Teams.RED);
         stage.setResizable(true);
         stage.setScene(new Scene(new VBox()));
         engine.start();

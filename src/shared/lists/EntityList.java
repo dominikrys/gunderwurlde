@@ -11,6 +11,7 @@ public enum EntityList {
     PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
 
     // Player
     PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 3), // TODO: remove the -3?
