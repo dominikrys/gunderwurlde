@@ -2,13 +2,13 @@ package server;
 
 import java.io.IOException;
 import java.net.*;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import client.net.Addressing;
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
+import server.net.JoinGameManager;
 import server.net.ServerReceiver;
 import server.net.ServerSender;
 import shared.lists.MapList;
@@ -16,105 +16,160 @@ import shared.lists.Teams;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
-import javax.xml.crypto.Data;
-
 public class Server extends Thread implements HasEngine {
+    // Requests for the engine to handle
     protected ClientRequests clientRequests;
+
+    // engine to pass the gameStates
     protected ProcessGameState engine;
-    private final String hostName;
+
+    // Threads to send gameViews and receive commands
     ServerSender sender;
     ServerReceiver receiver;
-    // Socket to listen to the server
+
+    // Sockets for listening and sending
     MulticastSocket listenSocket = null;
-    // Socket to send requests to the server
     MulticastSocket senderSocket = null;
+    MulticastSocket joinGameSocket = null;
+
+    // Addresses for listening on
     InetAddress listenAddress = null;
     InetAddress senderAddress = null;
-    InetAddress joinAddress = null;
+    InetAddress joinGameAddress = null;
+    InetAddress tcpAddress = null;
+    static int lowestAvailableAddress = 1;
+
     // Ports to be sent and received on
-    static final int SENDPORT = 4444;
-    static final int LISTENPORT = 4445;
+    static int sendport;
+    static int listenport;
+    static int JOINPORT = 8080;
+    static int lowestavailableport = 4444;
+
+    // Manager to handle the TCP protocol
+    JoinGameManager tcpMananger;
+
+    // Items used in communication for multiplayer
+    byte[] buffer;
+    DatagramPacket packet;
+
+    // bool for if the server is handling a multiplayer game
     Boolean multiplayer;
+
+    // the number of players the server should expect to join
     int numOfPlayers;
-    int nextID = 1;
+    // joinedPlayers =1 because host is always present
     int joinedPlayers = 1;
+
+    boolean isThreadsUp;
+    // The players that need to be added to the engine
     LinkedHashMap<String, Teams> playersToAdd;
+
     MapList mapName;
 
 
     public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
         this.mapName = mapName;
-        this.hostName = hostName;
         this.numOfPlayers = numOfPlayers;
-        playersToAdd = new LinkedHashMap<>();
-        playersToAdd.put(hostName, hostTeam);
+        this.playersToAdd = new LinkedHashMap<>();
+        this.playersToAdd.put(hostName, hostTeam);
+        System.out.println("Host added to game");
+        System.out.println(playersToAdd);
         this.multiplayer = multiplayer;
         this.clientRequests = null;
+        isThreadsUp = false;
         this.start();
     }
 
     public void run(){
         try {
-            listenSocket = new MulticastSocket(LISTENPORT);
+            // Declare ports to be used
+            sendport = lowestavailableport;
+            listenport = lowestavailableport+1;
+            updatedLowestAvailablePort();
+
+            // Start by setting up the threads that will be used during the actual game
+            listenSocket = new MulticastSocket(listenport);
+            Addressing.setInterfaces(listenSocket);
             senderSocket = new MulticastSocket();
-            listenAddress = InetAddress.getByName("230.0.0.1");
-            senderAddress = InetAddress.getByName("230.0.1.1");
+            Addressing.setInterfaces(senderSocket);
+            listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            updatedLowestAvailableAddress();
             System.out.println("Server starting");
-            // Create the initial GameView to be sent to the clients
 
-            // Create the threads that will run as sender and receiver
-            sender = new ServerSender(senderAddress, senderSocket, SENDPORT);
-            receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
-            int requestedJoins = 1;
-
+            // Check if the game is going to be multiplayer
             if(multiplayer){
-                System.out.println("joinedPlauers:" + joinedPlayers);
-                System.out.println("numOfplayers:" + numOfPlayers);
+                // Create the TCP threads to handle the join protocol
+                tcpMananger = new JoinGameManager(this);
+                tcpMananger.start();
+
+                joinGameSocket = new MulticastSocket(JOINPORT);
+                Addressing.setInterfaces(joinGameSocket);
+                joinGameAddress = InetAddress.getByName("230.0.0.0");
+                joinGameSocket.joinGroup(joinGameAddress);
+                tcpAddress = Addressing.getAddress();
+
+                System.out.println("Expected: " + numOfPlayers);
+                System.out.println("Joined: " + joinedPlayers);
                 // loop until all players have joined
-                while(numOfPlayers != requestedJoins) {
-                    int JOINPORT = 8889;
-                    int RECJOINPORT = 8888;
-                    MulticastSocket sendJoinSocket = new MulticastSocket(JOINPORT);
-                    Addressing.setInterfaces(sendJoinSocket);
-                    MulticastSocket receiveJoinSocket = new MulticastSocket(RECJOINPORT);
-                    Addressing.setInterfaces(receiveJoinSocket);
-                    InetAddress joinAddress = InetAddress.getByName("230.2.0.0");
-                    InetAddress recJoinAddress = InetAddress.getByName("230.1.0.0");
-                    receiveJoinSocket.joinGroup(recJoinAddress);
-                    System.out.println("num not equal to join");
-                    byte[] joinRequest = new byte[4];
-                    DatagramPacket receivePacket = new DatagramPacket(joinRequest, joinRequest.length);
-                    receiveJoinSocket.receive(receivePacket);
-                    System.out.println("Received request");
-                    byte[] commandBytes = Arrays.copyOfRange(receivePacket.getData(), 0, 4);
-                    ByteBuffer wrappedCommand = ByteBuffer.wrap(commandBytes);
-                    int request = wrappedCommand.getInt();
-                    if(request == 50){
-                        byte[] sendIDBytes = ByteBuffer.allocate(4).putInt(nextID).array();
-                        nextID++;
-                        DatagramPacket sendPacket = new DatagramPacket(sendIDBytes, sendIDBytes.length, joinAddress, JOINPORT);
-                        System.out.println("Sending clientID");
-                        sendJoinSocket.send(sendPacket);
-                        requestedJoins++;
+                while(numOfPlayers > joinedPlayers) {
+
+                    // create a packet to hold the request
+                    buffer = new byte[32];
+                    packet = new DatagramPacket(buffer, buffer.length);
+                    // Wait to receive requests
+                    joinGameSocket.receive(packet);
+                    System.out.println("Request received");
+                    // When request is received shorten to only the message and translate to string
+                    byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
+                    String recievedString = new String(receivedBytes);
+
+                    // if the sent message is the same as the address this server will operate on
+                    // this request is meant for this game so send back the address of the server
+                    if(recievedString.equals(senderAddress.toString())){
+                        String message = senderAddress.toString() + tcpAddress.toString();
+                        buffer = message.getBytes();
+                        packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
+                        joinGameSocket.send(packet);
+                    }
+                    else{
+                        System.out.println("Wrong message");
+                        Thread.yield();
+                    }
+                    int oldJoinedCount = joinedPlayers;
+                    while(oldJoinedCount == joinedPlayers){
+                        Thread.yield();
                     }
                 }
-
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("All players have joined the game");
-                System.out.println("Socket closed");
+                tcpMananger.end();
+                joinGameSocket.close();
             }
-            while(numOfPlayers != joinedPlayers){
-                Thread.yield();
-                System.out.println("expected: " + numOfPlayers + "Joined: " + joinedPlayers);
-                Thread.sleep(5000);
+
+            System.out.println("Multiplayer preparation finished");
+            System.out.println("Starting threads");
+            // Create the threads that will run as sender and receiver
+            sender = new ServerSender(senderAddress, senderSocket, sendport);
+            receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
+            System.out.println("Threads up");
+            isThreadsUp = true;
+
+            // check everything is ready
+            if(playersToAdd.size() != numOfPlayers){
+                System.out.println("ERROR PLAYER NOT ADDED");
             }
+
+            // create the engine and start it
             this.engine = new ProcessGameState(this, mapName, playersToAdd);
             engine.start();
-            System.out.println("Threads up");
-
             this.clientRequests = new ClientRequests(numOfPlayers);
 
-            // Server will join with receiver when termination is requested
-            // Only joins with receiver as receiver waits for sender to join
+            System.out.println("Server ready and waiting");
             sender.join();
             receiver.join();
             engine.handlerClosing();
@@ -132,6 +187,13 @@ public class Server extends Thread implements HasEngine {
         }
     }
 
+    private void updatedLowestAvailablePort() {
+        lowestavailableport += 2;
+    }
+    private void updatedLowestAvailableAddress() {
+        lowestAvailableAddress += 2;
+    }
+
     @Override
     public void updateGameView(GameView view) {
         sender.send(view);
@@ -143,8 +205,12 @@ public class Server extends Thread implements HasEngine {
 
     // Add player request from the serverReceiver sent to the engine
     public void addPlayer(String playerName, Teams playerTeam){
+        if(playersToAdd.containsKey(playerName)){
+            playerName = playerName + "(1)";
+        }
         playersToAdd.put(playerName, playerTeam);
         joinedPlayers++;
+        System.out.println(playersToAdd);
     }
 
     @Override
@@ -167,4 +233,13 @@ public class Server extends Thread implements HasEngine {
         sender.stopRunning();
         receiver.stopRunning();
     }
+
+    public boolean isServerFull(){
+        return (numOfPlayers > joinedPlayers);
+    }
+
+    public boolean isThreadsUp(){
+        return isThreadsUp;
+    }
+
 }

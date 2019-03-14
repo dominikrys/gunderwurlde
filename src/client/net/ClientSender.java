@@ -26,7 +26,6 @@ public class ClientSender extends Thread {
         this.port = port;
         this.playerID = playerID;
         running = true;
-        Addressing.setInterfaces(senderSocket);
         this.start();
     }
 
@@ -80,7 +79,7 @@ public class ClientSender extends Thread {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream out;
             out = new DataOutputStream(bos);
-            String data = (playerName + " " + playerTeam);
+            String data = (playerName + "/" + playerTeam);
             // Instead of actions followed by clientID
             // write the joinGame command followed by the required data
             out.writeInt(99);

@@ -41,7 +41,6 @@ public class ClientReceiver extends Thread {
         this.settings = settings;
         buffer = new byte[20000];
         running = true;
-        Addressing.setInterfaces(listenSocket);
         this.start();
     }
 
@@ -53,12 +52,8 @@ public class ClientReceiver extends Thread {
         this.running = false;
     }
 
-
-
-
     public void run() {
         try {
-            listenSocket.joinGroup(listenAddress);
             while (running) {
 
                 // creates a packet and waits to receive a message from the server
@@ -73,7 +68,6 @@ public class ClientReceiver extends Thread {
                     ByteBuffer wrappedValue = ByteBuffer.wrap(ValueBytes);
                     int value = wrappedValue.getInt();
                     if(command == 1){
-                        System.out.println("Updating buffersize");
                         buffer = new byte[value];
                     }
                     continue;

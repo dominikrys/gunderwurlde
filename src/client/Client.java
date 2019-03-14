@@ -1,6 +1,8 @@
 package client;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -15,16 +17,37 @@ import shared.lists.Teams;
 import shared.view.GameView;
 
 public class Client extends Thread {
+
+    // Sockets to listen and send on
     private MulticastSocket listenSocket;
-    // Socket to send requests to the server
     private MulticastSocket sendSocket;
+    private MulticastSocket joinGameSocket;
+    private Socket tcpSocket;
+
+    // Address to be communicated on
     private InetAddress listenAddress;
     private InetAddress senderAddress;
-    private static final int LISTENPORT = 4444;
-    private static final int SENDPORT = 4445;
+    private InetAddress joinGameAddress;
+    private InetAddress tcpAddress;
+    private int lowestAvailableAddress = 1;
+
+    // Ports to be communicated on
+    private int listenPort;
+    private int sendPort;
+    private static final int JOINPORT = 8080;
+    private static final int TCPPORT = 8081;
+    static int lowestAvailablePort = 4444;
+
+    // Used for sending information
+    byte[] buffer;
+    DatagramPacket packet;
+    Boolean waiting;
+
+
+    private String playerName;
+    private Teams team;
     private GameView view;
     private GameRenderer renderer;
-    private String playerName;
     private ClientSender sender;
     private ClientReceiver receiver;
     private Stage stage;
@@ -34,43 +57,76 @@ public class Client extends Thread {
     int playerID;
     boolean idIsSet;
     boolean threadsup;
+    boolean joinedGame;
 
 
-    public Client(Stage stage, String playerName, GameHandler handler, Settings settings, int playerID) {
-        this.stage = stage;
-        this.playerName = playerName;
-        this.handler = handler;
-        this.settings = settings;
-        this.playerID = playerID;
-        firstView = true;
-        threadsup = false;
-        System.out.println("client created");
+    public Client(Stage stage, GameHandler handler, Settings settings, int playerID) {
+       try {
+           joinedGame = true;
+           this.listenPort = lowestAvailablePort;
+           this.sendPort = lowestAvailablePort + 1;
+           updateLowestAvailablePort();
+           this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+           this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+           updateLowestAvailableAddress();
+           this.stage = stage;
+           this.handler = handler;
+           this.settings = settings;
+           this.playerID = playerID;
+           firstView = true;
+           threadsup = false;
+       } catch (UnknownHostException e) {
+           e.printStackTrace();
+       }
+
     }
 
-    public Client(Stage stage, String playerName, GameHandler handler, Settings settings) {
-        this.stage = stage;
-        this.playerName = playerName;
-        this.handler = handler;
-        this.settings = settings;
-        this.playerID = requestClientID();
-        idIsSet = true;
-        firstView = true;
-        threadsup = false;
-        System.out.println("client created");
+    private void updateLowestAvailableAddress() {
+        lowestAvailableAddress++;
+    }
+
+    private void updateLowestAvailablePort() {
+        lowestAvailablePort += 2;
+    }
+
+    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName, Teams team) {
+        try {
+            joinedGame = false;
+            this.playerName = playerName;
+            this.team = team;
+            this.listenPort = portValue;
+            this.sendPort = portValue + 1;
+            this.listenAddress = InetAddress.getByName("230.0.0." + ipValue);
+            this.senderAddress = InetAddress.getByName("230.0.1." + ipValue);
+            this.stage = stage;
+            this.handler = handler;
+            this.settings = settings;
+            idIsSet = true;
+            firstView = true;
+            threadsup = false;
+            joinGame();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run(){
         try{
-            listenSocket = new MulticastSocket(LISTENPORT);
+            System.out.println("Client run cycle started");
+            // Create the sockets to be communicated on
+            listenSocket = new MulticastSocket(listenPort);
+            Addressing.setInterfaces(listenSocket);
+            listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
-            listenAddress = InetAddress.getByName("230.0.1.1");
-            senderAddress = InetAddress.getByName("230.0.0.1");
+            Addressing.setInterfaces(sendSocket);
 
-            sender = new ClientSender(senderAddress, sendSocket, SENDPORT, playerID);
+            System.out.println("Setting threads");
+            sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             threadsup = true;
             System.out.println("Client running");
             // Waits for the sender to join as that will be the first thread to close
+            System.out.println("Waiting to receive ");
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
             receiver.join();
@@ -101,38 +157,68 @@ public class Client extends Thread {
             }
     }
 
-    public int requestClientID(){
-        int clientID = -1;
-        byte[] requestBytes = ByteBuffer.allocate(4).putInt(50).array();
-        try {
-            int JOINPORT = 8888;
-            int RECJOINPORT = 8889;
-            MulticastSocket sendJoinSocket = new MulticastSocket(JOINPORT);
-            Addressing.setInterfaces(sendJoinSocket);
-            MulticastSocket receiveJoinSocket = new MulticastSocket(RECJOINPORT);
-            Addressing.setInterfaces(receiveJoinSocket);
-            InetAddress joinAddress = InetAddress.getByName("230.1.0.0");
-            InetAddress recJoinAddress = InetAddress.getByName("230.2.0.0");
-            receiveJoinSocket.joinGroup(recJoinAddress);
-            DatagramPacket sendPacket = new DatagramPacket(requestBytes, requestBytes.length, joinAddress, JOINPORT);
-            System.out.println("Sending clientID request");
-            sendJoinSocket.send(sendPacket);
-            boolean idset = false;
-            while(!idset) {
-                byte[] receiveBytes = new byte[4];
-                DatagramPacket receivePacket = new DatagramPacket(receiveBytes, receiveBytes.length);
-                System.out.println("Waiting for clientID return");
-                receiveJoinSocket.receive(receivePacket);
+    public void joinGame(){
+        try{
+            // Start creating the joinGame Information
+            joinGameSocket = new MulticastSocket(JOINPORT);
+            Addressing.setInterfaces(joinGameSocket);
+            joinGameAddress = InetAddress.getByName("230.0.0.0");
+            joinGameSocket.joinGroup(joinGameAddress);
 
-                byte[] commandBytes = Arrays.copyOfRange(receivePacket.getData(), 0, 4);
-                ByteBuffer wrappedCommand = ByteBuffer.wrap(commandBytes);
-                clientID = wrappedCommand.getInt();
-                if (clientID == 50) {
+            String gameIPAddress = listenAddress.toString();
+            buffer = gameIPAddress.getBytes();
+
+            packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
+            System.out.println("Sending join request ");
+            joinGameSocket.send(packet);
+
+            buffer = new byte[32];
+            packet = new DatagramPacket(buffer, buffer.length);
+            waiting = true;
+            while(waiting){
+                joinGameSocket.receive(packet);
+                // message that we want to receive will always be 2 IP addresses
+                // one for ID, one for value
+                // 11 is largest value for sending just 1 IP so has to be greater than that
+                if(packet.getLength() > 12) {
+                    byte[] recievedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
+                    String messageReceived = new String(recievedBytes);
+                    String[] split = messageReceived.split("/");
+                    if (("/" + split[1]).equals(listenAddress.toString())) {
+                        tcpAddress = InetAddress.getByName(split[0]);
+                        waiting = false;
+                    } else {
+                        continue;
+                    }
+                }
+                else{
                     continue;
                 }
-                else {
-                    System.out.println("received ID:" + clientID);
-                    idset = true;
+                // We have received the servers IP address so can begin TCP communication
+                tcpSocket = new Socket(tcpAddress, TCPPORT);
+                InputStream is = tcpSocket.getInputStream();
+                OutputStream os = tcpSocket.getOutputStream();
+                byte[] clientIDBytes = new byte[4];
+                is.read(clientIDBytes);
+                ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
+                this.playerID =  wrappedCommand.getInt();
+                System.out.println("PlayerID: "+ playerID);
+
+                // Begin the join game Process
+                String data = (playerName + "/" + team);
+                byte[] nameAndTeamBytes = data.getBytes();
+                os.write(nameAndTeamBytes);
+
+                byte[] confirmationBytes = new byte[4];
+                is.read(confirmationBytes);
+                wrappedCommand = ByteBuffer.wrap(confirmationBytes);
+                int confirmation = wrappedCommand.getInt();
+                if(confirmation == 1){
+                    System.out.println("Player successfully joined");
+                    joinedGame = true;
+                }
+                else{
+                    System.out.println("player failed to join");
                 }
             }
         } catch (UnknownHostException e) {
@@ -142,17 +228,12 @@ public class Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return clientID;
     }
 
     public ClientSender getClientSender() {
         return this.sender;
     }
 
-    public void joinGame(String playerName, Teams team){
-        System.out.println("Sending request to engine");
-        sender.joinGame(playerName, team);
-    }
     public void close() {
         sender.stopRunning();
         receiver.stopRunning();
@@ -162,7 +243,8 @@ public class Client extends Thread {
         return threadsup;
     }
 
-    public boolean isIdIsSet(){
-        return idIsSet;
+
+    public boolean joinedGame() {
+        return joinedGame;
     }
 }

@@ -8,11 +8,6 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Teams;
 
-import javax.xml.crypto.Data;
-import java.io.IOException;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class GameHandler extends Thread {
     // Server variables
@@ -20,6 +15,9 @@ public class GameHandler extends Thread {
     private Server server;
     private Client client;
     private boolean serverStarted;
+
+    private String address;
+    private int port;
 
     // Renderer variables
     private Stage stage;
@@ -48,6 +46,9 @@ public class GameHandler extends Thread {
         this.map = map;
         this.team = team;
         this.numPlayers = Integer.parseInt(numOfPlayers);
+        String[] split = ipValue.split("\\.");
+        this.address = split[3];
+        this.port = Integer.parseInt(portValue);
     }
 
     public void run() {
@@ -57,16 +58,20 @@ public class GameHandler extends Thread {
                 if (!serverStarted) {
                     server = new Server(map, playerName, team, 1, false);
                     serverStarted = true;
-                    client = new Client(stage, playerName, this, settings, 0);
+                    client = new Client(stage, this, settings, 0);
                     client.start();
                 }
                 break;
             case MULTI_PLAYER_HOST:
                 if(!serverStarted) {
+                    System.out.println("Handler starting server");
                     server = new Server(MapList.MEADOW, playerName, team, numPlayers, true);
                     serverStarted = true;
-                    client = new Client(stage, playerName, this, settings, 0);
+                    System.out.println("Handler creating client");
+                    client = new Client(stage, this, settings, 0);
+                    System.out.println("Waiting for the go");
                     client.start();
+                    System.out.println("Host setup and ready");
                 }
                 // Code for setting up server, joining it, and waiting for players
                 break;
@@ -74,13 +79,10 @@ public class GameHandler extends Thread {
                 // TODO: Potential menu for choosing host address and port number?
                 if(!serverStarted) {
                     serverStarted = true;
-                    client = new Client(stage, playerName, this, settings);
+                    client = new Client(stage, this, settings, address, port, playerName, team);
+                    System.out.println("Waiting for the go");
                     client.start();
-                    while(!client.isThreadsup()){
-                        Thread.yield();
-                    }
-                    client.joinGame(playerName, team);
-                    System.out.println("Client officialy joining game");
+                    System.out.println("Client received the go");
                     // Code for joining some server
                 }
                 break;
@@ -100,9 +102,6 @@ public class GameHandler extends Thread {
 
         // TODO: handle the game closing once all stuff is running as is supposed to
     }
-
-
-
 
     public void end() {
         // End server if running/exists
