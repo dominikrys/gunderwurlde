@@ -2,7 +2,8 @@ package server.engine.ai;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Pistol;
+import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
@@ -23,16 +24,14 @@ public class MachineGunnerAI extends ZombieAI {
     private int attackAngle;
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
-    private Pistol pistol = new Pistol();
-    int counter = 0;
+    private Gun smg = new Smg();
 
     public MachineGunnerAI(int attackWidth, int bulletsPerAttack) {
         super();
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
         distanceToPlayerForAttack = Constants.TILE_SIZE * 10;
-        attackDelay = 200;
-//        attackDelay = LONG_DELAY;
+        attackDelay = LONG_DELAY;
         randomizePath = false;
     }
 
@@ -44,9 +43,7 @@ public class MachineGunnerAI extends ZombieAI {
 
         if (delayPast && shootingPathUnobstructed) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
-//                counter++;
-//                System.out.println("Shoots " + counter);
-                attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
+                attacks.add(new ProjectileAttack(smg.getShotProjectiles(
                         new Pose(pose, attackAngle), Teams.ENEMY)));
 
                 bulletsShotInThisAttack++;
@@ -64,22 +61,15 @@ public class MachineGunnerAI extends ZombieAI {
                 }
 
             } else {
-//                System.out.println("End of attack");
                 this.actionState = ActionList.NONE;
                 attacking = false;
                 bulletsShotInThisAttack = 0;
                 shootingPathUnobstructed = false;
-//                counter = 0;
             }
         } else {
             startOfAttackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) - ATTACK_WIDTH / 2);
             attackAngle = startOfAttackAngle;
             shootingPathUnobstructed = pathUnobstructed(pose, closestPlayer, tileMap);
-//            System.out.println(shootingPathUnobstructed);
-//            if(shootingPathUnobstructed) {
-//                System.out.println(shootingPathUnobstructed + " " + counter);
-//                counter++;
-//            }
         }
 
         return attacks;
