@@ -30,32 +30,32 @@ public class SoldierZombieAI extends EnemyAI {
 
     @Override
     public AIAction getAction() {
-            if (attacking) {                                //If attacking, continue to attack
-                return AIAction.ATTACK;
-            } else if (moving) {                            //If moving, continue to move
+        if (attacking) {                                //If attacking, continue to attack
+            return AIAction.ATTACK;
+        } else if (moving) {                            //If moving, continue to move
+            return AIAction.MOVE;
+        } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
+            //1 in 80 change it will decide to move
+            if (rand.nextInt(80) == 0) {
                 return AIAction.MOVE;
-            } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
-                //1 in 80 change it will decide to move
-                if (rand.nextInt(80) == 0) {
-                    return AIAction.MOVE;
-                } else {
-                    return AIAction.WAIT;
-                }
-            } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
-                int decision = rand.nextInt(100);
-                //Will decide whether to attack based on the RATE_OF_FIRE
-                if (decision <= RATE_OF_FIRE && decision >= 2) {
-                    attacking = true;
-                    beginAttackTime = System.currentTimeMillis();
-                    return AIAction.ATTACK;
-                } else if (decision < 2 && decision > 0) {
-                    return AIAction.MOVE;
-                } else {
-                    return AIAction.WAIT;
-                }
+            } else {
+                return AIAction.WAIT;
             }
-            return AIAction.WAIT;
+        } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
+            int decision = rand.nextInt(100);
+            //Will decide whether to attack based on the RATE_OF_FIRE
+            if (decision <= RATE_OF_FIRE && decision >= 2) {
+                attacking = true;
+                beginAttackTime = System.currentTimeMillis();
+                return AIAction.ATTACK;
+            } else if (decision < 2 && decision > 0) {
+                return AIAction.MOVE;
+            } else {
+                return AIAction.WAIT;
+            }
         }
+        return AIAction.WAIT;
+    }
 
 
     //TODO this method could probably live in EnemyAI
@@ -65,8 +65,7 @@ public class SoldierZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                    new Pose(pose, getAngle(pose, closestPlayer)), Teams.ENEMY)));
+
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -103,6 +102,13 @@ public class SoldierZombieAI extends EnemyAI {
 
         return new Force();
     }
+
+    @Override
+    protected Attack getAttackObj() {
+        int angle = getAngle(pose, closestPlayer);
+        return new ProjectileAttack(pistol.getShotProjectiles(new Pose(pose, angle), Teams.ENEMY));
+    }
+
 
     //    protected synchronized Pose generateNextPose() {
 //        pose = checkIfInSpawn();

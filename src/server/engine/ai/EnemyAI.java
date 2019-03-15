@@ -6,6 +6,7 @@ import static java.lang.Math.sqrt;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
@@ -31,6 +32,9 @@ public abstract class EnemyAI {
     private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
+    long beginAttackTime;
+    boolean attacking;
+    Attack attack = new AoeAttack(closestPlayer, 24, 1);
 
     protected EnemyAI() {
         this.attackDelay = SHORT_DELAY;
@@ -38,7 +42,19 @@ public abstract class EnemyAI {
         actionState = ActionList.NONE;
     }
 
-    public abstract LinkedList<Attack> getAttacks();
+    public LinkedList<Attack> getAttacks() {
+        LinkedList<Attack> attacks = new LinkedList<>();
+        long now = System.currentTimeMillis();
+
+        if ((now - beginAttackTime) >= attackDelay) {
+            attacks.add(getAttackObj());
+            attacking = false;
+            this.actionState = ActionList.NONE;
+        }
+        return attacks;
+    }
+
+    protected abstract Attack getAttackObj();
 
     protected abstract Force generateMovementForce();
 
@@ -153,7 +169,7 @@ public abstract class EnemyAI {
     }
 
     // vec = dist * (cos(angle)i + sin(angle)j)
-    private static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
+    static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
         double vecI = Math.cos(Math.toRadians(angleToPose)) * distanceToPose;
         double vecJ = Math.sin(Math.toRadians(angleToPose)) * distanceToPose;
 
