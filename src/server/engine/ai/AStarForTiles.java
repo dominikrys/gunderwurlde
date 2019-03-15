@@ -3,18 +3,16 @@ package server.engine.ai;
 import javafx.util.Pair;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.TileState;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-public class AStarForTiles extends Thread{
+public class AStarForTiles extends Thread {
 
     private final double COST_OF_TRAVEL;
     private double[][] realDist;
@@ -23,7 +21,7 @@ public class AStarForTiles extends Thread{
     private final Pose startPose;
     private final SniperAI myEnemy;
 
-    protected AStarForTiles(SniperAI myEnemy, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose){
+    protected AStarForTiles(SniperAI myEnemy, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose) {
         COST_OF_TRAVEL = cost_of_travel;
         this.tiles = tiles;
         this.startPose = startPose;
@@ -49,7 +47,7 @@ public class AStarForTiles extends Thread{
         }
 
         try {
-            myEnemy.setTilePath(aStar(enemTile, playerTile));
+            myEnemy.setTilePath(generatePoseDirectionPath(generateNodePath(aStar(enemTile, playerTile), enemTile)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,50 +58,65 @@ public class AStarForTiles extends Thread{
         return new Pair<>(tileCoords[1], tileCoords[0]); //y and x
     }
 
-    private ArrayList<Pair<Integer, Integer>> removeLeafs(ArrayList<Pair<Integer, Integer>> paths){
-        Pair<Integer,Integer> biggestDist = paths.get(0);
-
-        // Construct a new list from the set constucted from elements
-        // of the original list
-        List<Pair<Integer, Integer>> path = paths.stream()
-                .distinct()
-                .collect(Collectors.toList());
-
-        // Find a node that has the biggest distance to the final end node.
-        // At this point realDist array still have values for the last A* search
-
-        //TODO fix this
-//        for (Pair<Integer, Integer> coord : path) {
-//            if(realDist[biggestDist.getKey()][biggestDist.getValue()] < realDist[coord.getKey()][coord.getValue()]){
-//                biggestDist = coord;
-//            }
+    //TODO need this to be smarter
+    private LinkedList<Node> generateNodePath(PriorityQueue<Node> path, Pair<Integer, Integer> enemTile) {
+        Node currentNode = path.poll();
+        List<Node> list = new ArrayList<>(path);
+        LinkedList<Node> finalPath = new LinkedList<>();
+        Pair<Integer, Integer> testCoord = new Pair<>(10, 10);
+//        Node testNode = new Node(new Pose(4,25), 0, 0);
+//        System.out.println(enemTile);
+//        System.out.println(testCoord);
+        finalPath.add(currentNode);
+//        if(Node.nodesAdjacent(currentNode,testNode)){
+//            System.out.println("labas");
+//        }else{
+//            System.out.println("as krabas");
 //        }
-//
-//        // If the path is not straight to the end node, try to find shortcuts for it
-//        if(biggestDist != path.get(0)){
-//            ArrayList<Pair<Integer, Integer>> shortCut = aStar(path.get(0), biggestDist);
-//
-//            ArrayList<Pair<Integer, Integer>> shorterPath = new ArrayList<>();
-//
-//            // Add the starting "shortcut" node and the rest of the path
-//            shorterPath.addAll(shortCut);
-//            shorterPath.addAll(path.subList(path.indexOf(biggestDist) + 1, path.size()));
-//
-//            return shorterPath;
-//        }
+        while (!currentNode.getCoordinates().equals(enemTile)) {
+            for (Node node :
+                    list) {
+                if (node.getCostToGo() == currentNode.getCostToGo() - 1 && Node.nodesAdjacent(node, currentNode)) {
+                    currentNode = node;
+                    finalPath.add(currentNode);
+                }
+            }
+        }
+        return finalPath;
+    }
 
-        // If unable to find shortcuts, return the original path
-        return (ArrayList<Pair<Integer, Integer>>) path;
+    private LinkedList<Pose> generatePoseDirectionPath(LinkedList<Node> nodePath){
+        LinkedList<Pose> finalPath = new LinkedList<>();
+        Node currentNode = nodePath.poll();
+        Pose currentPose = new Pose(Tile.tileToLocation(currentNode.getCoordinates().getValue(),currentNode.getCoordinates().getKey()));
+        int currentAngle = -1;
+        int nextAngle;
+        Node nextNode;
+        Pose nextPose;
+
+        while(nodePath.size() != 0){
+            nextNode = nodePath.pop();
+            nextPose = new Pose(Tile.tileToLocation(nextNode.getCoordinates().getValue(),nextNode.getCoordinates().getKey()));
+            nextAngle = EnemyAI.getAngle(currentPose, nextPose);
+            if(nextAngle != currentAngle){
+                finalPath.add(currentPose);
+            }
+            currentPose = nextPose;
+            currentAngle = nextAngle;
+        }
+        finalPath.poll();
+        return finalPath;
     }
 
     // Coordinates are y x
-    protected LinkedHashSet<Pair<Integer, Integer>> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) throws IOException {
+    protected PriorityQueue<Node> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) throws IOException {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);
         // LinkedHashSet to store nodes after they have been expanded
-        LinkedHashSet<Pair<Integer, Integer>> closed = new LinkedHashSet<>();
+        LinkedHashSet<Pair<Integer, Integer>> closedCoords = new LinkedHashSet<>();
         // To store newly opened nodes
         PriorityQueue<Node> newNodes;
+        PriorityQueue<Node> closedNodes = new PriorityQueue<>();
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
@@ -122,21 +135,23 @@ public class AStarForTiles extends Thread{
 
         //TODO do I need this?
         // You cannot expand start node
-        closed.add(startCoords);
+        closedCoords.add(startCoords);
+        System.out.println(startPose);
+        closedNodes.add(new Node(new Pose(startCoords.getValue(), startCoords.getKey()), 0, realDist[startCoords.getValue()][startCoords.getKey()]));
 
         // A* finishes only when the end node is expanded
-        while(!closed.contains(endCoords)) try {
+        while (!closedCoords.contains(endCoords)) try {
 
             appendToLog("\nNode to expand: " + opened.peek() + "\n");
 
             newNodes = openNodes(opened.peek().getCoordinates(), opened.peek().getCostToGo());
-            // Add the coordinates of expanded node to the closed list and remove it from the opened queue
-            closed.add(opened.poll().getCoordinates());
-
+            // Add the coordinates of expanded node to the closedCoords list and remove it from the opened queue
+            closedCoords.add(opened.peek().getCoordinates());
+            closedNodes.add(opened.poll());
 //            appendToLog("\nNewly added nodes");
             for (Node n : newNodes) {
                 // Only add nodes to the open queue if they are not already there and the have not been expanded yet
-                if ((!closed.contains(n.getCoordinates())) && (!opened.contains(n))) {
+                if ((!closedCoords.contains(n.getCoordinates())) && (!opened.contains(n))) {
                     opened.add(n);
 //                    appendToLog("\n" + n.toString());
                 }
@@ -151,17 +166,17 @@ public class AStarForTiles extends Thread{
         }
 
         // Shorten the path by finding shortcuts
-//        closed  = removeLeafs(closed);
+//        closedCoords  = removeLeafs(closedCoords);
 //        System.out.println("Path Found!");
 
-        return closed;
+        return closedNodes;
     }
 
     private void printOut(PriorityQueue<Node> queue) throws IOException {
         PriorityQueue<Node> queueToPrint = new PriorityQueue<>(queue);
 
         appendToLog("\n\nOpen nodes");
-        while(queueToPrint.size() != 0){
+        while (queueToPrint.size() != 0) {
             appendToLog("\n" + queueToPrint.poll().toString());
         }
     }

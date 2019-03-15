@@ -18,6 +18,11 @@ public class Node implements Comparable<Node> {
         sum = costLeft + costToGo;
     }
 
+    public static boolean nodesAdjacent(Node node1, Node node2) {
+        return Math.abs(node1.getCoordinates().getValue()-node2.getCoordinates().getValue()) <= 1 &&
+                Math.abs(node1.getCoordinates().getKey()-node2.getCoordinates().getKey()) <= 1;
+    }
+
     public double getSum() {
         return sum;
     }

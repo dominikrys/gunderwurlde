@@ -11,9 +11,7 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Teams;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 public class SniperAI extends EnemyAI {
 
@@ -24,7 +22,7 @@ public class SniperAI extends EnemyAI {
     private boolean inPositionToAttack = false;
     private boolean playerAiming = false;
     private long beginAttackTime;
-    private LinkedHashSet<Pair<Integer, Integer>> posePath;
+    private LinkedList<Pose> posePath;
 
     public SniperAI(int rangeToRunAway){
         super();
@@ -99,11 +97,15 @@ public class SniperAI extends EnemyAI {
         setProcessing(false);
     }
 
-    synchronized void setTilePath(LinkedHashSet<Pair<Integer, Integer>> aStar) {
-        for (Pair<Integer, Integer> pair :
+    synchronized void setTilePath(LinkedList<Pose> aStar) {
+        for (Pose pose :
                 aStar) {
-            System.out.println(pair.getKey() + " " + pair.getValue());
+            System.out.println(Tile.locationToTile(pose)[0] + " " + Tile.locationToTile(pose)[1]);
         }
+        System.out.println(aStar.poll());
+        System.out.println(aStar.poll());
+        System.out.println(aStar.poll());
+
         posePath = aStar;
     }
 
