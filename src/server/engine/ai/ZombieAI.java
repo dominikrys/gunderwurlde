@@ -87,7 +87,7 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     protected Attack getAttackObj() {
-        return attack;
+        return new AoeAttack(closestPlayer, 24, 1);
     }
     //    @Override
 //    protected Pose generateNextPose() {

@@ -58,11 +58,6 @@ public class SniperAI extends EnemyAI {
         }
     }
 
-    @Override
-    public LinkedList<Attack> getAttacks() {
-        
-    }
-
 
     @Override
     protected Attack getAttackObj() {
@@ -87,6 +82,7 @@ public class SniperAI extends EnemyAI {
                 // cloak? stay still and wait
             }
         }
+        return null;
     }
 
     synchronized void setPoseToGo(Pose pose) {

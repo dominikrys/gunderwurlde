@@ -34,7 +34,6 @@ public abstract class EnemyAI {
     protected double maxMovementForce;
     long beginAttackTime;
     boolean attacking;
-    Attack attack = new AoeAttack(closestPlayer, 24, 1);
 
     protected EnemyAI() {
         this.attackDelay = SHORT_DELAY;

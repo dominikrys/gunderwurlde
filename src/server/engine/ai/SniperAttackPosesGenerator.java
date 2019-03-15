@@ -18,14 +18,14 @@ public class SniperAttackPosesGenerator extends Thread {
 
     @Override
     public void run() {
-        Pose pose;
-//        Random rand = new Random();
-        do{
-
-            pose =
-        }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), ai.tileMap));
-
-        ai.setPoseToGo(pose);
+//        Pose pose;
+////        Random rand = new Random();
+//        do{
+//
+////            pose
+//        }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), ai.tileMap));
+//
+//        ai.setPoseToGo(pose);
     }
 
 }

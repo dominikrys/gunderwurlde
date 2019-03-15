@@ -1,6 +1,7 @@
 package server.engine.ai;
 
 import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
 import shared.Constants;
 
 public class BoomerAI extends ZombieAI {
@@ -9,6 +10,10 @@ public class BoomerAI extends ZombieAI {
         super(Constants.TILE_SIZE * 2);
         randomizePath = false;
         attackDelay = LONG_DELAY;
-        attack = new AoeAttack(pose, 50, 3);
+    }
+
+    @Override
+    protected Attack getAttackObj() {
+        return new AoeAttack(pose, 50, 3);
     }
 }
