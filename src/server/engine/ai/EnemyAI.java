@@ -1,12 +1,5 @@
 package server.engine.ai;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-
-import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
@@ -14,6 +7,14 @@ import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 public abstract class EnemyAI {
 
     Enemy enemy;
@@ -22,18 +23,18 @@ public abstract class EnemyAI {
     static long MEDIUM_DELAY = 500;
     static long LONG_DELAY = 1000;
     protected Pose pose;
-//    double maxDistanceToMove;
+    //    double maxDistanceToMove;
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
     protected Tile[][] tileMap;
-//    protected int mapXDim;
+    //    protected int mapXDim;
 //    protected int mapYDim;
     private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
     long beginAttackTime;
-    boolean attacking;
+    boolean attacking = false;
 
     protected EnemyAI() {
         this.attackDelay = SHORT_DELAY;
@@ -97,10 +98,18 @@ public abstract class EnemyAI {
         this.pose = this.enemy.getPose();
 //        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
-        this.tileMap = tileMap;
-//        this.mapXDim = tileMap.length;
-//        this.mapYDim = tileMap[0].length;
+        this.tileMap = transposeMatrix(tileMap);
         this.closestPlayer = findClosestPlayer(playerPoses);
+    }
+
+    static Tile[][] transposeMatrix(Tile[][] m) {
+        Tile[][] temp = new Tile[m[0].length][m.length];
+
+        for (int i = 0; i < m.length; i++)
+            for (int j = 0; j < m[0].length; j++)
+                temp[j][i] = m[i][j];
+
+        return temp;
     }
 
     public boolean isProcessing() {
@@ -138,9 +147,9 @@ public abstract class EnemyAI {
 
     //TODO might be able to make this a bit more efficient with less steps to the enemy
     // and wider acceptance range. But this would make it less precise. But maybe that's ok.
-    
+
     // Left the prints for debugging if it's ever needed
-    public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap){
+    public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap) {
         int[] currentTile;
         Pose currentPose = startPose;
 //        System.out.println("\n\n\n\n\nstartPose:" + currentPose);
@@ -158,11 +167,11 @@ public abstract class EnemyAI {
 //                    e.printStackTrace();
 //                }
 
-            if(!tileNotSolid(currentTile, tileMap)) {
+            if (!tileNotSolid(currentTile, tileMap)) {
                 return false;
             }
 
-        }while(!Pose.compareLocation(currentPose, endPose, 15));
+        } while (!Pose.compareLocation(currentPose, endPose, 15));
 
         return true;
     }
