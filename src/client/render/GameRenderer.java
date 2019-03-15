@@ -43,9 +43,6 @@ public class GameRenderer implements Runnable {
     // Reusable variables used in rendering gameview
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
-    // Fonts
-    private Font fontManaspace28;
-    private Font fontManaspace18;
     // HUD items
     private HUD hud;
     // Variables for changing cursor + camera
@@ -86,19 +83,10 @@ public class GameRenderer implements Runnable {
         // Set paused to false
         paused = false;
 
-        // Load fonts
-        try {
-            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
-            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
-        } catch (FileNotFoundException e) {
-            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
-            fontManaspace28 = new Font("Consolas", 28);
-            fontManaspace18 = new Font("Consolas", 18);
-        }
-
-        // Iterate over sprites array and load all sprites used in the game
+        // Load sprites and fonts
         resourceLoader = new ResourceLoader();
         resourceLoader.loadAllSprites();
+        resourceLoader.loadFonts();
 
         // Initialize HUD
         hud = new HUD();
@@ -155,19 +143,19 @@ public class GameRenderer implements Runnable {
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        hud.createHUD(getCurrentPlayer(), resourceLoader, fontManaspace28, fontManaspace18);
+        hud.createHUD(getCurrentPlayer(), resourceLoader, resourceLoader.getFontManaspace28(), resourceLoader.getFontManaspace18());
         hud.setAlignment(Pos.TOP_LEFT);
 
         // Create pause overlay
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(fontManaspace28);
+        pauseLabel.setFont(resourceLoader.getFontManaspace28());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Label with instructions how to unpause
         // TODO: add e.g. settings.getPauseKey() when key settings in settings object
         Label pauseInstructions = new Label("Press ESC to unpause");
-        pauseLabel.setFont(fontManaspace18);
+        pauseLabel.setFont(resourceLoader.getFontManaspace18());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Set pausedoverlay VBox - make it slightly translucent
@@ -252,7 +240,7 @@ public class GameRenderer implements Runnable {
         centerCamera();
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), resourceLoader, fontManaspace28, fontManaspace18);
+        hud.updateHUD(getCurrentPlayer(), resourceLoader, resourceLoader.getFontManaspace28(), resourceLoader.getFontManaspace18());
 
         // If game is paused, add the paused overlay
         if (paused) {
