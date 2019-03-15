@@ -248,7 +248,7 @@ public class ProcessGameState extends Thread {
                 if (request.getDrop() && currentPlayer.getItems().size() > 1) {
                     currentPlayer.setCurrentAction(ActionList.THROW);
                     ItemDrop itemDropped = new ItemDrop(currentItem, playerPose, new Velocity(playerPose.getDirection(), 15)); // TODO tweak
-                    // TODO add force & add damage if melee weapon
+                    // TODO turn into projectile if melee weapon
                     items.put(itemDropped.getID(), itemDropped);
 
                     LinkedHashSet<int[]> tilesOn = tilesOn(itemDropped);
@@ -360,6 +360,7 @@ public class ProcessGameState extends Thread {
                                     if (haveCollided(aoeAttack, playerBeingChecked)) {
                                         playerBeingChecked.damage(aoeAttack.getDamage());
                                         playerBeingChecked.setTakenDamage(true);
+                                        playerBeingChecked.addNewForce(aoeAttack.getForce(playerBeingChecked.getPose(), currentEnemy.getLocation()));
                                         players.put(playerID, playerBeingChecked);
                                     }
                                 }
