@@ -7,7 +7,6 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
@@ -32,10 +31,9 @@ import java.util.Map;
 public class GameRenderer implements Runnable {
     // RendererResourceLoader object
     private RendererResourceLoader rendererResourceLoader;
-    // Variables for map
+    // Map renderer variables
     private AnchorPane mapBox;
-    private Canvas mapCanvas;
-    private GraphicsContext mapGC;
+    private MapCanvas mapCanvas;
     // HUD items
     private HUD hud;
     // Variables for changing cursor + camera
@@ -64,8 +62,6 @@ public class GameRenderer implements Runnable {
     // Last location of players and enemies hashmaps
     private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
-    // Entities that have death animations
-    enum EntityDeathAnimation {PLAYER, ENEMY}
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -133,8 +129,7 @@ public class GameRenderer implements Runnable {
     private void setUpGameView(GameView inputGameView) {
         // Initialise pane for map
         mapBox = new AnchorPane();
-        mapCanvas = new Canvas(settings.getScreenWidth(), settings.getScreenHeight());
-        mapGC = mapCanvas.getGraphicsContext2D();
+        mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
@@ -229,7 +224,7 @@ public class GameRenderer implements Runnable {
     // Render gameView
     private void renderGameView() {
         // Render map
-        renderMap();
+        mapCanvas.renderMap(gameView, rendererResourceLoader);
 
         // Render entities onto canvas
         renderEntitiesFromGameViewToCanvas();
@@ -639,25 +634,6 @@ public class GameRenderer implements Runnable {
         return null;
     }
 
-    // Render map from tiles
-    private void renderMap() {
-        // Get map X and Y dimensions
-        int mapX = gameView.getXDim();
-        int mapY = gameView.getYDim();
-
-        // Iterate through the map, rending each tile on canvas
-        for (int x = 0; x < mapX; x++) {
-            for (int y = 0; y < mapY; y++) {
-                // Get tile graphic
-                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
-
-                // Add tile to canvas
-                mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
-                        Constants.TILE_SIZE);
-            }
-        }
-    }
-
     // Set transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
@@ -712,5 +688,10 @@ public class GameRenderer implements Runnable {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    // Entities that have death animations
+    enum EntityDeathAnimation {
+        PLAYER, ENEMY
     }
 }
