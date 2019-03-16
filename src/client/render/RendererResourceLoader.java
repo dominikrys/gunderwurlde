@@ -16,12 +16,12 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResourceLoader {
+public class RendererResourceLoader {
     private Map<EntityList, Image> loadedSprites;
     private Font fontManaspace28;
     private Font fontManaspace18;
 
-    public ResourceLoader() {
+    public RendererResourceLoader() {
         loadedSprites = new HashMap<>();
         fontManaspace18 = null;
         fontManaspace28 = null;

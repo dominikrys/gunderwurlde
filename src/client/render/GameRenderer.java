@@ -15,7 +15,6 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import shared.Constants;
@@ -28,15 +27,12 @@ import shared.view.ItemView;
 import shared.view.SoundView;
 import shared.view.entity.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameRenderer implements Runnable {
-    // ResourceLoader object
-    ResourceLoader resourceLoader;
+    // RendererResourceLoader object
+    RendererResourceLoader rendererResourceLoader;
     // Client
     private ClientSender sender;
     private AnchorPane mapBox; // Pane for map canvas
@@ -84,9 +80,9 @@ public class GameRenderer implements Runnable {
         paused = false;
 
         // Load sprites and fonts
-        resourceLoader = new ResourceLoader();
-        resourceLoader.loadAllSprites();
-        resourceLoader.loadFonts();
+        rendererResourceLoader = new RendererResourceLoader();
+        rendererResourceLoader.loadAllSprites();
+        rendererResourceLoader.loadFonts();
 
         // Initialize HUD
         hud = new HUD();
@@ -143,19 +139,18 @@ public class GameRenderer implements Runnable {
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        hud.createHUD(getCurrentPlayer(), resourceLoader, resourceLoader.getFontManaspace28(), resourceLoader.getFontManaspace18());
-        hud.setAlignment(Pos.TOP_LEFT);
+        hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
 
         // Create pause overlay
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(resourceLoader.getFontManaspace28());
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Label with instructions how to unpause
         // TODO: add e.g. settings.getPauseKey() when key settings in settings object
         Label pauseInstructions = new Label("Press ESC to unpause");
-        pauseLabel.setFont(resourceLoader.getFontManaspace18());
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Set pausedoverlay VBox - make it slightly translucent
@@ -182,7 +177,7 @@ public class GameRenderer implements Runnable {
         root.setCursor(Cursor.NONE);
 
         // Set crosshair to cursorpane
-        cursorImage = new ImageView(resourceLoader.getSprite(EntityList.CROSSHAIR));
+        cursorImage = new ImageView(rendererResourceLoader.getSprite(EntityList.CROSSHAIR));
         cursorPane.getChildren().add(cursorImage);
 
         // Event handlers for mouse movements
@@ -240,7 +235,7 @@ public class GameRenderer implements Runnable {
         centerCamera();
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), resourceLoader, resourceLoader.getFontManaspace28(), resourceLoader.getFontManaspace18());
+        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
 
         // If game is paused, add the paused overlay
         if (paused) {
@@ -293,27 +288,27 @@ public class GameRenderer implements Runnable {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WALK_RED), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WALK_RED), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case BLUE:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WALK_BLUE), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WALK_BLUE), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case GREEN:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WALK_GREEN), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WALK_GREEN), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case YELLOW:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WALK_YELLOW), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WALK_YELLOW), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         default:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                     }
                 }
@@ -325,31 +320,31 @@ public class GameRenderer implements Runnable {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RELOAD_RED), 32, 45,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RELOAD_RED), 32, 45,
                                     5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                                     0, AnimationType.RELOAD));
                             break;
                         case BLUE:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
                                     5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                                     0, AnimationType.RELOAD));
                             break;
                         case GREEN:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
                                     5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                                     0, AnimationType.RELOAD));
                             break;
                         case YELLOW:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
                                     5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                                     0, AnimationType.RELOAD));
                             break;
                         default:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RELOAD), 32, 45,
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RELOAD), 32, 45,
                                     5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                                     0, AnimationType.RELOAD));
                     }
@@ -360,23 +355,23 @@ public class GameRenderer implements Runnable {
                 switch (currentPlayer.getTeam()) {
                     case RED:
                         playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_RED), AnimationType.ATTACK));
+                                rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_RED), AnimationType.ATTACK));
                         break;
                     case GREEN:
                         playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN), AnimationType.ATTACK));
+                                rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN), AnimationType.ATTACK));
                         break;
                     case YELLOW:
                         playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW), AnimationType.ATTACK));
+                                rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW), AnimationType.ATTACK));
                         break;
                     case BLUE:
                         playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE), AnimationType.ATTACK));
+                                rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE), AnimationType.ATTACK));
                         break;
                     default:
                         playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL), AnimationType.ATTACK));
+                                rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RECOIL), AnimationType.ATTACK));
                         break;
                 }
             }
@@ -396,46 +391,46 @@ public class GameRenderer implements Runnable {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RED), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_RED), AnimationType.STAND));
                             break;
                         case BLUE:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_BLUE), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_BLUE), AnimationType.STAND));
                             break;
                         case GREEN:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_GREEN), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_GREEN), AnimationType.STAND));
                             break;
                         case YELLOW:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_YELLOW), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN_YELLOW), AnimationType.STAND));
                             break;
                         default:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_WITH_GUN), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_WITH_GUN), AnimationType.STAND));
                             break;
                     }
                 } else {
                     switch (currentPlayer.getTeam()) {
                         case RED:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_RED), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_RED), AnimationType.STAND));
                             break;
                         case BLUE:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_BLUE), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_BLUE), AnimationType.STAND));
                             break;
                         case GREEN:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_GREEN), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_GREEN), AnimationType.STAND));
                             break;
                         case YELLOW:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER_YELLOW), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER_YELLOW), AnimationType.STAND));
                             break;
                         default:
                             playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.PLAYER), AnimationType.STAND));
+                                    rendererResourceLoader.getSprite(EntityList.PLAYER), AnimationType.STAND));
                             break;
                     }
                 }
@@ -465,37 +460,37 @@ public class GameRenderer implements Runnable {
                     switch (currentEnemy.getEntityListName()) {
                         case ZOMBIE:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case RUNNER:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.RUNNER_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.RUNNER_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case SOLDIER:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.SOLDIER_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.SOLDIER_WALK), 32, 32,
                                     6, 100, 0, AnimationType.MOVE));
                             break;
                         case MIDGET:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.MIDGET_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.MIDGET_WALK), 32, 32,
                                     6, 25, 0, AnimationType.MOVE));
                             break;
                         case BOOMER:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.BOOMER_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.BOOMER_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         case MACHINE_GUNNER:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.MACHINE_GUNNER_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.MACHINE_GUNNER_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                         default:
                             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    resourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
+                                    rendererResourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
                                     6, 75, 0, AnimationType.MOVE));
                             break;
                     }
@@ -504,7 +499,7 @@ public class GameRenderer implements Runnable {
             // Enemy standing, render standing image
             else {
                 enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                        resourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
+                        rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
             }
 
             // Render animation - Animation now in playerOnMap map so just render in appropriate location
@@ -545,7 +540,7 @@ public class GameRenderer implements Runnable {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-                        resourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
+                        rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
                 @Override
@@ -606,7 +601,7 @@ public class GameRenderer implements Runnable {
 
     private void renderEntityView(EntityView entityView) {
         // Get image from loaded sprites
-        Image imageToRender = resourceLoader.getSprite(entityView.getEntityListName());
+        Image imageToRender = rendererResourceLoader.getSprite(entityView.getEntityListName());
 
         // Render image
         renderEntity(entityView, mapGC, imageToRender);
@@ -661,7 +656,7 @@ public class GameRenderer implements Runnable {
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = resourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
+                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,

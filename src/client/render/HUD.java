@@ -1,6 +1,7 @@
 package client.render;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
@@ -28,17 +29,14 @@ public class HUD extends VBox {
     }
 
     // Create HUD
-    public void createHUD(PlayerView currentPlayer, ResourceLoader resourceLoader, Font fontManaspace28, Font fontManaspace18) {
-        // Make HUD
+    public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18) {
+        // Set general VBox settings
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setMaxWidth(Constants.TILE_SIZE * 6);
         this.setMaxHeight(300);
         this.setSpacing(5);
+        this.setAlignment(Pos.TOP_LEFT);
 
-        // If for some reason the player hasn't been found, return an empty HUD
-        if (currentPlayer == null) {
-            return;
-        }
 
         playerScoreNumber = new Label();
         playerScoreNumber.setFont(fontManaspace28);
@@ -93,7 +91,7 @@ public class HUD extends VBox {
     }
 
     // Update all HUD elements
-    public void updateHUD(PlayerView currentPlayer, ResourceLoader resourceLoader, Font fontManaspace28, Font fontManaspace18){
+    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18){
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
@@ -105,15 +103,15 @@ public class HUD extends VBox {
 
         // Populate heart box in GUI
         for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(resourceLoader.getSprite(EntityList.HEART_FULL)));
+            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_FULL)));
         }
         // Populate half heart
         for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(resourceLoader.getSprite(EntityList.HEART_HALF)));
+            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_HALF)));
         }
         // Populate lost hearts
         for (int i = 0; i < lostHearts; i++) {
-            heartBox.getChildren().add(new ImageView(resourceLoader.getSprite(EntityList.HEART_LOST)));
+            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_LOST)));
         }
 
         // Update held items
@@ -123,7 +121,7 @@ public class HUD extends VBox {
 
         for (ItemView currentItem : currentPlayer.getItems()) {
             // Make image view out of graphic
-            ImageView itemImageView = new ImageView(resourceLoader.getSprite(currentItem.getItemListName().getEntityList()));
+            ImageView itemImageView = new ImageView(rendererResourceLoader.getSprite(currentItem.getItemListName().getEntityList()));
 
             // Pane for item image to go in - for border
             FlowPane itemPane = new FlowPane();
@@ -179,7 +177,7 @@ public class HUD extends VBox {
         if (currentItem.getAmmoType() != AmmoList.NONE) {
             // Make label for current ammo in item
             Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(resourceLoader.getSprite(EntityList.AMMO_CLIP)));
+                    new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
             ammoInGun.setFont(fontManaspace28);
             ammoInGun.setTextFill(Color.BLACK);
             // Make label for total ammo in clip
