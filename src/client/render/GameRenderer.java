@@ -64,6 +64,8 @@ public class GameRenderer implements Runnable {
     // Last location of players and enemies hashmaps
     private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
+    // Entities that have death animations
+    enum EntityDeathAnimation {PLAYER, ENEMY};
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -486,24 +488,34 @@ public class GameRenderer implements Runnable {
             renderEntityView(currentProjectile);
         }
 
-        // Render enemy death animations
-        renderEnemyDeaths();
-
-        // TODO: render player deaths
+        // Render enemy and player death animations
+        renderEntityDeaths(EntityDeathAnimation.ENEMY);
+        renderEntityDeaths(EntityDeathAnimation.PLAYER);
     }
 
-    private void renderEnemyDeaths() {
-        // Make a hashmap of all  enemies on map to ease calculations
-        Map<Integer, Pose> gameViewEnemyPoses = new HashMap<>();
-        for (EnemyView enemyView : gameView.getEnemies()) {
-            gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
+    private void renderEntityDeaths(EntityDeathAnimation entityType) {
+        // Make a hashmap of all entities  on map to ease calculations and find dead entities
+        Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
+        HashMap<Integer, Pose> deadEntities = new HashMap<>();
+        switch (entityType) {
+            case PLAYER:
+                for (PlayerView playerView : gameView.getPlayers()) {
+                    gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
+                }
+
+                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastPlayerLocations, gameViewEntityPoses);
+                break;
+            case ENEMY:
+                for (EnemyView enemyView : gameView.getEnemies()) {
+                    gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
+                }
+
+                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEntityPoses);
+                break;
         }
 
-        // Find all dead enemies
-        HashMap<Integer, Pose> deadEnemies = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEnemyPoses);
-
         // Go through lit of dead enemies
-        for (Map.Entry<Integer, Pose> entry : deadEnemies.entrySet()) {
+        for (Map.Entry<Integer, Pose> entry : deadEntities.entrySet()) {
             // Set up an animationtimer with a one-off animation for every enemy
             new AnimationTimer() {
                 Pose pose = entry.getValue();
@@ -526,8 +538,15 @@ public class GameRenderer implements Runnable {
                 }
             }.start();
 
-            // Remove entry from last enemy locations so animation isn't played again
-            lastEnemyLocations.remove(entry.getKey());
+            // Remove entry from last locations so it isn't played again
+            switch (entityType) {
+                case PLAYER:
+                    lastPlayerLocations.remove(entry.getKey());
+                    break;
+                case ENEMY:
+                    lastEnemyLocations.remove(entry.getKey());
+                    break;
+            }
         }
     }
 
