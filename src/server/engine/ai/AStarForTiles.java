@@ -58,12 +58,13 @@ public class AStarForTiles extends Thread {
         return new Pair<>(tileCoords[1], tileCoords[0]); //y and x
     }
 
-    //TODO need this to be smarter
     private LinkedList<Node> generateNodePath(PriorityQueue<Node> path, Pair<Integer, Integer> enemTile) {
+        System.out.println(path.size());
         Node currentNode = path.poll();
         List<Node> list = new ArrayList<>(path);
         LinkedList<Node> finalPath = new LinkedList<>();
-        Pair<Integer, Integer> testCoord = new Pair<>(10, 10);
+        LinkedList<Node> possibleNodesToAdd = new LinkedList<>();
+//        Pair<Integer, Integer> testCoord = new Pair<>(10, 10);
 //        Node testNode = new Node(new Pose(4,25), 0, 0);
 //        System.out.println(enemTile);
 //        System.out.println(testCoord);
@@ -73,39 +74,76 @@ public class AStarForTiles extends Thread {
 //        }else{
 //            System.out.println("as krabas");
 //        }
+//        System.out.println(currentNode);
+//        System.out.println(list.size());
         while (!currentNode.getCoordinates().equals(enemTile)) {
-            for (Node node :
-                    list) {
+            for (Node node : list) {
+//                System.out.println("node " + node);
+//                System.out.println("currentNode " + currentNode);
                 if (node.getCostToGo() == currentNode.getCostToGo() - 1 && Node.nodesAdjacent(node, currentNode)) {
-                    currentNode = node;
-                    finalPath.add(currentNode);
+                    possibleNodesToAdd.add(node);
                 }
             }
+            currentNode = findBestNodeToAdd(possibleNodesToAdd, currentNode);
+            finalPath.add(currentNode);
+            possibleNodesToAdd.clear();
         }
+        for (Node n :
+                finalPath) {
+            System.out.println(n);
+        }
+
         return finalPath;
     }
 
-    private LinkedList<Pose> generatePoseDirectionPath(LinkedList<Node> nodePath){
-        LinkedList<Pose> finalPath = new LinkedList<>();
+    private Node findBestNodeToAdd(LinkedList<Node> possibleNodesToAdd, Node currentNode) {
+        Node bestNodeToAdd = null;
+
+        for (Node node : possibleNodesToAdd) {
+            if (((Math.abs(node.getX() - currentNode.getX()) == 1) &&
+                    (Math.abs(node.getY() - currentNode.getY()) != 1)) ||
+                    ((Math.abs(node.getX() - currentNode.getX()) != 1)
+                            && (Math.abs(node.getY() - currentNode.getY()) == 1))) {
+                bestNodeToAdd = node;
+            }
+        }
+
+        if(bestNodeToAdd == null){
+            bestNodeToAdd = possibleNodesToAdd.removeFirst();
+        }
+
+        return bestNodeToAdd;
+    }
+
+    //TODO make tihs better
+    private LinkedList<Pose> generatePoseDirectionPath(LinkedList<Node> nodePath) {
+        LinkedList<Pose> finalDirectionPath = new LinkedList<>();
         Node currentNode = nodePath.poll();
-        Pose currentPose = new Pose(Tile.tileToLocation(currentNode.getCoordinates().getValue(),currentNode.getCoordinates().getKey()));
+        Pose currentPose = new Pose(Tile.tileToLocation((int) currentNode.getX(), (int) currentNode.getY()));
         int currentAngle = -1;
         int nextAngle;
         Node nextNode;
         Pose nextPose;
+        Node finalnode = nodePath.peekLast();
+//        System.out.println("final node " + finalnode);
 
-        while(nodePath.size() != 0){
+        while (nodePath.size() != 0) {
             nextNode = nodePath.pop();
-            nextPose = new Pose(Tile.tileToLocation(nextNode.getCoordinates().getValue(),nextNode.getCoordinates().getKey()));
+            nextPose = new Pose(Tile.tileToLocation((int) nextNode.getX(), (int) nextNode.getY()));
             nextAngle = EnemyAI.getAngle(currentPose, nextPose);
-            if(nextAngle != currentAngle){
-                finalPath.add(currentPose);
+
+            if (nextAngle != currentAngle) {
+                finalDirectionPath.add(currentPose);
             }
+
             currentPose = nextPose;
             currentAngle = nextAngle;
         }
-        finalPath.poll();
-        return finalPath;
+//        System.out.println("final node" + nodePath.pop());
+        finalDirectionPath.add(new Pose(Tile.tileToLocation((int) finalnode.getX(), (int) finalnode.getY())));
+        finalDirectionPath.poll();
+
+        return finalDirectionPath;
     }
 
     // Coordinates are y x

@@ -23,6 +23,15 @@ public class Node implements Comparable<Node> {
                 Math.abs(node1.getCoordinates().getKey()-node2.getCoordinates().getKey()) <= 1;
     }
 
+    public double getX(){
+        return pose.getX();
+
+    }
+
+    public double getY(){
+        return pose.getY();
+    }
+
     public double getSum() {
         return sum;
     }
