@@ -65,7 +65,7 @@ public class GameRenderer implements Runnable {
     private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
     // Entities that have death animations
-    enum EntityDeathAnimation {PLAYER, ENEMY};
+    enum EntityDeathAnimation {PLAYER, ENEMY}
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -93,7 +93,7 @@ public class GameRenderer implements Runnable {
         playersOnMapAnimations = new HashMap<>();
         enemiesOnMapAnimations = new HashMap<>();
 
-        // Initialise location hashmaps
+        // Initialise last location hashmaps for animations
         lastPlayerLocations = new HashMap<>();
         lastEnemyLocations = new HashMap<>();
 
@@ -141,27 +141,7 @@ public class GameRenderer implements Runnable {
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
 
         // Create pause overlay
-        // "PAUSE" message
-        Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
-        pauseLabel.setTextFill(Color.BLACK);
-
-        // Label with instructions how to unpause
-        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
-        Label pauseInstructions = new Label("Press ESC to unpause");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
-        pauseLabel.setTextFill(Color.BLACK);
-
-        // Set pausedoverlay VBox - make it slightly translucent
-        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
-        pausedOverlay.setStyle(
-                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
-                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
-                        "-fx-background-insets: 50;"
-        );
-        pausedOverlay.setAlignment(Pos.CENTER);
-        pausedOverlay.setSpacing(10);
-        pausedOverlay.setVisible(false);
+        createPauseOverlay();
 
         // Create root stackpane
         StackPane root = new StackPane();
@@ -200,6 +180,30 @@ public class GameRenderer implements Runnable {
         soundView.activate();
     }
 
+    private void createPauseOverlay() {
+        // "PAUSE" message
+        Label pauseLabel = new Label("PAUSE");
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Label with instructions how to unpause
+        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
+        Label pauseInstructions = new Label("Press ESC to unpause");
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
+        pauseLabel.setTextFill(Color.BLACK);
+
+        // Set pausedoverlay VBox - make it slightly translucent
+        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
+        pausedOverlay.setStyle(
+                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
+                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
+                        "-fx-background-insets: 50;"
+        );
+        pausedOverlay.setAlignment(Pos.CENTER);
+        pausedOverlay.setSpacing(10);
+        pausedOverlay.setVisible(false);
+    }
+
     private void updateMouse(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
@@ -234,7 +238,8 @@ public class GameRenderer implements Runnable {
         centerCamera();
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
+        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18());
 
         // If game is paused, add the paused overlay
         if (paused) {
