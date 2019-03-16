@@ -3,23 +3,17 @@ package client.render;
 import client.gui.Settings;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
-import client.net.ClientSender;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import shared.Constants;
@@ -32,37 +26,28 @@ import shared.view.ItemView;
 import shared.view.SoundView;
 import shared.view.entity.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameRenderer implements Runnable {
-    // HashMap to store all graphics
-    private Map<EntityList, Image> loadedSprites;
-    // Client
-    private ClientSender sender;
-    private AnchorPane mapBox; // Pane for map canvas
-    // Reusable variables used in rendering gameview
+    // RendererResourceLoader object
+    private RendererResourceLoader rendererResourceLoader;
+    // Variables for map
+    private AnchorPane mapBox;
     private Canvas mapCanvas;
     private GraphicsContext mapGC;
-    // Fonts
-    private Font fontManaspace28;
-    private Font fontManaspace18;
     // HUD items
-    private Label playerScoreNumber;
-    private FlowPane heldItems;
-    private FlowPane heartBox;
-    private VBox ammoBox;
-    // Pane and imageview for cursor
+    private HUD hud;
+    // Variables for changing cursor + camera
     private AnchorPane cursorPane;
     private ImageView cursorImage;
-    // Current player info
+    private double mouseX;
+    private double mouseY;
+    // Player ID
     private int playerID;
     // GameView object which is to be updated
     private GameView gameView;
-    // Stage to render to
+    // Stage to set render to
     private Stage stage;
     // Whether the game is paused or not
     private boolean paused;
@@ -73,15 +58,14 @@ public class GameRenderer implements Runnable {
     // Settings object
     private Settings settings;
     private SoundView soundView;
-    // X and Y coordinates of the mouse
-    private double mouseX;
-    private double mouseY;
     // Animation hashmaps
     private Map<Integer, AnimatedSpriteManager> playersOnMapAnimations;
     private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
     // Last location of players and enemies hashmaps
     private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
+    // Entities that have death animations
+    enum EntityDeathAnimation {PLAYER, ENEMY};
 
     // Constructor
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
@@ -94,66 +78,13 @@ public class GameRenderer implements Runnable {
         // Set paused to false
         paused = false;
 
-        // Load fonts
-        try {
-            fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
-            fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
-        } catch (FileNotFoundException e) {
-            System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
-            fontManaspace28 = new Font("Consolas", 28);
-            fontManaspace18 = new Font("Consolas", 18);
-        }
+        // Load sprites and fonts
+        rendererResourceLoader = new RendererResourceLoader();
+        rendererResourceLoader.loadAllSprites();
+        rendererResourceLoader.loadFonts();
 
-        // Iterate over sprites array and load all sprites used in the game
-        loadedSprites = new HashMap<>();
-        for (EntityList entity : EntityList.values()) {
-            // Load image
-            Image loadedImage = new Image(entity.getPath());
-
-            // Check if loaded properly
-            if (loadedImage.isError()) {
-                System.out.println("Couldn't load image: " + entity.name() + " from directory: " + entity.getPath());
-                loadedSprites.put(entity, new Image(EntityList.DEFAULT.getPath()));
-            } else {
-                // Check if loaded image dimensions consistent with dim:ensions in EntityList (if the entity has a specified size)
-                if (entity.getSize() != 0) {
-                    /*
-                    TODO: add width check back in?
-                    if (loadedImage.getWidth() != entity.getSize()) {
-                        System.out.println("Error when loading " + entity.name() + ": width incorrect! Should be: " + entity.getSize());
-                    }
-                    */
-                    if (loadedImage.getHeight() != entity.getSize()) {
-                        System.out.println("Image " + entity.name() + ": loaded with incorrect height, should be: " + entity.getSize());
-                    }
-                }
-
-                // Check if transformation necessary, and if so perform it
-                if (entity.getColorAdjust() != null) {
-                    // Create new imageview and apply the color adjustment
-                    ImageView loadedImageView = new ImageView(loadedImage);
-                    loadedImageView.setEffect(entity.getColorAdjust());
-
-                    // Convert loaded image from imageview and store  in the loaded sprites hashmap
-                    Platform.runLater(() -> {
-                        SnapshotParameters sp = new SnapshotParameters();
-                        sp.setFill(Color.TRANSPARENT);
-
-                        loadedSprites.put(entity, SwingFXUtils.toFXImage(
-                                SwingFXUtils.fromFXImage(loadedImageView.snapshot(sp, null), null), null));
-                    });
-                } else {
-                    // No transformation necessary, just store in sprites hashmap
-                    loadedSprites.put(entity, loadedImage);
-                }
-            }
-        }
-
-        // Initialize HUD elements
-        playerScoreNumber = null;
-        heartBox = null;
-        heldItems = null;
-        ammoBox = null;
+        // Initialize HUD
+        hud = new HUD();
 
         // Initialise cursor pane
         cursorPane = new AnchorPane();
@@ -207,19 +138,18 @@ public class GameRenderer implements Runnable {
         mapBox.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        VBox HUDBox = createHUD();
-        HUDBox.setAlignment(Pos.TOP_LEFT);
+        hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
 
         // Create pause overlay
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(fontManaspace28);
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Label with instructions how to unpause
         // TODO: add e.g. settings.getPauseKey() when key settings in settings object
         Label pauseInstructions = new Label("Press ESC to unpause");
-        pauseLabel.setFont(fontManaspace18);
+        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
         pauseLabel.setTextFill(Color.BLACK);
 
         // Set pausedoverlay VBox - make it slightly translucent
@@ -240,13 +170,13 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapBox, HUDBox, pausedOverlay, cursorPane);
+        root.getChildren().addAll(mapBox, hud, pausedOverlay, cursorPane);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
 
         // Set crosshair to cursorpane
-        cursorImage = new ImageView(loadedSprites.get(EntityList.CROSSHAIR));
+        cursorImage = new ImageView(rendererResourceLoader.getSprite(EntityList.CROSSHAIR));
         cursorPane.getChildren().add(cursorImage);
 
         // Event handlers for mouse movements
@@ -304,7 +234,7 @@ public class GameRenderer implements Runnable {
         centerCamera();
 
         // Update HUD
-        updateHUD();
+        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
 
         // If game is paused, add the paused overlay
         if (paused) {
@@ -352,97 +282,81 @@ public class GameRenderer implements Runnable {
             // Check correct animation
             if (currentPlayer.isMoving()) {
                 // TODO: have this go through a scale factor check
-                // Check if in map of currently tracked players and if not, add it
+                // Check if in map of currently tracked players
                 if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.MOVE) {
+                    // Get the correct sprite
+                    EntityList entityToRender = EntityList.PLAYER_WALK;
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WALK_RED), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.PLAYER_WALK_RED;
                             break;
                         case BLUE:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WALK_BLUE), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.PLAYER_WALK_BLUE;
                             break;
                         case GREEN:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WALK_GREEN), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.PLAYER_WALK_GREEN;
                             break;
                         case YELLOW:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WALK_YELLOW), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.PLAYER_WALK_YELLOW;
                             break;
-                        default:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
                     }
+
+                    // Add animation to animationhashmap
+                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                            rendererResourceLoader.getSprite(entityToRender), 32, 32,
+                            6, 75, 0, AnimationType.MOVE));
                 }
             }
             // Check if player reloading
             else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
-                // Check if in map of currently tracked players and if not, add it
+                // Check if in map of currently tracked players
                 if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.RELOAD) {
+                    // Get the correct sprite
+                    EntityList entityToRender = EntityList.PLAYER_RELOAD;
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RELOAD_RED), 32, 45,
-                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                                    0, AnimationType.RELOAD));
+                            entityToRender = EntityList.PLAYER_RELOAD_RED;
                             break;
                         case BLUE:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RELOAD_BLUE), 32, 45,
-                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                                    0, AnimationType.RELOAD));
+                            entityToRender = EntityList.PLAYER_RELOAD_BLUE;
                             break;
                         case GREEN:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RELOAD_GREEN), 32, 45,
-                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                                    0, AnimationType.RELOAD));
+                            entityToRender = EntityList.PLAYER_RELOAD_GREEN;
                             break;
                         case YELLOW:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RELOAD_YELLOW), 32, 45,
-                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                                    0, AnimationType.RELOAD));
+                            entityToRender = EntityList.PLAYER_RELOAD_YELLOW;
                             break;
-                        default:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RELOAD), 32, 45,
-                                    5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                                    0, AnimationType.RELOAD));
                     }
+
+                    // Add animation to animationhashmap
+                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                            rendererResourceLoader.getSprite(entityToRender), 32, 45,
+                            5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                            0, AnimationType.RELOAD));
                 }
             }
             // Check if player attacking
             else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
+                // Get correct sprite
+                EntityList entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL;
                 switch (currentPlayer.getTeam()) {
                     case RED:
-                        playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_RED), AnimationType.ATTACK));
+                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_RED;
                         break;
                     case GREEN:
-                        playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_GREEN), AnimationType.ATTACK));
+                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_GREEN;
                         break;
                     case YELLOW:
-                        playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW), AnimationType.ATTACK));
+                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW;
                         break;
                     case BLUE:
-                        playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL_BLUE), AnimationType.ATTACK));
-                        break;
-                    default:
-                        playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                loadedSprites.get(EntityList.PLAYER_WITH_GUN_RECOIL), AnimationType.ATTACK));
+                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_BLUE;
                         break;
                 }
+
+                // Add sprite to animation hashmap
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                        rendererResourceLoader.getSprite(entityToRender), AnimationType.ATTACK));
             }
             // If standing, render standing image
             else {
@@ -456,53 +370,49 @@ public class GameRenderer implements Runnable {
                     }
                 }
 
+                // Get correct graphic
+                EntityList entityToRender;
                 if (hasGun) {
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_RED), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_WITH_GUN_RED;
                             break;
                         case BLUE:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_BLUE), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_WITH_GUN_BLUE;
                             break;
                         case GREEN:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_GREEN), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_WITH_GUN_GREEN;
                             break;
                         case YELLOW:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN_YELLOW), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_WITH_GUN_YELLOW;
                             break;
                         default:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_WITH_GUN), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_WITH_GUN;
                             break;
                     }
                 } else {
                     switch (currentPlayer.getTeam()) {
                         case RED:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_RED), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_RED;
                             break;
                         case BLUE:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_BLUE), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_BLUE;
                             break;
                         case GREEN:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_GREEN), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_GREEN;
                             break;
                         case YELLOW:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER_YELLOW), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER_YELLOW;
                             break;
                         default:
-                            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.PLAYER), AnimationType.STAND));
+                            entityToRender = EntityList.PLAYER;
                             break;
                     }
                 }
+
+                // Add sprite to animation hashmap
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                        rendererResourceLoader.getSprite(entityToRender), AnimationType.STAND));
             }
 
             // Animation now in playerOnMap map so just render in appropriate location
@@ -526,49 +436,41 @@ public class GameRenderer implements Runnable {
             if (currentEnemy.isMoving()) {
                 // Check if already in the hashmap for enemies on the map
                 if (enemiesOnMapAnimations.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
+                    //TODO: add support for larger enemies/those that don't use the default zombie skin
+
+                    // Get correct sprite
+                    EntityList entityToRender = EntityList.ZOMBIE_WALK;
                     switch (currentEnemy.getEntityListName()) {
                         case ZOMBIE:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.ZOMBIE_WALK;
                             break;
                         case RUNNER:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.RUNNER_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.RUNNER_WALK;
                             break;
                         case SOLDIER:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.SOLDIER_WALK), 32, 32,
-                                    6, 100, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.SOLDIER_WALK;
                             break;
                         case MIDGET:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.MIDGET_WALK), 32, 32,
-                                    6, 25, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.MIDGET_WALK;
                             break;
                         case BOOMER:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.BOOMER_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.BOOMER_WALK;
                             break;
                         case MACHINE_GUNNER:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.MACHINE_GUNNER_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
-                            break;
-                        default:
-                            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                                    loadedSprites.get(EntityList.ZOMBIE_WALK), 32, 32,
-                                    6, 75, 0, AnimationType.MOVE));
+                            entityToRender = EntityList.MACHINE_GUNNER_WALK;
                             break;
                     }
+
+                    // Add animation to animation hashmap
+                    enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                            rendererResourceLoader.getSprite(entityToRender), 32, 32,
+                            6, 75, 0, AnimationType.MOVE));
                 }
             }
             // Enemy standing, render standing image
             else {
                 enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
-                        loadedSprites.get(currentEnemy.getEntityListName()), AnimationType.STAND));
+                        rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
             }
 
             // Render animation - Animation now in playerOnMap map so just render in appropriate location
@@ -586,30 +488,40 @@ public class GameRenderer implements Runnable {
             renderEntityView(currentProjectile);
         }
 
-        // Render enemy death animations
-        renderEnemyDeaths();
-
-        // TODO: render player deaths
+        // Render enemy and player death animations
+        renderEntityDeaths(EntityDeathAnimation.ENEMY);
+        renderEntityDeaths(EntityDeathAnimation.PLAYER);
     }
 
-    private void renderEnemyDeaths() {
-        // Make a hashmap of all  enemies on map to ease calculations
-        Map<Integer, Pose> gameViewEnemyPoses = new HashMap<>();
-        for (EnemyView enemyView : gameView.getEnemies()) {
-            gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
+    private void renderEntityDeaths(EntityDeathAnimation entityType) {
+        // Make a hashmap of all entities  on map to ease calculations and find dead entities
+        Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
+        HashMap<Integer, Pose> deadEntities = new HashMap<>();
+        switch (entityType) {
+            case PLAYER:
+                for (PlayerView playerView : gameView.getPlayers()) {
+                    gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
+                }
+
+                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastPlayerLocations, gameViewEntityPoses);
+                break;
+            case ENEMY:
+                for (EnemyView enemyView : gameView.getEnemies()) {
+                    gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
+                }
+
+                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEntityPoses);
+                break;
         }
 
-        // Find all dead enemies
-        HashMap<Integer, Pose> deadEnemies = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEnemyPoses);
-
         // Go through lit of dead enemies
-        for (Map.Entry<Integer, Pose> entry : deadEnemies.entrySet()) {
+        for (Map.Entry<Integer, Pose> entry : deadEntities.entrySet()) {
             // Set up an animationtimer with a one-off animation for every enemy
             new AnimationTimer() {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
                 AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
-                        loadedSprites.get(EntityList.BLOOD_EXPLOSION), 32, 32,
+                        rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
                 @Override
@@ -626,8 +538,15 @@ public class GameRenderer implements Runnable {
                 }
             }.start();
 
-            // Remove entry from last enemy locations so animation isn't played again
-            lastEnemyLocations.remove(entry.getKey());
+            // Remove entry from last locations so it isn't played again
+            switch (entityType) {
+                case PLAYER:
+                    lastPlayerLocations.remove(entry.getKey());
+                    break;
+                case ENEMY:
+                    lastEnemyLocations.remove(entry.getKey());
+                    break;
+            }
         }
     }
 
@@ -670,7 +589,7 @@ public class GameRenderer implements Runnable {
 
     private void renderEntityView(EntityView entityView) {
         // Get image from loaded sprites
-        Image imageToRender = loadedSprites.get(entityView.getEntityListName());
+        Image imageToRender = rendererResourceLoader.getSprite(entityView.getEntityListName());
 
         // Render image
         renderEntity(entityView, mapGC, imageToRender);
@@ -715,125 +634,6 @@ public class GameRenderer implements Runnable {
         return null;
     }
 
-    // Update all HUD elements
-    private void updateHUD() {
-        // Get the player from gameview
-        PlayerView currentPlayer = getCurrentPlayer();
-
-        // Update score
-        playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
-
-        // Update hearts
-        heartBox.getChildren().clear();
-        int halfHearts = currentPlayer.getHealth() % 2;
-        int wholeHearts = currentPlayer.getHealth() / 2;
-        int lostHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
-
-        // Populate heart box in GUI
-        for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_FULL)));
-        }
-        // Populate half heart
-        for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_HALF)));
-        }
-        // Populate lost hearts
-        for (int i = 0; i < lostHearts; i++) {
-            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_LOST)));
-        }
-
-        // Update held items
-        heldItems.getChildren().clear();
-
-        int currentItemIndex = 0; // Keep track of current item since iterator is used
-
-        for (ItemView currentItem : currentPlayer.getItems()) {
-            // Make image view out of graphic
-            ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
-
-            // Pane for item image to go in - for border
-            FlowPane itemPane = new FlowPane();
-            itemPane.setPrefWidth(Constants.TILE_SIZE);
-            itemPane.setPadding(new Insets(2, 2, 2, 2));
-
-            // Check if the item currently being checked is the current selected item, and if it is, show that
-            if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(25, Color.HOTPINK);
-                dropShadow.setSpread(0.75);
-                itemImageView.setEffect(dropShadow);
-                itemPane.setBorder(new Border(new BorderStroke(Color.HOTPINK,
-                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-            } else {
-                // Not selected item, add black border
-                itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-            }
-
-            // Add imageview to pane
-            itemPane.getChildren().add(itemImageView);
-
-            // Add item to list
-            heldItems.getChildren().add(itemPane);
-
-            // Increment current item index
-            currentItemIndex++;
-        }
-
-        // Add empty item slots
-        while (currentItemIndex < 3) {
-            HBox itemPane = new HBox();
-            itemPane.setMinWidth(Constants.TILE_SIZE * 1.3);
-            itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                    BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-
-            // Add box to item list
-            heldItems.getChildren().add(itemPane);
-
-            currentItemIndex++;
-        }
-
-        // Get currently selected item
-        ItemView currentItem = currentPlayer.getCurrentItem();
-
-        // Clear ammo box
-        ammoBox.getChildren().clear();
-
-        // Information about current gun - ammo in clip and clip size
-        HBox currentGunInfo = new HBox();
-
-        // Add ammo amount to hud if the item has ammo
-        if (currentItem.getAmmoType() != AmmoList.NONE) {
-            // Make label for current ammo in item
-            Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(loadedSprites.get(EntityList.AMMO_CLIP)));
-            ammoInGun.setFont(fontManaspace28);
-            ammoInGun.setTextFill(Color.BLACK);
-            // Make label for total ammo in clip
-            Label totalAmmoInClip = new Label("/" + currentItem.getClipSize());
-            totalAmmoInClip.setFont(fontManaspace18);
-            totalAmmoInClip.setTextFill(Color.BLACK);
-
-            //Make label for total amount of ammo the current item uses
-            Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
-            totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
-
-            // Add info on current gun to the right element
-            currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
-            // Add the total amount of ammo the current gun uses under the gun info
-            ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
-        } else {
-            // Make label for infinite use if it's not a weapon
-            Label currentAmmo = new Label("∞");
-            currentAmmo.setFont(new Font("Consolas", 32));
-            currentAmmo.setTextFill(Color.BLACK);
-
-            // Add info on current gun to the right element and to ammo box
-            currentGunInfo.getChildren().addAll(currentAmmo);
-            ammoBox.getChildren().add(currentGunInfo);
-        }
-    }
-
     // Render map from tiles
     private void renderMap() {
         // Get map X and Y dimensions
@@ -844,7 +644,7 @@ public class GameRenderer implements Runnable {
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = loadedSprites.get(gameView.getTileMap()[x][y].getTileType().getEntityListName());
+                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
@@ -853,94 +653,10 @@ public class GameRenderer implements Runnable {
         }
     }
 
-    // Create HUD and initialise all elements
-    private VBox createHUD() {
-        // Make HUD
-        VBox HUDBox = new VBox();
-        HUDBox.setPadding(new Insets(5, 5, 5, 5));
-        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-        HUDBox.setMaxHeight(300);
-        HUDBox.setSpacing(5);
-
-        // Get the current player from the player list
-        PlayerView currentPlayer = getCurrentPlayer();
-
-        // If for some reason the player hasn't been found, return an empty HUD
-        if (currentPlayer == null) {
-            return new VBox();
-        }
-
-        playerScoreNumber = new Label();
-        playerScoreNumber.setFont(fontManaspace28);
-        playerScoreNumber.setTextFill(Color.BLACK);
-
-        // Label with player name to tell which player this part of the HUD is for
-        Label playerLabel = new Label(currentPlayer.getName());
-        playerLabel.setFont(fontManaspace28);
-        playerLabel.setTextFill(Color.BLACK);
-
-        // Player score
-        Label playerScoreLabel = new Label("SCORE: ");
-        playerScoreLabel.setFont(fontManaspace28);
-        playerScoreLabel.setTextFill(Color.BLACK);
-
-        // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
-        heartBox = new FlowPane();
-        heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
-
-        // Iterate through held items list and add to the HUD
-        heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
-
-        // Declare ammo vbox - populated dynamically
-        ammoBox = new VBox();
-
-        // Change background according to team
-        switch (currentPlayer.getTeam()) {
-            case RED:
-                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 47, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
-                break;
-            case BLUE:
-                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
-                break;
-            case GREEN:
-                HUDBox.setStyle("-fx-background-color: rgba(90, 240, 41, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
-                break;
-            case YELLOW:
-                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
-                break;
-            default:
-                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
-                HUDBox.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
-                break;
-        }
-
-        // Add elements of HUD for player to HUD
-        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
-
-        return HUDBox;
-    }
-
     // Set transform for the GraphicsContext to rotate around a pivot point.
     private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-    }
-
-    // Get image from the HashMap of loaded images according to the entity name
-    private Image getImageFromEntity(EntityList entityName) {
-        // Try to get the correct sprite, if not found then return default
-        Image image = loadedSprites.get(entityName);
-
-        if (image != null && !image.isError()) {
-            return image;
-        } else {
-            System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
-            return loadedSprites.get(EntityList.DEFAULT);
-        }
     }
 
     // Create an Image object from specified colour
@@ -975,14 +691,6 @@ public class GameRenderer implements Runnable {
             }
         }
         return outputImage;
-    }
-
-    public void setClientSender(ClientSender sender) {
-        this.sender = sender;
-    }
-
-    public GameView getView() {
-        return this.gameView;
     }
 
     public KeyboardHandler getKeyboardHandler() {
