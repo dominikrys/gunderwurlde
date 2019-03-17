@@ -290,13 +290,13 @@ public class MapCanvas extends Canvas {
         }
 
         // Render enemy and player death animations
-        renderEntityDeaths(GameRenderer.EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
-        renderEntityDeaths(GameRenderer.EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
+        renderEntityDeaths(EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
+        renderEntityDeaths(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
     }
 
     // Check which entities have died and display death animation
-    private void renderEntityDeaths(GameRenderer.EntityDeathAnimation entityType, GameView gameView,
-                                   RendererResourceLoader rendererResourceLoader) {
+    private void renderEntityDeaths(EntityDeathAnimation entityType, GameView gameView,
+                                    RendererResourceLoader rendererResourceLoader) {
         // Make a hashmap of all entities  on map to ease calculations and find dead entities
         Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
         HashMap<Integer, Pose> deadEntities = new HashMap<>();
@@ -456,5 +456,23 @@ public class MapCanvas extends Canvas {
             }
         }
         return outputImage;
+    }
+
+    /**
+     * Create a WritableImage object from a given colour
+     * @param color
+     * @return
+     */
+    private Image createImageFromColor(Color color) {
+        WritableImage image = new WritableImage(1, 1);
+        image.getPixelWriter().setColor(0, 0, color);
+        return image;
+    }
+
+    /**
+     * Enum containing entities that have death animations for the MapCanvas class
+     */
+    enum EntityDeathAnimation {
+        PLAYER, ENEMY
     }
 }

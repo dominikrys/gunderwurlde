@@ -21,36 +21,103 @@ import shared.view.GameView;
 import shared.view.SoundView;
 import shared.view.entity.PlayerView;
 
+/**
+ * GameRenderer class. Contains the whole rendering backbone.
+ * @author Dominik Rys
+ */
 public class GameRenderer implements Runnable {
-    // RendererResourceLoader object
+    /**
+     * RendererResourceLoader - Contains resources used by the renderer
+     */
     private RendererResourceLoader rendererResourceLoader;
-    // Map renderer variables
-    private AnchorPane mapBox;
-    private MapCanvas mapCanvas;
-    // HUD items
-    private HUD hud;
-    // Variables for changing cursor + camera
-    private AnchorPane cursorPane;
-    private ImageView cursorImage;
-    private double mouseX;
-    private double mouseY;
-    // Player ID
-    private int playerID;
-    // GameView object which is to be updated
-    private GameView gameView;
-    // Stage to set render to
-    private Stage stage;
-    // Whether the game is paused or not
-    private boolean paused;
-    private VBox pausedOverlay;
-    // Input variables
-    private KeyboardHandler kbHandler;
-    private MouseHandler mHandler;
-    // Settings object
-    private Settings settings;
-    private SoundView soundView;
 
-    // Constructor
+    /**
+     * Pane for the map
+     */
+    private AnchorPane mapPane;
+
+    /**
+     * Canvas for the map - this contains the game
+     */
+    private MapCanvas mapCanvas;
+
+    /**
+     * The hud object
+     */
+    private HUD hud;
+
+    /**
+     * Pane for cursor - necessary as custom cursor used
+     */
+    private AnchorPane cursorPane;
+
+    /**
+     * Custom cursor image
+     */
+    private ImageView cursorImage;
+
+    /**
+     * X coordinate of mouse
+     */
+    private double mouseX;
+
+    /**
+     * Y coordinate of mouse
+     */
+    private double mouseY;
+
+    /**
+     * ID of the player that this GameRenderer is for
+     */
+    private int playerID;
+
+    /**
+     * The current gamestate
+     */
+    private GameView gameView;
+
+    /**
+     * Stage to display renderer on
+     */
+    private Stage stage;
+
+    /**
+     * Whether the game is paused or not
+     */
+    private boolean paused;
+
+    /**
+     * VBox containing the pause overlay
+     */
+    private VBox pausedOverlay;
+
+    /**
+     * KeyboardHandler
+     */
+    private KeyboardHandler kbHandler;
+
+    /**
+     * Mouse handler
+     */
+    private MouseHandler mHandler;
+
+    /**
+     * Settings object
+     */
+    private Settings settings;
+
+    /**
+     * SoundView object to be passed to the sound manager
+     */
+    private SoundView soundView; // TODO: why is this here??
+
+    /**
+     * Constructor
+     * @param stage Stage to display game on
+     * @param initialGameView Initial gameview to initialise elements off of
+     * @param playerID ID of player for whom this renderer is for
+     * @param settings Settings object
+     */
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
@@ -84,11 +151,13 @@ public class GameRenderer implements Runnable {
         soundView = new SoundView(initialGameView, settings);
     }
 
-    // Run the thread - set up window and update game on a timer
+    /**
+     * Run the thread - set up gameview and keep updating the screen according to received gameviews
+     */
     @Override
     public void run() {
         // Set up GameView - change the stage
-        setUpGameView(gameView);
+        setUpRenderer(gameView);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -104,12 +173,15 @@ public class GameRenderer implements Runnable {
 //        timeline.play();
     }
 
-    // Set up the window for tha game
-    private void setUpGameView(GameView inputGameView) {
+    /**
+     * Initialise game renderer's elements according to the input gameview
+     * @param inputGameView First received gameviw object
+     */
+    private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapBox = new AnchorPane();
+        mapPane = new AnchorPane();
         mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
-        mapBox.getChildren().addAll(mapCanvas);
+        mapPane.getChildren().addAll(mapCanvas);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
@@ -124,7 +196,7 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapBox, hud, pausedOverlay, cursorPane);
+        root.getChildren().addAll(mapPane, hud, pausedOverlay, cursorPane);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
@@ -153,6 +225,9 @@ public class GameRenderer implements Runnable {
         soundView.activate();
     }
 
+    /**
+     * Create the pause overlay
+     */
     private void createPauseOverlay() {
         // "PAUSE" message
         Label pauseLabel = new Label("PAUSE");
@@ -177,6 +252,10 @@ public class GameRenderer implements Runnable {
         pausedOverlay.setVisible(false);
     }
 
+    /**
+     * Update the mouse location and render cursor in the new spot
+     * @param e Mouse moved ebent
+     */
     private void updateMouse(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
@@ -185,13 +264,18 @@ public class GameRenderer implements Runnable {
         renderCursor();
     }
 
-    // Render cursor
+    /**
+     * Render cursor according to the mouse's X and Y coordinates
+     */
     private void renderCursor() {
         AnchorPane.setLeftAnchor(cursorImage, mouseX - Constants.TILE_SIZE / 2);
         AnchorPane.setTopAnchor(cursorImage, mouseY - Constants.TILE_SIZE / 2);
     }
 
-    // Update stored gameView
+    /**
+     * Update stored gameview and update keyboard, mouse and sound handlers
+     * @param gameView
+     */
     public void updateGameView(GameView gameView) {
         this.gameView = gameView;
         this.kbHandler.setGameView(gameView);
@@ -199,7 +283,9 @@ public class GameRenderer implements Runnable {
         this.soundView.setGameView(gameView);
     }
 
-    // Render gameView
+    /**
+     * Render gameview
+     */
     private void renderGameView() {
         // Render map
         mapCanvas.renderMap(gameView, rendererResourceLoader);
@@ -222,6 +308,9 @@ public class GameRenderer implements Runnable {
         }
     }
 
+    /**
+     * Center the camera on the player
+     */
     private void centerCamera() {
         // Get player location on map
         PlayerView currentPlayer = getCurrentPlayer();
@@ -243,7 +332,9 @@ public class GameRenderer implements Runnable {
 
     }
 
-    // Method for getting the current player
+    /**
+     * Get the PlayerView object of the player specified in playerID
+     */
     private PlayerView getCurrentPlayer() {
         for (PlayerView playerView : gameView.getPlayers()) {
             if (playerView.getID() == playerID) {
@@ -254,31 +345,35 @@ public class GameRenderer implements Runnable {
         return null;
     }
 
-    // Create an Image object from specified colour
-    private Image createImageFromColor(Color color) {
-        WritableImage image = new WritableImage(1, 1);
-        image.getPixelWriter().setColor(0, 0, color);
-        return image;
-    }
-
+    /**
+     * Get keyboard handler
+     * @return Keyboard handler
+     */
     public KeyboardHandler getKeyboardHandler() {
         return this.kbHandler;
     }
 
+    /**
+     * Get mouse handler
+     * @return Mouse handler
+     */
     public MouseHandler getMouseHandler() {
         return this.mHandler;
     }
 
+    /**
+     * Check whether game is paused
+     * @return Boolean object corresponding to whether the game is paused or not
+     */
     public boolean isPaused() {
         return paused;
     }
 
+    /**
+     * Set whether renderer is paused or not
+     * @param paused Paused boolean
+     */
     public void setPaused(boolean paused) {
         this.paused = paused;
-    }
-
-    // Entities that have death animations
-    enum EntityDeathAnimation {
-        PLAYER, ENEMY
     }
 }
