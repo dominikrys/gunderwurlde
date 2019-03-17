@@ -24,10 +24,12 @@ import java.util.Map;
 public class MapCanvas extends Canvas {
     // Graphics context for canvas
     private GraphicsContext mapGC;
+
     // Animation hashmaps
     private Map<Integer, AnimatedSpriteManager> playersOnMapAnimations;
     private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
-    // Last location of players and enemies hashmaps
+
+    // Last location of players and enemies hashmaps - used for spawning and death animations
     private Map<Integer, Pose> lastPlayerLocations;
     private Map<Integer, Pose> lastEnemyLocations;
 
@@ -292,7 +294,8 @@ public class MapCanvas extends Canvas {
         renderEntityDeaths(GameRenderer.EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
     }
 
-    public void renderEntityDeaths(GameRenderer.EntityDeathAnimation entityType, GameView gameView,
+    // Check which entities have died and display death animation
+    private void renderEntityDeaths(GameRenderer.EntityDeathAnimation entityType, GameView gameView,
                                    RendererResourceLoader rendererResourceLoader) {
         // Make a hashmap of all entities  on map to ease calculations and find dead entities
         Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
@@ -368,7 +371,7 @@ public class MapCanvas extends Canvas {
     }
 
     // Render healthbar above entity
-    public void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
+    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
         // Variables for calculations
         int healthBarHeight = 5;
         int verticalOffset = 12;
@@ -393,7 +396,7 @@ public class MapCanvas extends Canvas {
         renderEntity(entityView, imageToRender);
     }
 
-    // Render entity onto the map canas
+    // Render entity onto the map canvas
     private void renderEntity(EntityView entity, Image image) {
         // If entity's sizeScaleFactor isn't zero, enlarge the graphic
         if (entity.getSizeScaleFactor() != 1) {
@@ -413,6 +416,7 @@ public class MapCanvas extends Canvas {
         mapGC.restore(); // Back to original state (before rotation)
     }
 
+    // Draw rotated image with spritesheet support - can specify which bit of image to render
     private void drawRotatedImageFromSpritesheet(Image image, double angle, double tlpx,
                                                  double tlpy, double sx, double sy, double sw, double sh) {
         mapGC.save(); // Saves the current state on stack, including the current transform for later
