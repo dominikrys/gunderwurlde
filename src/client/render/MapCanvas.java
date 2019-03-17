@@ -21,18 +21,42 @@ import shared.view.entity.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * MapCanvas class. This is what the map and all entities are rendered on.
+ *
+ * @author Dominik Rys
+ */
 public class MapCanvas extends Canvas {
-    // Graphics context for canvas
+    /**
+     * GraphicsContext used by this canvas
+     */
     private GraphicsContext mapGC;
 
-    // Animation hashmaps
+    /**
+     * Hashmap for storing player animations
+     */
     private Map<Integer, AnimatedSprite> playersOnMapAnimations;
+
+    /**
+     * HashMap for storing enemy animations
+     */
     private Map<Integer, AnimatedSprite> enemiesOnMapAnimations;
 
-    // Last location of players and enemies hashmaps - used for spawning and death animations
+    /**
+     * Player locations in last gameview object - used for checking if any players died
+     */
     private Map<Integer, Pose> lastPlayerLocations;
+
+    /**
+     * Enemy locations in last gameview object - used for checking if any enemies died
+     */
     private Map<Integer, Pose> lastEnemyLocations;
 
+    /**
+     * Constructor
+     * @param width Width of canvas
+     * @param height Height of canvas
+     */
     public MapCanvas(int width, int height) {
         // Initialise canvas
         super(width, height);
@@ -47,7 +71,11 @@ public class MapCanvas extends Canvas {
         lastEnemyLocations = new HashMap<>();
     }
 
-    // Render map from tiles
+    /**
+     * Render map tiles
+     * @param gameView GameView to get map data from
+     * @param rendererResourceLoader Renderer resources
+     */
     public void renderMap(GameView gameView, RendererResourceLoader rendererResourceLoader) {
         // Get map X and Y dimensions
         int mapX = gameView.getXDim();
@@ -66,7 +94,12 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    // Render entities to the map canvas
+    /**
+     * Render entities to canvas
+     * @param gameView GameView to get data from
+     * @param playerID ID of player that can see this canvas
+     * @param rendererResourceLoader Renderer resources
+     */
     public void renderEntitiesFromGameViewToCanvas(GameView gameView, int playerID, RendererResourceLoader rendererResourceLoader) {
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
@@ -294,7 +327,12 @@ public class MapCanvas extends Canvas {
         renderEntityDeaths(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
     }
 
-    // Check which entities have died and display death animation
+    /**
+     * Check which entities have died relative to the previous gameview object and display their death animations
+     * @param entityType EntityType to check deaths for
+     * @param gameView GameView to get data from
+     * @param rendererResourceLoader Renderer resources
+     */
     private void renderEntityDeaths(EntityDeathAnimation entityType, GameView gameView,
                                     RendererResourceLoader rendererResourceLoader) {
         // Make a hashmap of all entities  on map to ease calculations and find dead entities
@@ -352,16 +390,28 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    // Find difference between two maps - first argument is the hashmap whose extras will be returned
-    private <K, V> Map<K, V> mapDifference(Map<? extends K, ? extends V> left, Map<? extends K, ? extends V> right) {
+    /**
+     * Find difference between two maps
+     * @param map1 Map whose extras will be returned
+     * @param map2 Map to compare to the first map
+     * @param <K> Type of keys in input maps
+     * @param <V> Type of values in input maps
+     * @return Map containing the differences between the two maps
+     */
+    private <K, V> Map<K, V> mapDifference(Map<? extends K, ? extends V> map1, Map<? extends K, ? extends V> map2) {
         Map<K, V> difference = new HashMap<>();
-        difference.putAll(left);
-        difference.putAll(right);
-        difference.entrySet().removeAll(right.entrySet());
+        difference.putAll(map1);
+        difference.putAll(map2);
+        difference.entrySet().removeAll(map2.entrySet());
         return difference;
     }
 
-    // Render image according to info from its animation
+    /**
+     * Render image according to info from its animation
+     * @param entitiesOnMap Entities currently on the map
+     * @param id ID of animation
+     * @param pose Pose of animation to get location to render to from
+     */
     private void renderAnimationSpriteOnMap(Map<Integer, AnimatedSprite> entitiesOnMap, int id, Pose pose) {
         AnimatedSprite thisSpriteManager = entitiesOnMap.get(id);
 
@@ -370,7 +420,12 @@ public class MapCanvas extends Canvas {
                 thisSpriteManager.getIndividualImageWidth(), thisSpriteManager.getIndividualImageHeight());
     }
 
-    // Render healthbar above entity
+    /**
+     * Render healthbar above entity
+     * @param pose Pose of animation to get location to render to from
+     * @param currentHealth Current health of the entity
+     * @param maxHealth Max health of the entity
+     */
     private void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
         // Variables for calculations
         int healthBarHeight = 5;
@@ -388,6 +443,11 @@ public class MapCanvas extends Canvas {
                 Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
     }
 
+    /**
+     * Render entity from its EntityView object
+     * @param entityView EntityView to render
+     * @param rendererResourceLoader Renderer resources
+     */
     private void renderEntityView(EntityView entityView, RendererResourceLoader rendererResourceLoader) {
         // Get image from loaded sprites
         Image imageToRender = rendererResourceLoader.getSprite(entityView.getEntityListName());
@@ -396,42 +456,72 @@ public class MapCanvas extends Canvas {
         renderEntity(entityView, imageToRender);
     }
 
-    // Render entity onto the map canvas
-    private void renderEntity(EntityView entity, Image image) {
+    /**
+     * Render entity to map
+     * @param entityView Entity to render
+     * @param image Image to render
+     */
+    private void renderEntity(EntityView entityView, Image image) {
         // If entity's sizeScaleFactor isn't zero, enlarge the graphic
-        if (entity.getSizeScaleFactor() != 1) {
-            image = resampleImage(image, entity.getSizeScaleFactor());
+        if (entityView.getSizeScaleFactor() != 1) {
+            image = resampleImage(image, entityView.getSizeScaleFactor());
         }
 
         // Render entity to specified location on canvas
-        drawRotatedImage(image, entity.getPose().getDirection(), entity.getPose().getX(),
-                entity.getPose().getY());
+        drawRotatedImage(image, entityView.getPose().getDirection(), entityView.getPose().getX(),
+                entityView.getPose().getY());
     }
 
-    // Draw rotated image
-    private void drawRotatedImage(Image image, double angle, double tlpx, double tlpy) {
+    /**
+     * Draw rotated image on canvas
+     * @param image Image to draw
+     * @param angle Angle to draw image at
+     * @param x X coordinate to render image to
+     * @param y Y coordinate to render image to
+     */
+    private void drawRotatedImage(Image image, double angle, double x, double y) {
         mapGC.save(); // Saves the current state on stack, including the current transform for later
-        rotate(angle, tlpx + image.getWidth() / 2, tlpy + image.getHeight() / 2);
-        mapGC.drawImage(image, tlpx, tlpy);
+        rotate(angle, x + image.getWidth() / 2, y + image.getHeight() / 2);
+        mapGC.drawImage(image, x, y);
         mapGC.restore(); // Back to original state (before rotation)
     }
 
-    // Draw rotated image with spritesheet support - can specify which bit of image to render
-    private void drawRotatedImageFromSpritesheet(Image image, double angle, double tlpx,
-                                                 double tlpy, double sx, double sy, double sw, double sh) {
+    /**
+     * Draw rotated image with spritesheet support - can specify which bit of image to render
+     * @param image Image to render
+     * @param angle Angle to render image at
+     * @param x X coordinate to render image at
+     * @param y Y coordinate to render image at
+     * @param xOffset X offset on spritesheet to render image from
+     * @param yOffset Y offset on spritesheet to render image from
+     * @param width Width of image to render
+     * @param height Height of image to render
+     */
+    private void drawRotatedImageFromSpritesheet(Image image, double angle, double x, double y, double xOffset,
+                                                 double yOffset, double width, double height) {
         mapGC.save(); // Saves the current state on stack, including the current transform for later
-        rotate(angle, tlpx + sw / 2, tlpy + sh / 2);
-        mapGC.drawImage(image, sx, sy, sw, sh, tlpx, tlpy, sw, sh);
+        rotate(angle, x + width / 2, y + height / 2);
+        mapGC.drawImage(image, xOffset, yOffset, width, height, x, y, width, height);
         mapGC.restore(); // Back to original state (before rotation)
     }
 
-    // Set transform for the GraphicsContext to rotate around a pivot point.
+    /**
+     * Set transform for the GraphicsContext to rotate around a pivot point.
+     * @param angle Angle to rotate GraphicsContext by
+     * @param xPivotCoordinate Coordinate of rotation x pivot
+     * @param yPivotCoordinate Coordinate of rotation y pivot
+     */
     private void rotate(double angle, double xPivotCoordinate, double yPivotCoordinate) {
         Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
         mapGC.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
     }
 
-    // Scale image by integer value through resampling - useful for large enemies/powerups
+    /**
+     * Scale image by integer value through resampling - useful for large enemies/powerups
+     * @param inputImage Image to enlarge
+     * @param scaleFactor Scalefactor to enlarge image by
+     * @return Enlarged image
+     */
     private Image resampleImage(Image inputImage, int scaleFactor) {
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
@@ -460,8 +550,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Create a WritableImage object from a given colour
-     * @param color
-     * @return
+     * @param color Color to make image from
+     * @return Image made from input colour
      */
     private Image createImageFromColor(Color color) {
         WritableImage image = new WritableImage(1, 1);
