@@ -1,6 +1,5 @@
 package client;
 
-import client.gui.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import javafx.application.Application;
 import javafx.scene.image.Image;

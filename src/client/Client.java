@@ -1,6 +1,5 @@
 package client;
 
-import client.gui.Settings;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;

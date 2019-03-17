@@ -1,8 +1,9 @@
-package client.gui;
+package client;
+
+import client.input.KeyAction;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Settings class. Contains the game's settings
@@ -57,7 +58,7 @@ public class Settings implements Serializable {
     /**
      * Key mapping
      */
-    private HashMap<String,String> keyMapping;
+    private HashMap<KeyAction,String> keyMapping;
 
     /**
      * Constructor
@@ -83,17 +84,17 @@ public class Settings implements Serializable {
      */
     public void mapDefaultKeys() {
         keyMapping = new HashMap<>();
-        keyMapping.put("up", "W");
-        keyMapping.put("down", "S");
-        keyMapping.put("left", "A");
-        keyMapping.put("right", "D");
-        keyMapping.put("reload", "R");
-        keyMapping.put("drop", "G");
-        keyMapping.put("interact", "E");
-        keyMapping.put("item1", "DIGIT1");
-        keyMapping.put("item2", "DIGIT2");
-        keyMapping.put("item3", "DIGIT3");
-        keyMapping.put("esc", "ESCAPE");
+        keyMapping.put(KeyAction.UP, "W");
+        keyMapping.put(KeyAction.DOWN, "S");
+        keyMapping.put(KeyAction.LEFT, "A");
+        keyMapping.put(KeyAction.RIGHT, "D");
+        keyMapping.put(KeyAction.RELOAD, "R");
+        keyMapping.put(KeyAction.DROP, "G");
+        keyMapping.put(KeyAction.INTERACT, "E");
+        keyMapping.put(KeyAction.ITEM1, "DIGIT1");
+        keyMapping.put(KeyAction.ITEM2, "DIGIT2");
+        keyMapping.put(KeyAction.ITEM3, "DIGIT3");
+        keyMapping.put(KeyAction.ESC, "ESCAPE");
     }
 
     /**
@@ -235,7 +236,7 @@ public class Settings implements Serializable {
      * @param action The binding of which action to return
      * @return Binding of specified action
      */
-    public String getKey(String action) {
+    public String getKey(KeyAction action) {
         return keyMapping.get(action);
     }
 
@@ -244,7 +245,7 @@ public class Settings implements Serializable {
      * @param action Action to set key binding of
      * @param newKey New binding for specified action
      */
-    public void setKey(String action, String newKey) {
+    public void setKey(KeyAction action, String newKey) {
         keyMapping.put(action, newKey);
     }
 

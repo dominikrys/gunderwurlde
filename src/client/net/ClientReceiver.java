@@ -2,7 +2,7 @@ package client.net;
 
 
 import client.Client;
-import client.gui.Settings;
+import client.Settings;
 import client.render.GameRenderer;
 import shared.view.GameView;
 

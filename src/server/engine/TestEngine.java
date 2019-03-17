@@ -1,6 +1,6 @@
 package server.engine;
 
-import client.gui.Settings;
+import client.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
 import javafx.scene.Scene;

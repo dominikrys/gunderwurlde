@@ -1,6 +1,6 @@
 package client.render;
 
-import client.gui.Settings;
+import client.Settings;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;

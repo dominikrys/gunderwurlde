@@ -1,6 +1,5 @@
 package client;
 
-import client.gui.Settings;
 import client.input.ActionList;
 import javafx.application.Platform;
 import javafx.stage.Stage;

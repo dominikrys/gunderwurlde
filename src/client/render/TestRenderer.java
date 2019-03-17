@@ -1,6 +1,6 @@
 package client.render;
 
-import client.gui.Settings;
+import client.Settings;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
