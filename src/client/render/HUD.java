@@ -15,23 +15,47 @@ import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
 /**
- * 
+ * HUD class. Contains the HUD for the game
+ * @author Dominik Rys
  */
 public class HUD extends VBox {
+    /**
+     * Label for player score
+     */
     private Label playerScoreNumber;
+
+    /**
+     * Pane for held items
+     */
     private FlowPane heldItems;
-    private FlowPane heartBox;
+
+    /**
+     * Pane for hearts
+     */
+    private FlowPane heartPane;
+
+    /**
+     * VBox for ammo
+     */
     private VBox ammoBox;
 
+    /**
+     * Constructor
+     */
     public HUD() {
         // Initialize HUD elements
         playerScoreNumber = null;
-        heartBox = null;
+        heartPane = null;
         heldItems = null;
         ammoBox = null;
     }
 
-    // Create HUD
+    /**
+     * Create HUD
+     * @param currentPlayer PlayerView of player for whom this HUD is for
+     * @param fontManaspace28 Font of size 28
+     * @param fontManaspace18 Font of size 18
+     */
     public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18) {
         // Set general VBox settings
         this.setPadding(new Insets(5, 5, 5, 5));
@@ -56,8 +80,8 @@ public class HUD extends VBox {
         playerScoreLabel.setTextFill(Color.BLACK);
 
         // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
-        heartBox = new FlowPane();
-        heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
+        heartPane = new FlowPane();
+        heartPane.setMaxWidth(Constants.TILE_SIZE * 5);
 
         // Iterate through held items list and add to the HUD
         heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
@@ -90,31 +114,37 @@ public class HUD extends VBox {
         }
 
         // Add elements of HUD for player to HUD
-        this.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        this.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
     }
 
-    // Update all HUD elements
+    /**
+     * Update HUD with new data
+     * @param currentPlayer PlayerView for current player
+     * @param rendererResourceLoader Resources for renderer
+     * @param fontManaspace28 Font of size 28
+     * @param fontManaspace18 Font of size 18
+     */
     public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18){
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
         // Update hearts
-        heartBox.getChildren().clear();
+        heartPane.getChildren().clear();
         int halfHearts = currentPlayer.getHealth() % 2;
         int wholeHearts = currentPlayer.getHealth() / 2;
         int lostHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
 
         // Populate heart box in GUI
         for (int i = 0; i < wholeHearts; i++) {
-            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_FULL)));
+            heartPane.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_FULL)));
         }
         // Populate half heart
         for (int i = 0; i < halfHearts; i++) {
-            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_HALF)));
+            heartPane.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_HALF)));
         }
         // Populate lost hearts
         for (int i = 0; i < lostHearts; i++) {
-            heartBox.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_LOST)));
+            heartPane.getChildren().add(new ImageView(rendererResourceLoader.getSprite(EntityList.HEART_LOST)));
         }
 
         // Update held items
