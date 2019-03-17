@@ -11,8 +11,19 @@ import shared.lists.Teams;
 
 import java.io.IOException;
 
+/**
+ * MainMenuController class. Contains loader and controller for the menu menu.
+ * @author Dominik Rys
+ */
 public class MainMenuController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
 
     @FXML
@@ -33,7 +44,13 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     private Button highScoreButton;
 
+    /**
+     * Constructor
+     * @param stage Stage to show menu on
+     * @param settings Settings object
+     */
     public MainMenuController(Stage stage, Settings settings) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
 
@@ -50,17 +67,22 @@ public class MainMenuController extends VBox implements MenuController {
         }
     }
 
+    /**
+     * Show menu on stage
+     */
     public void show() {
-        // Main menu is displayed first, so see it setRootToStage necessary
+        // Main menu is displayed first, so see if setRootToStage necessary
         if (stage.getScene() == null) {
             MenuController.setRootToStage(stage, this, settings);
-            //ew ImageCursor(new Image("file:assets/img/gui/crosshair.png"))
-
         } else {
             this.stage.getScene().setRoot(this);
         }
     }
 
+    /**
+     * Go to play menu when the play button is pressed
+     * @param event Play button press
+     */
     @FXML
     void playButtonPress(ActionEvent event) {
         // Switch to play menu and clear this object
@@ -68,6 +90,10 @@ public class MainMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to the settings menu when the settings button is pressed
+     * @param event Settings button press
+     */
     @FXML
     void settingsButtonPress(ActionEvent event) {
         // Switch to settings menu and clear this object
@@ -75,6 +101,10 @@ public class MainMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to help menu when the help button is pressed
+     * @param event Help button press
+     */
     @FXML
     void helpButtonPress(ActionEvent event) {
         // Switch to help menu and clear this object
@@ -82,6 +112,10 @@ public class MainMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to high score menu when the high score button is pressed
+     * @param event High score button press
+     */
     @FXML
     void highScoreButtonPress(ActionEvent event) {
         // Switch to high score menu and clear this object
@@ -89,6 +123,10 @@ public class MainMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to the credits menu when the credits button is pressed
+     * @param event Credits button press
+     */
     @FXML
     void creditsButtonPress(ActionEvent event) {
         // Switch to credits screen and clear this object
@@ -96,6 +134,10 @@ public class MainMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Close stage when the quit button is pressed
+     * @param event Quit button press
+     */
     @FXML
     void quitButtonPress(ActionEvent event) {
         stage.close();

@@ -13,11 +13,34 @@ import shared.lists.Teams;
 
 import java.io.IOException;
 
+/**
+ * ServerJoinMenuController class. Has loader and controller for the server joining menu.
+ * @author Dominik Rys
+ */
 public class ServerJoinMenuController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
+
+    /**
+     * Connection type: single player, multiplayer etc.
+     */
     private ConnectionType connectionType;
+
+    /**
+     * Name of player
+     */
     private String playerName;
+
+    /**
+     * Selected team
+     */
     private Teams selectedTeam;
 
     @FXML
@@ -32,7 +55,16 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     @FXML
     private Button joinServerButton;
 
+    /**
+     * Constructor
+     * @param stage Stage to show menu on
+     * @param settings Settings object
+     * @param connectionType Type of connection
+     * @param playerName Name of player
+     * @param selectedTeam Team selected by player
+     */
     public ServerJoinMenuController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
         this.connectionType = connectionType;
@@ -59,6 +91,10 @@ public class ServerJoinMenuController extends VBox implements MenuController {
         joinServerButton.setDisable(true);
     }
 
+    /**
+     * Go back to the play menu
+     * @param event Back button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Switch to play menu and clear this screen
@@ -66,6 +102,10 @@ public class ServerJoinMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Disable or enable buttons when IP is typed
+     * @param event Text entered into IP field
+     */
     @FXML
     void IPFieldInput(ActionEvent event) {
         if (IPField.getText().length() > 0 && portField.getText().length() > 0) {
@@ -75,6 +115,10 @@ public class ServerJoinMenuController extends VBox implements MenuController {
         }
     }
 
+    /**
+     * Disable or enable buttons when port is typed
+     * @param event Text entered into port field
+     */
     @FXML
     void portFieldInput(ActionEvent event) {
         if (IPField.getText().length() > 0 && portField.getText().length() > 0) {
@@ -84,11 +128,18 @@ public class ServerJoinMenuController extends VBox implements MenuController {
         }
     }
 
+    /**
+     * Join server
+     * @param event Join server button press
+     */
     @FXML
     void joinServerButtonPress(ActionEvent event) {
         // TODO: Clear screen, add joining message + start gamehandler with IP and port + ADD TEAM TO THIS
     }
 
+    /**
+     * Show menu on stage
+     */
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);

@@ -16,9 +16,13 @@ import java.io.IOException;
  */
 public class ControlsSettingsController extends VBox implements MenuController {
     /**
-     * Stage and settings variables
+     * Stage to display menu on
      */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
 
     @FXML
@@ -66,6 +70,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
      * @param settings Settings object
      */
     public ControlsSettingsController(Stage stage, Settings settings) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
 
@@ -131,7 +136,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             downButton.setText(pressed);
-            settings.changeKey("down", pressed);
+            settings.setKey("down", pressed);
         });
     }
 
@@ -148,7 +153,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             dropButton.setText(pressed);
-            settings.changeKey("drop", pressed);
+            settings.setKey("drop", pressed);
         });
     }
 
@@ -165,7 +170,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             escapeButton.setText(pressed);
-            settings.changeKey("esc", pressed);
+            settings.setKey("esc", pressed);
         });
     }
 
@@ -182,7 +187,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             interactButton.setText(pressed);
-            settings.changeKey("interact", pressed);
+            settings.setKey("interact", pressed);
         });
     }
 
@@ -199,7 +204,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item1Button.setText(pressed);
-            settings.changeKey("item1", pressed);
+            settings.setKey("item1", pressed);
         });
     }
 
@@ -216,7 +221,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item2Button.setText(pressed);
-            settings.changeKey("item2", pressed);
+            settings.setKey("item2", pressed);
         });
     }
 
@@ -233,7 +238,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item3Button.setText(pressed);
-            settings.changeKey("item3", pressed);
+            settings.setKey("item3", pressed);
         });
     }
 
@@ -250,7 +255,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             leftButton.setText(pressed);
-            settings.changeKey("left", pressed);
+            settings.setKey("left", pressed);
         });
     }
 
@@ -267,7 +272,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             reloadButton.setText(pressed);
-            settings.changeKey("reload", pressed);
+            settings.setKey("reload", pressed);
         });
     }
 
@@ -284,7 +289,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             rightButton.setText(pressed);
-            settings.changeKey("right", pressed);
+            settings.setKey("right", pressed);
         });
     }
 
@@ -301,7 +306,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             upButton.setText(pressed);
-            settings.changeKey("up", pressed);
+            settings.setKey("up", pressed);
         });
     }
 
