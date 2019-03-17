@@ -14,6 +14,9 @@ import shared.lists.EntityList;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
+/**
+ * 
+ */
 public class HUD extends VBox {
     private Label playerScoreNumber;
     private FlowPane heldItems;

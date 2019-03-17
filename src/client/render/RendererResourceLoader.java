@@ -16,17 +16,39 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RendererResourceLoader class. Loads images and font used in the renderer
+ * @author Dominik Rys
+ */
 public class RendererResourceLoader {
+    /**
+     * Map containing sprites for corresponding entities
+     */
     private Map<EntityList, Image> loadedSprites;
+
+    /**
+     * Font used in game of size 28
+     */
     private Font fontManaspace28;
+
+    /**
+     * Font used in game of size 18
+     */
     private Font fontManaspace18;
 
+    /**
+     * Constructor
+     */
     public RendererResourceLoader() {
+        // Initialise variables
         loadedSprites = new HashMap<>();
         fontManaspace18 = null;
         fontManaspace28 = null;
     }
 
+    /**
+     * Load all sprites from EntityList and store in map
+     */
     public void loadAllSprites() {
         // Iterate over all entitity lists and put into hashmap
         for (EntityList entity : EntityList.values()) {
@@ -73,6 +95,9 @@ public class RendererResourceLoader {
         }
     }
 
+    /**
+     * Load sprites used in game
+     */
     public void loadFonts() {
         // Load fonts
         try {
@@ -85,14 +110,27 @@ public class RendererResourceLoader {
         }
     }
 
+    /**
+     * Get sprite from loaded sprites
+     * @param entity Entity whose sprite to get
+     * @return Sprite
+     */
     public Image getSprite(EntityList entity) {
         return loadedSprites.get(entity);
     }
 
+    /**
+     * Get font of size 28
+     * @return Font of size 28
+     */
     public Font getFontManaspace28() {
         return fontManaspace28;
     }
 
+    /**
+     * Get font of size 18
+     * @return Font of size 18
+     */
     public Font getFontManaspace18() {
         return fontManaspace18;
     }

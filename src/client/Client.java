@@ -63,13 +63,7 @@ public class Client extends Thread {
             // Closes the socket as communication has finished
             sendSocket.close();
             listenSocket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }

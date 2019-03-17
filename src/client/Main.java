@@ -7,12 +7,22 @@ import javafx.stage.Stage;
 
 import java.io.*;
 
+/**
+ * Main class. Extends application, sets all the necessary stage settings and displays the main menu
+ */
 public class Main extends Application {
-    // Main method
+    /**
+     * Main method
+     * @param args Command line arguments
+     */
     public static void main(String args[]) {
         launch(args);
     }
 
+    /**
+     * Start the thread
+     * @param stage Main stage
+     */
     @Override
     public void start(Stage stage) {
         // Try to load settings from local file. If not found, create new
@@ -40,6 +50,11 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Load settings from local file
+     * @param settings Initial settings to fall back to if file not loaded
+     * @return Loaded settings
+     */
     private Settings loadSettingsFromFile(Settings settings) {
         // Look for existing settings object and try to load it
         try (
