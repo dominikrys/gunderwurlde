@@ -7,6 +7,9 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Teams;
 
+/**
+ * GameHandler class. Starts the game and all the necessary threads
+ */
 public class GameHandler extends Thread {
     // Server variables
     private ConnectionType connectionType;
