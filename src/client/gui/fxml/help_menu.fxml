@@ -16,7 +16,7 @@
             <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Label>
-      <Label styleClass="manaspaceFontWhite" text="[Insert instructions]">
+      <Label styleClass="manaspaceFontWhite" text="todo">
          <font>
             <Font name="Manaspace" size="25.0" />
          </font>

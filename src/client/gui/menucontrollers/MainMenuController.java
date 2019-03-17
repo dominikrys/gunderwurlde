@@ -84,7 +84,9 @@ public class MainMenuController extends VBox implements MenuController {
 
     @FXML
     void highScoreButtonPress(ActionEvent event) {
-
+        // Switch to high score menu and clear this object
+        (new HighScoreMenuController(stage, settings)).show();
+        this.getChildren().clear();
     }
 
     @FXML
