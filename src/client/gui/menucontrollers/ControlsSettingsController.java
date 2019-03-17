@@ -10,7 +10,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * ControlsSettingsController class. Controller and loader for the controls menu.
+ * @author Dominik Rys
+ */
 public class ControlsSettingsController extends VBox implements MenuController {
+    /**
+     * Stage and settings variables
+     */
     private Stage stage;
     private Settings settings;
 
@@ -53,6 +60,11 @@ public class ControlsSettingsController extends VBox implements MenuController {
     @FXML
     private Button defaultsButton;
 
+    /**
+     * Constructor
+     * @param stage The stage to show the menu on
+     * @param settings Settings object
+     */
     public ControlsSettingsController(Stage stage, Settings settings) {
         this.stage = stage;
         this.settings = settings;
@@ -83,11 +95,18 @@ public class ControlsSettingsController extends VBox implements MenuController {
         escapeButton.setText(settings.getKey("esc"));
     }
 
+    /**
+     * Set menu to stage's scene
+     */
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
     }
 
+    /**
+     * Method which gets triggered when back button is pressed. Save settings to a file and go back to settings
+     * @param event Button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Save settings to file - not really necessary since the settings menu would do this too, but it's a nice
@@ -99,6 +118,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Reassign down button binding
+     * @param event Button press
+     */
     @FXML
     void downButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -112,6 +135,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign drop button binding
+     * @param event Button press
+     */
     @FXML
     void dropButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -125,6 +152,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign escape button binding
+     * @param event Button press
+     */
     @FXML
     void escapeButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -138,6 +169,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign interact button binding
+     * @param event Button press
+     */
     @FXML
     void interactButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -151,6 +186,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign item1 button binding
+     * @param event Button press
+     */
     @FXML
     void item1ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -164,6 +203,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign button2 binding
+     * @param event Button press
+     */
     @FXML
     void item2ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -177,6 +220,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign item3 binding
+     * @param event Button press
+     */
     @FXML
     void item3ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -190,6 +237,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign left button binding
+     * @param event Button press
+     */
     @FXML
     void leftButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -203,6 +254,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign reload button binding
+     * @param event Button press
+     */
     @FXML
     void reloadButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -216,6 +271,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign right button binding
+     * @param event Button press
+     */
     @FXML
     void rightButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -229,6 +288,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Reassign up button binding
+     * @param event Button press
+     */
     @FXML
     void upButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -242,6 +305,10 @@ public class ControlsSettingsController extends VBox implements MenuController {
         });
     }
 
+    /**
+     * Resets settings to defaults
+     * @param event Button press
+     */
     @FXML
     void defaultsButtonPress(ActionEvent event) {
         // Set defaults in settings
