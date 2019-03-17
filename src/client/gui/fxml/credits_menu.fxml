@@ -68,7 +68,7 @@
                   <Font name="Manaspace" size="25.0" />
                </font>
             </Label>
-            <Label styleClass="manaspaceFontWhite" text="Networking + AI" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label styleClass="manaspaceFontWhite" text="Networking and Enemy AI" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font name="Manaspace" size="25.0" />
                </font>
@@ -78,7 +78,7 @@
                   <Font name="Manaspace" size="25.0" />
                </font>
             </Label>
-            <Label styleClass="manaspaceFontWhite" text="Renderer and Graphics" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Label styleClass="manaspaceFontWhite" text="Renderer, UI and Graphics" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <font>
                   <Font name="Manaspace" size="25.0" />
                </font>
