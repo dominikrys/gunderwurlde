@@ -26,8 +26,8 @@ public class MapCanvas extends Canvas {
     private GraphicsContext mapGC;
 
     // Animation hashmaps
-    private Map<Integer, AnimatedSpriteManager> playersOnMapAnimations;
-    private Map<Integer, AnimatedSpriteManager> enemiesOnMapAnimations;
+    private Map<Integer, AnimatedSprite> playersOnMapAnimations;
+    private Map<Integer, AnimatedSprite> enemiesOnMapAnimations;
 
     // Last location of players and enemies hashmaps - used for spawning and death animations
     private Map<Integer, Pose> lastPlayerLocations;
@@ -77,7 +77,7 @@ public class MapCanvas extends Canvas {
         for (PlayerView currentPlayer : gameView.getPlayers()) {
             // Update animation hashmap to track entity
             if (!playersOnMapAnimations.containsKey(currentPlayer.getID())) {
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager());
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite());
             }
 
             // Check correct animation
@@ -103,7 +103,7 @@ public class MapCanvas extends Canvas {
                     }
 
                     // Add animation to animationhashmap
-                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
                             rendererResourceLoader.getSprite(entityToRender), 32, 32,
                             6, 75, 0, AnimationType.MOVE));
                 }
@@ -130,7 +130,7 @@ public class MapCanvas extends Canvas {
                     }
 
                     // Add animation to animationhashmap
-                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
                             rendererResourceLoader.getSprite(entityToRender), 32, 45,
                             5, currentPlayer.getCurrentItem().getReloadTime() / 5,
                             0, AnimationType.RELOAD));
@@ -156,7 +156,7 @@ public class MapCanvas extends Canvas {
                 }
 
                 // Add sprite to animation hashmap
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
                         rendererResourceLoader.getSprite(entityToRender), AnimationType.ATTACK));
             }
             // If standing, render standing image
@@ -212,7 +212,7 @@ public class MapCanvas extends Canvas {
                 }
 
                 // Add sprite to animation hashmap
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSpriteManager(
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
                         rendererResourceLoader.getSprite(entityToRender), AnimationType.STAND));
             }
 
@@ -230,7 +230,7 @@ public class MapCanvas extends Canvas {
         for (EnemyView currentEnemy : gameView.getEnemies()) {
             // Update animation hashmap to track entity
             if (!enemiesOnMapAnimations.containsKey(currentEnemy.getID())) {
-                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager());
+                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite());
             }
 
             // Check if enemy moving and is so, choose right animation
@@ -263,14 +263,14 @@ public class MapCanvas extends Canvas {
                     }
 
                     // Add animation to animation hashmap
-                    enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                    enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                             rendererResourceLoader.getSprite(entityToRender), 32, 32,
                             6, 75, 0, AnimationType.MOVE));
                 }
             }
             // Enemy standing, render standing image
             else {
-                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSpriteManager(
+                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                         rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
             }
 
@@ -323,7 +323,7 @@ public class MapCanvas extends Canvas {
             new AnimationTimer() {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
-                AnimatedSpriteManager deathSpriteManager = new AnimatedSpriteManager(
+                AnimatedSprite deathSpriteManager = new AnimatedSprite(
                         rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
@@ -332,8 +332,8 @@ public class MapCanvas extends Canvas {
                     // Check if animation still running - if not, stop animation
                     if (deathSpriteManager.getCurrentFrame() < frameCount - 1) {
                         drawRotatedImageFromSpritesheet(deathSpriteManager.getImage(), 0, pose.getX(),
-                                pose.getY(), deathSpriteManager.getSx(), deathSpriteManager.getSy(),
-                                deathSpriteManager.getImageWidth(), deathSpriteManager.getImageHeight());
+                                pose.getY(), deathSpriteManager.getXOffset(), deathSpriteManager.getYOffset(),
+                                deathSpriteManager.getIndividualImageWidth(), deathSpriteManager.getIndividualImageHeight());
                     } else {
                         this.stop();
                     }
@@ -362,12 +362,12 @@ public class MapCanvas extends Canvas {
     }
 
     // Render image according to info from its animation
-    private void renderAnimationSpriteOnMap(Map<Integer, AnimatedSpriteManager> entitiesOnMap, int id, Pose pose) {
-        AnimatedSpriteManager thisSpriteManager = entitiesOnMap.get(id);
+    private void renderAnimationSpriteOnMap(Map<Integer, AnimatedSprite> entitiesOnMap, int id, Pose pose) {
+        AnimatedSprite thisSpriteManager = entitiesOnMap.get(id);
 
         drawRotatedImageFromSpritesheet(thisSpriteManager.getImage(), pose.getDirection(), pose.getX(),
-                pose.getY(), thisSpriteManager.getSx(), thisSpriteManager.getSy(),
-                thisSpriteManager.getImageWidth(), thisSpriteManager.getImageHeight());
+                pose.getY(), thisSpriteManager.getXOffset(), thisSpriteManager.getYOffset(),
+                thisSpriteManager.getIndividualImageWidth(), thisSpriteManager.getIndividualImageHeight());
     }
 
     // Render healthbar above entity
