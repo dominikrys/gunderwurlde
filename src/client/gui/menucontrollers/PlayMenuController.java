@@ -266,7 +266,7 @@ public class PlayMenuController extends VBox implements MenuController {
      */
     private void checkButtons() {
         // Only allow going into single or multi player if a name has been entered
-        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
+        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() <= 10) {
             characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(true);

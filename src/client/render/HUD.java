@@ -59,11 +59,10 @@ public class HUD extends VBox {
     public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18) {
         // Set general VBox settings
         this.setPadding(new Insets(5, 5, 5, 5));
-        this.setMaxWidth(Constants.TILE_SIZE * 6);
+        this.setMaxWidth(200);
         this.setMaxHeight(300);
         this.setSpacing(5);
         this.setAlignment(Pos.TOP_LEFT);
-
 
         playerScoreNumber = new Label();
         playerScoreNumber.setFont(fontManaspace28);
@@ -96,19 +95,19 @@ public class HUD extends VBox {
                 this.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
                 break;
             case BLUE:
-                this.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 150 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
-                this.setStyle("-fx-background-color: rgba(90, 240, 41, 0.5); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(90, 240, 41, 0.5); -fx-background-radius: 0 0 150 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
                 break;
             case YELLOW:
-                this.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 150 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
                 break;
             default:
-                this.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 150 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
                 break;
         }
