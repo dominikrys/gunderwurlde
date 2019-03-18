@@ -23,7 +23,6 @@ import java.util.Map;
 
 /**
  * MapCanvas class. This is what the map and all entities are rendered on.
- *
  * @author Dominik Rys
  */
 public class MapCanvas extends Canvas {

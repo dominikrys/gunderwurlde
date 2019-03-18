@@ -92,19 +92,19 @@ public class HUD extends VBox {
         // Change background according to team
         switch (currentPlayer.getTeam()) {
             case RED:
-                this.setStyle("-fx-background-color: rgba(255, 0, 47, 0.4); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(255, 0, 47, 0.5); -fx-backgroundradius: 0 0 165 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
                 break;
             case BLUE:
-                this.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 165 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
-                this.setStyle("-fx-background-color: rgba(90, 240, 41, 0.4); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(90, 240, 41, 0.5); -fx-background-radius: 0 0 165 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
                 break;
             case YELLOW:
-                this.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 165 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
                 break;
             default:
@@ -163,10 +163,10 @@ public class HUD extends VBox {
 
             // Check if the item currently being checked is the current selected item, and if it is, show that
             if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-                DropShadow dropShadow = new DropShadow(25, Color.HOTPINK);
+                DropShadow dropShadow = new DropShadow(25, Color.GOLD);
                 dropShadow.setSpread(0.75);
                 itemImageView.setEffect(dropShadow);
-                itemPane.setBorder(new Border(new BorderStroke(Color.HOTPINK,
+                itemPane.setBorder(new Border(new BorderStroke(Color.GOLD,
                         BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
             } else {
                 // Not selected item, add black border
