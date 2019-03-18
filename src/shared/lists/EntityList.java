@@ -104,7 +104,7 @@ public enum EntityList {
     CROSSHAIR("file:assets/img/gui/crosshair.png"),
 
     /**
-     * Smoke cloud animation TODO: maybe move this out to another enum/class
+     * Smoke cloud animation
      */
     SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
 
