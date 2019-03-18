@@ -7,8 +7,10 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import shared.Constants;
+import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.view.ItemView;
@@ -21,20 +23,25 @@ import shared.view.entity.PlayerView;
  */
 public class HUD extends VBox {
     /**
+     * Minimap rectangle
+     */
+    Rectangle miniMapRectangle;
+    /**
+     * Pane for storing minimap
+     */
+    StackPane miniMapPane;
+    /**
      * Label for player score
      */
     private Label playerScoreNumber;
-
     /**
      * Pane for held items
      */
     private FlowPane heldItems;
-
     /**
      * Pane for hearts
      */
     private FlowPane heartPane;
-
     /**
      * VBox for ammo
      */
@@ -57,15 +64,18 @@ public class HUD extends VBox {
      * @param currentPlayer   PlayerView of player for whom this HUD is for
      * @param fontManaspace28 Font of size 28
      * @param fontManaspace18 Font of size 18
+     * @param mapWidth Width of map, in pixels
+     * @param mapHeight  Height of map, in pixels
      */
-    public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18) {
+    public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18, int mapWidth, int mapHeight) {
         // Set general VBox settings
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setMaxWidth(200);
-        this.setMaxHeight(300);
+        this.setMaxHeight(600);
         this.setSpacing(5);
         this.setAlignment(Pos.TOP_LEFT);
 
+        // Set up player score label
         playerScoreNumber = new Label();
         playerScoreNumber.setFont(fontManaspace28);
         playerScoreNumber.setTextFill(Color.BLACK);
@@ -114,8 +124,30 @@ public class HUD extends VBox {
                 break;
         }
 
+        // Set up minimap
+        miniMapPane = new StackPane();
+        miniMapRectangle = new Rectangle();
+        miniMapRectangle.setFill(Color.BLACK);
+        miniMapRectangle.setStroke(Color.LIGHTGRAY);
+        miniMapRectangle.setStrokeWidth(3);
+        int maxMinimapSize = 200;
+
+        // Scale minimap according to map size
+        if (mapHeight > mapWidth) {
+            miniMapRectangle.setHeight(maxMinimapSize);
+            miniMapRectangle.setWidth(((double) mapWidth / mapHeight) * maxMinimapSize);
+        } else if (mapHeight < mapWidth) {
+            miniMapRectangle.setHeight(((double) mapHeight / mapWidth) * maxMinimapSize);
+            miniMapRectangle.setWidth(maxMinimapSize);
+        } else {
+            miniMapRectangle.setHeight(maxMinimapSize);
+            miniMapRectangle.setWidth(maxMinimapSize);
+        }
+
+        miniMapPane.getChildren().addAll(miniMapRectangle);
+
         // Add elements of HUD for player to HUD
-        this.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        this.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox, miniMapPane);
     }
 
     /**
@@ -125,8 +157,12 @@ public class HUD extends VBox {
      * @param rendererResourceLoader Resources for renderer
      * @param fontManaspace28        Font of size 28
      * @param fontManaspace18        Font of size 18
+     * @param playerPose Pose of player for whom the HUD is
+     * @param mapWidth Width of the map, in pixels
+     * @param mapHeight Height of the map, in pixels
      */
-    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18) {
+    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18,
+                          Pose playerPose, int mapWidth, int mapHeight) {
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
@@ -239,5 +275,21 @@ public class HUD extends VBox {
             currentGunInfo.getChildren().addAll(currentAmmo);
             ammoBox.getChildren().add(currentGunInfo);
         }
+
+        // Make indicator for player location on minimap
+        int playerRectangleSize = 4;
+        Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
+        playerRectangle.setFill(Color.WHITE);
+
+        // Set correct position of player location on minimap
+        AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
+        AnchorPane.setLeftAnchor(playerRectangle, playerPose.getX() * (miniMapRectangle.getWidth() / mapWidth)
+                - playerRectangleSize / 2);
+        AnchorPane.setTopAnchor(playerRectangle, playerPose.getY() * (miniMapRectangle.getHeight() / mapHeight)
+                - playerRectangleSize / 2);
+
+        // Update pane
+        miniMapPane.getChildren().clear();
+        miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
     }
 }

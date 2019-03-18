@@ -185,7 +185,9 @@ public class GameRenderer implements Runnable {
         mapPane.getChildren().addAll(mapCanvas);
 
         // Create HUD
-        hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(), rendererResourceLoader.getFontManaspace18());
+        hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), gameView.getXDim() * Constants.TILE_SIZE,
+                gameView.getYDim() * Constants.TILE_SIZE);
 
         // Create pause overlay
         createPauseOverlay();
@@ -301,7 +303,8 @@ public class GameRenderer implements Runnable {
 
         // Update HUD
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18());
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
+                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
 
         // If game is paused, add the paused overlay
         if (paused) {
