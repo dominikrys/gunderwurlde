@@ -17,6 +17,7 @@ import java.io.IOException;
 
 /**
  * PlayMenuController class. Contains loader and controller for the play menu
+ *
  * @author Dominik Rys
  */
 public class PlayMenuController extends VBox implements MenuController {
@@ -60,9 +61,10 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to display menu on
-     * @param settings Settings object
-     * @param playerName Player name
+     *
+     * @param stage        Stage to display menu on
+     * @param settings     Settings object
+     * @param playerName   Player name
      * @param selectedTeam Team selected by player
      */
     public PlayMenuController(Stage stage, Settings settings, String playerName, Teams selectedTeam) {
@@ -121,6 +123,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Go back to main menu
+     *
      * @param event Back button press
      */
     @FXML
@@ -132,6 +135,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Check which buttons should be enabled according to the name entered
+     *
      * @param event Text entered
      */
     @FXML
@@ -142,6 +146,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Select blue team
+     *
      * @param event Blue team button press
      */
     @FXML
@@ -164,6 +169,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Select green team
+     *
      * @param event Green team button press
      */
     @FXML
@@ -186,6 +192,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Select red team
+     *
      * @param event Red team button press
      */
     @FXML
@@ -208,6 +215,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Select yellow team
+     *
      * @param event Yellow team button press
      */
     @FXML
@@ -230,6 +238,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Go to map selection screen which will be set for single player
+     *
      * @param event Single player button press
      */
     @FXML
@@ -241,6 +250,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Go to map selection screen which will be set up for multi player hosting
+     *
      * @param event Multiplayer hosting button press
      */
     @FXML
@@ -252,6 +262,7 @@ public class PlayMenuController extends VBox implements MenuController {
 
     /**
      * Go to server selection screen
+     *
      * @param event Multiplayer join game button press
      */
     @FXML

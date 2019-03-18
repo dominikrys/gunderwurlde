@@ -2,6 +2,7 @@ package client;
 
 /**
  * ConnectionType enum. Contains different types of connections within the game
+ *
  * @author Dominik Rys
  */
 public enum ConnectionType {

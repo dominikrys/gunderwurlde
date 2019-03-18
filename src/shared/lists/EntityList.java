@@ -5,7 +5,7 @@ import shared.Constants;
 
 /**
  * EntityList enum. Holds sprites and sizes of all renderable entities
- *
+ * <p>
  * For coloradjust 'hue', 'saturation', 'brightness', 'contrast' all take values between -1 and 1
  */
 public enum EntityList {
@@ -130,9 +130,10 @@ public enum EntityList {
 
     /**
      * Constructor
-     * @param spritePath Sprite path
+     *
+     * @param spritePath  Sprite path
      * @param colorAdjust Coloradjust
-     * @param size Size of entity
+     * @param size        Size of entity
      */
     EntityList(String spritePath, ColorAdjust colorAdjust, int size) {
         this.spritePath = spritePath;
@@ -142,6 +143,7 @@ public enum EntityList {
 
     /**
      * Constructor
+     *
      * @param spritePath Sprite path
      */
     EntityList(String spritePath) {
@@ -150,8 +152,9 @@ public enum EntityList {
 
     /**
      * Constructor
+     *
      * @param spritePath Sprite path
-     * @param size Size of entity
+     * @param size       Size of entity
      */
     EntityList(String spritePath, int size) {
         this(spritePath, null, size);
@@ -159,15 +162,17 @@ public enum EntityList {
 
     /**
      * Constructor
-     * @param spritePath Sprite path
+     *
+     * @param spritePath  Sprite path
      * @param colorAdjust ColorAdjust
      */
     EntityList(String spritePath, ColorAdjust colorAdjust) {
-        this (spritePath, colorAdjust, 0);
+        this(spritePath, colorAdjust, 0);
     }
 
     /**
      * Get sprite path
+     *
      * @return Sprite path
      */
     public String getPath() {
@@ -176,6 +181,7 @@ public enum EntityList {
 
     /**
      * Get ColorAdjust
+     *
      * @return ColorAdjust
      */
     public ColorAdjust getColorAdjust() {
@@ -184,6 +190,7 @@ public enum EntityList {
 
     /**
      * Get size of entity
+     *
      * @return Size of entity
      */
     public int getSize() {

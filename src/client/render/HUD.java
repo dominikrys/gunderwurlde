@@ -16,6 +16,7 @@ import shared.view.entity.PlayerView;
 
 /**
  * HUD class. Contains the HUD for the game
+ *
  * @author Dominik Rys
  */
 public class HUD extends VBox {
@@ -52,7 +53,8 @@ public class HUD extends VBox {
 
     /**
      * Create HUD
-     * @param currentPlayer PlayerView of player for whom this HUD is for
+     *
+     * @param currentPlayer   PlayerView of player for whom this HUD is for
      * @param fontManaspace28 Font of size 28
      * @param fontManaspace18 Font of size 18
      */
@@ -118,12 +120,13 @@ public class HUD extends VBox {
 
     /**
      * Update HUD with new data
-     * @param currentPlayer PlayerView for current player
+     *
+     * @param currentPlayer          PlayerView for current player
      * @param rendererResourceLoader Resources for renderer
-     * @param fontManaspace28 Font of size 28
-     * @param fontManaspace18 Font of size 18
+     * @param fontManaspace28        Font of size 28
+     * @param fontManaspace18        Font of size 18
      */
-    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18){
+    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18) {
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 

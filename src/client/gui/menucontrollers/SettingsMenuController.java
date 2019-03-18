@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /**
  * SettingsMenuController class. Has loader and controller for the settings menu
+ *
  * @author Dominik Rys
  */
 public class SettingsMenuController extends VBox implements MenuController {
@@ -70,7 +71,8 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show menu on
+     *
+     * @param stage    Stage to show menu on
      * @param settings Settings object
      */
     public SettingsMenuController(Stage stage, Settings settings) {
@@ -140,6 +142,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Save settings and go back to the main menu
+     *
      * @param event Back button press
      */
     @FXML
@@ -154,6 +157,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Highlight fullscreen button and set fullscreen in settings
+     *
      * @param event Fullscreen button press
      */
     @FXML
@@ -166,6 +170,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Highlight window button and set windowed in settings
+     *
      * @param event Windowed button press
      */
     @FXML
@@ -178,6 +183,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set music to off
+     *
      * @param event Music off button press
      */
     @FXML
@@ -189,6 +195,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set music to on
+     *
      * @param event Music on button press
      */
     @FXML
@@ -200,6 +207,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set sound to off
+     *
      * @param event Sound off button press
      */
     @FXML
@@ -211,6 +219,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set sound to on
+     *
      * @param event Sound on button press
      */
     @FXML
@@ -222,6 +231,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set music volume according to slider position
+     *
      * @param event Music volume slider dragged
      */
     @FXML
@@ -231,6 +241,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set sound volume according to slider position
+     *
      * @param event Sound volume slider dragged
      */
     @FXML
@@ -240,6 +251,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Set a new screen resolution
+     *
      * @param event Resolution selected from combo box
      */
     @FXML
@@ -253,6 +265,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Apply graphics settings
+     *
      * @param event Apply graphics settings button press
      */
     @FXML
@@ -275,6 +288,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Go to controls menu
+     *
      * @param event Controls button press
      */
     @FXML
@@ -286,6 +300,7 @@ public class SettingsMenuController extends VBox implements MenuController {
 
     /**
      * Reset settings to defaults
+     *
      * @param event Reset settings button press
      */
     @FXML

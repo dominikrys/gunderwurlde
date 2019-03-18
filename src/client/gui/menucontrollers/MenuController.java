@@ -8,7 +8,8 @@ import javafx.stage.Stage;
 
 /**
  * MenuController interface. Has some common methods that all menu controllers need
- * @author  Dominik Rys
+ *
+ * @author Dominik Rys
  */
 public interface MenuController {
     /**
@@ -18,6 +19,7 @@ public interface MenuController {
 
     /**
      * Set scene of given stage to the input scene
+     *
      * @param stage Stage to set the scene to
      * @param scene The scene to set to the stage
      */
@@ -42,8 +44,9 @@ public interface MenuController {
 
     /**
      * Set scene to stage but for objects of type 'Parent'
-     * @param stage Stage to set the scene to
-     * @param root Parent object to set to the stage
+     *
+     * @param stage    Stage to set the scene to
+     * @param root     Parent object to set to the stage
      * @param settings Settings object, necessary for getting screen dimensions
      */
     static void setRootToStage(Stage stage, Parent root, Settings settings) {

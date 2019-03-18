@@ -13,6 +13,7 @@ import java.io.*;
 public class Main extends Application {
     /**
      * Main method
+     *
      * @param args Command line arguments
      */
     public static void main(String args[]) {
@@ -21,6 +22,7 @@ public class Main extends Application {
 
     /**
      * Start the thread
+     *
      * @param stage Main stage
      */
     @Override
@@ -52,6 +54,7 @@ public class Main extends Application {
 
     /**
      * Load settings from local file
+     *
      * @param settings Initial settings to fall back to if file not loaded
      * @return Loaded settings
      */

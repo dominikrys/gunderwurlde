@@ -12,6 +12,7 @@ import java.io.IOException;
 
 /**
  * HighScoreMenuController class. Contains loader and controller for the high score menu
+ *
  * @author Dominik Rys
  */
 public class HighScoreMenuController extends VBox implements MenuController {
@@ -30,7 +31,8 @@ public class HighScoreMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show menu on
+     *
+     * @param stage    Stage to show menu on
      * @param settings Settings object
      */
     public HighScoreMenuController(Stage stage, Settings settings) {
@@ -53,6 +55,7 @@ public class HighScoreMenuController extends VBox implements MenuController {
 
     /**
      * Go back to the main menu
+     *
      * @param event Button press
      */
     @FXML

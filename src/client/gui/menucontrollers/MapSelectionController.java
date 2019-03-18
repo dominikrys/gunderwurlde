@@ -25,6 +25,7 @@ import java.io.IOException;
 
 /**
  * MapSelectionController class. Has loader and controller for the map selection menu
+ *
  * @author Dominik Rys
  */
 public class MapSelectionController extends VBox implements MenuController {
@@ -76,11 +77,12 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show menu on
-     * @param settings Settings object
+     *
+     * @param stage          Stage to show menu on
+     * @param settings       Settings object
      * @param connectionType Type of connection
-     * @param playerName Name of player
-     * @param selectedTeam Team selected by player
+     * @param playerName     Name of player
+     * @param selectedTeam   Team selected by player
      */
     public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
         // Set variables
@@ -126,6 +128,7 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Go back to play menu when the back button is presed
+     *
      * @param event Back button press
      */
     @FXML
@@ -137,6 +140,7 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Set correct player number when slider dragged
+     *
      * @param event Slider dragged event
      */
     @FXML
@@ -146,6 +150,7 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Select meadow map
+     *
      * @param event Button press
      */
     @FXML
@@ -177,6 +182,7 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Select map 2
+     *
      * @param event Button press
      */
     @FXML
@@ -190,6 +196,7 @@ public class MapSelectionController extends VBox implements MenuController {
 
     /**
      * Select map 3
+     *
      * @param event Button press
      */
     @FXML

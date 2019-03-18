@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * MainMenuController class. Contains loader and controller for the menu menu.
+ *
  * @author Dominik Rys
  */
 public class MainMenuController extends VBox implements MenuController {
@@ -46,7 +47,8 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show menu on
+     *
+     * @param stage    Stage to show menu on
      * @param settings Settings object
      */
     public MainMenuController(Stage stage, Settings settings) {
@@ -81,6 +83,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Go to play menu when the play button is pressed
+     *
      * @param event Play button press
      */
     @FXML
@@ -92,6 +95,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Go to the settings menu when the settings button is pressed
+     *
      * @param event Settings button press
      */
     @FXML
@@ -103,6 +107,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Go to help menu when the help button is pressed
+     *
      * @param event Help button press
      */
     @FXML
@@ -114,6 +119,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Go to high score menu when the high score button is pressed
+     *
      * @param event High score button press
      */
     @FXML
@@ -125,6 +131,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Go to the credits menu when the credits button is pressed
+     *
      * @param event Credits button press
      */
     @FXML
@@ -136,6 +143,7 @@ public class MainMenuController extends VBox implements MenuController {
 
     /**
      * Close stage when the quit button is pressed
+     *
      * @param event Quit button press
      */
     @FXML

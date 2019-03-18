@@ -12,6 +12,7 @@ import java.io.IOException;
 
 /**
  * HelpMenuController class. Contains controller and loader for help menu
+ *
  * @author Dominik Rys
  */
 public class HelpMenuController extends VBox implements MenuController {
@@ -30,7 +31,8 @@ public class HelpMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show menu on
+     *
+     * @param stage    Stage to show menu on
      * @param settings Settings object
      */
     public HelpMenuController(Stage stage, Settings settings) {
@@ -53,6 +55,7 @@ public class HelpMenuController extends VBox implements MenuController {
 
     /**
      * Go back to main menu
+     *
      * @param event Button press
      */
     @FXML

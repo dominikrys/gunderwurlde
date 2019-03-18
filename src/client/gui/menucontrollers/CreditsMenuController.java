@@ -12,6 +12,7 @@ import java.io.IOException;
 
 /**
  * CreditsMenuController class. Controller and loader for controls menu.
+ *
  * @author Dominik Rys
  */
 public class CreditsMenuController extends VBox implements MenuController {
@@ -30,7 +31,8 @@ public class CreditsMenuController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage Stage to show the menu on
+     *
+     * @param stage    Stage to show the menu on
      * @param settings Settings object
      */
     public CreditsMenuController(Stage stage, Settings settings) {
@@ -53,6 +55,7 @@ public class CreditsMenuController extends VBox implements MenuController {
 
     /**
      * Go back to the main menu
+     *
      * @param event Button press
      */
     @FXML

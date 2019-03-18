@@ -18,6 +18,7 @@ import java.util.Map;
 
 /**
  * RendererResourceLoader class. Loads images and font used in the renderer
+ *
  * @author Dominik Rys
  */
 public class RendererResourceLoader {
@@ -112,6 +113,7 @@ public class RendererResourceLoader {
 
     /**
      * Get sprite from loaded sprites
+     *
      * @param entity Entity whose sprite to get
      * @return Sprite
      */
@@ -121,6 +123,7 @@ public class RendererResourceLoader {
 
     /**
      * Get font of size 28
+     *
      * @return Font of size 28
      */
     public Font getFontManaspace28() {
@@ -129,6 +132,7 @@ public class RendererResourceLoader {
 
     /**
      * Get font of size 18
+     *
      * @return Font of size 18
      */
     public Font getFontManaspace18() {

@@ -8,9 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -23,6 +21,7 @@ import shared.view.entity.PlayerView;
 
 /**
  * GameRenderer class. Contains the whole rendering backbone.
+ *
  * @author Dominik Rys
  */
 public class GameRenderer implements Runnable {
@@ -113,10 +112,11 @@ public class GameRenderer implements Runnable {
 
     /**
      * Constructor
-     * @param stage Stage to display game on
+     *
+     * @param stage           Stage to display game on
      * @param initialGameView Initial gameview to initialise elements off of
-     * @param playerID ID of player for whom this renderer is for
-     * @param settings Settings object
+     * @param playerID        ID of player for whom this renderer is for
+     * @param settings        Settings object
      */
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
         // Initialise gameView, stage and playerID
@@ -175,6 +175,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Initialise game renderer's elements according to the input gameview
+     *
      * @param inputGameView First received gameviw object
      */
     private void setUpRenderer(GameView inputGameView) {
@@ -254,6 +255,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Update the mouse location and render cursor in the new spot
+     *
      * @param e Mouse moved ebent
      */
     private void updateMouse(MouseEvent e) {
@@ -274,6 +276,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Update stored gameview and update keyboard, mouse and sound handlers
+     *
      * @param gameView
      */
     public void updateGameView(GameView gameView) {
@@ -347,6 +350,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Get keyboard handler
+     *
      * @return Keyboard handler
      */
     public KeyboardHandler getKeyboardHandler() {
@@ -355,6 +359,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Get mouse handler
+     *
      * @return Mouse handler
      */
     public MouseHandler getMouseHandler() {
@@ -363,6 +368,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Check whether game is paused
+     *
      * @return Boolean object corresponding to whether the game is paused or not
      */
     public boolean isPaused() {
@@ -371,6 +377,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Set whether renderer is paused or not
+     *
      * @param paused Paused boolean
      */
     public void setPaused(boolean paused) {

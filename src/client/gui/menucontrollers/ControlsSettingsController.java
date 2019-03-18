@@ -1,7 +1,7 @@
 package client.gui.menucontrollers;
 
-import client.input.KeyAction;
 import client.Settings;
+import client.input.KeyAction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * ControlsSettingsController class. Controller and loader for the controls menu.
+ *
  * @author Dominik Rys
  */
 public class ControlsSettingsController extends VBox implements MenuController {
@@ -67,7 +68,8 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Constructor
-     * @param stage The stage to show the menu on
+     *
+     * @param stage    The stage to show the menu on
      * @param settings Settings object
      */
     public ControlsSettingsController(Stage stage, Settings settings) {
@@ -111,6 +113,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Method which gets triggered when back button is pressed. Save settings to a file and go back to settings
+     *
      * @param event Button press
      */
     @FXML
@@ -126,6 +129,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign down button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -143,6 +147,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign drop button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -160,6 +165,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign escape button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -177,6 +183,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign interact button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -194,6 +201,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign item1 button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -211,6 +219,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign button2 binding
+     *
      * @param event Button press
      */
     @FXML
@@ -228,6 +237,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign item3 binding
+     *
      * @param event Button press
      */
     @FXML
@@ -245,6 +255,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign left button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -262,6 +273,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign reload button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -279,6 +291,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign right button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -296,6 +309,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Reassign up button binding
+     *
      * @param event Button press
      */
     @FXML
@@ -313,6 +327,7 @@ public class ControlsSettingsController extends VBox implements MenuController {
 
     /**
      * Resets settings to defaults
+     *
      * @param event Button press
      */
     @FXML

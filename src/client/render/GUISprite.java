@@ -2,6 +2,7 @@ package client.render;
 
 /**
  * GUISprite enum. Holds Sprites used in the GUI
+ *
  * @author Dominik Rys
  */
 public enum GUISprite {
@@ -27,6 +28,7 @@ public enum GUISprite {
 
     /**
      * Constructor
+     *
      * @param spritePath Path to sprite
      */
     GUISprite(String spritePath) {
@@ -35,6 +37,7 @@ public enum GUISprite {
 
     /**
      * Get sprite path
+     *
      * @return Sprite path
      */
     public String getPath() {

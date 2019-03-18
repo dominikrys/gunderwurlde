@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 /**
  * Settings class. Contains the game's settings
+ *
  * @author Dominik Rys
  */
 public class Settings implements Serializable {
@@ -58,7 +59,7 @@ public class Settings implements Serializable {
     /**
      * Key mapping
      */
-    private HashMap<KeyAction,String> keyMapping;
+    private HashMap<KeyAction, String> keyMapping;
 
     /**
      * Constructor
@@ -99,6 +100,7 @@ public class Settings implements Serializable {
 
     /**
      * Get sound volume
+     *
      * @return Sound volume
      */
     public int getSoundVolume() {
@@ -107,6 +109,7 @@ public class Settings implements Serializable {
 
     /**
      * Set sound volume, checking if within allowed bounds
+     *
      * @param soundVolume Sound volume to set
      */
     public void setSoundVolume(int soundVolume) {
@@ -122,6 +125,7 @@ public class Settings implements Serializable {
 
     /**
      * Get music volume
+     *
      * @return Music volume
      */
     public int getMusicVolume() {
@@ -130,6 +134,7 @@ public class Settings implements Serializable {
 
     /**
      * Set music volume, making sure it's within allowed bounds
+     *
      * @param musicVolume
      */
     public void setMusicVolume(int musicVolume) {
@@ -145,6 +150,7 @@ public class Settings implements Serializable {
 
     /**
      * Check if sound muted
+     *
      * @return Whether sound muted
      */
     public boolean isSoundMute() {
@@ -153,6 +159,7 @@ public class Settings implements Serializable {
 
     /**
      * Set sound muted or unmuted
+     *
      * @param soundMute True if muted, false if unmuted
      */
     public void setSoundMute(boolean soundMute) {
@@ -161,6 +168,7 @@ public class Settings implements Serializable {
 
     /**
      * Check if music is muted
+     *
      * @return Whether music is muted
      */
     public boolean isMusicMute() {
@@ -169,6 +177,7 @@ public class Settings implements Serializable {
 
     /**
      * Set music mute
+     *
      * @param musicMute Music mute: true if muted, false if not muted
      */
     public void setMusicMute(boolean musicMute) {
@@ -177,6 +186,7 @@ public class Settings implements Serializable {
 
     /**
      * Check if full screen
+     *
      * @return Whether full screen
      */
     public boolean isFullScreen() {
@@ -185,6 +195,7 @@ public class Settings implements Serializable {
 
     /**
      * Set full screen
+     *
      * @param fullScreen Full screen boolean: true if fullscreen, false if not
      */
     public void setFullScreen(boolean fullScreen) {
@@ -193,6 +204,7 @@ public class Settings implements Serializable {
 
     /**
      * Get screen resolution with 'x' in the middle so it can be displayed legibly
+     *
      * @return String containing the screen resolution with an 'x' between height and width
      */
     public String getScreenResolutionString() {
@@ -201,6 +213,7 @@ public class Settings implements Serializable {
 
     /**
      * Get screen height
+     *
      * @return Screen height
      */
     public int getScreenHeight() {
@@ -208,8 +221,18 @@ public class Settings implements Serializable {
     }
 
     /**
+     * Set screen height
+     *
+     * @param screenHeight Value to set screen height to
+     */
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
+    }
+
+    /**
      * Get screen width
-      * @return Screen width
+     *
+     * @return Screen width
      */
     public int getScreenWidth() {
         return screenWidth;
@@ -217,6 +240,7 @@ public class Settings implements Serializable {
 
     /**
      * Set screen width
+     *
      * @param screenWidth Value to set screen width to
      */
     public void setScreenWidth(int screenWidth) {
@@ -224,15 +248,8 @@ public class Settings implements Serializable {
     }
 
     /**
-     * Set screen height
-     * @param screenHeight Value to set screen height to
-     */
-    public void setScreenHeight (int screenHeight) {
-        this.screenHeight = screenHeight;
-    }
-
-    /**
      * Get key mapping as key
+     *
      * @param action The binding of which action to return
      * @return Binding of specified action
      */
@@ -242,6 +259,7 @@ public class Settings implements Serializable {
 
     /**
      * Set key binding of action to one specified
+     *
      * @param action Action to set key binding of
      * @param newKey New binding for specified action
      */

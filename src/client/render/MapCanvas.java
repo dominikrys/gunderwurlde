@@ -23,6 +23,7 @@ import java.util.Map;
 
 /**
  * MapCanvas class. This is what the map and all entities are rendered on.
+ *
  * @author Dominik Rys
  */
 public class MapCanvas extends Canvas {
@@ -53,7 +54,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Constructor
-     * @param width Width of canvas
+     *
+     * @param width  Width of canvas
      * @param height Height of canvas
      */
     public MapCanvas(int width, int height) {
@@ -72,7 +74,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render map tiles
-     * @param gameView GameView to get map data from
+     *
+     * @param gameView               GameView to get map data from
      * @param rendererResourceLoader Renderer resources
      */
     public void renderMap(GameView gameView, RendererResourceLoader rendererResourceLoader) {
@@ -95,8 +98,9 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render entities to canvas
-     * @param gameView GameView to get data from
-     * @param playerID ID of player that can see this canvas
+     *
+     * @param gameView               GameView to get data from
+     * @param playerID               ID of player that can see this canvas
      * @param rendererResourceLoader Renderer resources
      */
     public void renderEntitiesFromGameViewToCanvas(GameView gameView, int playerID, RendererResourceLoader rendererResourceLoader) {
@@ -328,8 +332,9 @@ public class MapCanvas extends Canvas {
 
     /**
      * Check which entities have died relative to the previous gameview object and display their death animations
-     * @param entityType EntityType to check deaths for
-     * @param gameView GameView to get data from
+     *
+     * @param entityType             EntityType to check deaths for
+     * @param gameView               GameView to get data from
      * @param rendererResourceLoader Renderer resources
      */
     private void renderEntityDeaths(EntityDeathAnimation entityType, GameView gameView,
@@ -391,10 +396,11 @@ public class MapCanvas extends Canvas {
 
     /**
      * Find difference between two maps
+     *
      * @param map1 Map whose extras will be returned
      * @param map2 Map to compare to the first map
-     * @param <K> Type of keys in input maps
-     * @param <V> Type of values in input maps
+     * @param <K>  Type of keys in input maps
+     * @param <V>  Type of values in input maps
      * @return Map containing the differences between the two maps
      */
     private <K, V> Map<K, V> mapDifference(Map<? extends K, ? extends V> map1, Map<? extends K, ? extends V> map2) {
@@ -407,9 +413,10 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render image according to info from its animation
+     *
      * @param entitiesOnMap Entities currently on the map
-     * @param id ID of animation
-     * @param pose Pose of animation to get location to render to from
+     * @param id            ID of animation
+     * @param pose          Pose of animation to get location to render to from
      */
     private void renderAnimationSpriteOnMap(Map<Integer, AnimatedSprite> entitiesOnMap, int id, Pose pose) {
         AnimatedSprite thisSpriteManager = entitiesOnMap.get(id);
@@ -421,9 +428,10 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render healthbar above entity
-     * @param pose Pose of animation to get location to render to from
+     *
+     * @param pose          Pose of animation to get location to render to from
      * @param currentHealth Current health of the entity
-     * @param maxHealth Max health of the entity
+     * @param maxHealth     Max health of the entity
      */
     private void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
         // Variables for calculations
@@ -444,7 +452,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render entity from its EntityView object
-     * @param entityView EntityView to render
+     *
+     * @param entityView             EntityView to render
      * @param rendererResourceLoader Renderer resources
      */
     private void renderEntityView(EntityView entityView, RendererResourceLoader rendererResourceLoader) {
@@ -457,8 +466,9 @@ public class MapCanvas extends Canvas {
 
     /**
      * Render entity to map
+     *
      * @param entityView Entity to render
-     * @param image Image to render
+     * @param image      Image to render
      */
     private void renderEntity(EntityView entityView, Image image) {
         // If entity's sizeScaleFactor isn't zero, enlarge the graphic
@@ -473,10 +483,11 @@ public class MapCanvas extends Canvas {
 
     /**
      * Draw rotated image on canvas
+     *
      * @param image Image to draw
      * @param angle Angle to draw image at
-     * @param x X coordinate to render image to
-     * @param y Y coordinate to render image to
+     * @param x     X coordinate to render image to
+     * @param y     Y coordinate to render image to
      */
     private void drawRotatedImage(Image image, double angle, double x, double y) {
         mapGC.save(); // Saves the current state on stack, including the current transform for later
@@ -487,14 +498,15 @@ public class MapCanvas extends Canvas {
 
     /**
      * Draw rotated image with spritesheet support - can specify which bit of image to render
-     * @param image Image to render
-     * @param angle Angle to render image at
-     * @param x X coordinate to render image at
-     * @param y Y coordinate to render image at
+     *
+     * @param image   Image to render
+     * @param angle   Angle to render image at
+     * @param x       X coordinate to render image at
+     * @param y       Y coordinate to render image at
      * @param xOffset X offset on spritesheet to render image from
      * @param yOffset Y offset on spritesheet to render image from
-     * @param width Width of image to render
-     * @param height Height of image to render
+     * @param width   Width of image to render
+     * @param height  Height of image to render
      */
     private void drawRotatedImageFromSpritesheet(Image image, double angle, double x, double y, double xOffset,
                                                  double yOffset, double width, double height) {
@@ -506,7 +518,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Set transform for the GraphicsContext to rotate around a pivot point.
-     * @param angle Angle to rotate GraphicsContext by
+     *
+     * @param angle            Angle to rotate GraphicsContext by
      * @param xPivotCoordinate Coordinate of rotation x pivot
      * @param yPivotCoordinate Coordinate of rotation y pivot
      */
@@ -517,7 +530,8 @@ public class MapCanvas extends Canvas {
 
     /**
      * Scale image by integer value through resampling - useful for large enemies/powerups
-     * @param inputImage Image to enlarge
+     *
+     * @param inputImage  Image to enlarge
      * @param scaleFactor Scalefactor to enlarge image by
      * @return Enlarged image
      */
@@ -549,6 +563,7 @@ public class MapCanvas extends Canvas {
 
     /**
      * Create a WritableImage object from a given colour
+     *
      * @param color Color to make image from
      * @return Image made from input colour
      */

@@ -7,6 +7,7 @@ import javafx.util.Duration;
 
 /**
  * AnimatedSprite class. Handles spritesheet animations.
+ *
  * @author Dominik Rys
  */
 public class AnimatedSprite {
@@ -52,13 +53,14 @@ public class AnimatedSprite {
 
     /**
      * Constructor
-     * @param image Image containing spritesheet
+     *
+     * @param image                 Image containing spritesheet
      * @param individualImageHeight Height of each image in spritesheet
-     * @param individualImageWidth Width of each image in spritesheet
-     * @param frameCount Total amount of frames on spritesheet
-     * @param timeBetweenFrames Time between frames in milliseonds
-     * @param cycleCount How many times to cycle through animation
-     * @param animationType Animation type according to AnimationType enum
+     * @param individualImageWidth  Width of each image in spritesheet
+     * @param frameCount            Total amount of frames on spritesheet
+     * @param timeBetweenFrames     Time between frames in milliseonds
+     * @param cycleCount            How many times to cycle through animation
+     * @param animationType         Animation type according to AnimationType enum
      */
     AnimatedSprite(Image image, int individualImageHeight, int individualImageWidth, int frameCount,
                    int timeBetweenFrames, int cycleCount, AnimationType animationType) {
@@ -109,7 +111,8 @@ public class AnimatedSprite {
 
     /**
      * Constructor for static images
-     * @param image Image
+     *
+     * @param image         Image
      * @param animationType Type of animation according to AnimationType enum
      */
     AnimatedSprite(Image image, AnimationType animationType) {
@@ -126,6 +129,7 @@ public class AnimatedSprite {
 
     /**
      * Get image
+     *
      * @return Image stored by this object
      */
     public Image getImage() {
@@ -134,6 +138,7 @@ public class AnimatedSprite {
 
     /**
      * Get current x offset
+     *
      * @return X offset
      */
     public double getXOffset() {
@@ -142,6 +147,7 @@ public class AnimatedSprite {
 
     /**
      * Get current y offset
+     *
      * @return Y offset
      */
     public double getYOffset() {
@@ -150,6 +156,7 @@ public class AnimatedSprite {
 
     /**
      * Get individual image width
+     *
      * @return Individual image width
      */
     public int getIndividualImageWidth() {
@@ -158,6 +165,7 @@ public class AnimatedSprite {
 
     /**
      * Get individual image height
+     *
      * @return Individual image height
      */
     public int getIndividualImageHeight() {
@@ -166,6 +174,7 @@ public class AnimatedSprite {
 
     /**
      * Get animation type
+     *
      * @return Animation type
      */
     public AnimationType getAnimationType() {
@@ -174,6 +183,7 @@ public class AnimatedSprite {
 
     /**
      * Get current frame
+     *
      * @return Current frame
      */
     public int getCurrentFrame() {
