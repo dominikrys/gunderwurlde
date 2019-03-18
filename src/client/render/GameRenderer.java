@@ -108,7 +108,7 @@ public class GameRenderer implements Runnable {
     /**
      * SoundView object to be passed to the sound manager
      */
-    private SoundView soundView; // TODO: why is this here??
+    private SoundView soundView;
 
     /**
      * Constructor

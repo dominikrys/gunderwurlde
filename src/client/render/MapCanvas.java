@@ -106,7 +106,24 @@ public class MapCanvas extends Canvas {
     public void renderEntitiesFromGameViewToCanvas(GameView gameView, int playerID, RendererResourceLoader rendererResourceLoader) {
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
-            renderEntityView(currentItem, rendererResourceLoader);
+            // Make item flicker when timer on it is expiring
+            if (currentItem.getTimeLeft() < 4000  && currentItem.getTimeLeft() >= 2500) {
+                if (currentItem.getTimeLeft() % 500 < 250) {
+                    renderEntityView(currentItem, rendererResourceLoader);
+                }
+            }
+            else if (currentItem.getTimeLeft() < 2500  && currentItem.getTimeLeft() >= 1000) {
+                if (currentItem.getTimeLeft() % 250 < 125) {
+                    renderEntityView(currentItem, rendererResourceLoader);
+                }
+            }
+            else if (currentItem.getTimeLeft() < 1000  && currentItem.getTimeLeft() >= 0) {
+                if (currentItem.getTimeLeft() % 100 < 50) {
+                    renderEntityView(currentItem, rendererResourceLoader);
+                }
+            } else {
+                renderEntityView(currentItem, rendererResourceLoader);
+            }
         }
 
         // Render players

@@ -93,7 +93,7 @@ public class HUD extends VBox {
         // Change background according to team
         switch (currentPlayer.getTeam()) {
             case RED:
-                this.setStyle("-fx-background-color: rgba(255, 0, 47, 0.5); -fx-backgroundradius: 0 0 165 0;");
+                this.setStyle("-fx-background-color: rgba(255, 0, 47, 0.5); -fx-background-radius: 0 0 150 0;");
                 this.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
                 break;
             case BLUE:
