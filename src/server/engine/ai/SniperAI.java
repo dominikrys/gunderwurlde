@@ -23,6 +23,7 @@ public class SniperAI extends EnemyAI {
     private boolean playerAiming = false;
     private long beginAttackTime;
     private LinkedList<Pose> posePath;
+    private boolean AStartProcessing = false;
 
     public SniperAI(int rangeToRunAway){
         super();
@@ -71,42 +72,43 @@ public class SniperAI extends EnemyAI {
 
     @Override
     protected Force generateMovementForce() {
-        if(runAway()){
-            if(posePath == null)
+        if (runAway()) {
+            if (posePath == null && !AStartProcessing)
                 new AStarForTiles(this, 0.8, tileMap, pose, (Pose) Tile.tileToLocation(25, 15)).run();
-        }else{
-            if(posePath == null) {
-                System.out.println();
-                Pose endPose = new Pose(Tile.tileToLocation(25, 4));
-                new AStarForTiles(this, 1, tileMap, pose, endPose).run();
-            }else{
-//                int[] endTile= Tile.locationToTile((Pose)posePath.toArray()[ posePath.size()-1 ]);
-//                System.out.println(endTile[0] + " " + endTile[1]);
+        } else {
+            if (posePath == null) {
+                if (!AStartProcessing) {
+                    Pose endPose = new Pose(Tile.tileToLocation(25, 4));
+                    new AStarForTiles(this, 1, tileMap, pose, closestPlayer).run();
+                    AStartProcessing = true;
+                } else {
+                    //cloak and move somewhere?
+                }
+            } else {
+//                System.out.println("pose to go: " + posePath.peekLast());
+                if (!Pose.compareLocation(pose, posePath.peekLast(), 5)) {
+                    int angle = getAngle(pose, posePath.peekLast());
+                    return new Force(angle, maxMovementForce);
+                } else {
+                    posePath.pollLast();
+                }
             }
-            //calc pos and move using aStart
         }
-        return null;
+        return new Force(pose.getDirection(), 0);
     }
 
     private boolean runAway() {
         return false;
     }
 
-    synchronized void setPoseToGo(Pose pose) {
-        poseToGo = pose;
-        setProcessing(false);
-    }
-
     synchronized void setTilePath(LinkedList<Pose> aStar) {
-        for (Pose pose :
-                aStar) {
+        System.out.println("Returned direction poses: ");
+        for (Pose pose : aStar) {
             System.out.println(Tile.locationToTile(pose)[0] + " " + Tile.locationToTile(pose)[1]);
         }
-        System.out.println(aStar.poll());
-        System.out.println(aStar.poll());
-        System.out.println(aStar.poll());
 
         posePath = aStar;
+        AStartProcessing = false;
     }
 
 }

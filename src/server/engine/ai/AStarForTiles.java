@@ -20,6 +20,8 @@ public class AStarForTiles extends Thread {
     private final Pose endPose;
     private final Pose startPose;
     private final SniperAI myEnemy;
+    private Pair<Integer, Integer> enemTile;
+    private Pair<Integer, Integer> playerTile;
 
     protected AStarForTiles(SniperAI myEnemy, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose) {
         COST_OF_TRAVEL = cost_of_travel;
@@ -37,8 +39,8 @@ public class AStarForTiles extends Thread {
 //    }
 
     public void run() {
-        Pair<Integer, Integer> enemTile = PoseToPairOfTileCoords(startPose);
-        Pair<Integer, Integer> playerTile = PoseToPairOfTileCoords(endPose);
+        enemTile = PoseToPairOfTileCoords(startPose);
+        playerTile = PoseToPairOfTileCoords(endPose);
 
         for (Tile[] arr :
                 this.tiles) {
@@ -47,7 +49,7 @@ public class AStarForTiles extends Thread {
         }
 
         try {
-            myEnemy.setTilePath(generatePoseDirectionPath(generateNodePath(aStar(enemTile, playerTile), enemTile)));
+            myEnemy.setTilePath(generatePoseDirectionPath(generateNodePath(aStar(enemTile, playerTile))));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,28 +60,25 @@ public class AStarForTiles extends Thread {
         return new Pair<>(tileCoords[1], tileCoords[0]); //y and x
     }
 
-    private LinkedList<Node> generateNodePath(PriorityQueue<Node> path, Pair<Integer, Integer> enemTile) {
+    private LinkedList<Node> generateNodePath(PriorityQueue<Node> path) {
         System.out.println(path.size());
-        Node currentNode = path.poll();
         List<Node> list = new ArrayList<>(path);
         LinkedList<Node> finalPath = new LinkedList<>();
         LinkedList<Node> possibleNodesToAdd = new LinkedList<>();
-//        Pair<Integer, Integer> testCoord = new Pair<>(10, 10);
-//        Node testNode = new Node(new Pose(4,25), 0, 0);
-//        System.out.println(enemTile);
-//        System.out.println(testCoord);
+        Node currentNode = null;
+
+        for (Node n : path) {
+            if(n.getCoordinates().equals(playerTile))
+                currentNode = n;
+        }
+
+        if(currentNode == null){
+            return null;
+        }
         finalPath.add(currentNode);
-//        if(Node.nodesAdjacent(currentNode,testNode)){
-//            System.out.println("labas");
-//        }else{
-//            System.out.println("as krabas");
-//        }
-//        System.out.println(currentNode);
-//        System.out.println(list.size());
+
         while (!currentNode.getCoordinates().equals(enemTile)) {
             for (Node node : list) {
-//                System.out.println("node " + node);
-//                System.out.println("currentNode " + currentNode);
                 if (node.getCostToGo() == currentNode.getCostToGo() - 1 && Node.nodesAdjacent(node, currentNode)) {
                     possibleNodesToAdd.add(node);
                 }
@@ -87,10 +86,6 @@ public class AStarForTiles extends Thread {
             currentNode = findBestNodeToAdd(possibleNodesToAdd, currentNode);
             finalPath.add(currentNode);
             possibleNodesToAdd.clear();
-        }
-        for (Node n :
-                finalPath) {
-            System.out.println(n);
         }
 
         return finalPath;
@@ -115,17 +110,16 @@ public class AStarForTiles extends Thread {
         return bestNodeToAdd;
     }
 
-    //TODO make tihs better
+    //TODO make this better
     private LinkedList<Pose> generatePoseDirectionPath(LinkedList<Node> nodePath) {
         LinkedList<Pose> finalDirectionPath = new LinkedList<>();
-        Node currentNode = nodePath.poll();
+        Node currentNode = nodePath.peek();
         Pose currentPose = new Pose(Tile.tileToLocation((int) currentNode.getX(), (int) currentNode.getY()));
         int currentAngle = -1;
         int nextAngle;
         Node nextNode;
         Pose nextPose;
-        Node finalnode = nodePath.peekLast();
-//        System.out.println("final node " + finalnode);
+        Node finalNode = nodePath.peekLast();
 
         while (nodePath.size() != 0) {
             nextNode = nodePath.pop();
@@ -139,14 +133,14 @@ public class AStarForTiles extends Thread {
             currentPose = nextPose;
             currentAngle = nextAngle;
         }
-//        System.out.println("final node" + nodePath.pop());
-        finalDirectionPath.add(new Pose(Tile.tileToLocation((int) finalnode.getX(), (int) finalnode.getY())));
+
+        finalDirectionPath.add(new Pose(Tile.tileToLocation((int) finalNode.getX(), (int) finalNode.getY())));
         finalDirectionPath.poll();
 
         return finalDirectionPath;
     }
 
-    // Coordinates are y x
+    // Coordinates are y x in the Pairs
     protected PriorityQueue<Node> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) throws IOException {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);

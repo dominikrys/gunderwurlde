@@ -8,8 +8,12 @@ import shared.Pose;
 public class Node implements Comparable<Node> {
     private Pose pose;
     private double costToGo = 0;
-    private double costLeft;
-    private double sum;
+    private double costLeft = 0;
+    private double sum = 0;
+
+    public Node(Pair<Integer, Integer> tile){
+        this.pose = new Pose(tile.getValue(), tile.getKey());
+    }
 
     public Node(Pose pose, double costToGo, double costLeft) {
         this.pose = pose;
