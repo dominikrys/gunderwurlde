@@ -104,20 +104,24 @@ public class MapCanvas extends Canvas {
      * @param rendererResourceLoader Renderer resources
      */
     public void renderEntitiesFromGameViewToCanvas(GameView gameView, int playerID, RendererResourceLoader rendererResourceLoader) {
+        // Render enemy and player spawn animations
+        renderEntitySpawns(EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
+        renderEntitySpawns(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
+
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
             // Make item flicker when timer on it is expiring
-            if (currentItem.getTimeLeft() < 4000  && currentItem.getTimeLeft() >= 2500) {
-                if (currentItem.getTimeLeft() % 500 < 250) {
+            if (currentItem.getTimeLeft() < 5000  && currentItem.getTimeLeft() >= 3000) {
+                if (currentItem.getTimeLeft() % 400 < 200) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
             }
-            else if (currentItem.getTimeLeft() < 2500  && currentItem.getTimeLeft() >= 1000) {
+            else if (currentItem.getTimeLeft() < 3000  && currentItem.getTimeLeft() >= 1500) {
                 if (currentItem.getTimeLeft() % 250 < 125) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
             }
-            else if (currentItem.getTimeLeft() < 1000  && currentItem.getTimeLeft() >= 0) {
+            else if (currentItem.getTimeLeft() < 1500  && currentItem.getTimeLeft() >= 0) {
                 if (currentItem.getTimeLeft() % 100 < 50) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
@@ -128,213 +132,12 @@ public class MapCanvas extends Canvas {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
-            // Update animation hashmap to track entity
-            if (!playersOnMapAnimations.containsKey(currentPlayer.getID())) {
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite());
-            }
-
-            // Check correct animation
-            if (currentPlayer.isMoving()) {
-                // TODO: have this go through a scale factor check
-                // Check if in map of currently tracked players
-                if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.MOVE) {
-                    // Get the correct sprite
-                    EntityList entityToRender = EntityList.PLAYER_WALK;
-                    switch (currentPlayer.getTeam()) {
-                        case RED:
-                            entityToRender = EntityList.PLAYER_WALK_RED;
-                            break;
-                        case BLUE:
-                            entityToRender = EntityList.PLAYER_WALK_BLUE;
-                            break;
-                        case GREEN:
-                            entityToRender = EntityList.PLAYER_WALK_GREEN;
-                            break;
-                        case YELLOW:
-                            entityToRender = EntityList.PLAYER_WALK_YELLOW;
-                            break;
-                    }
-
-                    // Add animation to animationhashmap
-                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
-                            rendererResourceLoader.getSprite(entityToRender), 32, 32,
-                            6, 75, 0, AnimationType.MOVE));
-                }
-            }
-            // Check if player reloading
-            else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
-                // Check if in map of currently tracked players
-                if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.RELOAD) {
-                    // Get the correct sprite
-                    EntityList entityToRender = EntityList.PLAYER_RELOAD;
-                    switch (currentPlayer.getTeam()) {
-                        case RED:
-                            entityToRender = EntityList.PLAYER_RELOAD_RED;
-                            break;
-                        case BLUE:
-                            entityToRender = EntityList.PLAYER_RELOAD_BLUE;
-                            break;
-                        case GREEN:
-                            entityToRender = EntityList.PLAYER_RELOAD_GREEN;
-                            break;
-                        case YELLOW:
-                            entityToRender = EntityList.PLAYER_RELOAD_YELLOW;
-                            break;
-                    }
-
-                    // Add animation to animationhashmap
-                    playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
-                            rendererResourceLoader.getSprite(entityToRender), 32, 45,
-                            5, currentPlayer.getCurrentItem().getReloadTime() / 5,
-                            0, AnimationType.RELOAD));
-                }
-            }
-            // Check if player attacking
-            else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
-                // Get correct sprite
-                EntityList entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL;
-                switch (currentPlayer.getTeam()) {
-                    case RED:
-                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_RED;
-                        break;
-                    case GREEN:
-                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_GREEN;
-                        break;
-                    case YELLOW:
-                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW;
-                        break;
-                    case BLUE:
-                        entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_BLUE;
-                        break;
-                }
-
-                // Add sprite to animation hashmap
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
-                        rendererResourceLoader.getSprite(entityToRender), AnimationType.ATTACK));
-            }
-            // If standing, render standing image
-            else {
-                // Check if player has item that takes bullets - if so, render player with a gun
-                boolean hasGun = false;
-
-                for (ItemView iv : currentPlayer.getItems()) {
-                    if (iv.getAmmoType() != AmmoList.NONE) {
-                        hasGun = true;
-                        break;
-                    }
-                }
-
-                // Get correct graphic
-                EntityList entityToRender;
-                if (hasGun) {
-                    switch (currentPlayer.getTeam()) {
-                        case RED:
-                            entityToRender = EntityList.PLAYER_WITH_GUN_RED;
-                            break;
-                        case BLUE:
-                            entityToRender = EntityList.PLAYER_WITH_GUN_BLUE;
-                            break;
-                        case GREEN:
-                            entityToRender = EntityList.PLAYER_WITH_GUN_GREEN;
-                            break;
-                        case YELLOW:
-                            entityToRender = EntityList.PLAYER_WITH_GUN_YELLOW;
-                            break;
-                        default:
-                            entityToRender = EntityList.PLAYER_WITH_GUN;
-                            break;
-                    }
-                } else {
-                    switch (currentPlayer.getTeam()) {
-                        case RED:
-                            entityToRender = EntityList.PLAYER_RED;
-                            break;
-                        case BLUE:
-                            entityToRender = EntityList.PLAYER_BLUE;
-                            break;
-                        case GREEN:
-                            entityToRender = EntityList.PLAYER_GREEN;
-                            break;
-                        case YELLOW:
-                            entityToRender = EntityList.PLAYER_YELLOW;
-                            break;
-                        default:
-                            entityToRender = EntityList.PLAYER;
-                            break;
-                    }
-                }
-
-                // Add sprite to animation hashmap
-                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
-                        rendererResourceLoader.getSprite(entityToRender), AnimationType.STAND));
-            }
-
-            // Animation now in playerOnMap map so just render in appropriate location
-            renderAnimationSpriteOnMap(playersOnMapAnimations, currentPlayer.getID(), currentPlayer.getPose());
-
-            // Render healthbar
-            renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
-
-            // Put player into player locations hashmap
-            lastPlayerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
+            renderPlayerView(playerID, rendererResourceLoader, currentPlayer);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
-            // Update animation hashmap to track entity
-            if (!enemiesOnMapAnimations.containsKey(currentEnemy.getID())) {
-                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite());
-            }
-
-            // Check if enemy moving and is so, choose right animation
-            if (currentEnemy.isMoving()) {
-                // Check if already in the hashmap for enemies on the map
-                if (enemiesOnMapAnimations.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
-                    //TODO: add support for larger enemies/those that don't use the default zombie skin
-
-                    // Get correct sprite
-                    EntityList entityToRender = EntityList.ZOMBIE_WALK;
-                    switch (currentEnemy.getEntityListName()) {
-                        case ZOMBIE:
-                            entityToRender = EntityList.ZOMBIE_WALK;
-                            break;
-                        case RUNNER:
-                            entityToRender = EntityList.RUNNER_WALK;
-                            break;
-                        case SOLDIER:
-                            entityToRender = EntityList.SOLDIER_WALK;
-                            break;
-                        case MIDGET:
-                            entityToRender = EntityList.MIDGET_WALK;
-                            break;
-                        case BOOMER:
-                            entityToRender = EntityList.BOOMER_WALK;
-                            break;
-                        case MACHINE_GUNNER:
-                            entityToRender = EntityList.MACHINE_GUNNER_WALK;
-                            break;
-                    }
-
-                    // Add animation to animation hashmap
-                    enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
-                            rendererResourceLoader.getSprite(entityToRender), 32, 32,
-                            6, 75, 0, AnimationType.MOVE));
-                }
-            }
-            // Enemy standing, render standing image
-            else {
-                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
-                        rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
-            }
-
-            // Render animation - Animation now in playerOnMap map so just render in appropriate location
-            renderAnimationSpriteOnMap(enemiesOnMapAnimations, currentEnemy.getID(), currentEnemy.getPose());
-
-            // Render healthbar
-            renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
-
-            // Put enemy into enemy locations hashmap
-            lastEnemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
+            renderEnemyView(rendererResourceLoader, currentEnemy);
         }
 
         // Render projectiles
@@ -345,6 +148,226 @@ public class MapCanvas extends Canvas {
         // Render enemy and player death animations
         renderEntityDeaths(EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
         renderEntityDeaths(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
+    }
+
+    /**
+     * Render enemy off of enemyview + healthbar
+     * @param rendererResourceLoader Renderer resources
+     * @param currentEnemy Enemy to be rendered
+     */
+    private void renderEnemyView(RendererResourceLoader rendererResourceLoader, EnemyView currentEnemy) {
+        // Update animation hashmap to track entity
+        if (!enemiesOnMapAnimations.containsKey(currentEnemy.getID())) {
+            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite());
+        }
+
+        // Check if enemy moving and is so, choose right animation
+        if (currentEnemy.isMoving()) {
+            // Check if already in the hashmap for enemies on the map
+            if (enemiesOnMapAnimations.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
+                //TODO: add support for larger enemies/those that don't use the default zombie skin
+
+                // Get correct sprite
+                EntityList entityToRender = EntityList.ZOMBIE_WALK;
+                switch (currentEnemy.getEntityListName()) {
+                    case ZOMBIE:
+                        entityToRender = EntityList.ZOMBIE_WALK;
+                        break;
+                    case RUNNER:
+                        entityToRender = EntityList.RUNNER_WALK;
+                        break;
+                    case SOLDIER:
+                        entityToRender = EntityList.SOLDIER_WALK;
+                        break;
+                    case MIDGET:
+                        entityToRender = EntityList.MIDGET_WALK;
+                        break;
+                    case BOOMER:
+                        entityToRender = EntityList.BOOMER_WALK;
+                        break;
+                    case MACHINE_GUNNER:
+                        entityToRender = EntityList.MACHINE_GUNNER_WALK;
+                        break;
+                }
+
+                // Add animation to animation hashmap
+                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                        rendererResourceLoader.getSprite(entityToRender), 32, 32,
+                        6, 75, 0, AnimationType.MOVE));
+            }
+        }
+        // Enemy standing, render standing image
+        else {
+            enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                    rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
+        }
+
+        // Render animation - Animation now in playerOnMap map so just render in appropriate location
+        renderAnimationSpriteOnMap(enemiesOnMapAnimations, currentEnemy.getID(), currentEnemy.getPose());
+
+        // Render healthbar
+        renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
+
+        // Put enemy into enemy locations hashmap
+        lastEnemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
+    }
+
+    /**
+     * Render player off of PlayerView
+     * @param playerID ID of player to render
+     * @param rendererResourceLoader Renderer resources
+     * @param currentPlayer PlayerView to render
+     */
+    private void renderPlayerView(int playerID, RendererResourceLoader rendererResourceLoader, PlayerView currentPlayer) {
+        // Update animation hashmap to track entity
+        if (!playersOnMapAnimations.containsKey(currentPlayer.getID())) {
+            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite());
+        }
+
+        // Check correct animation
+        if (currentPlayer.isMoving()) {
+            // TODO: have this go through a scale factor check
+            // Check if in map of currently tracked players
+            if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.MOVE) {
+                // Get the correct sprite
+                EntityList entityToRender = EntityList.PLAYER_WALK;
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        entityToRender = EntityList.PLAYER_WALK_RED;
+                        break;
+                    case BLUE:
+                        entityToRender = EntityList.PLAYER_WALK_BLUE;
+                        break;
+                    case GREEN:
+                        entityToRender = EntityList.PLAYER_WALK_GREEN;
+                        break;
+                    case YELLOW:
+                        entityToRender = EntityList.PLAYER_WALK_YELLOW;
+                        break;
+                }
+
+                // Add animation to animationhashmap
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
+                        rendererResourceLoader.getSprite(entityToRender), 32, 32,
+                        6, 75, 0, AnimationType.MOVE));
+            }
+        }
+        // Check if player reloading
+        else if (currentPlayer.getCurrentAction() == ActionList.RELOADING) {
+            // Check if in map of currently tracked players
+            if (playersOnMapAnimations.get(playerID).getAnimationType() != AnimationType.RELOAD) {
+                // Get the correct sprite
+                EntityList entityToRender = EntityList.PLAYER_RELOAD;
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        entityToRender = EntityList.PLAYER_RELOAD_RED;
+                        break;
+                    case BLUE:
+                        entityToRender = EntityList.PLAYER_RELOAD_BLUE;
+                        break;
+                    case GREEN:
+                        entityToRender = EntityList.PLAYER_RELOAD_GREEN;
+                        break;
+                    case YELLOW:
+                        entityToRender = EntityList.PLAYER_RELOAD_YELLOW;
+                        break;
+                }
+
+                // Add animation to animationhashmap
+                playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
+                        rendererResourceLoader.getSprite(entityToRender), 32, 45,
+                        5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                        0, AnimationType.RELOAD));
+            }
+        }
+        // Check if player attacking
+        else if (currentPlayer.getCurrentAction() == ActionList.ATTACKING) {
+            // Get correct sprite
+            EntityList entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL;
+            switch (currentPlayer.getTeam()) {
+                case RED:
+                    entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_RED;
+                    break;
+                case GREEN:
+                    entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_GREEN;
+                    break;
+                case YELLOW:
+                    entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_YELLOW;
+                    break;
+                case BLUE:
+                    entityToRender = EntityList.PLAYER_WITH_GUN_RECOIL_BLUE;
+                    break;
+            }
+
+            // Add sprite to animation hashmap
+            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
+                    rendererResourceLoader.getSprite(entityToRender), AnimationType.ATTACK));
+        }
+        // If standing, render standing image
+        else {
+            // Check if player has item that takes bullets - if so, render player with a gun
+            boolean hasGun = false;
+
+            for (ItemView iv : currentPlayer.getItems()) {
+                if (iv.getAmmoType() != AmmoList.NONE) {
+                    hasGun = true;
+                    break;
+                }
+            }
+
+            // Get correct graphic
+            EntityList entityToRender;
+            if (hasGun) {
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        entityToRender = EntityList.PLAYER_WITH_GUN_RED;
+                        break;
+                    case BLUE:
+                        entityToRender = EntityList.PLAYER_WITH_GUN_BLUE;
+                        break;
+                    case GREEN:
+                        entityToRender = EntityList.PLAYER_WITH_GUN_GREEN;
+                        break;
+                    case YELLOW:
+                        entityToRender = EntityList.PLAYER_WITH_GUN_YELLOW;
+                        break;
+                    default:
+                        entityToRender = EntityList.PLAYER_WITH_GUN;
+                        break;
+                }
+            } else {
+                switch (currentPlayer.getTeam()) {
+                    case RED:
+                        entityToRender = EntityList.PLAYER_RED;
+                        break;
+                    case BLUE:
+                        entityToRender = EntityList.PLAYER_BLUE;
+                        break;
+                    case GREEN:
+                        entityToRender = EntityList.PLAYER_GREEN;
+                        break;
+                    case YELLOW:
+                        entityToRender = EntityList.PLAYER_YELLOW;
+                        break;
+                    default:
+                        entityToRender = EntityList.PLAYER;
+                        break;
+                }
+            }
+
+            // Add sprite to animation hashmap
+            playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
+                    rendererResourceLoader.getSprite(entityToRender), AnimationType.STAND));
+        }
+
+        // Animation now in playerOnMap map so just render in appropriate location
+        renderAnimationSpriteOnMap(playersOnMapAnimations, currentPlayer.getID(), currentPlayer.getPose());
+
+        // Render healthbar
+        renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
+
+        // Put player into player locations hashmap
+        lastPlayerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
     }
 
     /**
@@ -376,23 +399,23 @@ public class MapCanvas extends Canvas {
                 break;
         }
 
-        // Go through lit of dead enemies
+        // Go through list of dead entities
         for (Map.Entry<Integer, Pose> entry : deadEntities.entrySet()) {
             // Set up an animationtimer with a one-off animation for every enemy
             new AnimationTimer() {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
-                AnimatedSprite deathSpriteManager = new AnimatedSprite(
+                AnimatedSprite deathAnimation = new AnimatedSprite(
                         rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
                         frameCount, 25, 1, AnimationType.NONE);
 
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (deathSpriteManager.getCurrentFrame() < frameCount - 1) {
-                        drawRotatedImageFromSpritesheet(deathSpriteManager.getImage(), 0, pose.getX(),
-                                pose.getY(), deathSpriteManager.getXOffset(), deathSpriteManager.getYOffset(),
-                                deathSpriteManager.getIndividualImageWidth(), deathSpriteManager.getIndividualImageHeight());
+                    if (deathAnimation.getCurrentFrame() < frameCount - 1) {
+                        drawRotatedImageFromSpritesheet(deathAnimation.getImage(), 0, pose.getX(),
+                                pose.getY(), deathAnimation.getXOffset(), deathAnimation.getYOffset(),
+                                deathAnimation.getIndividualImageWidth(), deathAnimation.getIndividualImageHeight());
                     } else {
                         this.stop();
                     }
@@ -408,6 +431,59 @@ public class MapCanvas extends Canvas {
                     lastEnemyLocations.remove(entry.getKey());
                     break;
             }
+        }
+    }
+
+    /**
+     * Render enemy spawn animations
+     * @param entityType Entity to render spawn animation for
+     * @param gameView GameView storing data
+     * @param rendererResourceLoader Renderer resource loader
+     */
+    private void renderEntitySpawns(EntityDeathAnimation entityType, GameView gameView,
+                                    RendererResourceLoader rendererResourceLoader) {
+        // Make a hashmap of all entities  on map to ease calculations and find dead entities
+        Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
+        HashMap<Integer, Pose> newEntities = new HashMap<>();
+        switch (entityType) {
+            case PLAYER:
+                for (PlayerView playerView : gameView.getPlayers()) {
+                    gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
+                }
+
+                newEntities = (HashMap<Integer, Pose>) mapDifference(gameViewEntityPoses, lastPlayerLocations);
+                break;
+            case ENEMY:
+                for (EnemyView enemyView : gameView.getEnemies()) {
+                    gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
+                }
+
+                newEntities = (HashMap<Integer, Pose>) mapDifference(gameViewEntityPoses, lastEnemyLocations);
+                break;
+        }
+
+        // Go through list of new entities
+        for (Map.Entry<Integer, Pose> entry : newEntities.entrySet()) {
+            // Set up an animationtimer with a one-off animation for every enemy
+            new AnimationTimer() {
+                Pose pose = entry.getValue();
+                int frameCount = 32;
+                AnimatedSprite spawnAnimation = new AnimatedSprite(
+                        rendererResourceLoader.getSprite(EntityList.WHITE_SMOKE_CLOUD), 32, 32,
+                        frameCount, 25, 1, AnimationType.NONE);
+
+                @Override
+                public void handle(long now) {
+                    // Check if animation still running - if not, stop animation
+                    if (spawnAnimation.getCurrentFrame() < frameCount - 1) {
+                        drawRotatedImageFromSpritesheet(spawnAnimation.getImage(), 0, pose.getX(),
+                                pose.getY(), spawnAnimation.getXOffset(), spawnAnimation.getYOffset(),
+                                spawnAnimation.getIndividualImageWidth(), spawnAnimation.getIndividualImageHeight());
+                    } else {
+                        this.stop();
+                    }
+                }
+            }.start();
         }
     }
 

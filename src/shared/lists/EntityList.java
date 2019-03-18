@@ -111,7 +111,12 @@ public enum EntityList {
     /**
      * Blood explosion animation
      */
-    BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png");
+    BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png"),
+
+    /**
+     * White smoke cloud animation
+     */
+    WHITE_SMOKE_CLOUD("file:assets/img/misc_animations/white_smoke_cloud.png");
 
     /**
      * Path to sprite
