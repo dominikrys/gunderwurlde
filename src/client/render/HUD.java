@@ -26,7 +26,6 @@ public class HUD extends BorderPane {
      * VBox for all player info
      */
     VBox playerInfoBox;
-
     /**
      * Minimap rectangle
      */
@@ -131,10 +130,13 @@ public class HUD extends BorderPane {
 
         // Set up minimap
         miniMapPane = new StackPane();
+        miniMapPane.setPadding(new Insets(10, 10, 10, 10));
+
         miniMapRectangle = new Rectangle();
-        miniMapRectangle.setFill(Color.BLACK);
-        miniMapRectangle.setStroke(Color.LIGHTGRAY);
+        miniMapRectangle.setFill(new Color(0, 0, 0, 1.75));
+        miniMapRectangle.setStroke(new Color(0.75, 0.75, 0.75, 0.9));
         miniMapRectangle.setStrokeWidth(3);
+
         int maxMinimapSize = 200;
 
         // Scale minimap according to map size
@@ -149,14 +151,14 @@ public class HUD extends BorderPane {
             miniMapRectangle.setWidth(maxMinimapSize);
         }
 
+        // Add minimap to top right of HUD
         miniMapPane.getChildren().add(miniMapRectangle);
         this.setRight(miniMapPane);
-        this.setAlignment(miniMapPane, Pos.TOP_LEFT);
 
         // Add playerinfo elements to top left of hud
         playerInfoBox.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
         this.setLeft(playerInfoBox);
-        this.setAlignment(playerInfoBox, Pos.TOP_RIGHT);
+        this.setAlignment(playerInfoBox, Pos.TOP_LEFT);
     }
 
     /**
@@ -300,5 +302,6 @@ public class HUD extends BorderPane {
         // Update pane
         miniMapPane.getChildren().clear();
         miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
+        miniMapPane.setAlignment(Pos.TOP_RIGHT);
     }
 }
