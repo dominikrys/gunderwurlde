@@ -274,11 +274,8 @@ public class GameRenderer implements Runnable {
 
         // Set pausedoverlay VBox - make it slightly translucent
         pausedOverlay = new VBox(pauseLabel, pauseInstructions);
-        pausedOverlay.setStyle(
-                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
-                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
-                        "-fx-background-insets: 50;"
-        );
+        pausedOverlay.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 1),
+                new CornerRadii(0), new Insets(50, 50, 50, 50))));
         pausedOverlay.setAlignment(Pos.CENTER);
         pausedOverlay.setSpacing(10);
         pausedOverlay.setVisible(false);
