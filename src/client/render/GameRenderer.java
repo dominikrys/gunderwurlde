@@ -179,10 +179,12 @@ public class GameRenderer implements Runnable {
             }
         }.start();
 
-        // Alternative: use timeline. This way can also specify FPS
-//        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.play();
+        /*
+        // Alternative:timeline. This way can specify FPS so can be added to settings as variable FPS?
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> renderGameView()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+        */
     }
 
     /**
