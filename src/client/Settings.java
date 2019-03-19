@@ -81,6 +81,30 @@ public class Settings implements Serializable {
     }
 
     /**
+     * Static method for loading settings file
+     *
+     * @return Loaded settings
+     */
+    public static Settings loadSettingsFromFile() {
+        Settings settings = null;
+        try (
+                InputStream file = new FileInputStream("settings.ser");
+                InputStream buffer = new BufferedInputStream(file);
+                ObjectInput input = new ObjectInputStream(buffer)
+        ) {
+            // Deserialize the file
+            settings = (Settings) input.readObject();
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+
+        return settings;
+    }
+
+    /**
      * Set key mapping to default
      */
     public void mapDefaultKeys() {
@@ -248,6 +272,15 @@ public class Settings implements Serializable {
     }
 
     /**
+     * Get fullscreen boolean
+     *
+     * @return Fullscreen if true
+     */
+    public boolean getFullscreen() {
+        return fullScreen;
+    }
+
+    /**
      * Get key mapping as key
      *
      * @param action The binding of which action to return
@@ -282,3 +315,4 @@ public class Settings implements Serializable {
         }
     }
 }
+

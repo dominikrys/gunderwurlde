@@ -310,16 +310,21 @@ public class HUD extends BorderPane {
         Label gameOverLabel = new Label("You Died!");
         gameOverLabel.setFont(fontManaspace50);
         gameOverLabel.setTextFill(Color.RED);
+        gameOverLabel.setPadding(new Insets(10, 10, 10, 10));
+        gameOverLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+                new CornerRadii(0), new Insets(0, 0, 0, 0))));
 
         // Create label notifying player they are now in spectator mode
         Label spectatorHintLabel = new Label("You are now in spectator mode");
         spectatorHintLabel.setFont(fontManaspace18);
         spectatorHintLabel.setTextFill(Color.BLACK);
+        spectatorHintLabel.setPadding(new Insets(10, 10, 10, 10));
+        spectatorHintLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+                new CornerRadii(0), new Insets(0, 0, 0, 0))));
 
         // Add labels to VBox and display VBox
-        VBox deathMessage = new VBox(gameOverLabel, spectatorHintLabel);
-        deathMessage.setSpacing(10);
-        deathMessage.setAlignment(Pos.CENTER);
-        this.setCenter(deathMessage);
+        VBox deathMessageBox = new VBox(gameOverLabel, spectatorHintLabel);
+        deathMessageBox.setAlignment(Pos.CENTER);
+        this.setCenter(deathMessageBox);
     }
 }
