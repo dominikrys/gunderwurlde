@@ -133,13 +133,13 @@ public class HUD extends BorderPane {
         miniMapPane.setPadding(new Insets(10, 10, 10, 10));
 
         miniMapRectangle = new Rectangle();
-        miniMapRectangle.setFill(new Color(0, 0, 0, 1.75));
+        miniMapRectangle.setFill(new Color(0, 0, 0, 0.75));
         miniMapRectangle.setStroke(new Color(0.75, 0.75, 0.75, 0.9));
         miniMapRectangle.setStrokeWidth(3);
 
-        int maxMinimapSize = 200;
-
         // Scale minimap according to map size
+        int maxMinimapSize = 200;
+        
         if (mapHeight > mapWidth) {
             miniMapRectangle.setHeight(maxMinimapSize);
             miniMapRectangle.setWidth(((double) mapWidth / mapHeight) * maxMinimapSize);
