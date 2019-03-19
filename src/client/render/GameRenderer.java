@@ -239,6 +239,9 @@ public class GameRenderer implements Runnable {
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, this::updateMouse);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::updateMouse);
 
+        // Event handler for pause menu
+        stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
+
         // Set root to scene
         stage.getScene().setRoot(root);
 
@@ -410,6 +413,18 @@ public class GameRenderer implements Runnable {
         AnchorPane.setTopAnchor(mapCanvas,
                 (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
                         + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
+    }
+
+    /**
+     * Handle kinds of renderer input that don't have to be sent to the server
+     * @param e Key event
+     */
+    public void handleRendererInput(KeyEvent e) {
+        // Check if the ESC button has been pressed
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.ESC))) {
+            // Pause/unpause the game
+            paused = !paused;
+        }
     }
 
     /**
