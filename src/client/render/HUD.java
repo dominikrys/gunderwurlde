@@ -158,7 +158,6 @@ public class HUD extends BorderPane {
         // Add playerinfo elements to top left of hud
         playerInfoBox.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
         this.setLeft(playerInfoBox);
-        this.setAlignment(playerInfoBox, Pos.TOP_LEFT);
     }
 
     /**
@@ -303,5 +302,24 @@ public class HUD extends BorderPane {
         miniMapPane.getChildren().clear();
         miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
         miniMapPane.setAlignment(Pos.TOP_RIGHT);
+    }
+
+    //TODO: add javadoc + COMMENTS
+    public void displayDeathMessage(Font fontManaspace50, Font fontManaspace18) {
+        // Create game over text
+        Label gameOverLabel = new Label("You Died!");
+        gameOverLabel.setFont(fontManaspace50);
+        gameOverLabel.setTextFill(Color.RED);
+
+        // Create label notifying player they are now in spectator mode
+        Label spectatorHintLabel = new Label("You are now in spectator mode");
+        spectatorHintLabel.setFont(fontManaspace18);
+        spectatorHintLabel.setTextFill(Color.BLACK);
+
+        // Add labels to VBox and display VBox
+        VBox deathMessage = new VBox(gameOverLabel, spectatorHintLabel);
+        deathMessage.setSpacing(10);
+        deathMessage.setAlignment(Pos.CENTER);
+        this.setCenter(deathMessage);
     }
 }

@@ -10,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -97,12 +96,12 @@ public class GameRenderer implements Runnable {
     /**
      * KeyboardHandler
      */
-    private KeyboardHandler kbHandler;
+    private KeyboardHandler kbHandler; //TODO: move this out of renderer
 
     /**
      * Mouse handler
      */
-    private MouseHandler mHandler;
+    private MouseHandler mHandler; // todo: move this out of renderer
 
     /**
      * Settings object
@@ -324,6 +323,9 @@ public class GameRenderer implements Runnable {
                 // If first time in spectator mode
                 stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleSpectatorCamera);
 
+                // Display game over essage in hud
+                hud.displayDeathMessage(rendererResourceLoader.getFontManaspace50(), rendererResourceLoader.getFontManaspace18());
+
                 spectator = true;
             }
         } else {
@@ -376,14 +378,6 @@ public class GameRenderer implements Runnable {
         if (e.getCode().toString().equals(settings.getKey(KeyAction.RIGHT))) {
             mapCanvas.setTranslateX(mapCanvas.getTranslateX() - 10);
         }
-//        // Adjust map horizontally
-//        AnchorPane.setLeftAnchor(mapCanvas,
-//                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
-//                        + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
-//        // Adjust map vertically
-//        AnchorPane.setTopAnchor(mapCanvas,
-//                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
-//                        + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
     }
 
     /**

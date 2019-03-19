@@ -38,6 +38,11 @@ public class RendererResourceLoader {
     private Font fontManaspace18;
 
     /**
+     * Font used in game of size 50
+     */
+    private Font fontManaspace50;
+
+    /**
      * Constructor
      */
     public RendererResourceLoader() {
@@ -104,10 +109,12 @@ public class RendererResourceLoader {
         try {
             fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
             fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);
+            fontManaspace50 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 50);
         } catch (FileNotFoundException e) {
             System.out.println("Loading default font, font not found in " + Constants.MANASPACE_FONT_PATH);
             fontManaspace28 = new Font("Consolas", 28);
             fontManaspace18 = new Font("Consolas", 18);
+            fontManaspace50 = new Font("Consolas", 50);
         }
     }
 
@@ -137,5 +144,14 @@ public class RendererResourceLoader {
      */
     public Font getFontManaspace18() {
         return fontManaspace18;
+    }
+
+    /**
+     * Get font of size 50
+     *
+     * @return Font of size 50
+     */
+    public Font getFontManaspace50() {
+        return fontManaspace50;
     }
 }
