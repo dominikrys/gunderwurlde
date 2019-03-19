@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Settings;
+import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
@@ -9,12 +10,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shared.Constants;
 import shared.lists.EntityList;
+import shared.lists.EntityStatus;
 import shared.view.GameView;
 import shared.view.SoundView;
 import shared.view.entity.PlayerView;
@@ -116,6 +120,11 @@ public class GameRenderer implements Runnable {
     private boolean running;
 
     /**
+     * Boolean for spectator mode
+     */
+    private boolean spectator;
+
+    /**
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -146,6 +155,9 @@ public class GameRenderer implements Runnable {
 
         // Set running to true
         running = true;
+
+        // Set spectator mode to false
+        spectator = false;
 
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
@@ -272,7 +284,7 @@ public class GameRenderer implements Runnable {
     /**
      * Update the mouse location and render cursor in the new spot
      *
-     * @param e Mouse moved ebent
+     * @param e Mouse moved event
      */
     private void updateMouse(MouseEvent e) {
         mouseX = e.getSceneX();
@@ -306,14 +318,32 @@ public class GameRenderer implements Runnable {
      * Render gameview
      */
     private void renderGameView() {
+        // Check if player has died, in which case give them a free camera
+        if (getCurrentPlayer().getStatus() == EntityStatus.DEAD) {
+            if (!spectator) {
+                // If first time in spectator mode
+                stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleSpectatorCamera);
+
+                spectator = true;
+            }
+        } else {
+            // Check if coming back from spectator mode
+            if (spectator) {
+                // Remove eventhandler from spectator mode
+                stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this::handleSpectatorCamera);
+
+                spectator = false;
+            }
+
+            // Center camera on player
+            centerCamera();
+        }
+
         // Render map
         mapCanvas.renderMap(gameView, rendererResourceLoader);
 
         // Render entities onto canvas
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
-
-        // Center camera on player
-        centerCamera();
 
         // Update HUD
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
@@ -326,6 +356,34 @@ public class GameRenderer implements Runnable {
         } else {
             pausedOverlay.setVisible(false);
         }
+    }
+
+    /**
+     * Move camera according to what key is pressed
+     *
+     * @param e Key event
+     */
+    private void handleSpectatorCamera(KeyEvent e) {
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.UP))) {
+            mapCanvas.setTranslateY(mapCanvas.getTranslateY() + 10);
+        }
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.DOWN))) {
+            mapCanvas.setTranslateY(mapCanvas.getTranslateY() - 10);
+        }
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.LEFT))) {
+            mapCanvas.setTranslateX(mapCanvas.getTranslateX() + 10);
+        }
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.RIGHT))) {
+            mapCanvas.setTranslateX(mapCanvas.getTranslateX() - 10);
+        }
+//        // Adjust map horizontally
+//        AnchorPane.setLeftAnchor(mapCanvas,
+//                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+//                        + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
+//        // Adjust map vertically
+//        AnchorPane.setTopAnchor(mapCanvas,
+//                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+//                        + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
     }
 
     /**
@@ -349,7 +407,6 @@ public class GameRenderer implements Runnable {
         AnchorPane.setTopAnchor(mapCanvas,
                 (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
                         + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
-
     }
 
     /**
