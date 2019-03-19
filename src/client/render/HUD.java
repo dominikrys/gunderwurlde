@@ -304,7 +304,11 @@ public class HUD extends BorderPane {
         miniMapPane.setAlignment(Pos.TOP_RIGHT);
     }
 
-    //TODO: add javadoc + COMMENTS
+    /**
+     * Display message after played dies
+     * @param fontManaspace50 Font of size 50
+     * @param fontManaspace18 Font of size 18
+     */
     public void displayDeathMessage(Font fontManaspace50, Font fontManaspace18) {
         // Create game over text
         Label gameOverLabel = new Label("You Died!");
