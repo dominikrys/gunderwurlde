@@ -139,7 +139,7 @@ public class HUD extends BorderPane {
 
         // Scale minimap according to map size
         int maxMinimapSize = 200;
-        
+
         if (mapHeight > mapWidth) {
             miniMapRectangle.setHeight(maxMinimapSize);
             miniMapRectangle.setWidth(((double) mapWidth / mapHeight) * maxMinimapSize);
@@ -294,10 +294,10 @@ public class HUD extends BorderPane {
 
         // Set correct position of player location on minimap
         AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
-        AnchorPane.setLeftAnchor(playerRectangle, playerPose.getX() * (miniMapRectangle.getWidth() / mapWidth)
-                - playerRectangleSize / 2);
-        AnchorPane.setTopAnchor(playerRectangle, playerPose.getY() * (miniMapRectangle.getHeight() / mapHeight)
-                - playerRectangleSize / 2);
+        AnchorPane.setLeftAnchor(playerRectangle, (playerPose.getX() + Constants.TILE_SIZE / 2) *
+                (miniMapRectangle.getWidth() / mapWidth) - playerRectangleSize / 2);
+        AnchorPane.setTopAnchor(playerRectangle, (playerPose.getY() + Constants.TILE_SIZE / 2) *
+                (miniMapRectangle.getHeight() / mapHeight) - playerRectangleSize / 2);
 
         // Update pane
         miniMapPane.getChildren().clear();
