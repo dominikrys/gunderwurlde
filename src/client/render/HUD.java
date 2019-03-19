@@ -21,7 +21,12 @@ import shared.view.entity.PlayerView;
  *
  * @author Dominik Rys
  */
-public class HUD extends VBox {
+public class HUD extends BorderPane {
+    /**
+     * VBox for all player info
+     */
+    VBox playerInfoBox;
+
     /**
      * Minimap rectangle
      */
@@ -64,16 +69,16 @@ public class HUD extends VBox {
      * @param currentPlayer   PlayerView of player for whom this HUD is for
      * @param fontManaspace28 Font of size 28
      * @param fontManaspace18 Font of size 18
-     * @param mapWidth Width of map, in pixels
-     * @param mapHeight  Height of map, in pixels
+     * @param mapWidth        Width of map, in pixels
+     * @param mapHeight       Height of map, in pixels
      */
     public void createHUD(PlayerView currentPlayer, Font fontManaspace28, Font fontManaspace18, int mapWidth, int mapHeight) {
-        // Set general VBox settings
-        this.setPadding(new Insets(5, 5, 5, 5));
-        this.setMaxWidth(200);
-        this.setMaxHeight(600);
-        this.setSpacing(5);
-        this.setAlignment(Pos.TOP_LEFT);
+        // Set general playerInfoBox settings
+        playerInfoBox = new VBox();
+        playerInfoBox.setPadding(new Insets(5, 5, 5, 5));
+        playerInfoBox.setMaxWidth(200);
+        playerInfoBox.setMaxHeight(300);
+        playerInfoBox.setSpacing(5);
 
         // Set up player score label
         playerScoreNumber = new Label();
@@ -103,24 +108,24 @@ public class HUD extends VBox {
         // Change background according to team
         switch (currentPlayer.getTeam()) {
             case RED:
-                this.setStyle("-fx-background-color: rgba(255, 0, 47, 0.5); -fx-background-radius: 0 0 150 0;");
-                this.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
+                playerInfoBox.setStyle("-fx-background-color: rgba(255, 0, 47, 0.5); -fx-background-radius: 0 0 150 0;");
+                playerInfoBox.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
                 break;
             case BLUE:
-                this.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 150 0;");
-                this.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
+                playerInfoBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.5); -fx-background-radius: 0 0 150 0;");
+                playerInfoBox.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
                 break;
             case GREEN:
-                this.setStyle("-fx-background-color: rgba(90, 240, 41, 0.5); -fx-background-radius: 0 0 150 0;");
-                this.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
+                playerInfoBox.setStyle("-fx-background-color: rgba(90, 240, 41, 0.5); -fx-background-radius: 0 0 150 0;");
+                playerInfoBox.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
                 break;
             case YELLOW:
-                this.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 150 0;");
-                this.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
+                playerInfoBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.5); -fx-background-radius: 0 0 150 0;");
+                playerInfoBox.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
                 break;
             default:
-                this.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 150 0;");
-                this.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
+                playerInfoBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 150 0;");
+                playerInfoBox.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
                 break;
         }
 
@@ -144,10 +149,14 @@ public class HUD extends VBox {
             miniMapRectangle.setWidth(maxMinimapSize);
         }
 
-        miniMapPane.getChildren().addAll(miniMapRectangle);
+        miniMapPane.getChildren().add(miniMapRectangle);
+        this.setRight(miniMapPane);
+        this.setAlignment(miniMapPane, Pos.TOP_LEFT);
 
-        // Add elements of HUD for player to HUD
-        this.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox, miniMapPane);
+        // Add playerinfo elements to top left of hud
+        playerInfoBox.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
+        this.setLeft(playerInfoBox);
+        this.setAlignment(playerInfoBox, Pos.TOP_RIGHT);
     }
 
     /**
@@ -157,9 +166,9 @@ public class HUD extends VBox {
      * @param rendererResourceLoader Resources for renderer
      * @param fontManaspace28        Font of size 28
      * @param fontManaspace18        Font of size 18
-     * @param playerPose Pose of player for whom the HUD is
-     * @param mapWidth Width of the map, in pixels
-     * @param mapHeight Height of the map, in pixels
+     * @param playerPose             Pose of player for whom the HUD is
+     * @param mapWidth               Width of the map, in pixels
+     * @param mapHeight              Height of the map, in pixels
      */
     public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18,
                           Pose playerPose, int mapWidth, int mapHeight) {
