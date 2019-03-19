@@ -265,8 +265,7 @@ public class GameRenderer implements Runnable {
         pauseLabel.setTextFill(Color.BLACK);
 
         // Label with instructions how to unpause
-        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
-        Label pauseInstructions = new Label("Press ESC to unpause");
+        Label pauseInstructions = new Label("Press " + settings.getKey(KeyAction.ESC) + " to unpause");
         pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
         pauseLabel.setTextFill(Color.BLACK);
 
