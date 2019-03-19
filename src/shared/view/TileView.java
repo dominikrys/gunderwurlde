@@ -3,7 +3,7 @@ package shared.view;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.TileState;
-import shared.lists.TileTypes;
+import shared.lists.TileType;
 
 import java.io.Serializable;
 
@@ -13,7 +13,7 @@ public class TileView implements Serializable {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
 
     // Type of tile
-    protected TileTypes tileType;
+    protected TileType tileType;
 
     // State of tile, e.g. solid or passable
     protected TileState tileState;
@@ -22,18 +22,18 @@ public class TileView implements Serializable {
 
     private boolean wasHit;
 
-    public TileView(TileTypes tileType, TileState tileState) {
+    public TileView(TileType tileType, TileState tileState) {
         this(tileType, tileState, false);
     }
 
-    public TileView(TileTypes tileType, TileState tileState, boolean wasHit) {
+    public TileView(TileType tileType, TileState tileState, boolean wasHit) {
         this.tileType = tileType;
         this.tileState = tileState;
         this.entityName = EntityList.DEFAULT;
         this.wasHit = wasHit;
     }
 
-    public TileTypes getTileType() {
+    public TileType getTileType() {
         return tileType;
     }
 

@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class PlayMenuController extends VBox implements MenuController {
     /**
      * Selected team
      */
-    private Teams selectedTeam;
+    private Team selectedTeam;
 
     @FXML
     private TextField nameField;
@@ -67,7 +67,7 @@ public class PlayMenuController extends VBox implements MenuController {
      * @param playerName   Player name
      * @param selectedTeam Team selected by player
      */
-    public PlayMenuController(Stage stage, Settings settings, String playerName, Teams selectedTeam) {
+    public PlayMenuController(Stage stage, Settings settings, String playerName, Team selectedTeam) {
         // Set variables
         this.stage = stage;
         this.settings = settings;
@@ -159,7 +159,7 @@ public class PlayMenuController extends VBox implements MenuController {
      * Select blue team and set all the appropriate elements in the menu
      */
     private void selectBlueTeam() {
-        selectedTeam = Teams.BLUE;
+        selectedTeam = Team.BLUE;
         teamBlueButton.setEffect(ControllerUtils.getMenuDropshadow());
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(null);
@@ -182,7 +182,7 @@ public class PlayMenuController extends VBox implements MenuController {
      * Select green team and set all the appropriate elements in the menu
      */
     private void selectGreenTeam() {
-        selectedTeam = Teams.GREEN;
+        selectedTeam = Team.GREEN;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(ControllerUtils.getMenuDropshadow());
         teamRedButton.setEffect(null);
@@ -205,7 +205,7 @@ public class PlayMenuController extends VBox implements MenuController {
      * Select red team and set all the appropriate elements in the menu
      */
     private void selectRedTeam() {
-        selectedTeam = Teams.RED;
+        selectedTeam = Team.RED;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(ControllerUtils.getMenuDropshadow());
@@ -228,7 +228,7 @@ public class PlayMenuController extends VBox implements MenuController {
      * Select yellow team and set all the appropriate elements in the menu
      */
     private void selectYellowTeam() {
-        selectedTeam = Teams.YELLOW;
+        selectedTeam = Team.YELLOW;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(null);
@@ -281,7 +281,7 @@ public class PlayMenuController extends VBox implements MenuController {
             characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(true);
-            if (selectedTeam != Teams.NONE) {
+            if (selectedTeam != Team.NONE) {
                 singlePlayerButton.setDisable(false);
                 multiJoinGameButton.setDisable(false);
                 multiCreateGameButton.setDisable(false);

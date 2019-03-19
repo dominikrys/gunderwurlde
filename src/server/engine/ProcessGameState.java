@@ -39,7 +39,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityStatus;
 import shared.lists.ItemType;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
@@ -69,7 +69,7 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Teams hostTeam) {
+    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Team hostTeam) {
         this.handler = handler;
         LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
@@ -105,7 +105,7 @@ public class ProcessGameState extends Thread {
         this.interrupt();
     }
 
-    public void addPlayer(String playerName, Teams team) {
+    public void addPlayer(String playerName, Team team) {
         gameState.addPlayer(new Player(team, playerName));
     }
 
@@ -443,7 +443,7 @@ public class ProcessGameState extends Thread {
                                 Enemy enemyBeingChecked = enemies.get(enemyID);
                                 Location enemyLocation = enemyBeingChecked.getLocation();
 
-                                if (currentProjectile.getTeam() != Teams.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
+                                if (currentProjectile.getTeam() != Team.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
                                     enemyBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                     removed = true;
 

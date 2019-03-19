@@ -7,7 +7,7 @@ import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 
@@ -30,7 +30,7 @@ public class ShotgunMidgetAI extends ZombieAI{
 
         if ((now - beginAttackTime) >= attackDelay) {
             int attackAngle = getAngle(pose, closestPlayer);
-            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Teams.ENEMY)));
+            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }

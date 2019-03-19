@@ -19,7 +19,7 @@ import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPhysics {
     public static final int DEFAULT_HEALTH = 20;
@@ -36,12 +36,12 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
     }
 
-    protected static EnumMap<Teams, Integer> teamScore = new EnumMap<>(Teams.class);
+    protected static EnumMap<Team, Integer> teamScore = new EnumMap<>(Team.class);
 
     private static int nextPlayerID = 0;
 
     protected final int playerID;
-    protected final Teams team;
+    protected final Team team;
     protected final String name;
 
     protected ArrayList<Item> items;
@@ -59,7 +59,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
     protected Force resultantForce;
     protected double mass;
 
-    public Player(Teams team, String name) {
+    public Player(Team team, String name) {
         super(DEFAULT_SIZE, EntityList.PLAYER);
         this.health = DEFAULT_HEALTH;
         this.maxHealth = health;
@@ -94,14 +94,14 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         this.currentAction = currentAction;
     }
 
-    public static void changeScore(Teams team, int value) {
+    public static void changeScore(Team team, int value) {
         if (teamScore.containsKey(team))
             teamScore.put(team, teamScore.get(team) + value);
         else
             teamScore.put(team, value);
     }
 
-    public static int getScore(Teams team) {
+    public static int getScore(Team team) {
         if (teamScore.containsKey(team))
             return teamScore.get(team);
         else
@@ -219,7 +219,7 @@ public class Player extends Entity implements HasHealth, IsMovable, HasID, HasPh
         return teamScore.get(team);
     }
 
-    public Teams getTeam() {
+    public Team getTeam() {
         return team;
     }
 

@@ -8,7 +8,7 @@ import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 
@@ -47,7 +47,7 @@ public class MachineGunnerAI extends ZombieAI {
         if (delayPast && shootingPathUnobstructed && isInAttackPosition) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(smg.getShotProjectiles(
-                        new Pose(pose, attackAngle), Teams.ENEMY)));
+                        new Pose(pose, attackAngle), Team.ENEMY)));
 
                 bulletsShotInThisAttack++;
 

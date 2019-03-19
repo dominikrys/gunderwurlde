@@ -1,7 +1,10 @@
 package shared.lists;
 
+/**
+ * Ammolist enum. Contains the different types of ammo in the game
+ */
 public enum AmmoList implements IsItem {
-    BASIC_AMMO, NONE/* Use none for items with infinite ammo */, SHOTGUN_ROUND;
+    BASIC_AMMO, SHOTGUN_ROUND, NONE/* Use none for items with infinite ammo */;
 
     @Override
     public ItemType getItemType() {

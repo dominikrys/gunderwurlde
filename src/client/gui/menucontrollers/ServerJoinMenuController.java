@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
     /**
      * Selected team
      */
-    private Teams selectedTeam;
+    private Team selectedTeam;
 
     @FXML
     private TextField IPField;
@@ -65,7 +65,7 @@ public class ServerJoinMenuController extends VBox implements MenuController {
      * @param playerName     Name of player
      * @param selectedTeam   Team selected by player
      */
-    public ServerJoinMenuController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
+    public ServerJoinMenuController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Team selectedTeam) {
         // Set variables
         this.stage = stage;
         this.settings = settings;

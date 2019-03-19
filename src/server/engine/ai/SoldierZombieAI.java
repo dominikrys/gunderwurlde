@@ -6,7 +6,7 @@ import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -66,7 +66,7 @@ public class SoldierZombieAI extends EnemyAI {
 
         if ((now - beginAttackTime) >= attackDelay) {
             attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                    new Pose(pose, getAngle(pose, closestPlayer)), Teams.ENEMY)));
+                    new Pose(pose, getAngle(pose, closestPlayer)), Team.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }

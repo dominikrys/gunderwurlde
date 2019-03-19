@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.Constants;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 
@@ -52,7 +52,7 @@ public class MapSelectionController extends VBox implements MenuController {
     /**
      * Team selected by player
      */
-    private Teams selectedTeam;
+    private Team selectedTeam;
 
     @FXML
     private Button meadowButton;
@@ -84,7 +84,7 @@ public class MapSelectionController extends VBox implements MenuController {
      * @param playerName     Name of player
      * @param selectedTeam   Team selected by player
      */
-    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
+    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Team selectedTeam) {
         // Set variables
         this.stage = stage;
         this.settings = settings;
