@@ -5,6 +5,7 @@ import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -15,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
@@ -323,8 +325,16 @@ public class GameRenderer implements Runnable {
                 // If first time in spectator mode
                 stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleSpectatorCamera);
 
-                // Display game over essage in hud
+                // Display game over message in hud
                 hud.displayDeathMessage(rendererResourceLoader.getFontManaspace50(), rendererResourceLoader.getFontManaspace18());
+
+                // After a couple of seconds, close the message
+                (new Thread(() -> {
+                    PauseTransition delay = new PauseTransition(Duration.seconds(4));
+                    delay.setOnFinished(event -> hud.closeDeathMessage());
+                    delay.play();
+                })
+                ).start();
 
                 spectator = true;
             }

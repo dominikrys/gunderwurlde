@@ -327,4 +327,11 @@ public class HUD extends BorderPane {
         deathMessageBox.setAlignment(Pos.CENTER);
         this.setCenter(deathMessageBox);
     }
+
+    /**
+     * Close the death message
+     */
+    public void closeDeathMessage() {
+        this.setCenter(null);
+    }
 }

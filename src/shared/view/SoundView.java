@@ -76,9 +76,6 @@ public class SoundView {
 					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
-			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
-				playing.get(p.getID()).stop();
-			}
 		}
 	}
 	
