@@ -111,6 +111,11 @@ public class GameRenderer implements Runnable {
     private SoundView soundView;
 
     /**
+     * Running boolean
+     */
+    private boolean running;
+
+    /**
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -139,6 +144,9 @@ public class GameRenderer implements Runnable {
         // Initialise cursor pane
         cursorPane = new AnchorPane();
 
+        // Set running to true
+        running = true;
+
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
         mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
@@ -163,7 +171,11 @@ public class GameRenderer implements Runnable {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                renderGameView();
+                if (running) {
+                    renderGameView();
+                } else {
+                    this.stop();
+                }
             }
         }.start();
 
@@ -385,5 +397,12 @@ public class GameRenderer implements Runnable {
      */
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    /**
+     * Stop renderer. This kills the AnimationTimer that renders GameViews to the stage
+     */
+    public void stop() {
+        running = false;
     }
 }
