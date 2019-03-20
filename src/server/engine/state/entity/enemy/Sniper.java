@@ -1,11 +1,9 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.BoomerAI;
-import server.engine.ai.EnemyAI;
-import server.engine.ai.SniperAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.SniperAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
-import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -26,13 +24,13 @@ public class Sniper extends Zombie {
     private final int RANGE_TO_RUN_WAY;
 
     public Sniper(int rangeToRunAway) {
-        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new server.engine.ai.SniperAI(rangeToRunAway), DEFAULT_MASS);
+        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SniperAI(rangeToRunAway), DEFAULT_MASS);
 
         this.RANGE_TO_RUN_WAY = rangeToRunAway;
     }
 
     @Override
     EnemyAI getNewAI() {
-        return new server.engine.ai.SniperAI(RANGE_TO_RUN_WAY);
+        return new SniperAI(RANGE_TO_RUN_WAY);
     }
 }

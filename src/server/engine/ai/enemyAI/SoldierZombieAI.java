@@ -1,5 +1,7 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
+import server.engine.ai.AIAction;
+import server.engine.ai.newPoseGenerators.RandomPoseGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Pistol;
@@ -72,7 +74,7 @@ public class SoldierZombieAI extends EnemyAI {
         return attacks;
     }
 
-    synchronized void setPoseToGo(Pose pose) {
+    public synchronized void setPoseToGo(Pose pose) {
         poseToGo = pose;
         setProcessing(false);
     }

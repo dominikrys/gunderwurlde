@@ -1,11 +1,7 @@
-package server.engine.ai;
+package server.engine.ai.newPoseGenerators;
 
-import server.engine.state.map.tile.Tile;
+import server.engine.ai.enemyAI.SniperAI;
 import shared.Pose;
-
-import java.util.Random;
-
-import static server.engine.ai.EnemyAI.poseInDistance;
 
 public class SniperAttackPosesGenerator extends Thread {
     private SniperAI ai;

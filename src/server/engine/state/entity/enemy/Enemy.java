@@ -1,7 +1,6 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.EnemyAI;
-import server.engine.ai.ZombieAI;
+import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.HasHealth;
 import server.engine.state.entity.HasID;

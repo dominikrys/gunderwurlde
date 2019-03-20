@@ -1,4 +1,4 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;

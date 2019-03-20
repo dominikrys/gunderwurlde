@@ -1,4 +1,4 @@
-package server.engine.ai;
+package server.engine.ai.aStar;
 
 
 import javafx.util.Pair;

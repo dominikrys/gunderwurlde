@@ -1,5 +1,6 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
+import server.engine.ai.AIAction;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
@@ -8,7 +9,6 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -27,7 +27,7 @@ public abstract class EnemyAI {
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
-    protected Tile[][] tileMap;
+    Tile[][] tileMap;
     //    protected int mapXDim;
 //    protected int mapYDim;
     private boolean isProcessing;
@@ -60,6 +60,10 @@ public abstract class EnemyAI {
 
     public abstract AIAction getAction();
 
+    public Tile[][] getTileMap(){
+        return tileMap;
+    }
+
     public ActionList getActionState() {
         return actionState;
     }
@@ -78,7 +82,7 @@ public abstract class EnemyAI {
     }
 
     //Static for RandomPoseGenerator
-    static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
+    public static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
         int mapXDim = tileMap.length;
         int mapYDim = tileMap[0].length;
@@ -131,7 +135,7 @@ public abstract class EnemyAI {
         return closestPlayer;
     }
 
-    static int getAngle(Pose enemy, Pose player) {
+    public static int getAngle(Pose enemy, Pose player) {
         int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
         if (angle < 0) {
@@ -177,7 +181,7 @@ public abstract class EnemyAI {
     }
 
     // vec = dist * (cos(angle)i + sin(angle)j)
-    static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
+    public static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
         double vecI = Math.cos(Math.toRadians(angleToPose)) * distanceToPose;
         double vecJ = Math.sin(Math.toRadians(angleToPose)) * distanceToPose;
 
