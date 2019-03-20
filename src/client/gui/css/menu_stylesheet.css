@@ -174,25 +174,9 @@
 }
 
 .backToGameButton {
-    -font-size: 50px;
+    -fx-font-size: 28px;
 }
 
 .backToMenuButton {
-    -font-size: 14px;
-}
-
-.backToGameButton:hover {
-    -font-size: 50px;
-    -fx-text-fill: black;
-    -fx-border-color: lightgrey;
-    -fx-background-color: lightgrey;
-    -fx-cursor: hand;
-}
-
-.backToMenuButton:hover {
-    -font-size: 14px;
-    -fx-text-fill: black;
-    -fx-border-color: lightgrey;
-    -fx-background-color: lightgrey;
-    -fx-cursor: hand;
+    -fx-font-size: 15px;
 }
