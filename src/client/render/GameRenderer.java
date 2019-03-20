@@ -36,11 +36,6 @@ public class GameRenderer implements Runnable {
     private RendererResourceLoader rendererResourceLoader;
 
     /**
-     * Pane for the map
-     */
-    private AnchorPane mapPane;
-
-    /**
      * Canvas for the map - this contains the game
      */
     private MapCanvas mapCanvas;
@@ -207,9 +202,7 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapPane = new AnchorPane();
         mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
-        mapPane.getChildren().addAll(mapCanvas);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
@@ -221,12 +214,12 @@ public class GameRenderer implements Runnable {
 
         // Create root stackpane
         StackPane root = new StackPane();
-        root.setAlignment(Pos.TOP_LEFT);
+        root.setAlignment(Pos.CENTER);
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapPane, hud, cursorPane, pausedOverlay);
+        root.getChildren().addAll(mapCanvas, hud, cursorPane, pausedOverlay);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
@@ -262,11 +255,14 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
+        // Load pause FXML
         try {
             pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        pausedOverlay.setAlignment(Pos.CENTER);
         pausedOverlay.setVisible(false);
     }
 
@@ -385,13 +381,12 @@ public class GameRenderer implements Runnable {
         double cameraMouseSensitivity = 0.25;
 
         // Adjust map horizontally
-        AnchorPane.setLeftAnchor(mapCanvas,
-                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
+        mapCanvas.setTranslateX((double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+                + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
+
         // Adjust map vertically
-        AnchorPane.setTopAnchor(mapCanvas,
-                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
+        mapCanvas.setTranslateY((double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+                + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
     }
 
     /**
