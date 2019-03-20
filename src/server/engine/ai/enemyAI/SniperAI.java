@@ -9,7 +9,7 @@ import server.engine.state.item.weapon.gun.SniperRifle;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Pose;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 
@@ -67,7 +67,7 @@ public class SniperAI extends AStarUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getShotProjectiles(new Pose(pose, angle), Teams.ENEMY));
+        return new ProjectileAttack(gun.getShotProjectiles(new Pose(pose, angle), Team.ENEMY));
     }
 
     @Override

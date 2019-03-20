@@ -134,11 +134,11 @@ public class Tile {
 
     @Override
     public String toString(){
-        if(tileType == TileTypes.WOOD) {
+        if(tileType == TileType.WOOD) {
             return "W";
-        }else if(tileType == TileTypes.GRASS){
+        }else if(tileType == TileType.GRASS){
             return "G";
-        }else if(tileType == TileTypes.DOOR){
+        }else if(tileType == TileType.DOOR){
             return "D";
         }
         return "New state added";
