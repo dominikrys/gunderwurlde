@@ -31,28 +31,111 @@ public class AStarForTiles extends Thread {
         this.myEnemy = myEnemy;
     }
 
-//    protected AStar(double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose){
-//        COST_OF_TRAVEL = cost_of_travel;
-//        this.tiles = tiles;
-//        this.startPose = startPose;
-//        this.endPose = endPose;
-//    }
-
     public void run() {
         enemTile = PoseToPairOfTileCoords(startPose);
         playerTile = PoseToPairOfTileCoords(endPose);
 
-        for (Tile[] arr :
-                this.tiles) {
-
-            System.out.println(Arrays.toString(arr));
-        }
+//        System.out.println("\n\n\n\n" + findNodeToAddToWalkAroundSolidTile(new Node(19, 13), new Node(18, 14)) +
+//                "\n\n\n\n");
+//        for (Tile[] arr :
+//                this.tiles) {
+//            System.out.println(Arrays.toString(arr));
+//        }
 
         try {
-            myEnemy.setTilePath(generatePoseDirectionPath(generateNodePath(aStar(enemTile, playerTile))));
+            myEnemy.setTilePath(generatePoseDirectionPath(addNodesForCorners(generateNodePath(aStar(enemTile, playerTile)))));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private LinkedList<Node> addNodesForCorners(LinkedList<Node> nodePath) {
+        Node lastNode = nodePath.peekLast();
+        Node currentNode;
+        Node nodeToAdd;
+        for (int i = 1; i < nodePath.size(); i++) {
+            currentNode = nodePath.get(i);
+            if ((Math.abs(lastNode.getY() - currentNode.getY()) != 0) &&
+                    (Math.abs(lastNode.getX() - currentNode.getX()) != 0)) {
+                nodeToAdd = findNodeToAddToWalkAroundSolidTile(lastNode, currentNode);
+                if (nodeToAdd != null) {
+                    System.out.println("NodeToAdd: " + nodeToAdd);
+                    nodePath.add(i, nodeToAdd);
+                    nodeToAdd = null;
+                }
+            }
+            lastNode = currentNode;
+        }
+        return nodePath;
+    }
+
+    private Node findNodeToAddToWalkAroundSolidTile(Node node1, Node node2) {
+        Node nodeToAdd = null;
+        System.out.println(node1 + "\n" + node2 + "\n\n\n");
+//
+//        System.out.println((node1.getIntX() + 1 == node2.getIntY()) && (node1.getIntY() + 1 == node2.getIntY()));
+//
+//        System.out.println("fist stm: " + (node1.getIntX() + 1 == node2.getIntX()) + " 2nd stm: "
+//                + (node1.getIntY() + 1 == node2.getIntY()));
+
+        if ((node1.getX() + 1 == node2.getX()) && (node1.getY() - 1 == node2.getY())) {
+            //  2
+            //1
+            nodeToAdd = takeNotSolid(node1, nodeToAdd);
+        } else if ((node2.getX() + 1 == node1.getX()) && (node2.getY() - 1 == node1.getY())) {
+            //  1
+            //2
+            nodeToAdd = takeNotSolid(node2, nodeToAdd);
+        } else if ((node1.getX() + 1 == node2.getX()) && (node1.getY() + 1 == node2.getY())) {
+            //1
+            //  2
+            nodeToAdd = takeNotSolid2(node2, nodeToAdd);
+        } else if ((node2.getX() + 1 == node1.getX()) && (node2.getY() + 1 == node1.getY())) {
+            //2
+            //  1
+            nodeToAdd = takeNotSolid2(node1, nodeToAdd);
+        }
+
+        return nodeToAdd;
+    }
+    //TODO figure out a better name
+    private Node takeNotSolid2(Node node, Node nodeToAdd) {
+        System.out.println(node);
+        int[] tile = {node.getIntY() - 1, node.getIntX()};
+        System.out.println("upper right - Tile[0]: " + tile[0] + " Tile[1]: " + tile[1]);
+        if (!EnemyAI.tileNotSolid(tile, tiles)) {
+            //1 *
+            //  2
+            nodeToAdd = new Node(node.getX() - 1, node.getY());
+        } else {
+            tile[0] = (int) node.getY();
+            tile[1] = (int) node.getX() - 1;
+            System.out.println("lower left Tile[0]: " + tile[0] + " Tile[1]: " + tile[1]);
+            if (!EnemyAI.tileNotSolid(tile, tiles)) {
+                //1
+                //* 2
+                nodeToAdd = new Node(node.getX(), node.getY() - 1);
+            }
+        }
+        return nodeToAdd;
+    }
+
+    private Node takeNotSolid(Node node, Node nodeToAdd) {
+        int[] tile = {(int) node.getY() - 1, (int) node.getX()};
+        if (!EnemyAI.tileNotSolid(tile, tiles)) {
+            //* 1
+            //2
+            nodeToAdd = new Node(node.getX() + 1, node.getY());
+        } else {
+            tile[0] = (int) node.getY();
+            tile[1] = (int) node.getX() + 1;
+            if (!EnemyAI.tileNotSolid(tile, tiles)) {
+                //  1
+                //2 *
+                nodeToAdd = new Node(node.getX(), node.getY() - 1);
+            }
+        }
+        return nodeToAdd;
     }
 
     private Pair<Integer, Integer> PoseToPairOfTileCoords(Pose Pose) {
@@ -68,11 +151,11 @@ public class AStarForTiles extends Thread {
         Node currentNode = null;
 
         for (Node n : path) {
-            if(n.getCoordinates().equals(playerTile))
+            if (n.getCoordinates().equals(playerTile))
                 currentNode = n;
         }
 
-        if(currentNode == null){
+        if (currentNode == null) {
             return null;
         }
         finalPath.add(currentNode);
@@ -103,7 +186,7 @@ public class AStarForTiles extends Thread {
             }
         }
 
-        if(bestNodeToAdd == null){
+        if (bestNodeToAdd == null) {
             bestNodeToAdd = possibleNodesToAdd.removeFirst();
         }
 
@@ -135,13 +218,14 @@ public class AStarForTiles extends Thread {
         }
 
         finalDirectionPath.add(new Pose(Tile.tileToLocation((int) finalNode.getX(), (int) finalNode.getY())));
-        finalDirectionPath.poll();
+        finalDirectionPath.pollLast();
 
         return finalDirectionPath;
     }
 
     // Coordinates are y x in the Pairs
-    protected PriorityQueue<Node> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) throws IOException {
+    protected PriorityQueue<Node> aStar(Pair<Integer, Integer> startCoords, Pair<Integer, Integer> endCoords) throws
+            IOException {
         // Straight line distances from every coords to end coords
         realDist = calcRealDist(endCoords);
         // LinkedHashSet to store nodes after they have been expanded

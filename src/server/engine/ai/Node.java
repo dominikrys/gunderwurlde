@@ -15,6 +15,10 @@ public class Node implements Comparable<Node> {
         this.pose = new Pose(tile.getValue(), tile.getKey());
     }
 
+    public Node(double x, double y){
+        this.pose = new Pose(x, y);
+    }
+
     public Node(Pose pose, double costToGo, double costLeft) {
         this.pose = pose;
         this.costToGo += costToGo;
@@ -29,11 +33,18 @@ public class Node implements Comparable<Node> {
 
     public double getX(){
         return pose.getX();
-
     }
 
     public double getY(){
         return pose.getY();
+    }
+
+    public int getIntX(){
+        return (int) pose.getX();
+    }
+
+    public int getIntY(){
+        return (int) pose.getY();
     }
 
     public double getSum() {

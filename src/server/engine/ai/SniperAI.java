@@ -86,11 +86,12 @@ public class SniperAI extends EnemyAI {
                 }
             } else {
 //                System.out.println("pose to go: " + posePath.peekLast());
-                if (!Pose.compareLocation(pose, posePath.peekLast(), 5)) {
+                if (!Pose.compareLocation(pose, posePath.peekLast(), 1)) {
                     int angle = getAngle(pose, posePath.peekLast());
                     return new Force(angle, maxMovementForce);
                 } else {
-                    posePath.pollLast();
+                    int angle = getAngle(pose, posePath.pollLast());
+                    return new Force(angle, maxMovementForce);
                 }
             }
         }
