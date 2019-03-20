@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -227,7 +226,7 @@ public class GameRenderer implements Runnable {
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapPane, hud, pausedOverlay, cursorPane);
+        root.getChildren().addAll(mapPane, hud, cursorPane, pausedOverlay);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
@@ -263,10 +262,8 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        pausedOverlay = new VBox();
         try {
-            Pane newLoadedPane =  FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
-            this.wait(1);
+            pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -352,13 +349,6 @@ public class GameRenderer implements Runnable {
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
                 rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
                 gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
-
-        // If game is paused, add the paused overlay
-        if (paused) {
-            pausedOverlay.setVisible(true);
-        } else {
-            pausedOverlay.setVisible(false);
-        }
     }
 
     /**
@@ -406,6 +396,7 @@ public class GameRenderer implements Runnable {
 
     /**
      * Handle kinds of renderer input that don't have to be sent to the server
+     *
      * @param e Key event
      */
     public void handleRendererInput(KeyEvent e) {
@@ -413,6 +404,17 @@ public class GameRenderer implements Runnable {
         if (e.getCode().toString().equals(settings.getKey(KeyAction.ESC))) {
             // Pause/unpause the game
             paused = !paused;
+
+            // Show the pause overlay and perform any other necessary actions
+            if (paused) {
+                pausedOverlay.setVisible(true);
+                stage.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                cursorPane.setVisible(false);
+            } else {
+                pausedOverlay.setVisible(false);
+                stage.getScene().getRoot().setCursor(Cursor.NONE);
+                cursorPane.setVisible(true);
+            }
         }
     }
 

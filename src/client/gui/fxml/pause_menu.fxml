@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.render.GameRenderer">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-spacing: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.render.PauseMenuController">
    <children>
       <Label style="-fx-padding: 5px;" text="PAUSE">
          <font>
