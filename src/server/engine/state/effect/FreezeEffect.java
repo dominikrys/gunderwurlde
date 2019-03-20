@@ -24,9 +24,13 @@ public class FreezeEffect extends StatusEffect {
             if (oldAcceration == -1)
                 oldAcceration = e.getAcceleration();
             e.setAcceleration(oldAcceration * 0.9);
-        } else {
-            e.setAcceleration(oldAcceration);
         }
+        return e;
+    }
+
+    @Override
+    public LivingEntity clearEffect(LivingEntity e) {
+        e.setAcceleration(oldAcceration);
         return e;
     }
 

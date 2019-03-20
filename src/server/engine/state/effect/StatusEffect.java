@@ -16,11 +16,14 @@ public abstract class StatusEffect {
 
     public LivingEntity applyEffect(LivingEntity e) {
         if (startTime + duration < System.currentTimeMillis()) {
+            e = clearEffect(e);
             e.clearStatusEffect();
         } else {
             e.setStatus(status);
         }
         return e;
     }
+
+    public abstract LivingEntity clearEffect(LivingEntity e);
 
 }

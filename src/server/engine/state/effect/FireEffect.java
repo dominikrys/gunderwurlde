@@ -34,4 +34,9 @@ public class FireEffect extends StatusEffect {
         return e;
     }
 
+    @Override
+    public LivingEntity clearEffect(LivingEntity e) {
+        return e;
+    }
+
 }

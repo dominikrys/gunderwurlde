@@ -490,6 +490,8 @@ public class ProcessGameState extends Thread {
                                 if (currentProjectile.getTeam() != Team.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
                                     enemyBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                     if (currentProjectile instanceof HasEffect) {
+                                        if (enemyBeingChecked.hasEffect())
+                                            enemyBeingChecked = (Enemy) enemyBeingChecked.getEffect().clearEffect(enemyBeingChecked);
                                         enemyBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
                                     }
                                     removed = true;
@@ -545,6 +547,8 @@ public class ProcessGameState extends Thread {
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
                                         playerBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                         if (currentProjectile instanceof HasEffect) {
+                                            if (playerBeingChecked.hasEffect())
+                                                playerBeingChecked = (Player) playerBeingChecked.getEffect().clearEffect(playerBeingChecked);
                                             playerBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
                                         }
                                         removed = true;
