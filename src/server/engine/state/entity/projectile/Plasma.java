@@ -7,7 +7,7 @@ import shared.lists.EntityList;
 import shared.lists.Team;
 
 public class Plasma extends Projectile {
-    public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 30;
+    public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 32;
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = EntityList.PLASMA.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
