@@ -1,5 +1,6 @@
 package server.engine.state.entity;
 
+import server.engine.state.effect.StatusEffect;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
 import server.engine.state.physics.Velocity;
@@ -20,6 +21,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     protected Velocity velocity;
     protected Force resultantForce;
     protected double mass;
+    protected StatusEffect effect;
 
     protected LivingEntity(int maxHealth, double acceleration, EntityList entityListName, int size, double mass) {
         super(size, entityListName);
@@ -140,6 +142,22 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     @Override
     public double getMass() {
         return mass;
+    }
+
+    public void addEffect(StatusEffect effect) {
+        this.effect = effect;
+    }
+
+    public boolean hasEffect() {
+        return (effect != null);
+    }
+
+    public StatusEffect getEffect() {
+        return effect;
+    }
+
+    public void clearStatusEffect() {
+        this.effect = null;
     }
 
 }
