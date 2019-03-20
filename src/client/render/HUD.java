@@ -304,7 +304,11 @@ public class HUD extends BorderPane {
         miniMapPane.setAlignment(Pos.TOP_RIGHT);
     }
 
-    //TODO: add javadoc + COMMENTS
+    /**
+     * Display message after played dies
+     * @param fontManaspace50 Font of size 50
+     * @param fontManaspace18 Font of size 18
+     */
     public void displayDeathMessage(Font fontManaspace50, Font fontManaspace18) {
         // Create game over text
         Label gameOverLabel = new Label("You Died!");
@@ -315,7 +319,7 @@ public class HUD extends BorderPane {
                 new CornerRadii(0), new Insets(0, 0, 0, 0))));
 
         // Create label notifying player they are now in spectator mode
-        Label spectatorHintLabel = new Label("You are now in spectator mode");
+        Label spectatorHintLabel = new Label("Entering spectator mode");
         spectatorHintLabel.setFont(fontManaspace18);
         spectatorHintLabel.setTextFill(Color.BLACK);
         spectatorHintLabel.setPadding(new Insets(10, 10, 10, 10));

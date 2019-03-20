@@ -6,10 +6,10 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -34,11 +34,6 @@ public class GameRenderer implements Runnable {
      * RendererResourceLoader - Contains resources used by the renderer
      */
     private RendererResourceLoader rendererResourceLoader;
-
-    /**
-     * Pane for the map
-     */
-    private AnchorPane mapPane;
 
     /**
      * Canvas for the map - this contains the game
@@ -207,9 +202,7 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapPane = new AnchorPane();
         mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
-        mapPane.getChildren().addAll(mapCanvas);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
@@ -221,12 +214,12 @@ public class GameRenderer implements Runnable {
 
         // Create root stackpane
         StackPane root = new StackPane();
-        root.setAlignment(Pos.TOP_LEFT);
+        root.setAlignment(Pos.CENTER);
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
                 new Insets(0, 0, 0, 0))));
 
         // Add elements to root
-        root.getChildren().addAll(mapPane, hud, pausedOverlay, cursorPane);
+        root.getChildren().addAll(mapCanvas, hud, cursorPane, pausedOverlay);
 
         // Set cursor to none - crosshair of a different size can then be renderer that's not dictated by the system
         root.setCursor(Cursor.NONE);
@@ -238,6 +231,9 @@ public class GameRenderer implements Runnable {
         // Event handlers for mouse movements
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, this::updateMouse);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::updateMouse);
+
+        // Event handler for pause menu
+        stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
 
         // Set root to scene
         stage.getScene().setRoot(root);
@@ -259,26 +255,14 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        // "PAUSE" message
-        Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
-        pauseLabel.setTextFill(Color.BLACK);
+        // Load pause FXML
+        try {
+            pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // Label with instructions how to unpause
-        // TODO: add e.g. settings.getPauseKey() when key settings in settings object
-        Label pauseInstructions = new Label("Press ESC to unpause");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
-        pauseLabel.setTextFill(Color.BLACK);
-
-        // Set pausedoverlay VBox - make it slightly translucent
-        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
-        pausedOverlay.setStyle(
-                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
-                        "-fx-effect: dropshadow(gaussian, white, 50, 0, 0, 0);" +
-                        "-fx-background-insets: 50;"
-        );
         pausedOverlay.setAlignment(Pos.CENTER);
-        pausedOverlay.setSpacing(10);
         pausedOverlay.setVisible(false);
     }
 
@@ -361,13 +345,6 @@ public class GameRenderer implements Runnable {
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
                 rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
                 gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
-
-        // If game is paused, add the paused overlay
-        if (paused) {
-            pausedOverlay.setVisible(true);
-        } else {
-            pausedOverlay.setVisible(false);
-        }
     }
 
     /**
@@ -404,13 +381,36 @@ public class GameRenderer implements Runnable {
         double cameraMouseSensitivity = 0.25;
 
         // Adjust map horizontally
-        AnchorPane.setLeftAnchor(mapCanvas,
-                (double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
+        mapCanvas.setTranslateX((double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+                + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
+
         // Adjust map vertically
-        AnchorPane.setTopAnchor(mapCanvas,
-                (double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
-                        + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
+        mapCanvas.setTranslateY((double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+                + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
+    }
+
+    /**
+     * Handle kinds of renderer input that don't have to be sent to the server
+     *
+     * @param e Key event
+     */
+    public void handleRendererInput(KeyEvent e) {
+        // Check if the ESC button has been pressed
+        if (e.getCode().toString().equals(settings.getKey(KeyAction.ESC))) {
+            // Pause/unpause the game
+            paused = !paused;
+
+            // Show the pause overlay and perform any other necessary actions
+            if (paused) {
+                pausedOverlay.setVisible(true);
+                stage.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                cursorPane.setVisible(false);
+            } else {
+                pausedOverlay.setVisible(false);
+                stage.getScene().getRoot().setCursor(Cursor.NONE);
+                cursorPane.setVisible(true);
+            }
+        }
     }
 
     /**
