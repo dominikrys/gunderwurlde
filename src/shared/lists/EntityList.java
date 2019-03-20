@@ -86,6 +86,17 @@ public enum EntityList {
      * Projectiles
      */
     BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    //TODO
+    HEAVY_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4), 
+    PLASMA("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    FIRE("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    ICE("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    CRYSTAL("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    BOUNCE("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    ROCKET("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    PHANTOM("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    STICKY("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    
 
     /**
      * Tiles
