@@ -16,8 +16,9 @@ public class CrystalBullet extends Projectile {
     public static final int DEFAULT_NUMBER_OF_SPLITS = 1;
     public static final int DEFAULT_AMOUNT_PER_SPLIT = 8;
 
-    private final int numberOfSplits;
     private final int amountPerSplit;
+
+    private int numberOfSplits;
 
     public CrystalBullet() {
         this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, DEFAULT_RANGE, DEFAULT_NUMBER_OF_SPLITS, DEFAULT_AMOUNT_PER_SPLIT);
@@ -47,7 +48,16 @@ public class CrystalBullet extends Projectile {
 
     public LinkedList<Projectile> getSplitProjectiles() {
         LinkedList<Projectile> newProjectiles = new LinkedList<>();
-        // TODO
+
+        if (numberOfSplits > 0) {
+            int directionGap = 360 / amountPerSplit;
+            for (int n = 0; n < amountPerSplit; n++) {
+                Projectile projectileToAdd = (CrystalBullet) this.makeCopy();
+                ((CrystalBullet) projectileToAdd).numberOfSplits--;
+                projectileToAdd.setPose(new Pose(this.pose, this.pose.getDirection() + (directionGap * n)));
+            }
+        }
+
         return newProjectiles;
     }
 
