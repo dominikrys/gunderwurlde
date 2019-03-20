@@ -22,6 +22,7 @@ import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
 import server.engine.state.entity.projectile.CrystalBullet;
+import server.engine.state.entity.projectile.HasEffect;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
@@ -223,7 +224,8 @@ public class ProcessGameState extends Thread {
                 Pose playerPose = currentPlayer.getPose();
                 Item currentItem = currentPlayer.getCurrentItem();
 
-                // TODO process status (Make method for this?)
+                if (currentPlayer.hasEffect())
+                    currentPlayer = (Player) currentPlayer.getEffect().applyEffect(currentPlayer);
 
                 if (currentItem instanceof Gun) {
                     Gun currentGun = ((Gun) currentItem);
@@ -324,6 +326,7 @@ public class ProcessGameState extends Thread {
             // process enemies
             LinkedHashMap<Integer, Enemy> enemies = gameState.getEnemies();
             LinkedHashSet<EnemyView> enemiesView = new LinkedHashSet<>();
+            LinkedList<Integer> enemiesToRemove = new LinkedList<>();
 
             HashSet<Pose> playerPoses = new HashSet<>();
             players.values().stream().forEach((p) -> playerPoses.add(p.getPose()));
@@ -335,7 +338,8 @@ public class ProcessGameState extends Thread {
                 currentEnemy.setMoving(false);
                 currentEnemy.setTakenDamage(false);
 
-                // TODO process status (Make method for this?)
+                if (currentEnemy.hasEffect())
+                    currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
 
                 int enemyID = currentEnemy.getID();
                 double maxMovementForce = Physics.getForce(currentEnemy.getAcceleration(), 0, currentEnemy.getMass()).getForce();
@@ -401,13 +405,24 @@ public class ProcessGameState extends Thread {
 
                 currentEnemy.setCurrentAction(ai.getActionState());
 
-                if (currentEnemy.getHealth() > 0)
+                if (currentEnemy.getHealth() > 0 && currentEnemy.getStatus() != EntityStatus.DEAD) {
                     enemies.put(enemyID, currentEnemy);
+                } else {
+                    enemiesToRemove.add(enemyID);
+                }
 
                 enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(),
                         currentEnemy.getEntityListName(), currentEnemy.isCloaked(), currentEnemy.getStatus(),
                         currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                         currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
+            }
+
+            for (Integer enemyID : enemiesToRemove) {
+                LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemies.get(enemyID));
+                for (int[] enemyTileCords : enemyTilesOn) {
+                    tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                }
+                enemies.remove(enemyID);
             }
 
             // process projectiles
@@ -452,6 +467,9 @@ public class ProcessGameState extends Thread {
 
                                 if (currentProjectile.getTeam() != Team.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
                                     enemyBeingChecked.addNewForce(currentProjectile.getImpactForce());
+                                    if (currentProjectile instanceof HasEffect) {
+                                        enemyBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
+                                    }
                                     removed = true;
 
                                     if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
@@ -504,6 +522,9 @@ public class ProcessGameState extends Thread {
 
                                     if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
                                         playerBeingChecked.addNewForce(currentProjectile.getImpactForce());
+                                        if (currentProjectile instanceof HasEffect) {
+                                            playerBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
+                                        }
                                         removed = true;
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.damage(currentProjectile.getDamage());

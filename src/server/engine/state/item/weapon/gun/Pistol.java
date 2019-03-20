@@ -1,7 +1,7 @@
 package server.engine.state.item.weapon.gun;
 
+import server.engine.state.entity.projectile.Plasma;
 import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.entity.projectile.SmallBullet;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
@@ -11,7 +11,7 @@ public class Pistol extends Gun {
     public static final int DEFAULT_RELOAD_TIME = 3000;
     public static final int DEFAULT_AMMO_PER_SHOT = 1;
     public static final int DEFAULT_PROJECTILES_PER_SHOT = 1;
-    public static final Projectile DEFAULT_PROJECTILE = new SmallBullet();
+    public static final Projectile DEFAULT_PROJECTILE = new Plasma();
     public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.BASIC_AMMO;
     public static final int DEFAULT_SPREAD = 0;
     public static final int DEFAULT_COOL_DOWN = 500; //2bps

@@ -6,6 +6,7 @@ import server.engine.state.physics.HasPhysics;
 import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
+import shared.lists.EntityStatus;
 
 public abstract class LivingEntity extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
@@ -158,6 +159,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
 
     public void clearStatusEffect() {
         this.effect = null;
+        this.status = EntityStatus.NONE;
     }
 
 }
