@@ -21,6 +21,7 @@ import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
+import server.engine.state.entity.projectile.CrystalBullet;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
@@ -36,6 +37,7 @@ import shared.Location;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
+import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 import shared.lists.ItemType;
 import shared.lists.MapList;
@@ -433,7 +435,7 @@ public class ProcessGameState extends Thread {
                             break;
                         }
                         if (tileOn.getState() == TileState.SOLID) {
-                            removed = true;
+                            removed = currentProjectile.isRemoved(tileOn, Tile.tileToLocation(tileCords[0], tileCords[1]));
                             tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
                             break;
                         }
@@ -518,7 +520,9 @@ public class ProcessGameState extends Thread {
 
                 }
                 if (removed) {
-                    // TODO removed projectile process
+                    if (currentProjectile.getEntityListName() == EntityList.CRYSTAL) {
+                        newProjectiles.addAll(((CrystalBullet) currentProjectile).getSplitProjectiles());
+                    }
                 } else {
                     newProjectiles.add(currentProjectile);
                     projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getEntityListName(),

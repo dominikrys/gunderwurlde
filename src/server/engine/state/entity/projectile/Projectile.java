@@ -1,7 +1,9 @@
 package server.engine.state.entity.projectile;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
+import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
@@ -73,6 +75,10 @@ public abstract class Projectile extends Entity {
 
     public Force getImpactForce() {
         return new Force(pose.getDirection(), damage * FORCE_PER_DMG);
+    }
+
+    public boolean isRemoved(Tile tile, Location tileLocation) {
+        return true;
     }
 
 }
