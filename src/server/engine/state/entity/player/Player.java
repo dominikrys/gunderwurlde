@@ -40,6 +40,7 @@ public class Player extends LivingEntity {
     protected int currentItem;
     protected int maxItems;
 
+    private boolean paused;
 
     public Player(Team team, String name) {
         super(DEFAULT_HEALTH, DEFAULT_ACCELERATION, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
@@ -56,6 +57,7 @@ public class Player extends LivingEntity {
         this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
+        this.paused = false;
     }
 
     public static void changeScore(Team team, int value) {
@@ -194,5 +196,13 @@ public class Player extends LivingEntity {
     @Override
     public Entity makeCopy() {
         return new Player(team, name);
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }

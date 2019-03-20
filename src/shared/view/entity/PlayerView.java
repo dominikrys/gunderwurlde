@@ -1,12 +1,16 @@
 package shared.view.entity;
 
-import shared.Pose;
-import shared.lists.*;
-import shared.view.ItemView;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
+
+import shared.Pose;
+import shared.lists.ActionList;
+import shared.lists.AmmoList;
+import shared.lists.EntityList;
+import shared.lists.EntityStatus;
+import shared.lists.Team;
+import shared.view.ItemView;
 
 public class PlayerView extends EntityView implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -25,10 +29,11 @@ public class PlayerView extends EntityView implements Serializable {
     protected int moveSpeed;;
     protected boolean takenDamage;
     protected boolean moving;
+    protected boolean paused;
 
     public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
                       String name, EnumMap<AmmoList, Integer> ammo, int playerID, Team team, boolean cloaked, EntityStatus status,
-                      ActionList currentAction, boolean takenDamage, boolean moving) {
+                      ActionList currentAction, boolean takenDamage, boolean moving, boolean paused) {
         super(pose, sizeScaleFactor, EntityList.PLAYER, cloaked, status);
         this.health = health;
         this.maxHealth = maxHealth;
@@ -42,6 +47,11 @@ public class PlayerView extends EntityView implements Serializable {
         this.takenDamage = takenDamage;
         this.moving = moving;
         this.currentAction = currentAction;
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     public ActionList getCurrentAction() {

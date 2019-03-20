@@ -127,23 +127,27 @@ public class ProcessGameState extends Thread {
         long longestTimeProcessing = 0;
         int ticksLeft = TICKS_TILL_INFO;
 
-
         // Zones
         LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
         LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
+
+        boolean paused = false;
+        int numPaused = 0;
 
         while (!handlerClosing) {
             currentTimeDifference = System.currentTimeMillis() - lastProcessTime;
 
             // performance checks
-            numOfProcesses++;
-            if (numOfProcesses != 0) {
-                totalTimeProcessing += currentTimeDifference;
-                if (currentTimeDifference > longestTimeProcessing)
-                    longestTimeProcessing = currentTimeDifference;
-                if (--ticksLeft == 0) {
-                    printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
-                    ticksLeft = TICKS_TILL_INFO;
+            if (!paused) {
+                numOfProcesses++;
+                if (numOfProcesses != 0) {
+                    totalTimeProcessing += currentTimeDifference;
+                    if (currentTimeDifference > longestTimeProcessing)
+                        longestTimeProcessing = currentTimeDifference;
+                    if (--ticksLeft == 0) {
+                        printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
+                        ticksLeft = TICKS_TILL_INFO;
+                    }
                 }
             }
 
@@ -196,6 +200,21 @@ public class ProcessGameState extends Thread {
                     players.remove(playerID);
                     handler.removePlayer(playerID);
                     continue;
+                }
+
+                if (request.getPause() && !currentPlayer.isPaused()) {
+                    numPaused++;
+                    currentPlayer.setPaused(true);
+                } else if (request.getResume() && currentPlayer.isPaused()) {
+                    numPaused--;
+                    currentPlayer.setPaused(false);
+                }
+
+                if (numPaused == players.size()) {
+                    paused = true;
+                    break;
+                } else {
+                    paused = false;
                 }
 
                 // reset player values
@@ -299,6 +318,9 @@ public class ProcessGameState extends Thread {
                 players.put(playerID, currentPlayer);
 
             }
+
+            if (paused)
+                continue;
 
             // process item drops
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
@@ -879,7 +901,7 @@ public class ProcessGameState extends Thread {
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
                 p.getAmmoList(), p.getID(), p.getTeam(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(),
-                p.isMoving());
+                p.isMoving(), p.isPaused());
     }
 
     private static int[] getMostSignificatTile(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {
