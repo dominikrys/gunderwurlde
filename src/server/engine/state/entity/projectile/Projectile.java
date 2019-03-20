@@ -42,8 +42,10 @@ public abstract class Projectile extends Entity {
 
     public boolean maxRangeReached(double distanceMoved) {
         this.dist_travelled += distanceMoved;
-        if (this.max_range == 0 || this.dist_travelled < max_range) return false;
-        else return true;
+        if (this.max_range == 0 || this.dist_travelled < max_range)
+            return false;
+        else
+            return true;
     }
 
     public int getRange() {
@@ -51,7 +53,8 @@ public abstract class Projectile extends Entity {
     }
 
     public void setRange(int range) {
-        if (range < 0) range = 0; //0 is considered infinite
+        if (range < 0)
+            range = 0; // 0 is considered infinite
         this.max_range = range;
     }
 

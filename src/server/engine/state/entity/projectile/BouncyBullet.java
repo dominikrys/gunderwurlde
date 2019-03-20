@@ -43,7 +43,7 @@ public class BouncyBullet extends Projectile implements HasPhysics { // TODO fin
     public Entity makeCopy() {
         return new BouncyBullet(speed, damage, size, max_range, pose, team, bouncesLeft);
     }
-    
+
     @Override
     public boolean isRemoved(Tile tile, Location tileLocation) {
         if (--bouncesLeft == 0) {
