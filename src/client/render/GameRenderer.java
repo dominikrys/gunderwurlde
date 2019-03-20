@@ -6,6 +6,7 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -262,22 +263,13 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        // "PAUSE" message
-        Label pauseLabel = new Label("PAUSE");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace28());
-        pauseLabel.setTextFill(Color.BLACK);
-
-        // Label with instructions how to unpause
-        Label pauseInstructions = new Label("Press " + settings.getKey(KeyAction.ESC) + " to unpause");
-        pauseLabel.setFont(rendererResourceLoader.getFontManaspace18());
-        pauseLabel.setTextFill(Color.BLACK);
-
-        // Set pausedoverlay VBox - make it slightly translucent
-        pausedOverlay = new VBox(pauseLabel, pauseInstructions);
-        pausedOverlay.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 1),
-                new CornerRadii(0), new Insets(50, 50, 50, 50))));
-        pausedOverlay.setAlignment(Pos.CENTER);
-        pausedOverlay.setSpacing(10);
+        pausedOverlay = new VBox();
+        try {
+            Pane newLoadedPane =  FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            this.wait(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         pausedOverlay.setVisible(false);
     }
 

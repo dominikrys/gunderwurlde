@@ -173,3 +173,7 @@
     -fx-background-color: lightgrey;
     -fx-cursor: hand;
 }
+
+.backToGameButton {
+    -font-size: 40px
+}
