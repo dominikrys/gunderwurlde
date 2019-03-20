@@ -21,25 +21,27 @@ public class BouncyBullet extends Projectile implements HasPhysics { // TODO fin
     private int bouncesLeft;
 
     public BouncyBullet() {
-        this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, DEFAULT_RANGE);
+        this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, DEFAULT_RANGE, DEFAULT_BOUNCE_COUNT);
     }
 
-    public BouncyBullet(int speed, int damage, int size, int range) {
+    public BouncyBullet(int speed, int damage, int size, int range, int bounces) {
         super(speed, damage, EntityList.BOUNCE, size, range);
+        this.bouncesLeft = bounces;
     }
 
-    public BouncyBullet(int speed, int damage, int size, int range, Pose p, Team team) {
+    public BouncyBullet(int speed, int damage, int size, int range, Pose p, Team team, int bounces) {
         super(speed, damage, EntityList.BOUNCE, size, range, p, team);
+        this.bouncesLeft = bounces;
     }
 
     @Override
     public Projectile createFor(Pose p, Team team) {
-        return new BouncyBullet(this.speed, this.damage, this.size, this.max_range, p, team);
+        return new BouncyBullet(this.speed, this.damage, this.size, this.max_range, p, team, this.bouncesLeft);
     }
 
     @Override
     public Entity makeCopy() {
-        return new BouncyBullet(speed, damage, size, max_range, pose, team);
+        return new BouncyBullet(speed, damage, size, max_range, pose, team, bouncesLeft);
     }
     
     @Override

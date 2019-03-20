@@ -14,7 +14,7 @@ public class CrystalBullet extends Projectile {
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = EntityList.CRYSTAL.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
-    public static final int DEFAULT_NUMBER_OF_SPLITS = 2;
+    public static final int DEFAULT_NUMBER_OF_SPLITS = 1;
     public static final int DEFAULT_AMOUNT_PER_SPLIT = 8;
 
     private final int amountPerSplit;
