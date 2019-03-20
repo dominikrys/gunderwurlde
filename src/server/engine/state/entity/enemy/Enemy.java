@@ -2,62 +2,26 @@ package server.engine.state.entity.enemy;
 
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.state.entity.Entity;
-import server.engine.state.entity.HasHealth;
-import server.engine.state.entity.HasID;
-import server.engine.state.entity.IsMovable;
-import server.engine.state.physics.Force;
-import server.engine.state.physics.HasPhysics;
-import server.engine.state.physics.Velocity;
-import shared.lists.ActionList;
+import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
 
 import java.util.LinkedHashSet;
 
-public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
-    private static int nextID = 0;
-
+public abstract class Enemy extends LivingEntity {
     protected final LinkedHashSet<Drop> drops;
-    protected final int id;
-    protected EntityList entityListName;
-    protected ActionList currentAction;
     protected EnemyAI ai;
     protected int scoreOnKill;
-    protected int health;
-    protected int maxHealth;
-    protected double acceleration;
-    protected boolean takenDamage;
-    protected boolean moving;
-    protected Velocity velocity;
-    protected Force resultantForce;
-    protected double mass;
+
 
     Enemy(int maxHealth, double acceleration, EntityList entityListName, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
-        super(size, entityListName);
-        this.maxHealth = maxHealth;
-        this.health = maxHealth;
-        this.acceleration = acceleration;
+        super(maxHealth, acceleration, entityListName, size, mass);
         this.drops = drops;
         this.entityListName = entityListName;
-        this.id = nextID++;
         this.scoreOnKill = scoreOnKill;
         this.ai =ai;
-        this.takenDamage = false;
-        this.moving = false;
-        this.currentAction = ActionList.NONE;
-        this.velocity = new Velocity();
-        this.resultantForce = new Force();
-        this.mass = mass;
     }
 
     abstract EnemyAI getNewAI();
-
-    public ActionList getCurrentAction() {
-        return currentAction;
-    }
-
-    public void setCurrentAction(ActionList currentAction) {
-        this.currentAction = currentAction;
-    }
 
     public EnemyAI getAI() {
         return ai;
@@ -75,107 +39,9 @@ public abstract class Enemy extends Entity implements HasPhysics, HasHealth, IsM
         return drops;
     }
 
-    public EntityList getEntityListName() {
-        return entityListName;
-    }
-
     @Override
     public Entity makeCopy(){
         return new Zombie(entityListName, maxHealth, acceleration, size, drops, scoreOnKill, getNewAI(), mass);
-    }
-
-    @Override
-    public boolean hasTakenDamage() {
-        return takenDamage;
-    }
-
-    @Override
-    public void setTakenDamage(boolean takenDamage) {
-        this.takenDamage = takenDamage;
-    }
-
-    @Override
-    public boolean isMoving() {
-        return moving;
-    }
-
-    @Override
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public double getAcceleration() {
-        return acceleration;
-    }
-
-    public void setAcceleration(double acceleration) {
-        this.acceleration = acceleration;
-    }
-
-    @Override
-    public int getHealth() {
-        return health;
-    }
-
-    @Override
-    public void setHealth(int health) {
-        if (health < 0)
-            health = 0;
-        this.health = health;
-    }
-
-    @Override
-    public boolean damage(int amount) {
-        if (amount >= health) {
-            health = 0;
-            return true;
-        } else {
-            health -= amount;
-            return false;
-        }
-    }
-
-    @Override
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    @Override
-    public void setMaxHealth(int maxHealth) {
-        if (maxHealth < 0)
-            maxHealth = 0;
-        this.maxHealth = maxHealth;
-    }
-
-    @Override
-    public int getID() {
-        return id;
-    }
-
-    @Override
-    public Velocity getVelocity() {
-        return velocity;
-    }
-
-    @Override
-    public void setVelocity(Velocity v) {
-        this.velocity = v;
-        this.resultantForce = new Force();
-    }
-
-    @Override
-    public Force getResultantForce() {
-        return resultantForce;
-    }
-
-    @Override
-    public void addNewForce(Force f) {
-        this.resultantForce.add(f);
-    }
-
-    @Override
-    public double getMass() {
-        return mass;
     }
 
 }

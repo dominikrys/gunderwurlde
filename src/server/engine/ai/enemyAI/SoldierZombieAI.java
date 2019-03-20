@@ -8,7 +8,7 @@ import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -67,7 +67,6 @@ public class SoldierZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -108,7 +107,7 @@ public class SoldierZombieAI extends EnemyAI {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(pistol.getShotProjectiles(new Pose(pose, angle), Teams.ENEMY));
+        return new ProjectileAttack(pistol.getShotProjectiles(new Pose(pose, angle), Team.ENEMY));
     }
 
 

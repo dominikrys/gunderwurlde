@@ -39,7 +39,7 @@
             </ImageView>
          </children>
       </HBox>
-      <Label fx:id="characterErrorText" alignment="CENTER" prefHeight="32.0" prefWidth="523.0" styleClass="nameTooLong" text="Name has to be up to 11 characters!" textAlignment="CENTER" textFill="#e50b0b">
+      <Label fx:id="characterErrorText" alignment="CENTER" prefHeight="32.0" prefWidth="523.0" styleClass="nameTooLong" text="Name can be up to 10 characters long!" textAlignment="CENTER" textFill="#e50b0b">
          <font>
             <Font name="Consolas" size="22.0" />
          </font>

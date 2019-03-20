@@ -33,7 +33,7 @@ public class MapReader {
         while (!line.isEmpty()) {
             LinkedList<String> tileComp = getComponents(line);
             char ID = tileComp.removeFirst().charAt(0);
-            TileTypes type = TileTypes.valueOf(tileComp.removeFirst());
+            TileType type = TileType.valueOf(tileComp.removeFirst());
             TileState state = TileState.valueOf(tileComp.removeFirst());
             double value = Double.valueOf(tileComp.removeFirst());
             tiles.put(ID, new Tile(type, state, value));
@@ -52,11 +52,11 @@ public class MapReader {
             line = file.removeFirst();
         }
 
-        EnumMap<Teams, Location> teamSpawns = new EnumMap<>(Teams.class);
+        EnumMap<Team, Location> teamSpawns = new EnumMap<>(Team.class);
         line = file.removeFirst();
         while (!line.isEmpty()) {
             LinkedList<String> teamComp = getComponents(line);
-            teamSpawns.put(Teams.valueOf(teamComp.removeFirst()), compToLocation(teamComp));
+            teamSpawns.put(Team.valueOf(teamComp.removeFirst()), compToLocation(teamComp));
             line = file.removeFirst();
         }
 

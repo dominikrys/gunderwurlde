@@ -8,7 +8,7 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -20,7 +20,7 @@ public class GameState {
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashMap<Integer, Player> players;
     protected LinkedHashMap<Integer, ItemDrop> items;
-    protected EnumMap<Teams, Location> teamSpawns;
+    protected EnumMap<Team, Location> teamSpawns;
 
     public GameState(GameMap currentMap, LinkedHashMap<Integer, Player> players) {
         this.players = players;

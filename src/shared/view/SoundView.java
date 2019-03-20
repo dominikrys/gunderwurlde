@@ -1,6 +1,6 @@
 package shared.view;
 
-import client.gui.Settings;
+import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.scene.media.AudioClip;
 import shared.GameSound;
@@ -75,9 +75,6 @@ public class SoundView {
 				else {
 					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
-			}
-			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
-				playing.get(p.getID()).stop();
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package client.gui.menucontrollers;
 
-import client.gui.Settings;
+import client.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +14,20 @@ import shared.Constants;
 
 import java.io.IOException;
 
+/**
+ * SettingsMenuController class. Has loader and controller for the settings menu
+ *
+ * @author Dominik Rys
+ */
 public class SettingsMenuController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
 
     @FXML
@@ -57,7 +69,14 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     private Button resetButton;
 
+    /**
+     * Constructor
+     *
+     * @param stage    Stage to show menu on
+     * @param settings Settings object
+     */
     public SettingsMenuController(Stage stage, Settings settings) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
 
@@ -113,11 +132,19 @@ public class SettingsMenuController extends VBox implements MenuController {
         resolutionComboBox.getSelectionModel().select(settings.getScreenResolutionString());
     }
 
+    /**
+     * Show menu on stage
+     */
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
     }
 
+    /**
+     * Save settings and go back to the main menu
+     *
+     * @param event Back button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Save settings to file
@@ -128,6 +155,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Highlight fullscreen button and set fullscreen in settings
+     *
+     * @param event Fullscreen button press
+     */
     @FXML
     void displayFullscreenButtonPress(ActionEvent event) {
         settings.setFullScreen(true);
@@ -136,6 +168,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(false);
     }
 
+    /**
+     * Highlight window button and set windowed in settings
+     *
+     * @param event Windowed button press
+     */
     @FXML
     void displayWindowedButtonPress(ActionEvent event) {
         settings.setFullScreen(false);
@@ -144,6 +181,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(false);
     }
 
+    /**
+     * Set music to off
+     *
+     * @param event Music off button press
+     */
     @FXML
     void musicOffButtonPress(ActionEvent event) {
         settings.setMusicMute(true);
@@ -151,6 +193,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         musicOnButton.setEffect(null);
     }
 
+    /**
+     * Set music to on
+     *
+     * @param event Music on button press
+     */
     @FXML
     void musicOnButtonPress(ActionEvent event) {
         settings.setMusicMute(false);
@@ -158,6 +205,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
     }
 
+    /**
+     * Set sound to off
+     *
+     * @param event Sound off button press
+     */
     @FXML
     void soundOffButtonPress(ActionEvent event) {
         settings.setSoundMute(true);
@@ -165,6 +217,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         soundOnButton.setEffect(null);
     }
 
+    /**
+     * Set sound to on
+     *
+     * @param event Sound on button press
+     */
     @FXML
     void soundOnButtonPress(ActionEvent event) {
         settings.setSoundMute(false);
@@ -172,16 +229,31 @@ public class SettingsMenuController extends VBox implements MenuController {
         soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
     }
 
+    /**
+     * Set music volume according to slider position
+     *
+     * @param event Music volume slider dragged
+     */
     @FXML
     void musicVolumeSliderDragged(MouseEvent event) {
         settings.setMusicVolume((int) musicVolumeSlider.getValue());
     }
 
+    /**
+     * Set sound volume according to slider position
+     *
+     * @param event Sound volume slider dragged
+     */
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
         settings.setSoundVolume((int) soundVolumeSlider.getValue());
     }
 
+    /**
+     * Set a new screen resolution
+     *
+     * @param event Resolution selected from combo box
+     */
     @FXML
     void resolutionComboBoxChanged(ActionEvent event) {
         // Get resolution from combobos and adjust the settings object accordingly
@@ -191,6 +263,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(false);
     }
 
+    /**
+     * Apply graphics settings
+     *
+     * @param event Apply graphics settings button press
+     */
     @FXML
     void applyButtonPress(ActionEvent event) {
         // Apply graphics settings
@@ -200,12 +277,20 @@ public class SettingsMenuController extends VBox implements MenuController {
         applyButton.setDisable(true);
     }
 
+    /**
+     * Set stage's dimensions according to saved settings
+     */
     private void updateScreen() {
         stage.setFullScreen(settings.isFullScreen());
         stage.setWidth(settings.getScreenWidth());
         stage.setHeight(settings.getScreenHeight());
     }
 
+    /**
+     * Go to controls menu
+     *
+     * @param event Controls button press
+     */
     @FXML
     void controlsButtonPress(ActionEvent event) {
         // Switch to controls menu and clear this object
@@ -213,6 +298,11 @@ public class SettingsMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Reset settings to defaults
+     *
+     * @param event Reset settings button press
+     */
     @FXML
     void resetButtonPress(ActionEvent event) {
         // Override settings object

@@ -1,7 +1,7 @@
 package client.input;
 
 import client.GameHandler;
-import client.gui.Settings;
+import client.Settings;
 import javafx.scene.image.Image;
 import shared.Pose;
 import shared.view.TileView;

@@ -1,6 +1,5 @@
 package client;
 
-import client.gui.Settings;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
@@ -10,17 +9,15 @@ import shared.view.GameView;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class Client extends Thread {
+    private static final int LISTENPORT = 4444;
+    private static final int SENDPORT = 4445;
     private MulticastSocket listenSocket;
     // Socket to send requests to the server
     private MulticastSocket sendSocket;
     private InetAddress listenAddress;
     private InetAddress senderAddress;
-    private static final int LISTENPORT = 4444;
-    private static final int SENDPORT = 4445;
     private GameView view;
     private GameRenderer renderer;
     private String playerName;
@@ -44,8 +41,8 @@ public class Client extends Thread {
         firstView = true;
     }
 
-    public void run(){
-        try{
+    public void run() {
+        try {
             listenSocket = new MulticastSocket(LISTENPORT);
             sendSocket = new MulticastSocket();
             listenAddress = InetAddress.getByName("230.0.1.1");
@@ -64,18 +61,12 @@ public class Client extends Thread {
             // Closes the socket as communication has finished
             sendSocket.close();
             listenSocket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setGameView(GameView view, Settings settings){
+    public void setGameView(GameView view, Settings settings) {
         this.view = view;
         if (firstView) {
             firstView = false;
@@ -87,13 +78,13 @@ public class Client extends Thread {
             renderer.updateGameView(this.view);
         }
     }
-    
+
     public ClientSender getClientSender() {
-    	return this.sender;
+        return this.sender;
     }
 
     public void close() {
-    	this.running = false;
+        this.running = false;
         sender.stopRunning();
         receiver.stopRunning();
     }

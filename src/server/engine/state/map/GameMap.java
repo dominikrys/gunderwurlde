@@ -3,7 +3,7 @@ package server.engine.state.map;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -12,11 +12,11 @@ public class GameMap {
     protected final int DEFAULT_X_DIM;
     protected final int DEFAULT_Y_DIM;
     protected Tile[][] tileMap;
-    protected EnumMap<Teams, Location> teamSpawns;
+    protected EnumMap<Team, Location> teamSpawns;
     protected MapList mapName;
     protected LinkedHashMap<Integer, Zone> zones;
 
-    GameMap(int xDim, int yDim, Tile[][] tileMap, EnumMap<Teams, Location> teamSpawns, LinkedHashMap<Integer, Zone> zones, MapList mapName) {
+    GameMap(int xDim, int yDim, Tile[][] tileMap, EnumMap<Team, Location> teamSpawns, LinkedHashMap<Integer, Zone> zones, MapList mapName) {
         this.DEFAULT_X_DIM = xDim;
         this.DEFAULT_Y_DIM = yDim;
         this.tileMap = tileMap;
@@ -52,11 +52,11 @@ public class GameMap {
         return tileMap;
     }
 
-    public EnumMap<Teams, Location> getTeamSpawns() {
+    public EnumMap<Team, Location> getTeamSpawns() {
         return teamSpawns;
     }
 
-    public void setPlayerSpawns(EnumMap<Teams, Location> teamSpawns) {
+    public void setPlayerSpawns(EnumMap<Team, Location> teamSpawns) {
         this.teamSpawns = teamSpawns;
     }
 

@@ -4,7 +4,7 @@ import server.engine.state.entity.Entity;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 public class SmallBullet extends Projectile {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
@@ -20,12 +20,12 @@ public class SmallBullet extends Projectile {
         super(speed, damage, EntityList.BASIC_BULLET, size, range);
     }
 
-    public SmallBullet(int speed, int damage, int size, int range, Pose p, Teams team) {
+    public SmallBullet(int speed, int damage, int size, int range, Pose p, Team team) {
         super(speed, damage, EntityList.BASIC_BULLET, size, range, p, team);
     }
 
     @Override
-    public Projectile createFor(Pose p, Teams team) {
+    public Projectile createFor(Pose p, Team team) {
         return new SmallBullet(this.speed, this.damage, this.size, this.max_range, p, team);
     }
 

@@ -11,11 +11,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * HelpMenuController class. Contains controller and loader for help menu
+ * HighScoreMenuController class. Contains loader and controller for the high score menu
  *
  * @author Dominik Rys
  */
-public class HelpMenuController extends VBox implements MenuController {
+public class HighScoreMenuController extends VBox implements MenuController {
     /**
      * Stage to display menu on
      */
@@ -35,13 +35,13 @@ public class HelpMenuController extends VBox implements MenuController {
      * @param stage    Stage to show menu on
      * @param settings Settings object
      */
-    public HelpMenuController(Stage stage, Settings settings) {
+    public HighScoreMenuController(Stage stage, Settings settings) {
         // Set variables
         this.stage = stage;
         this.settings = settings;
 
         // Load FXML and set appropriate methods
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/help_menu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/high_score_menu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -54,7 +54,7 @@ public class HelpMenuController extends VBox implements MenuController {
     }
 
     /**
-     * Go back to main menu
+     * Go back to the main menu
      *
      * @param event Button press
      */

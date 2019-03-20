@@ -5,14 +5,14 @@ import java.util.LinkedHashSet;
 import shared.Constants;
 import shared.Location;
 import shared.lists.TileState;
-import shared.lists.TileTypes;
+import shared.lists.TileType;
 
 public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
     public static final double DEFAULT_DENSITY = 200;
 
     // Type of tile
-    protected TileTypes tileType;
+    protected TileType tileType;
 
     // State of tile, e.g. solid or passable
     protected TileState tileState;
@@ -24,7 +24,7 @@ public class Tile {
     protected double frictionCoefficient;
     protected double bounceCoefficient;
 
-    public Tile(TileTypes tileType, TileState tileState, double value) {
+    public Tile(TileType tileType, TileState tileState, double value) {
         this.tileType = tileType;
         this.tileState = tileState;
         this.itemDropsOnTile = new LinkedHashSet<>();
@@ -98,7 +98,7 @@ public class Tile {
         return enemiesOnTile.remove(enemyID);
     }
 
-    public TileTypes getType() {
+    public TileType getType() {
         return tileType;
     }
 

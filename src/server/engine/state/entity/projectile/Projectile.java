@@ -1,10 +1,12 @@
 package server.engine.state.entity.projectile;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
+import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 public abstract class Projectile extends Entity {
     private static final int FORCE_PER_DMG = 1000;
@@ -14,9 +16,9 @@ public abstract class Projectile extends Entity {
     protected EntityList entityListName;
     protected int max_range;
     protected int dist_travelled;
-    protected Teams team;
+    protected Team team;
 
-    Projectile(int speed, int damage, EntityList entityListName, int size, int max_range, Pose pose, Teams team) {
+    Projectile(int speed, int damage, EntityList entityListName, int size, int max_range, Pose pose, Team team) {
         super(pose, size, entityListName);
         this.speed = speed;
         this.damage = damage;
@@ -31,10 +33,10 @@ public abstract class Projectile extends Entity {
         this.damage = damage;
         this.max_range = max_range;
         this.dist_travelled = 0;
-        this.team = Teams.NONE;
+        this.team = Team.NONE;
     }
 
-    public Teams getTeam() {
+    public Team getTeam() {
         return team;
     }
 
@@ -69,10 +71,14 @@ public abstract class Projectile extends Entity {
         this.damage = damage;
     }
 
-    public abstract Projectile createFor(Pose p, Teams team);
+    public abstract Projectile createFor(Pose p, Team team);
 
     public Force getImpactForce() {
         return new Force(pose.getDirection(), damage * FORCE_PER_DMG);
+    }
+
+    public boolean isRemoved(Tile tile, Location tileLocation) {
+        return true;
     }
 
 }
