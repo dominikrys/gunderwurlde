@@ -94,6 +94,7 @@ public class ProcessGameState extends Thread {
         playerViews.add(toPlayerView(hostPlayer));
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
+        LOGGER.info("Engine set up.");
     }
 
     public void setClientRequests(ClientRequests clientRequests) {
@@ -101,16 +102,18 @@ public class ProcessGameState extends Thread {
     }
 
     public void handlerClosing() {
+        LOGGER.info("Stopping engine.");
         this.handlerClosing = true;
         this.interrupt();
     }
 
-    public void addPlayer(String playerName, Team team) {
+    public void addPlayer(String playerName, Team team) { // TODO remove if not used
         gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override
     public void run() {
+        LOGGER.info("Starting engine.");
         handler.updateGameView(view);
         long lastProcessTime = System.currentTimeMillis();
         long currentTimeDifference = 0;
@@ -186,6 +189,7 @@ public class ProcessGameState extends Thread {
                 Request request = playerRequest.getValue();
 
                 if (request.getLeave()) {
+                    LOGGER.info("Removing player: " + playerID);
                     players.remove(playerID);
                     handler.removePlayer(playerID);
                     continue;
@@ -200,6 +204,7 @@ public class ProcessGameState extends Thread {
                     continue;
 
                 if (currentPlayer.getHealth() <= 0) {
+                    LOGGER.info("Player: " + playerID + " has died.");
                     currentPlayer.setStatus(EntityStatus.DEAD);
                     currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
@@ -522,7 +527,6 @@ public class ProcessGameState extends Thread {
             }
 
             // physics processing
-            // TODO refactor somehow?
 
             for (Player p : players.values()) {
                 Player currentPlayer = p;
@@ -784,6 +788,7 @@ public class ProcessGameState extends Thread {
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
             handler.updateGameView(view);
         }
+        LOGGER.info("Engine stopped!");
         printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
     }
 
