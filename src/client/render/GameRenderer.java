@@ -121,6 +121,11 @@ public class GameRenderer implements Runnable {
     private boolean spectator;
 
     /**
+     * Controller for the pause menu
+     */
+    private PauseMenuController pauseMenuController;
+
+    /**
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -154,6 +159,9 @@ public class GameRenderer implements Runnable {
 
         // Set spectator mode to false
         spectator = false;
+
+        // Initialise pause menu controller
+        pauseMenuController = new PauseMenuController();
 
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
@@ -255,10 +263,16 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        // Load pause FXML
         try {
-            pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            // Load pause FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            pausedOverlay = fxmlLoader.load();
+
+            // Set controller and update its settings value
+            pauseMenuController = fxmlLoader.getController();
+            pauseMenuController.updateSettings(settings);
         } catch (Exception e) {
+            System.out.println("Couldn't load the pause menu .FXML!");
             e.printStackTrace();
         }
 

@@ -92,7 +92,7 @@ public enum EntityList {
     ICE_BULLET("file:assets/img/entity/projectile/ice_bullet.png", 4),
     CRYSTAL_BULLET("file:assets/img/entity/projectile/crystal_bullet.png", 5),
     BOUNCE_BULLET("file:assets/img/entity/projectile/bounce_bullet.png", 4),
-    ROCKET("file:assets/img/entity/projectile/rocket.png", 16),
+    ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 4),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 4),
     
