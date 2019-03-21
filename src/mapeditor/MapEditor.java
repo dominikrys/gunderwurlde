@@ -97,6 +97,7 @@ public class MapEditor {
 	private ImageView paintTileImageView;
 	private Button paintChangeButton;
 	private CheckBox deleteCheckbox;
+	private Button waveButton;
 	private int mapWidth;
 	private int mapHeight;
 	private GraphicsContext mapGc;
@@ -107,6 +108,7 @@ public class MapEditor {
 	private int selectedX;
 	private int selectedY;
 	private Tile paintTile;
+	private WaveSetter waveSetter;
 	
 	// New map
 	public MapEditor(int resWidth, int resHeight) {
@@ -381,10 +383,23 @@ public class MapEditor {
 			}
 		});
 		
-		// > > > Delete mode
+		// > > > > Delete mode
 		deleteCheckbox = new CheckBox("Activate Delete Mode");
 		paintVBox.getChildren().add(deleteCheckbox);
 		deleteCheckbox.setDisable(true);
+		
+		// > > > Wave Settings
+		waveButton = new Button("Set Waves");
+		info.getChildren().add(waveButton);
+		waveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(waveSetter == null) {
+					waveSetter = new WaveSetter();
+				}
+				waveSetter.show();
+			}
+		});
 		
 		stage.show();
         
