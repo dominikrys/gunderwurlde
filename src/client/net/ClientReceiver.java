@@ -36,7 +36,7 @@ public class ClientReceiver extends Thread {
         this.client = client;
         this.renderer = renderer;
         this.settings = settings;
-        buffer = new byte[20000];
+        buffer = new byte[2000000];
         running = true;
         this.start();
     }
