@@ -185,6 +185,7 @@ public class Player extends LivingEntity {
         return teamScore.get(team);
     }
 
+    @Override
     public Team getTeam() {
         return team;
     }

@@ -20,6 +20,7 @@ public class Tile {
     protected LinkedHashSet<Integer> itemDropsOnTile;
     protected LinkedHashSet<Integer> enemiesOnTile;
     protected LinkedHashSet<Integer> playersOnTile;
+    protected LinkedHashSet<Integer> entitiesOnTile;
     protected LinkedHashSet<Integer> zoneTriggers;
     protected double frictionCoefficient;
     protected double bounceCoefficient;
@@ -30,6 +31,7 @@ public class Tile {
         this.itemDropsOnTile = new LinkedHashSet<>();
         this.enemiesOnTile = new LinkedHashSet<>();
         this.playersOnTile = new LinkedHashSet<>();
+        this.entitiesOnTile = new LinkedHashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
         if (tileState == TileState.SOLID) {
             this.bounceCoefficient = value;
@@ -68,10 +70,40 @@ public class Tile {
 
     public void addPlayer(int playerID) {
         playersOnTile.add(playerID);
+        entitiesOnTile.add(playerID);
     }
 
     public boolean removePlayer(int playerID) {
-        return playersOnTile.remove(playerID);
+        if (playersOnTile.remove(playerID)) {
+            entitiesOnTile.remove(playerID);
+            return true;
+        }
+        return false;
+    }
+    
+    public LinkedHashSet<Integer> getEnemiesOnTile() {
+        return enemiesOnTile;
+    }
+
+    public void addEnemy(int enemyID) {
+        enemiesOnTile.add(enemyID);
+        entitiesOnTile.add(enemyID);
+    }
+    
+    public boolean removeEnemy(int enemyID) {
+        if (enemiesOnTile.remove(enemyID)) {
+            entitiesOnTile.remove(enemyID);
+            return true;
+        }
+        return false;
+    }
+
+    public LinkedHashSet<Integer> getEntitiesOnTile() {
+        return entitiesOnTile;
+    }
+
+    public boolean removeEntity(int entityID) {
+        return entitiesOnTile.remove(entityID);
     }
 
     public LinkedHashSet<Integer> getItemDropsOnTile() {
@@ -81,21 +113,9 @@ public class Tile {
     public void addItemDrop(int itemID) {
         this.itemDropsOnTile.add(itemID);
     }
-    
+
     public boolean removeItemDrop(int itemID) {
         return itemDropsOnTile.remove(itemID);
-    }
-
-    public LinkedHashSet<Integer> getEnemiesOnTile() {
-        return enemiesOnTile;
-    }
-
-    public void addEnemy(int enemyID) {
-        this.enemiesOnTile.add(enemyID);
-    }
-    
-    public boolean removeEnemy(int enemyID) {
-        return enemiesOnTile.remove(enemyID);
     }
 
     public TileType getType() {

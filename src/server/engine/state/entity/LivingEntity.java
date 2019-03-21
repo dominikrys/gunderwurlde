@@ -7,6 +7,7 @@ import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
+import shared.lists.Team;
 
 public abstract class LivingEntity extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
@@ -161,5 +162,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         this.effect = null;
         this.status = EntityStatus.NONE;
     }
+
+    public abstract Team getTeam();
 
 }

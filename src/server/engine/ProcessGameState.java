@@ -15,6 +15,7 @@ import server.engine.ai.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
+import server.engine.state.entity.LivingEntity;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
@@ -74,7 +75,7 @@ public class ProcessGameState extends Thread {
 
     public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Team hostTeam) {
         this.handler = handler;
-        LinkedHashMap<Integer, Player> players = new LinkedHashMap<>();
+        LinkedHashMap<Integer, LivingEntity> players = new LinkedHashMap<>();
         Player hostPlayer = new Player(hostTeam, hostName);
         players.put(hostPlayer.getID(), hostPlayer);
         this.gameState = new GameState(MapReader.readMap(mapName), players);
@@ -175,18 +176,19 @@ public class ProcessGameState extends Thread {
             Tile[][] tileMap = currentMap.getTileMap();
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>(); // TODO change projectiles to use hashmap with id which may improve performance?
             LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
+            LinkedHashMap<Integer, LivingEntity> livingEntities = gameState.getLivingEntities();
 
             TileView[][] tileMapView = view.getTileMap();
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
 
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
-            LinkedHashMap<Integer, Player> players = gameState.getPlayers();
-            clientRequests = new ClientRequests(players.size()); // clears requests
+            LinkedHashSet<Integer> playerIDs = gameState.getPlayerIDs();
+            clientRequests = new ClientRequests(playerIDs.size()); // clears requests
 
             for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
                 int playerID = playerRequest.getKey();
-                Player currentPlayer = players.get(playerID);
+                Player currentPlayer = (Player) livingEntities.get(playerID);
 
                 if (currentPlayer == null) {
                     LOGGER.warning("Request from non-existent player. Was the player added/removed properly in handler?");
@@ -197,7 +199,8 @@ public class ProcessGameState extends Thread {
 
                 if (request.getLeave()) {
                     LOGGER.info("Removing player: " + playerID);
-                    players.remove(playerID);
+                    playerIDs.remove(playerID);
+                    livingEntities.remove(playerID);
                     handler.removePlayer(playerID);
                     continue;
                 }
@@ -210,7 +213,7 @@ public class ProcessGameState extends Thread {
                     currentPlayer.setPaused(false);
                 }
 
-                if (numPaused == players.size()) {
+                if (numPaused == playerIDs.size()) {
                     paused = true;
                     break;
                 } else {
@@ -231,7 +234,7 @@ public class ProcessGameState extends Thread {
                     currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
-                        tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
+                        tileMap[playerTileCords[0]][playerTileCords[1]].removeEntity(playerID);
                     }
                     continue; // TODO find proper way of dealing with player death?
                 }
@@ -315,7 +318,7 @@ public class ProcessGameState extends Thread {
                     currentPlayer.setCurrentAction(ActionList.ITEM_SWITCH);
                 }
 
-                players.put(playerID, currentPlayer);
+                livingEntities.put(playerID, currentPlayer);
 
             }
 
@@ -345,16 +348,17 @@ public class ProcessGameState extends Thread {
             }
             itemsToRemove.stream().forEach((i) -> items.remove(i));
             itemsToRemove = new LinkedList<>();
+
             // process enemies
-            LinkedHashMap<Integer, Enemy> enemies = gameState.getEnemies();
             LinkedHashSet<EnemyView> enemiesView = new LinkedHashSet<>();
+            LinkedHashSet<Integer> enemyIDs = gameState.getEnemyIDs();
             LinkedList<Integer> enemiesToRemove = new LinkedList<>();
 
             HashSet<Pose> playerPoses = new HashSet<>();
-            players.values().stream().forEach((p) -> playerPoses.add(p.getPose()));
+            playerIDs.stream().forEach((p) -> playerPoses.add(((Player) livingEntities.get(p)).getPose()));
 
-            for (Enemy e : enemies.values()) {
-                Enemy currentEnemy = e;
+            for (Integer e : enemyIDs) {
+                Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
                 // reset values
                 currentEnemy.setMoving(false);
@@ -389,12 +393,12 @@ public class ProcessGameState extends Thread {
                                 LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
-                                    Player playerBeingChecked = players.get(playerID);
+                                    Player playerBeingChecked = (Player) livingEntities.get(playerID);
                                     if (haveCollided(aoeAttack, playerBeingChecked)) {
                                         playerBeingChecked.damage(aoeAttack.getDamage());
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.addNewForce(aoeAttack.getForce(playerBeingChecked.getPose(), currentEnemy.getLocation()));
-                                        players.put(playerID, playerBeingChecked);
+                                        livingEntities.put(playerID, playerBeingChecked);
                                     }
                                 }
                             }
@@ -428,7 +432,7 @@ public class ProcessGameState extends Thread {
                 currentEnemy.setCurrentAction(ai.getActionState());
 
                 if (currentEnemy.getHealth() > 0 && currentEnemy.getStatus() != EntityStatus.DEAD) {
-                    enemies.put(enemyID, currentEnemy);
+                    livingEntities.put(enemyID, currentEnemy);
                 } else {
                     enemiesToRemove.add(enemyID);
                 }
@@ -440,11 +444,12 @@ public class ProcessGameState extends Thread {
             }
 
             for (Integer enemyID : enemiesToRemove) {
-                LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemies.get(enemyID));
+                LinkedHashSet<int[]> enemyTilesOn = tilesOn(livingEntities.get(enemyID));
                 for (int[] enemyTileCords : enemyTilesOn) {
                     tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
                 }
-                enemies.remove(enemyID);
+                livingEntities.remove(enemyID);
+                enemyIDs.remove(enemyID);
             }
 
             // process projectiles
@@ -481,43 +486,46 @@ public class ProcessGameState extends Thread {
                     if (!removed) {
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                            LinkedHashSet<Integer> enemiesOnTile = tileOn.getEnemiesOnTile();
+                            LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
 
-                            for (Integer enemyID : enemiesOnTile) {
-                                Enemy enemyBeingChecked = enemies.get(enemyID);
-                                Location enemyLocation = enemyBeingChecked.getLocation();
+                            for (Integer entityID : entitiesOnTile) {
+                                LivingEntity entityBeingChecked = livingEntities.get(entityID);
+                                Location entityLocation = entityBeingChecked.getLocation();
 
-                                if (currentProjectile.getTeam() != Team.ENEMY && haveCollided(currentProjectile, enemyBeingChecked)) {
-                                    enemyBeingChecked.addNewForce(currentProjectile.getImpactForce());
+                                if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
+                                    entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
+                                    entityBeingChecked.setTakenDamage(true);
+
                                     if (currentProjectile instanceof HasEffect) {
-                                        if (enemyBeingChecked.hasEffect())
-                                            enemyBeingChecked = (Enemy) enemyBeingChecked.getEffect().clearEffect(enemyBeingChecked);
-                                        enemyBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
+                                        if (entityBeingChecked.hasEffect())
+                                            entityBeingChecked = (Enemy) entityBeingChecked.getEffect().clearEffect(entityBeingChecked);
+                                        entityBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
                                     }
                                     removed = true;
 
-                                    if (enemyBeingChecked.damage(currentProjectile.getDamage())) {
-                                        // TODO enemy death status here
-                                        enemies.remove(enemyID);
-                                        activeZones.get(enemyBeingChecked.getZoneID()).entityRemoved();
+                                    if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
+                                        enemyIDs.remove(entityID);
+                                        livingEntities.remove(entityID);
 
-                                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyBeingChecked);
+                                        activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
+
+                                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
                                         for (int[] enemyTileCords : enemyTilesOn) {
-                                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
                                         }
 
-                                        Player.changeScore(currentProjectile.getTeam(), enemyBeingChecked.getScoreOnKill());
+                                        Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
 
-                                        LinkedHashSet<Drop> drops = enemyBeingChecked.getDrops();
+                                        LinkedHashSet<Drop> drops = ((Enemy) entityBeingChecked).getDrops();
                                         for (Drop d : drops) {
                                             int dropAmount = d.getDrop();
                                             if (dropAmount != 0) {
                                                 Item itemToDrop = d.getItem();
                                                 // TODO tweak values
-                                                int dropDirection = enemyBeingChecked.getVelocity().getDirection() + random.nextInt(80) - 40;
-                                                double dropSpeed = enemyBeingChecked.getVelocity().getSpeed() + 25 + random.nextInt(5);
+                                                int dropDirection = entityBeingChecked.getVelocity().getDirection() + random.nextInt(80) - 40;
+                                                double dropSpeed = entityBeingChecked.getVelocity().getSpeed() + 25 + random.nextInt(5);
                                                 Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
-                                                ItemDrop newDrop = new ItemDrop(itemToDrop, enemyLocation, itemDropVelocity, dropAmount);
+                                                ItemDrop newDrop = new ItemDrop(itemToDrop, entityLocation, itemDropVelocity, dropAmount);
                                                 items.put(newDrop.getID(), newDrop);
                                                 // TODO spawned itemdrop status? is this needed?
                                                 itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
@@ -531,33 +539,10 @@ public class ProcessGameState extends Thread {
                                             }
                                         }
                                     } else {
-                                        enemyBeingChecked.setTakenDamage(true);
-                                        enemies.put(enemyID, enemyBeingChecked);
+                                        livingEntities.put(entityID, entityBeingChecked);
                                     }
                                     break; // bullet was removed no need to check other enemies
                                 }
-                            }
-
-                            if (!removed) {
-                                LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
-
-                                for (Integer playerID : playersOnTile) {
-                                    Player playerBeingChecked = players.get(playerID);
-
-                                    if (currentProjectile.getTeam() != playerBeingChecked.getTeam() && haveCollided(currentProjectile, playerBeingChecked)) {
-                                        playerBeingChecked.addNewForce(currentProjectile.getImpactForce());
-                                        if (currentProjectile instanceof HasEffect) {
-                                            if (playerBeingChecked.hasEffect())
-                                                playerBeingChecked = (Player) playerBeingChecked.getEffect().clearEffect(playerBeingChecked);
-                                            playerBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
-                                        }
-                                        removed = true;
-                                        playerBeingChecked.setTakenDamage(true);
-                                        playerBeingChecked.damage(currentProjectile.getDamage());
-                                        break; // bullet was removed no need to check other players
-                                    }
-                                }
-
                             }
 
                             if (removed)
@@ -579,158 +564,81 @@ public class ProcessGameState extends Thread {
 
             // physics processing
 
-            for (Player p : players.values()) {
-                Player currentPlayer = p;
-                LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
-                int playerID = currentPlayer.getID();
+            for (LivingEntity e : livingEntities.values()) {
+                LivingEntity currentEntity = e;
+                LinkedHashSet<int[]> tilesOn = tilesOn(currentEntity);
+                int entityID = currentEntity.getID();
                 for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].removePlayer(playerID);
+                    tileMap[tileCords[0]][tileCords[1]].removeEntity(entityID);
                 }
-                currentPlayer = (Player) doPhysics(currentPlayer, tileMap, currentTimeDifference);
 
-                tilesOn = tilesOn(currentPlayer);
-                LinkedHashSet<Integer> playersOnTile = new LinkedHashSet<>();
-                LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
+                currentEntity = (LivingEntity) doPhysics(currentEntity, tileMap, currentTimeDifference);
+
+                tilesOn = tilesOn(currentEntity);
+                LinkedHashSet<Integer> entitiesOnTile = new LinkedHashSet<>();
 
                 for (int[] tileCords : tilesOn) {
                     Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                    playersOnTile.addAll(tileOn.getPlayersOnTile());
-                    enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
+                    entitiesOnTile.addAll(tileOn.getEntitiesOnTile());
                 }
-                
+
                 double closestThing = Double.MAX_VALUE;
                 int closestID = -1;
-                boolean isPlayer = false;
 
-                for (int playerCheckedID : playersOnTile) {
-                    Player playerBeingChecked = players.get(playerCheckedID);
-                    if (playerID != playerCheckedID && haveCollided(currentPlayer, playerBeingChecked)) {
-                        double dist = getDistSqrd(currentPlayer.getLocation(), playerBeingChecked.getLocation());
+                for (int entityCheckedID : entitiesOnTile) {
+                    LivingEntity entityBeingChecked = livingEntities.get(entityCheckedID);
+                    if (entityID != entityCheckedID && haveCollided(currentEntity, entityBeingChecked)) {
+                        double dist = getDistSqrd(currentEntity.getLocation(), entityBeingChecked.getLocation());
                         if (dist < closestThing) {
                             closestThing = dist;
-                            isPlayer = true;
-                            closestID = playerCheckedID;
-                        }
-                    }
-                }
-
-                for (int enemyCheckedID : enemiesOnTile) {
-                    Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
-                    if (haveCollided(currentPlayer, enemyBeingChecked)) {
-                        double dist = getDistSqrd(currentPlayer.getLocation(), enemyBeingChecked.getLocation());
-                        if (dist < closestThing) {
-                            closestThing = dist;
-                            isPlayer = false;
-                            closestID = enemyCheckedID;
+                            closestID = entityCheckedID;
                         }
                     }
                 }
 
                 if (closestID != -1) {
-                    HasPhysics e2;
-                    if (isPlayer) {
-                        e2 = players.get(closestID);
-                        tilesOn = tilesOn((Entity) e2);
-                        for (int[] tileCords : tilesOn) {
-                            tileMap[tileCords[0]][tileCords[1]].removePlayer(closestID);
-                        }
-                    } else {
-                        e2 = enemies.get(closestID);
-                        tilesOn = tilesOn((Entity) e2);
-                        for (int[] tileCords : tilesOn) {
-                            tileMap[tileCords[0]][tileCords[1]].removeEnemy(closestID);
-                        }
+                    LivingEntity e2 = livingEntities.get(closestID);
+                    tilesOn = tilesOn(e2);
+                    for (int[] tileCords : tilesOn) {
+                        tileMap[tileCords[0]][tileCords[1]].removeEntity(closestID);
                     }
 
-                    HasPhysics result[] = Physics.objectCollision(currentPlayer, e2, tileMap);
-                    currentPlayer = (Player) result[0];
-                    e2 = result[1];
+                    HasPhysics result[] = Physics.objectCollision(currentEntity, e2, tileMap);
+                    currentEntity = (LivingEntity) result[0];
+                    e2 = (LivingEntity) result[1];
 
-                    if (isPlayer) {
-                        tilesOn = tilesOn((Entity) e2);
+                    tilesOn = tilesOn(e2);
+                    if (e2 instanceof Player) {
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addPlayer(closestID);
                         }
-                        players.put(closestID, (Player) e2);
                     } else {
-                        tilesOn = tilesOn((Entity) e2);
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addEnemy(closestID);
                         }
-                        enemies.put(closestID, (Enemy) e2);
                     }
+
+
+                    livingEntities.put(closestID, e2);
                 }
 
-                tilesOn = tilesOn(currentPlayer);
-                for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].addPlayer(playerID);
-                }
-
-                players.put(playerID, currentPlayer);
-            }
-
-            for (Enemy e : enemies.values()) {
-                Enemy currentEnemy = e;
-                LinkedHashSet<int[]> tilesOn = tilesOn(currentEnemy);
-                int enemyID = currentEnemy.getID();
-                for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].removeEnemy(enemyID);
-                }
-
-                currentEnemy = (Enemy) doPhysics(currentEnemy, tileMap, currentTimeDifference);
-
-                tilesOn = tilesOn(currentEnemy);
-                LinkedHashSet<Integer> enemiesOnTile = new LinkedHashSet<>();
-
-                for (int[] tileCords : tilesOn) {
-                    Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                    enemiesOnTile.addAll(tileOn.getEnemiesOnTile());
-                }
-
-                double closestThing = Double.MAX_VALUE;
-                int closestID = -1;
-
-                for (int enemyCheckedID : enemiesOnTile) {
-                    Enemy enemyBeingChecked = enemies.get(enemyCheckedID);
-                    if (enemyID != enemyCheckedID && haveCollided(currentEnemy, enemyBeingChecked)) {
-                        double dist = getDistSqrd(currentEnemy.getLocation(), enemyBeingChecked.getLocation());
-                        if (dist < closestThing) {
-                            closestThing = dist;
-                            closestID = enemyCheckedID;
-                        }
-                    }
-                }
-
-                if (closestID != -1) {
-                    Enemy e2 = enemies.get(closestID);
-                    tilesOn = tilesOn(e2);
+                tilesOn = tilesOn(currentEntity);
+                if (currentEntity instanceof Player) {
                     for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].removeEnemy(closestID);
+                        tileMap[tileCords[0]][tileCords[1]].addPlayer(entityID);
                     }
-
-                    HasPhysics result[] = Physics.objectCollision(currentEnemy, e2, tileMap);
-                    currentEnemy = (Enemy) result[0];
-                    e2 = (Enemy) result[1];
-
-                    tilesOn = tilesOn(e2);
+                } else {
                     for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].addEnemy(closestID);
+                        tileMap[tileCords[0]][tileCords[1]].addEnemy(entityID);
                     }
-
-                    enemies.put(closestID, e2);
                 }
 
-                tilesOn = tilesOn(currentEnemy);
-                for (int[] tileCords : tilesOn) {
-                    tileMap[tileCords[0]][tileCords[1]].addEnemy(enemyID);
-                }
-
-                enemies.put(enemyID, currentEnemy);
+                livingEntities.put(entityID, currentEntity);
             }
 
             // final player processing
-            for (Player p : players.values()) {
-                Player currentPlayer = p;
+            for (Integer p : playerIDs) {
+                Player currentPlayer = (Player) livingEntities.get(p);
                 LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
                 int playerID = currentPlayer.getID();
 
@@ -797,7 +705,7 @@ public class ProcessGameState extends Thread {
                     }
 
                 }
-                players.put(playerID, currentPlayer);
+                livingEntities.put(playerID, currentPlayer);
             }
 
             // TODO process tiles?
@@ -807,7 +715,8 @@ public class ProcessGameState extends Thread {
                 for (Entity e : z.getEntitysToSpawn()) {
                     if (e instanceof Enemy) {
                         Enemy enemyToSpawn = (Enemy) e;
-                        enemies.put(enemyToSpawn.getID(), enemyToSpawn);
+                        livingEntities.put(enemyToSpawn.getID(), enemyToSpawn);
+                        enemyIDs.add(enemyToSpawn.getID());
                     }
                 }
 
@@ -824,16 +733,17 @@ public class ProcessGameState extends Thread {
 
             zonesToRemove.stream().forEach((z) -> activeZones.remove(z));
 
-            gameState.setPlayers(players);
+            gameState.setPlayerIDs(playerIDs);
+            gameState.setEnemyIDs(enemyIDs);
+            gameState.setLivingEntities(livingEntities);
             gameState.setProjectiles(newProjectiles);
-            gameState.setEnemies(enemies);
             gameState.setItems(items);
             gameState.setTileMap(tileMap);
 
             // turn players to player view
             LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
-            for (Player p : players.values()) {
-                playersView.add(toPlayerView(p));
+            for (Integer p : playerIDs) {
+                playersView.add(toPlayerView((Player) livingEntities.get(p)));
             }
 
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
@@ -847,7 +757,7 @@ public class ProcessGameState extends Thread {
         double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
         LOGGER.info("LongestTimeProcessing: " + longestTimeProcessing + "\n" + "TimeProcessing: " + totalTimeProcessing + "\n" + "NumOfProcesses: "
                 + numOfProcesses + "\n" + "AverageTimeProcessing: " + avgTimeProcessing + "\n" + "ProjectileCount: " + gameState.getProjectiles().size() + "\n"
-                + "EnemyCount: " + gameState.getEnemies().size());
+                + "EnemyCount: " + gameState.getEnemyIDs().size());
     }
 
     private static double getDistanceMoved(long timeDiff, double speed) {

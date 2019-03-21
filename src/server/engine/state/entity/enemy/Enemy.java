@@ -6,6 +6,7 @@ import server.engine.ai.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
+import shared.lists.Team;
 
 public abstract class Enemy extends LivingEntity {
     protected final LinkedHashSet<Drop> drops;
@@ -42,6 +43,11 @@ public abstract class Enemy extends LivingEntity {
     @Override
     public Entity makeCopy(){
         return new Zombie(entityListName, maxHealth, acceleration, size, drops, scoreOnKill, getNewAI(), mass);
+    }
+
+    @Override
+    public Team getTeam() {
+        return Team.ENEMY;
     }
 
 }
