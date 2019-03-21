@@ -97,7 +97,7 @@ public class ProcessGameState extends Thread {
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
         playerViews.add(toPlayerView(hostPlayer));
 
-        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
+        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
     }
 
@@ -359,7 +359,11 @@ public class ProcessGameState extends Thread {
             LinkedList<Integer> enemiesToRemove = new LinkedList<>();
 
             HashSet<Pose> playerPoses = new HashSet<>();
-            playerIDs.stream().forEach((p) -> playerPoses.add(livingEntities.get(p).getPose()));
+            for (Integer p : playerIDs) {
+                LivingEntity currentPlayer = livingEntities.get(p);
+                //if (currentPlayer.getStatus() != EntityStatus.DEAD)
+                    playerPoses.add(currentPlayer.getPose());
+            }
 
             for (Integer e : enemyIDs) {
                 Enemy currentEnemy = (Enemy) livingEntities.get(e);
@@ -761,7 +765,28 @@ public class ProcessGameState extends Thread {
                 playersView.add(toPlayerView((Player) livingEntities.get(p)));
             }
 
-            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
+            // check win condition
+            Team remainingTeam = Team.NONE;
+            boolean gameOver = true;
+            if (playerIDs.size() != 1) {
+                for (Integer p : playerIDs) {
+                    LivingEntity playerBeingChecked = livingEntities.get(p);
+                    if (playerBeingChecked.getStatus() != EntityStatus.DEAD) {
+                        Team playerTeam = playerBeingChecked.getTeam();
+                        if (remainingTeam != playerTeam && remainingTeam != Team.NONE) {
+                            gameOver = false;
+                            break;
+                        } else {
+                            remainingTeam = playerTeam;
+                        }
+                    }
+                }
+
+                if (!gameOver)
+                    remainingTeam = Team.NONE;
+            }
+
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView, remainingTeam);
             handler.updateGameView(view);
         }
         LOGGER.info("Engine stopped!");
