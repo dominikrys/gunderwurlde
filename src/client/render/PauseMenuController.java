@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Settings;
+import client.gui.menucontrollers.ControllerUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -69,7 +70,9 @@ public class PauseMenuController {
      */
     @FXML
     void musicOffButtonPress(ActionEvent event) {
-
+        settings.setMusicMute(true);
+        musicOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+        musicOnButton.setEffect(null);
     }
 
     /**
@@ -79,7 +82,9 @@ public class PauseMenuController {
      */
     @FXML
     void musicOnButtonPress(ActionEvent event) {
-
+        settings.setMusicMute(false);
+        musicOffButton.setEffect(null);
+        musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
     }
 
     /**
@@ -89,7 +94,7 @@ public class PauseMenuController {
      */
     @FXML
     void musicVolumeSliderDragged(MouseEvent event) {
-
+        settings.setMusicVolume((int) musicVolumeSlider.getValue());
     }
 
     /**
@@ -99,7 +104,9 @@ public class PauseMenuController {
      */
     @FXML
     void soundOffButtonPress(ActionEvent event) {
-
+        settings.setSoundMute(true);
+        soundOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+        soundOnButton.setEffect(null);
     }
 
     /**
@@ -109,7 +116,9 @@ public class PauseMenuController {
      */
     @FXML
     void soundOnButtonPress(ActionEvent event) {
-
+        settings.setSoundMute(false);
+        soundOffButton.setEffect(null);
+        soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
     }
 
     /**
@@ -119,16 +128,45 @@ public class PauseMenuController {
      */
     @FXML
     void soundVolumeSliderDragged(MouseEvent event) {
-
+        settings.setSoundVolume((int) soundVolumeSlider.getValue());
     }
 
     /**
-     * Update the settings object stored by this class
+     * Update the settings object stored by this class and update all relevant elements
      *
      * @param settings New settings object
      */
     public void updateSettings(Settings settings) {
+        // Update settings object
         this.settings = settings;
+
+        // Set up menu according to settings object
+        soundVolumeSlider.setValue(settings.getSoundVolume());
+        musicVolumeSlider.setValue(settings.getMusicVolume());
+
+        if (settings.isMusicMute()) {
+            musicOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+            musicOnButton.setEffect(null);
+        } else {
+            musicOffButton.setEffect(null);
+            musicOnButton.setEffect(ControllerUtils.getMenuDropshadow());
+        }
+
+        if (settings.isSoundMute()) {
+            soundOffButton.setEffect(ControllerUtils.getMenuDropshadow());
+            soundOnButton.setEffect(null);
+        } else {
+            soundOffButton.setEffect(null);
+            soundOnButton.setEffect(ControllerUtils.getMenuDropshadow());
+        }
     }
 
+    /**
+     * Get settings object
+     *
+     * @return Settings object
+     */
+    public Settings getSettings() {
+        return settings;
+    }
 }

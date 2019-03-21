@@ -160,9 +160,6 @@ public class GameRenderer implements Runnable {
         // Set spectator mode to false
         spectator = false;
 
-        // Initialise pause menu controller
-        pauseMenuController = new PauseMenuController();
-
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
         mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
@@ -423,6 +420,11 @@ public class GameRenderer implements Runnable {
                 pausedOverlay.setVisible(false);
                 stage.getScene().getRoot().setCursor(Cursor.NONE);
                 cursorPane.setVisible(true);
+
+                // Get settings from controller and apply them
+                settings = pauseMenuController.getSettings();
+
+                // TODO: update sound
             }
         }
     }
