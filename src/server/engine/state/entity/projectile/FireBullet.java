@@ -11,7 +11,7 @@ import shared.lists.Team;
 public class FireBullet extends Projectile implements HasEffect {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 18;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = EntityList.FIRE.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.FIRE_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = Tile.TILE_SIZE * 20;
 
     public FireBullet() {
@@ -19,11 +19,11 @@ public class FireBullet extends Projectile implements HasEffect {
     }
 
     public FireBullet(int speed, int damage, int size, int range) {
-        super(speed, damage, EntityList.FIRE, size, range);
+        super(speed, damage, EntityList.FIRE_BULLET, size, range);
     }
 
     public FireBullet(int speed, int damage, int size, int range, Pose p, Team team) {
-        super(speed, damage, EntityList.FIRE, size, range, p, team);
+        super(speed, damage, EntityList.FIRE_BULLET, size, range, p, team);
     }
 
     @Override
