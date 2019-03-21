@@ -135,7 +135,7 @@ public class Server extends Thread implements HasEngine {
                     }
                     else{
                         System.out.println("Wrong message");
-                        Thread.yield();
+                        continue;
                     }
                     int oldJoinedCount = joinedPlayers;
                     while(oldJoinedCount == joinedPlayers){
