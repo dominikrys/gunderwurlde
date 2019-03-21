@@ -17,7 +17,17 @@ public class PauseMenuController {
     /**
      * Settings object
      */
-    Settings settings;
+    private Settings settings;
+
+    /**
+     * Boolean for whether the back to menu button has been pressed
+     */
+    private boolean quitToMenuPressed;
+
+    /**
+     * Boolean for whether the back to game button has been pressed
+     */
+    private boolean backToGamePressed;
 
     @FXML
     private Slider soundVolumeSlider;
@@ -50,7 +60,7 @@ public class PauseMenuController {
      */
     @FXML
     void backToGameButtonPress(ActionEvent event) {
-
+        backToGamePressed = true;
     }
 
     /**
@@ -60,7 +70,7 @@ public class PauseMenuController {
      */
     @FXML
     void backToMenuButtonPress(ActionEvent event) {
-
+        quitToMenuPressed = true;
     }
 
     /**
@@ -132,13 +142,17 @@ public class PauseMenuController {
     }
 
     /**
-     * Update the settings object stored by this class and update all relevant elements
+     * Intialise the settings object and update all relevant elements
      *
      * @param settings New settings object
      */
-    public void updateSettings(Settings settings) {
+    public void initialise(Settings settings) {
         // Update settings object
         this.settings = settings;
+
+        // Initialise booleans TODO: find a better way of doing this
+        quitToMenuPressed = false;
+        backToGamePressed = false;
 
         // Set up menu according to settings object
         soundVolumeSlider.setValue(settings.getSoundVolume());
@@ -168,5 +182,21 @@ public class PauseMenuController {
      */
     public Settings getSettings() {
         return settings;
+    }
+
+    /**
+     * Return whether quit to menu has been pressed
+     * @return Quit to menu has been pressed
+     */
+    public boolean getQuitToMenuPressed() {
+        return quitToMenuPressed;
+    }
+
+    /**
+     * Return whether back to menu has been pressed
+     * @return Back to menu has been pressed
+     */
+    public boolean getBackToGamePressed(){
+        return backToGamePressed;
     }
 }

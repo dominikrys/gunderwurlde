@@ -267,7 +267,7 @@ public class GameRenderer implements Runnable {
 
             // Set controller and update its settings value
             pauseMenuController = fxmlLoader.getController();
-            pauseMenuController.updateSettings(settings);
+            pauseMenuController.initialise(settings);
         } catch (Exception e) {
             System.out.println("Couldn't load the pause menu .FXML!");
             e.printStackTrace();
@@ -413,20 +413,42 @@ public class GameRenderer implements Runnable {
 
             // Show the pause overlay and perform any other necessary actions
             if (paused) {
+                pauseMenuController.initialise(settings);
                 pausedOverlay.setVisible(true);
                 stage.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 cursorPane.setVisible(false);
+
+                // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
+                (new Thread(() -> {
+                    while (paused) {
+                        if (pauseMenuController.getBackToGamePressed()) {
+                            paused = false;
+                            backToGameFromPauseMenu();
+                        } else if (pauseMenuController.getQuitToMenuPressed()){
+                            paused = false;
+                            stop();
+                        }
+                    }
+                })
+                ).start();
             } else {
-                pausedOverlay.setVisible(false);
-                stage.getScene().getRoot().setCursor(Cursor.NONE);
-                cursorPane.setVisible(true);
-
-                // Get settings from controller and apply them
-                settings = pauseMenuController.getSettings();
-
-                // TODO: update sound
+                backToGameFromPauseMenu();
             }
         }
+    }
+
+    /**
+     * Hide the pause money and apply its settings
+     */
+    private void backToGameFromPauseMenu() {
+        pausedOverlay.setVisible(false);
+        stage.getScene().getRoot().setCursor(Cursor.NONE);
+        cursorPane.setVisible(true);
+
+        // Get settings from controller and apply them
+        settings = pauseMenuController.getSettings();
+
+        // TODO: update sound
     }
 
     /**
