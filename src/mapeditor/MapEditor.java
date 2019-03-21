@@ -17,6 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -85,6 +86,17 @@ public class MapEditor {
 	private Label greenTeamSpawnLabel2;
 	private Label yellowTeamSpawnLabel1;
 	private Label yellowTeamSpawnLabel2;
+	private Button setRedSpawn;
+	private Button setBlueSpawn;
+	private Button setGreenSpawn;
+	private Button setYellowSpawn;
+	private HashMap<Team,int[]> teamSpawns;
+	private VBox paintVBox;
+	private CheckBox paintCheckbox;
+	private HBox paintHBox;
+	private ImageView paintTileImageView;
+	private Button paintChangeButton;
+	private CheckBox deleteCheckbox;
 	private int mapWidth;
 	private int mapHeight;
 	private GraphicsContext mapGc;
@@ -94,11 +106,7 @@ public class MapEditor {
 	private boolean keysActivated;
 	private int selectedX;
 	private int selectedY;
-	private Button setRedSpawn;
-	private Button setBlueSpawn;
-	private Button setGreenSpawn;
-	private Button setYellowSpawn;
-	private HashMap<Team,int[]> teamSpawns;
+	private Tile paintTile;
 	
 	// New map
 	public MapEditor(int resWidth, int resHeight) {
@@ -329,6 +337,55 @@ public class MapEditor {
 			}
 		});
 		
+		// > > > Paint Mode VBox
+		paintVBox = new VBox();
+		info.getChildren().add(paintVBox);
+		paintVBox.setSpacing(10);
+		paintVBox.setAlignment(Pos.CENTER);
+		
+		// > > > > Paint Mode Checkbox
+		paintCheckbox = new CheckBox("Activate Paint Mode");
+		paintVBox.getChildren().add(paintCheckbox);
+		paintCheckbox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(paintCheckbox.isSelected()) {
+					paintChangeButton.setDisable(false);
+					deleteCheckbox.setDisable(false);
+				}
+				else {
+					paintChangeButton.setDisable(true);
+					deleteCheckbox.setDisable(true);
+				}
+			}
+		});
+		
+		// > > > > Paint mode HBox
+		paintHBox = new HBox();
+		paintVBox.getChildren().add(paintHBox);
+		paintHBox.setSpacing(10);
+		paintHBox.setAlignment(Pos.CENTER);
+		
+		// > > > > > Paint tile image view
+		paintTileImageView = new ImageView();
+		paintHBox.getChildren().add(paintTileImageView);
+		
+		// > > > > > Paint tile select button
+		paintChangeButton = new Button("Change");
+		paintHBox.getChildren().add(paintChangeButton);
+		paintChangeButton.setDisable(true);
+		paintChangeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				TileSelector paintTileSelector = new TileSelector(mapEditor);
+			}
+		});
+		
+		// > > > Delete mode
+		deleteCheckbox = new CheckBox("Activate Delete Mode");
+		paintVBox.getChildren().add(deleteCheckbox);
+		deleteCheckbox.setDisable(true);
+		
 		stage.show();
         
 		stage.setOnCloseRequest(we -> {
@@ -389,7 +446,7 @@ public class MapEditor {
 			@Override
 			public void handle(MouseEvent event) {
 				selectTile((int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
-				if(event.getClickCount() == 2) {
+				if(event.getClickCount() == 2 && !paintCheckbox.isSelected()) {
 					TileSelector tileSelector = new TileSelector(mapEditor, (int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
 				}
 			}
@@ -415,7 +472,9 @@ public class MapEditor {
 			params.setFill(Color.TRANSPARENT);
 			mapSnapshot = mapCanvas.snapshot(params, null);
 			mapTiles[tileX][tileY] = tile;
-			selectTile(tileX, tileY);
+			if(!paintCheckbox.isSelected()) {
+				selectTile(tileX, tileY);
+			}
 		}
 	}
 	
@@ -430,7 +489,9 @@ public class MapEditor {
 			params.setFill(Color.TRANSPARENT);
 			mapSnapshot = mapCanvas.snapshot(params, null);
 			mapTiles[tileX][tileY] = null;
-			selectTile(tileX, tileY);
+			if(!paintCheckbox.isSelected()) {
+				selectTile(tileX, tileY);
+			}
 		}
 	}
 	
@@ -493,9 +554,24 @@ public class MapEditor {
 	private void selectTile(int tileX, int tileY) {
 		selectedX = tileX;
 		selectedY = tileY;
-		mapGc.drawImage(mapSnapshot, 0, 0);
-		drawEdge(tileX, tileY, Color.YELLOW);
-		displayTileInfo(tileX, tileY);
+		if(!paintCheckbox.isSelected()) {
+			mapGc.drawImage(mapSnapshot, 0, 0);
+			drawEdge(tileX, tileY, Color.YELLOW);
+			displayTileInfo(tileX, tileY);
+		}
+		else {
+			if(!deleteCheckbox.isSelected()) {
+				if(paintTile == null) {
+					TileSelector paintTileSelector = new TileSelector(mapEditor);
+				}
+				if(paintTile != null) {
+					drawTile(selectedX, selectedY, paintTile);
+				}
+			}
+			else {
+				removeTile(selectedX, selectedY);
+			}
+		}
 	}
 	
 	// I made this before learning about strokeRect
@@ -643,6 +719,12 @@ public class MapEditor {
 			return true;
 		}
 		return false;
+	}
+	
+	// Set paint tile
+	protected void setPaintTile(Tile tile) {
+		paintTileImageView.setImage(tileSprite.get(tile.getType()));
+		paintTile = tile;
 	}
 	
 }

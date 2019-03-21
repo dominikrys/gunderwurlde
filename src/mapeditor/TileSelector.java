@@ -53,14 +53,25 @@ public class TileSelector {
 	private Button saveButton;
 	private Button deleteButton;
 	private Button cancelButton;
+	private HBox selectCancel;
+	private Button paintSelectButton;
 	// TODO:
 	private VBox doorSettingsVBox;
+	private boolean paintMode;
+	
+	public TileSelector(MapEditor mapEditor) {
+		this.mapEditor = mapEditor;
+		this.tileSprite = mapEditor.getTileSprite();
+		this.paintMode = true;
+		this.init();
+	}
 	
 	public TileSelector(MapEditor mapEditor, int tileX, int tileY) {
 		this.mapEditor = mapEditor;
 		this.tileX = tileX;
 		this.tileY = tileY;
 		this.tileSprite = mapEditor.getTileSprite();
+		this.paintMode = false;
 		this.init();
 	}
 	
@@ -167,35 +178,64 @@ public class TileSelector {
 		
 		// TODO: special settings (e.g. DOOR)
 		
-		// > > > Save Delete and Cancel
-		saveDeleteCancel = new HBox();
-		vBox.getChildren().add(saveDeleteCancel);
-		saveDeleteCancel.setSpacing(30);
-		saveDeleteCancel.setAlignment(Pos.CENTER);
-		saveButton = new Button("Save");
-		saveDeleteCancel.getChildren().add(saveButton);
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
-					if(entry.getKey().toString().equals(tileMenu.getValue())) {
-						mapEditor.drawTile(tileX, tileY, entry.getValue());
+		if(!paintMode) {
+			// > > > Save Delete and Cancel
+			saveDeleteCancel = new HBox();
+			vBox.getChildren().add(saveDeleteCancel);
+			saveDeleteCancel.setSpacing(30);
+			saveDeleteCancel.setAlignment(Pos.CENTER);
+			saveButton = new Button("Save");
+			saveDeleteCancel.getChildren().add(saveButton);
+			saveButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
+						if(entry.getKey().toString().equals(tileMenu.getValue())) {
+							mapEditor.drawTile(tileX, tileY, entry.getValue());
+						}
 					}
+					stage.close();
 				}
-				stage.close();
-			}
-		});
-		deleteButton = new Button("Delete");
-		saveDeleteCancel.getChildren().add(deleteButton);
-		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				mapEditor.removeTile(tileX, tileY);
-				stage.close();
-			}
-		});
+			});
+			deleteButton = new Button("Delete");
+			saveDeleteCancel.getChildren().add(deleteButton);
+			deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					mapEditor.removeTile(tileX, tileY);
+					stage.close();
+				}
+			});
+		}
+		else {
+			// > > > Select and Cancel
+			selectCancel = new HBox();
+			vBox.getChildren().add(selectCancel);
+			selectCancel.setAlignment(Pos.CENTER);
+			selectCancel.setSpacing(30);
+			
+			paintSelectButton = new Button("Select");
+			selectCancel.getChildren().add(paintSelectButton);
+			paintSelectButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
+						if(entry.getKey().toString().equals(tileMenu.getValue())) {
+							mapEditor.setPaintTile(entry.getValue());
+						}
+					}
+					stage.close();
+				}
+			});
+		}
+		
 		cancelButton = new Button("Cancel");
-		saveDeleteCancel.getChildren().add(cancelButton);
+		if(!paintMode) {
+			saveDeleteCancel.getChildren().add(cancelButton);
+		}
+		else {
+			selectCancel.getChildren().add(cancelButton);
+		}
 		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
