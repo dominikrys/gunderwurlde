@@ -102,10 +102,6 @@ public class Tile {
         return entitiesOnTile;
     }
 
-    public boolean removeEntity(int entityID) {
-        return entitiesOnTile.remove(entityID);
-    }
-
     public LinkedHashSet<Integer> getItemDropsOnTile() {
         return itemDropsOnTile;
     }
