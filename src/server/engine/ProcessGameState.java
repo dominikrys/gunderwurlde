@@ -275,23 +275,30 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.getDrop() && currentPlayer.getItems().size() > 1) { // TODO fix
-                    currentPlayer.setCurrentAction(ActionList.THROW);
-                    ItemDrop itemDropped = new ItemDrop(currentItem, playerPose, new Velocity(playerPose.getDirection(), 15)); // TODO tweak
-                    // TODO turn into projectile if melee weapon
-                    items.put(itemDropped.getID(), itemDropped);
+                if (request.getDrop() && currentPlayer.getItems().size() > 1) {
+                    if (currentPlayer.removeItem(currentPlayer.getCurrentItemIndex())) {
+                        LOGGER.info("Player: " + playerID + " dropped item.");
+                        currentPlayer.setCurrentAction(ActionList.THROW);
+                        Velocity dropVelocity = new Velocity(playerPose.getDirection(), 30);
+                        dropVelocity.add(currentPlayer.getVelocity());
+                        ItemDrop itemDropped = new ItemDrop(currentItem, playerPose, dropVelocity);
+                        // TODO turn into projectile if melee weapon
+                        items.put(itemDropped.getID(), itemDropped);
 
-                    LinkedHashSet<int[]> tilesOn = tilesOn(itemDropped);
-                    for (int[] tileCords : tilesOn) {
-                        tileMap[tileCords[0]][tileCords[1]].addItemDrop(itemDropped.getID());
+                        LinkedHashSet<int[]> tilesOn = tilesOn(itemDropped);
+                        for (int[] tileCords : tilesOn) {
+                            tileMap[tileCords[0]][tileCords[1]].addItemDrop(itemDropped.getID());
+                        }
+                    } else {
+                        LOGGER.warning("Player: " + playerID + "Failed to drop item.");
                     }
-                    currentPlayer.removeItem(currentPlayer.getCurrentItemIndex());
 
                 } else if (request.getReload()) {
                     if (currentItem instanceof Gun) {
                         Gun currentGun = ((Gun) currentItem);
                         if (currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType())))
                             currentPlayer.setCurrentAction(ActionList.RELOADING);
+                        currentPlayer.setCurrentItem(currentItem);
                     }
                 }
 
@@ -309,8 +316,6 @@ public class ProcessGameState extends Thread {
                     }
 
                 }
-
-                currentPlayer.setCurrentItem(currentItem); // sets item changes before switching
 
                 if (request.selectItemAtExists()) {
                     currentPlayer.setCurrentItemIndex(request.getSelectItemAt());

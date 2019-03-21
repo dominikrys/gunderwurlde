@@ -171,7 +171,7 @@ public class Player extends LivingEntity {
 
     public void setCurrentItemIndex(int slot) {
         if (slot < 0)
-            slot = 0;
+            slot = items.size() - 1;
         else if (slot > items.size() - 1)
             slot = items.size() - 1;
         if (slot != currentItem) {
