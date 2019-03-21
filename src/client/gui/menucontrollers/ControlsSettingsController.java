@@ -1,10 +1,10 @@
 package client.gui.menucontrollers;
 
-import client.gui.Settings;
+import client.Settings;
+import client.input.KeyAction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -12,8 +12,20 @@ import shared.lists.KeyActionList;
 
 import java.io.IOException;
 
+/**
+ * ControlsSettingsController class. Controller and loader for the controls menu.
+ *
+ * @author Dominik Rys
+ */
 public class ControlsSettingsController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
 
     @FXML
@@ -55,7 +67,14 @@ public class ControlsSettingsController extends VBox implements MenuController {
     @FXML
     private Button defaultsButton;
 
+    /**
+     * Constructor
+     *
+     * @param stage    The stage to show the menu on
+     * @param settings Settings object
+     */
     public ControlsSettingsController(Stage stage, Settings settings) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
 
@@ -72,24 +91,32 @@ public class ControlsSettingsController extends VBox implements MenuController {
         }
 
         // Set text of all keyboard buttons to their current mappings
-        upButton.setText(settings.getKey(KeyActionList.UP));
-        downButton.setText(settings.getKey(KeyActionList.DOWN));
-        leftButton.setText(settings.getKey(KeyActionList.LEFT));
-        rightButton.setText(settings.getKey(KeyActionList.RIGHT));
-        interactButton.setText(settings.getKey(KeyActionList.INTERACT));
-        dropButton.setText(settings.getKey(KeyActionList.DROP));
-        reloadButton.setText(settings.getKey(KeyActionList.RELOAD));
-        item1Button.setText(settings.getKey(KeyActionList.ITEM1));
-        item2Button.setText(settings.getKey(KeyActionList.ITEM2));
-        item3Button.setText(settings.getKey(KeyActionList.ITEM3));
-        escapeButton.setText(settings.getKey(KeyActionList.ESC));
+        upButton.setText(settings.getKey(KeyAction.UP));
+        downButton.setText(settings.getKey(KeyAction.DOWN));
+        leftButton.setText(settings.getKey(KeyAction.LEFT));
+        rightButton.setText(settings.getKey(KeyAction.RIGHT));
+        interactButton.setText(settings.getKey(KeyAction.INTERACT));
+        dropButton.setText(settings.getKey(KeyAction.DROP));
+        reloadButton.setText(settings.getKey(KeyAction.RELOAD));
+        item1Button.setText(settings.getKey(KeyAction.ITEM1));
+        item2Button.setText(settings.getKey(KeyAction.ITEM2));
+        item3Button.setText(settings.getKey(KeyAction.ITEM3));
+        escapeButton.setText(settings.getKey(KeyAction.ESC));
     }
 
+    /**
+     * Set menu to stage's scene
+     */
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
     }
 
+    /**
+     * Method which gets triggered when back button is pressed. Save settings to a file and go back to settings
+     *
+     * @param event Button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Save settings to file - not really necessary since the settings menu would do this too, but it's a nice
@@ -101,6 +128,11 @@ public class ControlsSettingsController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Reassign down button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void downButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -110,10 +142,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             downButton.setText(pressed);
-            settings.changeKey(KeyActionList.DOWN, pressed);
+            settings.setKey(KeyAction.DOWN, pressed);
         });
     }
 
+    /**
+     * Reassign drop button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void dropButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -123,10 +160,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             dropButton.setText(pressed);
-            settings.changeKey(KeyActionList.DROP, pressed);
+            settings.setKey(KeyAction.DROP, pressed);
         });
     }
 
+    /**
+     * Reassign escape button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void escapeButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -136,10 +178,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             escapeButton.setText(pressed);
-            settings.changeKey(KeyActionList.ESC, pressed);
+            settings.setKey(KeyAction.ESC, pressed);
         });
     }
 
+    /**
+     * Reassign interact button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void interactButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -149,10 +196,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             interactButton.setText(pressed);
-            settings.changeKey(KeyActionList.INTERACT, pressed);
+            settings.setKey(KeyAction.INTERACT, pressed);
         });
     }
 
+    /**
+     * Reassign item1 button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void item1ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -162,10 +214,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item1Button.setText(pressed);
-            settings.changeKey(KeyActionList.ITEM1, pressed);
+            settings.setKey(KeyAction.ITEM1, pressed);
         });
     }
 
+    /**
+     * Reassign button2 binding
+     *
+     * @param event Button press
+     */
     @FXML
     void item2ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -175,10 +232,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item2Button.setText(pressed);
-            settings.changeKey(KeyActionList.ITEM2, pressed);
+            settings.setKey(KeyAction.ITEM2, pressed);
         });
     }
 
+    /**
+     * Reassign item3 binding
+     *
+     * @param event Button press
+     */
     @FXML
     void item3ButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -188,10 +250,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             item3Button.setText(pressed);
-            settings.changeKey(KeyActionList.ITEM3, pressed);
+            settings.setKey(KeyAction.ITEM3, pressed);
         });
     }
 
+    /**
+     * Reassign left button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void leftButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -201,10 +268,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             leftButton.setText(pressed);
-            settings.changeKey(KeyActionList.LEFT, pressed);
+            settings.setKey(KeyAction.LEFT, pressed);
         });
     }
 
+    /**
+     * Reassign reload button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void reloadButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -214,10 +286,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             reloadButton.setText(pressed);
-            settings.changeKey(KeyActionList.RELOAD, pressed);
+            settings.setKey(KeyAction.RELOAD, pressed);
         });
     }
 
+    /**
+     * Reassign right button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void rightButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -227,10 +304,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             rightButton.setText(pressed);
-            settings.changeKey(KeyActionList.RIGHT, pressed);
+            settings.setKey(KeyAction.RIGHT, pressed);
         });
     }
 
+    /**
+     * Reassign up button binding
+     *
+     * @param event Button press
+     */
     @FXML
     void upButtonPress(ActionEvent event) {
         // Change text to tell user how to reassign button
@@ -240,10 +322,15 @@ public class ControlsSettingsController extends VBox implements MenuController {
         stage.getScene().setOnKeyPressed(event1 -> {
             String pressed = event1.getCode().toString();
             upButton.setText(pressed);
-            settings.changeKey(KeyActionList.UP, pressed);
+            settings.setKey(KeyAction.UP, pressed);
         });
     }
 
+    /**
+     * Resets settings to defaults
+     *
+     * @param event Button press
+     */
     @FXML
     void defaultsButtonPress(ActionEvent event) {
         // Set defaults in settings

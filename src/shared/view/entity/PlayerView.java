@@ -8,8 +8,8 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-import shared.lists.Status;
-import shared.lists.Teams;
+import shared.lists.EntityStatus;
+import shared.lists.Team;
 import shared.view.ItemView;
 
 public class PlayerView extends EntityView implements Serializable {
@@ -20,7 +20,7 @@ public class PlayerView extends EntityView implements Serializable {
     protected EnumMap<AmmoList, Integer> ammo;
     protected ArrayList<ItemView> items;
     protected String name;
-    protected Teams team;
+    protected Team team;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
@@ -29,10 +29,11 @@ public class PlayerView extends EntityView implements Serializable {
     protected int moveSpeed;;
     protected boolean takenDamage;
     protected boolean moving;
+    protected boolean paused;
 
     public PlayerView(Pose pose, int sizeScaleFactor, int health, int maxHealth, ArrayList<ItemView> items, int currentItemIndex, int score,
-            String name, EnumMap<AmmoList, Integer> ammo, int playerID, Teams team, boolean cloaked, Status status,
-            ActionList currentAction, boolean takenDamage, boolean moving) {
+                      String name, EnumMap<AmmoList, Integer> ammo, int playerID, Team team, boolean cloaked, EntityStatus status,
+                      ActionList currentAction, boolean takenDamage, boolean moving, boolean paused) {
         super(pose, sizeScaleFactor, EntityList.PLAYER, cloaked, status);
         this.health = health;
         this.maxHealth = maxHealth;
@@ -46,6 +47,11 @@ public class PlayerView extends EntityView implements Serializable {
         this.takenDamage = takenDamage;
         this.moving = moving;
         this.currentAction = currentAction;
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     public ActionList getCurrentAction() {
@@ -96,7 +102,7 @@ public class PlayerView extends EntityView implements Serializable {
         return items;
     }
 
-    public Teams getTeam() {
+    public Team getTeam() {
         return team;
     }
 

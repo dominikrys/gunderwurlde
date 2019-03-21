@@ -24,6 +24,7 @@ public class Zone {
     protected int entityCount;
     protected LinkedHashMap<int[], Door> doors;
     protected int id;
+    protected boolean active;
 
     public Zone(LinkedHashSet<Location> entitySpawns, LinkedList<Round> rounds, LinkedHashSet<int[]> triggers, LinkedHashMap<int[], Door> doors) {
         this.entitySpawns = entitySpawns;
@@ -35,6 +36,7 @@ public class Zone {
         this.doors = doors;
         this.entityCount = 0;
         this.id = nextZoneID++;
+        this.active = false;
     }
 
     public LinkedHashMap<int[], Tile> getTileChanges() {
@@ -55,6 +57,7 @@ public class Zone {
     }
 
     public void activate() {
+        this.active = true;
         currentRound.start();
     }
 
@@ -95,7 +98,7 @@ public class Zone {
                 currentRound = roundIterator.next();
                 currentRound.start();
             } else {
-                // TODO no more rounds left deactivate zone
+                this.active = false;
             }
         }
         currentWaves = newWaves;
@@ -115,6 +118,10 @@ public class Zone {
 
     public int getId() {
         return id;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
 }

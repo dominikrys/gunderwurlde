@@ -42,6 +42,15 @@
             <String fx:value="manaspaceFontWhite" />
             <String fx:value="menuButton" />
          </styleClass></Button>
+      <Button fx:id="creditsBtton" mnemonicParsing="false" onAction="#creditsButtonPress" text="Credits">
+         <font>
+            <Font name="Manaspace" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="menuButton" />
+         </styleClass>
+      </Button>
       <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonPress" text="Help">
          <font>
             <Font name="Manaspace" size="22.0" />

@@ -3,7 +3,7 @@ package shared.view.entity;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
-import shared.lists.Status;
+import shared.lists.EntityStatus;
 
 import java.io.Serializable;
 
@@ -17,7 +17,7 @@ public class EnemyView extends EntityView implements Serializable {
     protected int maxHealth;
     protected int ID;
 
-    public EnemyView(Pose pose, int size, EntityList name, boolean cloaked, Status status, ActionList currentAction, boolean takenDamage, boolean moving, int health, int maxHealth, int ID) {
+    public EnemyView(Pose pose, int size, EntityList name, boolean cloaked, EntityStatus status, ActionList currentAction, boolean takenDamage, boolean moving, int health, int maxHealth, int ID) {
         super(pose, size, name, cloaked, status);
         this.takenDamage = takenDamage;
         this.moving = moving;

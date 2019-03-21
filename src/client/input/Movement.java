@@ -1,14 +1,14 @@
 package client.input;
 
-import java.util.LinkedHashSet;
-
 import client.GameHandler;
-import client.gui.Settings;
+import client.Settings;
 import javafx.scene.image.Image;
 import shared.Pose;
 import shared.view.TileView;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
+
+import java.util.LinkedHashSet;
 
 public class Movement extends Action{
 	

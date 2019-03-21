@@ -1,11 +1,6 @@
 package shared.view;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import client.gui.Settings;
+import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.scene.media.AudioClip;
 import shared.GameSound;
@@ -14,6 +9,11 @@ import shared.lists.SoundList;
 import shared.view.entity.EnemyView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class SoundView {
 	

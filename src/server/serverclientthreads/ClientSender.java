@@ -1,11 +1,13 @@
 package server.serverclientthreads;
 
-import java.io.*;
+import shared.Pose;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.Enumeration;
 import java.util.Scanner;
-
-import shared.Pose;
 
 public class ClientSender extends Thread {
     MulticastSocket senderSocket;

@@ -38,9 +38,9 @@ import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.MapEditorAssetList;
-import shared.lists.Teams;
+import shared.lists.Team;
 import shared.lists.TileState;
-import shared.lists.TileTypes;
+import shared.lists.TileType;
 
 public class MapEditor {
 	
@@ -90,7 +90,7 @@ public class MapEditor {
 	private GraphicsContext mapGc;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
-	private HashMap<TileTypes, Image> tileSprite;
+	private HashMap<TileType, Image> tileSprite;
 	private boolean keysActivated;
 	private int selectedX;
 	private int selectedY;
@@ -98,7 +98,7 @@ public class MapEditor {
 	private Button setBlueSpawn;
 	private Button setGreenSpawn;
 	private Button setYellowSpawn;
-	private HashMap<Teams,int[]> teamSpawns;
+	private HashMap<Team,int[]> teamSpawns;
 	
 	// New map
 	public MapEditor(int resWidth, int resHeight) {
@@ -119,7 +119,7 @@ public class MapEditor {
 		return this.mapTiles;
 	}
 	
-	public HashMap<TileTypes, Image> getTileSprite() {
+	public HashMap<TileType, Image> getTileSprite() {
 		return this.tileSprite;
 	}
 	
@@ -262,7 +262,7 @@ public class MapEditor {
 		});
 		
 		// > > > Team spawns
-		teamSpawns = new HashMap<Teams, int[]>(); // {-1, -1} means unset
+		teamSpawns = new HashMap<Team, int[]>(); // {-1, -1} means unset
 		
 		teamSpawnInfo = new GridPane();
 		info.getChildren().add(teamSpawnInfo);
@@ -280,7 +280,7 @@ public class MapEditor {
 		setRedSpawn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				setTeamSpawn(selectedX, selectedY, Teams.RED);
+				setTeamSpawn(selectedX, selectedY, Team.RED);
 			}
 		});
 		
@@ -295,7 +295,7 @@ public class MapEditor {
 		setBlueSpawn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				setTeamSpawn(selectedX, selectedY, Teams.BLUE);
+				setTeamSpawn(selectedX, selectedY, Team.BLUE);
 			}
 		});
 		
@@ -310,7 +310,7 @@ public class MapEditor {
 		setGreenSpawn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				setTeamSpawn(selectedX, selectedY, Teams.GREEN);
+				setTeamSpawn(selectedX, selectedY, Team.GREEN);
 			}
 		});
 		
@@ -325,7 +325,7 @@ public class MapEditor {
 		setYellowSpawn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				setTeamSpawn(selectedX, selectedY, Teams.YELLOW);
+				setTeamSpawn(selectedX, selectedY, Team.YELLOW);
 			}
 		});
 		
@@ -485,8 +485,8 @@ public class MapEditor {
 	
 	// Load tile sprites
 	private void loadTileSprite() {
-		tileSprite = new HashMap<TileTypes, Image>();
-		EnumSet.allOf(TileTypes.class).forEach(tileTypes -> tileSprite.put(tileTypes, new Image(tileTypes.getEntityListName().getPath())));
+		tileSprite = new HashMap<TileType, Image>();
+		EnumSet.allOf(TileType.class).forEach(tileTypes -> tileSprite.put(tileTypes, new Image(tileTypes.getEntityListName().getPath())));
 	}
 	
 	// Tile selection
@@ -507,7 +507,7 @@ public class MapEditor {
 		mapGc.strokeLine((tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
 	}
 	
-	private void drawSpawnLetter(int tileX, int tileY, Teams team) {
+	private void drawSpawnLetter(int tileX, int tileY, Team team) {
 		mapGc.drawImage(mapSnapshot, 0, 0);
 		Paint p = Color.TRANSPARENT;
 		String s = "";
@@ -555,7 +555,7 @@ public class MapEditor {
 	}
 	
 	// Set team spawn tile
-	private void setTeamSpawn(int tileX, int tileY, Teams team) {
+	private void setTeamSpawn(int tileX, int tileY, Team team) {
 		if(mapTiles[tileX][tileY] != null && !mapTiles[tileX][tileY].getState().equals(TileState.SOLID)) {
 			// Check here so no invalid spawn popup
 			if(checkTile(tileX, tileY)) {
@@ -581,7 +581,7 @@ public class MapEditor {
 	}
 	
 	// Set team spawn info
-	private void setTeamSpawnInfo(String tileX, String tileY, Teams team) {
+	private void setTeamSpawnInfo(String tileX, String tileY, Team team) {
 		String s = "(" + tileX + ", " + tileY + ")";
 		switch(team) {
 			case RED:
@@ -601,7 +601,7 @@ public class MapEditor {
 	
 	// Check if tile is a spawn etc.
 	private boolean checkTile(int tileX, int tileY) {
-		for(Map.Entry<Teams, int[]> entry : teamSpawns.entrySet()) {
+		for(Map.Entry<Team, int[]> entry : teamSpawns.entrySet()) {
 			if(entry.getValue()[0] == tileX && entry.getValue()[1] == tileY) {
 				if(tileOverWritePopUp(entry.getKey().toString() + " spawn")) {
 					setTeamSpawnInfo("-", "-", entry.getKey());

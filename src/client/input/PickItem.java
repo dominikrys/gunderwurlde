@@ -1,10 +1,10 @@
 package client.input;
 
-import java.util.LinkedHashSet;
-
 import client.GameHandler;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
+
+import java.util.LinkedHashSet;
 
 public class PickItem extends Action {
 

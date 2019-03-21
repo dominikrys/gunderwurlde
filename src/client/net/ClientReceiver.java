@@ -1,21 +1,17 @@
 package client.net;
 
 
+import client.Client;
+import client.Settings;
+import client.render.GameRenderer;
+import shared.view.GameView;
+
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Enumeration;
-
-import client.Client;
-import client.gui.Settings;
-import client.render.GameRenderer;
-import shared.view.GameView;
 
 // Gets messages from other clients via the server (by the
 // serverclientthreads.ServerSender thread).

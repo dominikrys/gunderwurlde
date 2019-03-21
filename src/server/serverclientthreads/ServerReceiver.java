@@ -1,6 +1,6 @@
 package server.serverclientthreads;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 

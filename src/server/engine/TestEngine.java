@@ -1,18 +1,18 @@
 package server.engine;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import client.gui.Settings;
+import client.Settings;
 import client.render.GameRenderer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 import shared.request.ClientRequests;
 import shared.view.GameView;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class TestEngine extends Application implements HasEngine {
     private static final int LOOPS = 1000;
@@ -48,7 +48,7 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOWTEST, "Bob", Teams.RED);
+        this.engine = new ProcessGameState(this, MapList.MEADOWWITHWALLS, "Bob", Team.RED);
         stage.setResizable(true);
         stage.setScene(new Scene(new VBox()));
         engine.start();

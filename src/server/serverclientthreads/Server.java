@@ -1,7 +1,9 @@
 package server.serverclientthreads;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 
 public class Server extends Thread {
     // Socket to listen to the server

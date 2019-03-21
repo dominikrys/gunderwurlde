@@ -13,12 +13,16 @@ public class Request implements Serializable {
     protected boolean reload;
     protected boolean leave;
     protected boolean drop;
+    protected boolean pause;
+    private boolean resume;
 
     public Request() {
         this.shoot = false;
         this.reload = false;
         this.leave = false;
         this.drop = false;
+        this.pause = false;
+        this.resume = false;
         this.movementDir = -1;
         this.facing = -1;
         this.selectItemAt = -1;
@@ -90,6 +94,22 @@ public class Request implements Serializable {
 
     public boolean getLeave() {
         return leave;
+    }
+
+    public void requestPause() {
+        this.pause = true;
+    }
+
+    public boolean getPause() {
+        return pause;
+    }
+
+    public void requestResume() {
+        this.resume = true;
+    }
+
+    public boolean getResume() {
+        return resume;
     }
 
 }

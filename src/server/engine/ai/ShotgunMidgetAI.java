@@ -2,43 +2,25 @@ package server.engine.ai;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.entity.projectile.SmallBullet;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 
 public class ShotgunMidgetAI extends ZombieAI{
 
-    private final int KNOCKBACK_AMOUT;
-//    private int knockback;
-    private int knockbackAngle;
-    private boolean knockbackState = false;
+    private final int KNOCKBACK_AMOUNT;
     private Shotgun shotgun = new Shotgun(3, 10, 1000);
 
     public ShotgunMidgetAI(int knockbackAmount){
-        super();
-        this.KNOCKBACK_AMOUT = knockbackAmount;
-    }
-
-    @Override
-    public AIAction getAction() {
-        if (attacking) {
-            return AIAction.ATTACK;
-        } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE * 3 || knockbackState) {
-            return AIAction.MOVE;
-        } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE * 3) {
-            this.actionState = ActionList.ATTACKING;
-            attacking = true;
-            beginAttackTime = System.currentTimeMillis();
-            return AIAction.ATTACK;
-        }
-        return AIAction.WAIT;
+        super(Constants.TILE_SIZE * 3);
+        randomizePath = false;
+        this.KNOCKBACK_AMOUNT = knockbackAmount;
+        attackDelay = MEDIUM_DELAY;
     }
 
     @Override
@@ -47,9 +29,8 @@ public class ShotgunMidgetAI extends ZombieAI{
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            knockbackAngle = (int) getAngle(pose, closestPlayer);
-            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(
-                    new Pose(pose, knockbackAngle), Teams.ENEMY)));
+            int attackAngle = getAngle(pose, closestPlayer);
+            attacks.add(new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
@@ -58,13 +39,11 @@ public class ShotgunMidgetAI extends ZombieAI{
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
-        knockbackAngle = (int) getAngle(pose, closestPlayer);
-        return new Force(Pose.normaliseDirection(knockbackAngle + 180), maxMovementForce + KNOCKBACK_AMOUT);
-    }
-
-    @Override
-    protected Force generateMovementForce(){
-        int angleToMove = (int) getAngle(pose, closestPlayer);
-        return new Force(angleToMove, maxMovementForce);
+        if (!attacking) {
+            int knockbackAngle = Pose.normaliseDirection(getAngle(pose, closestPlayer) + 180);
+            return new Force(knockbackAngle, maxMovementForce + KNOCKBACK_AMOUNT);
+        }else{
+            return new Force(pose.getDirection(), 0);
+        }
     }
 }

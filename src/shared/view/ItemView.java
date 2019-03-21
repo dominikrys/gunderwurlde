@@ -1,9 +1,9 @@
 package shared.view;
 
-import java.io.Serializable;
-
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
+
+import java.io.Serializable;
 
 public class ItemView implements Serializable {
     private static final long serialVersionUID = 1L;

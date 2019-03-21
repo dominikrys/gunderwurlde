@@ -1,12 +1,12 @@
 package shared.view;
 
-import java.io.Serializable;
-import java.util.LinkedHashSet;
-
 import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
+
+import java.io.Serializable;
+import java.util.LinkedHashSet;
 
 public class GameView implements Serializable {
     private static final long serialVersionUID = 1L;

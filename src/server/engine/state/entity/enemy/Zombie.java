@@ -1,13 +1,13 @@
 package server.engine.state.entity.enemy;
 
-import java.util.LinkedHashSet;
-
 import server.engine.ai.EnemyAI;
 import server.engine.ai.ZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+
+import java.util.LinkedHashSet;
 
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
@@ -23,20 +23,16 @@ public class Zombie extends Enemy {
     }
 
     public Zombie() {
-        this(DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
+        this(EntityList.ZOMBIE, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new ZombieAI(), DEFAULT_MASS);
     }
 
-    Zombie(int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
-        super(maxHealth, acceleration, EntityList.ZOMBIE, size, drops, scoreOnKill, ai, mass);
-    }
-
-    Zombie(int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, EntityList type, double mass) {
-        super(maxHealth, acceleration, type, size, drops, scoreOnKill, ai, mass);
+    Zombie(EntityList enemyType, int maxHealth, double acceleration, int size, LinkedHashSet<Drop> drops, int scoreOnKill, EnemyAI ai, double mass) {
+        super(maxHealth, acceleration, enemyType, size, drops, scoreOnKill, ai, mass);
     }
 
     @Override
-    public Enemy makeCopy() {
-        return new Zombie(this.maxHealth, this.acceleration, this.size, this.drops, this.scoreOnKill, new ZombieAI(), this.mass);
+    EnemyAI getNewAI() {
+        return new ZombieAI();
     }
 
 }

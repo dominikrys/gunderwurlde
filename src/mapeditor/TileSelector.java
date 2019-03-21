@@ -20,15 +20,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
 import shared.lists.TileState;
-import shared.lists.TileTypes;
+import shared.lists.TileType;
 
 public class TileSelector {
 	
 	private MapEditor mapEditor;
 	private int tileX;
 	private int tileY;
-	private HashMap<TileTypes, Image> tileSprite;
-	private HashMap<TileTypes, Tile> tileSettings;
+	private HashMap<TileType, Image> tileSprite;
+	private HashMap<TileType, Tile> tileSettings;
 	private Stage stage;
 	private StackPane root;
 	private Scene scene;
@@ -177,7 +177,7 @@ public class TileSelector {
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				for(Map.Entry<TileTypes, Tile> entry : tileSettings.entrySet()) {
+				for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
 					if(entry.getKey().toString().equals(tileMenu.getValue())) {
 						mapEditor.drawTile(tileX, tileY, entry.getValue());
 					}
@@ -215,7 +215,7 @@ public class TileSelector {
 	
 	// Display info of selected tile
 	private void changeTileSelection() {
-		for(Map.Entry<TileTypes, Tile> entry : tileSettings.entrySet()) {
+		for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
 			if(entry.getKey().toString().equals(tileMenu.getValue())) {
 				tileImageView.setImage(tileSprite.get(entry.getKey()));
 				tileTypeLabel2.setText(entry.getKey().toString());
@@ -228,8 +228,8 @@ public class TileSelector {
 	
 	// Get default settings for tiles
 	private void getTileSettings() {
-		tileSettings = new HashMap<TileTypes, Tile>();
-		EnumSet.allOf(TileTypes.class).forEach(tileType -> {
+		tileSettings = new HashMap<TileType, Tile>();
+		EnumSet.allOf(TileType.class).forEach(tileType -> {
 			switch(tileType) {
 				case WOOD:
 					tileSettings.put(tileType, new Tile(tileType, TileState.SOLID, 0.7));

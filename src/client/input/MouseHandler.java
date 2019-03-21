@@ -1,14 +1,12 @@
 package client.input;
 
-import client.GameHandler;
 import javafx.animation.AnimationTimer;
-import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.util.Duration;
+import shared.Constants;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
@@ -54,8 +52,8 @@ public class MouseHandler extends UserInteraction {
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
-        playerX = mapCanvas.getLayoutX() + playerView.getPose().getX() + 16;
-        playerY = mapCanvas.getLayoutY() + playerView.getPose().getY() + 16;
+        playerX = mapCanvas.getTranslateX() + playerView.getPose().getX() + Constants.TILE_SIZE / 2;
+        playerY = mapCanvas.getTranslateY() + playerView.getPose().getY() + Constants.TILE_SIZE / 2;
         // System.out.println("mouseX: " + mouseX);
         // System.out.println("mouseY: " + mouseY);
         // System.out.println("playerX: " + playerX);

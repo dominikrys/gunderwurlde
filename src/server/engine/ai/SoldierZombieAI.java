@@ -6,7 +6,7 @@ import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -58,7 +58,7 @@ public class SoldierZombieAI extends EnemyAI {
         }
 
 
-
+    //TODO this method could probably live in EnemyAI
     @Override
     public LinkedList<Attack> getAttacks() {
         LinkedList<Attack> attacks = new LinkedList<>();
@@ -66,14 +66,45 @@ public class SoldierZombieAI extends EnemyAI {
 
         if ((now - beginAttackTime) >= attackDelay) {
             attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                    new Pose(pose, (int) getAngle(pose, closestPlayer)), Teams.ENEMY)));
+                    new Pose(pose, getAngle(pose, closestPlayer)), Team.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
         return attacks;
     }
 
-//    protected synchronized Pose generateNextPose() {
+    synchronized void setPoseToGo(Pose pose) {
+        poseToGo = pose;
+        setProcessing(false);
+    }
+
+    protected Force generateMovementForce() {
+        //if does not have pose to go
+        if (poseToGo == null || Pose.compareLocation(pose, poseToGo, 20)) {
+            moving = false;
+            //if not already generating a new pose to go
+            if (!isProcessing()) {
+                setProcessing(true);
+                new RandomPoseGen(this, pose).start();
+            } else {
+                //if has a pose generated
+                moving = true;
+                int angleToMove = getAngle(pose, poseToGo);
+//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
+                return new Force(angleToMove, maxMovementForce);
+            }
+        } else {
+            //if has a pose to go
+            moving = true;
+            int angleToMove = getAngle(pose, poseToGo);
+//            pose = poseFromAngle(angle, angle, maxDistanceToMove);
+            return new Force(angleToMove, maxMovementForce);
+        }
+
+        return new Force();
+    }
+
+    //    protected synchronized Pose generateNextPose() {
 //        pose = checkIfInSpawn();
 //        //if out of spawn
 //        if(outOfSpawn) {
@@ -100,37 +131,5 @@ public class SoldierZombieAI extends EnemyAI {
 //
 //        return pose;
 //    }
-
-
-    synchronized void setPoseToGo(Pose pose) {
-        poseToGo = pose;
-        setProcessing(false);
-    }
-
-    protected Force generateMovementForce() {
-        //if does not have pose to go
-        if (poseToGo == null || poseToGo.compareLocation(pose, 20)) {
-            moving = false;
-            //if not already generating a new pose to go
-            if (!isProcessing()) {
-                setProcessing(true);
-                new RandomPoseGen(this, pose).start();
-            } else {
-                //if has a pose generated
-                moving = true;
-                int angleToMove = (int) getAngle(pose, poseToGo);
-//                pose = poseFromAngle(angle, angle, maxDistanceToMove);
-                return new Force(angleToMove, maxMovementForce);
-            }
-        } else {
-            //if has a pose to go
-            moving = true;
-            int angleToMove = (int) getAngle(pose, poseToGo);
-//            pose = poseFromAngle(angle, angle, maxDistanceToMove);
-            return new Force(angleToMove, maxMovementForce);
-        }
-
-        return new Force();
-    }
 
 }

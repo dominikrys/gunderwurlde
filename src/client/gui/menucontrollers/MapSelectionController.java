@@ -2,7 +2,7 @@ package client.gui.menucontrollers;
 
 import client.ConnectionType;
 import client.GameHandler;
-import client.gui.Settings;
+import client.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,16 +19,40 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.Constants;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 
+/**
+ * MapSelectionController class. Has loader and controller for the map selection menu
+ *
+ * @author Dominik Rys
+ */
 public class MapSelectionController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
+
+    /**
+     * Type of connection: multi player, single player, hosting or now
+     */
     private ConnectionType connectionType;
+
+    /**
+     * Name of player
+     */
     private String playerName;
-    private Teams selectedTeam;
+
+    /**
+     * Team selected by player
+     */
+    private Team selectedTeam;
 
     @FXML
     private Button meadowButton;
@@ -51,8 +75,17 @@ public class MapSelectionController extends VBox implements MenuController {
     @FXML
     private Label playerNumberLabel;
 
-
-    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Teams selectedTeam) {
+    /**
+     * Constructor
+     *
+     * @param stage          Stage to show menu on
+     * @param settings       Settings object
+     * @param connectionType Type of connection
+     * @param playerName     Name of player
+     * @param selectedTeam   Team selected by player
+     */
+    public MapSelectionController(Stage stage, Settings settings, ConnectionType connectionType, String playerName, Team selectedTeam) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
         this.connectionType = connectionType;
@@ -85,11 +118,19 @@ public class MapSelectionController extends VBox implements MenuController {
         }
     }
 
+    /**
+     * Show menu on stage
+     */
     @Override
     public void show() {
         this.stage.getScene().setRoot(this);
     }
 
+    /**
+     * Go back to play menu when the back button is presed
+     *
+     * @param event Back button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Switch to play menu and clear this screen
@@ -97,11 +138,21 @@ public class MapSelectionController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Set correct player number when slider dragged
+     *
+     * @param event Slider dragged event
+     */
     @FXML
     void playerSliderDragged(MouseEvent event) {
         playerNumberLabel.setText(Long.toString(Math.round(playerSlider.getValue())));
     }
 
+    /**
+     * Select meadow map
+     *
+     * @param event Button press
+     */
     @FXML
     void meadowButtonPress(ActionEvent event) {
         // Clear the screen and show loading screen
@@ -111,6 +162,9 @@ public class MapSelectionController extends VBox implements MenuController {
         (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW)).start();
     }
 
+    /**
+     * Display loading screen when starting server and loading files
+     */
     private void displayMapLoading() {
         // Clear the screen
         this.getChildren().clear();
@@ -126,11 +180,25 @@ public class MapSelectionController extends VBox implements MenuController {
         this.getChildren().addAll(loadingLabel, progressIndicator);
     }
 
+    /**
+     * Select map 2
+     *
+     * @param event Button press
+     */
     @FXML
     void map2ButtonPress(ActionEvent event) {
+        // Clear the screen and show loading screen
+        displayMapLoading();
 
+        // Start gamehandler with correct connectiontype, map and team
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS)).start();
     }
 
+    /**
+     * Select map 3
+     *
+     * @param event Button press
+     */
     @FXML
     void map3ButtonPress(ActionEvent event) {
 

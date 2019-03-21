@@ -114,7 +114,7 @@ public class Physics {
     }
 
     public static Force getDragForce(double fluidDensity, Velocity velocity, int size) {
-        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size) * 2);
+        double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size));
         int direction = velocity.getDirection() - 180;
         if (direction < 0)
             direction += 360;
@@ -124,10 +124,6 @@ public class Physics {
     private static double getDragForce(double fluidDensity, double speed, double surfaceArea) {
         return 0.5 * Math.pow(speed, 2) * surfaceArea * fluidDensity;
     }
-
-    //public static Velocity getNewVelocity(Impulse impulse, Velocity velocity, int size) {
-       // return velocity;
-    //}
 
     public static Velocity getNewVelocity(double acceleration, Velocity velocity, int direction, long time) {
         double changeInSpeed = acceleration * normaliseTime(time);
@@ -149,7 +145,7 @@ public class Physics {
         return components;
     }
 
-    static double[] fromComponents(double xComp, double yComp) {
+    public static double[] fromComponents(double xComp, double yComp) {
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
         int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
 

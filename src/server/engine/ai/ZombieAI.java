@@ -1,45 +1,47 @@
 package server.engine.ai;
 
+import server.engine.state.entity.attack.AoeAttack;
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.physics.Force;
+import shared.Constants;
+import shared.lists.ActionList;
+
 import java.util.LinkedList;
 import java.util.Random;
 
-import server.engine.state.entity.attack.AoeAttack;
-import server.engine.state.entity.attack.Attack;
-import server.engine.state.map.tile.Tile;
-import server.engine.state.physics.Force;
-import shared.Constants;
-import shared.Location;
-import shared.Pose;
-import shared.lists.ActionList;
-
 public class ZombieAI extends EnemyAI {
 
-    long attackDelay;
     long beginAttackTime;
     boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
-    private Location attackLocation;
+    boolean randomizePath = true;
+    private final int DISTANCE_TO_PLAYER_FOR_ATTACK;
 
     public ZombieAI() {
         super();
+        this.DISTANCE_TO_PLAYER_FOR_ATTACK = Constants.TILE_SIZE;
         this.beginAttackTime = System.currentTimeMillis();
-        this.attackDelay = DEFAULT_DELAY;
         this.attacking = false;
+    }
+
+    public ZombieAI(int distanceToPlayerForAttack) {
+        super();
+        this.beginAttackTime = System.currentTimeMillis();
+        this.attacking = false;
+        this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
     }
 
     @Override
     public AIAction getAction() {
         if (attacking) {
             return AIAction.ATTACK;
-        } else if (getDistToPlayer(closestPlayer) >= Constants.TILE_SIZE) {
-//            System.out.println("Move");
+        } else if (getDistToPlayer(closestPlayer) >= DISTANCE_TO_PLAYER_FOR_ATTACK) {
             return AIAction.MOVE;
-        } else if (getDistToPlayer(closestPlayer) < Constants.TILE_SIZE) {
+        } else if (getDistToPlayer(closestPlayer) < DISTANCE_TO_PLAYER_FOR_ATTACK) {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
-            attackLocation = closestPlayer;
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
@@ -51,31 +53,24 @@ public class ZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(attackLocation, 24, 1));
+            attacks.add(new AoeAttack(closestPlayer, 24, 1));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
         return attacks;
     }
 
-//    @Override
-//    protected Pose generateNextPose() {
-//        pose = checkIfInSpawn();
-//
-//        if (outOfSpawn) {
-//            double angle = getAngle(pose, closestPlayer);
-//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-//        }
-//
-//        return pose;
-//    }
 
     protected Force generateMovementForce(){
-        int angleToMove = (int) getAngle(pose, closestPlayer);
-        return new Force((int) randomizePath(angleToMove), maxMovementForce);
+        int angleToMove = getAngle(pose, closestPlayer);
+        if(randomizePath) {
+            return new Force((int) randomizePath(angleToMove), maxMovementForce);
+        }else{
+            return new Force(angleToMove, maxMovementForce);
+        }
     }
 
-    //Maybe needs some more balancing
+    //TODO Maybe needs some more balancing
     private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
@@ -103,4 +98,16 @@ public class ZombieAI extends EnemyAI {
 
         return angle;
     }
+
+    //    @Override
+//    protected Pose generateNextPose() {
+//        pose = checkIfInSpawn();
+//
+//        if (outOfSpawn) {
+//            double angle = getAngle(pose, closestPlayer);
+//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
+//        }
+//
+//        return pose;
+//    }
 }
