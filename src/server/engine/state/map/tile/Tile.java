@@ -148,4 +148,16 @@ public class Tile {
         return DEFAULT_DENSITY;
     }
 
+    @Override
+    public String toString(){
+        if(tileType == TileType.WOOD) {
+            return "W";
+        }else if(tileType == TileType.GRASS){
+            return "G";
+        }else if(tileType == TileType.DOOR){
+            return "D";
+        }
+        return "New state added";
+    }
+
 }

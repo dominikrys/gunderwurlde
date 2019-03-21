@@ -1,18 +1,16 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
+import server.engine.ai.AIAction;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.lists.ActionList;
 
-import java.util.LinkedList;
 import java.util.Random;
 
 public class ZombieAI extends EnemyAI {
 
-    long beginAttackTime;
-    boolean attacking;
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     boolean randomizePath = true;
@@ -27,9 +25,9 @@ public class ZombieAI extends EnemyAI {
 
     public ZombieAI(int distanceToPlayerForAttack) {
         super();
+        this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
         this.beginAttackTime = System.currentTimeMillis();
         this.attacking = false;
-        this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
     }
 
     @Override
@@ -47,19 +45,6 @@ public class ZombieAI extends EnemyAI {
         return AIAction.WAIT;
     }
 
-    @Override
-    public LinkedList<Attack> getAttacks() {
-        LinkedList<Attack> attacks = new LinkedList<>();
-        long now = System.currentTimeMillis();
-
-        if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(closestPlayer, 24, 1));
-            attacking = false;
-            this.actionState = ActionList.NONE;
-        }
-        return attacks;
-    }
-
 
     protected Force generateMovementForce(){
         int angleToMove = getAngle(pose, closestPlayer);
@@ -71,6 +56,7 @@ public class ZombieAI extends EnemyAI {
     }
 
     //TODO Maybe needs some more balancing
+
     private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
@@ -99,6 +85,10 @@ public class ZombieAI extends EnemyAI {
         return angle;
     }
 
+    @Override
+    protected Attack getAttackObj() {
+        return new AoeAttack(closestPlayer, 24, 1);
+    }
     //    @Override
 //    protected Pose generateNextPose() {
 //        pose = checkIfInSpawn();

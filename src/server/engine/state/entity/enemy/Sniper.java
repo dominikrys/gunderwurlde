@@ -1,8 +1,7 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.BoomerAI;
-import server.engine.ai.EnemyAI;
-import server.engine.ai.SniperAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.SniperAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
@@ -34,5 +33,4 @@ public class Sniper extends Zombie {
     EnemyAI getNewAI() {
         return new SniperAI(RANGE_TO_RUN_WAY);
     }
-
 }

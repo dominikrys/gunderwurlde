@@ -1,7 +1,7 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.EnemyAI;
-import server.engine.ai.SoldierZombieAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.SoldierZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;

@@ -1,7 +1,7 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.EnemyAI;
-import server.engine.ai.ZombieAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.ZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
     public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.95;
-    public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize() / 2  - 5;
     public static final int DEFAULT_SCORE_ON_KILL = 10;
     public static final double DEFAULT_MASS = 2;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
