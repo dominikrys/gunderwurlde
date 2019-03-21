@@ -12,7 +12,7 @@ import shared.lists.Team;
 public class CrystalBullet extends Projectile {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = EntityList.CRYSTAL.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.CRYSTAL_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
     public static final int DEFAULT_NUMBER_OF_SPLITS = 1;
     public static final int DEFAULT_AMOUNT_PER_SPLIT = 8;
@@ -28,13 +28,13 @@ public class CrystalBullet extends Projectile {
     }
 
     public CrystalBullet(int speed, int damage, int size, int range, int numOfSplits, int amountPerSplit) {
-        super(speed, damage, EntityList.CRYSTAL, size, range);
+        super(speed, damage, EntityList.CRYSTAL_BULLET, size, range);
         this.numberOfSplits = numOfSplits;
         this.amountPerSplit = amountPerSplit;
     }
 
     public CrystalBullet(int speed, int damage, int size, int range, int numOfSplits, int amountPerSplit, Pose p, Team team) {
-        super(speed, damage, EntityList.CRYSTAL, size, range, p, team);
+        super(speed, damage, EntityList.CRYSTAL_BULLET, size, range, p, team);
         this.numberOfSplits = numOfSplits;
         this.amountPerSplit = amountPerSplit;
     }

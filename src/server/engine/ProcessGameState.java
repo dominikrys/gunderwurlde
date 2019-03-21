@@ -555,7 +555,7 @@ public class ProcessGameState extends Thread {
 
                 }
                 if (removed) {
-                    if (currentProjectile.getEntityListName() == EntityList.CRYSTAL) {
+                    if (currentProjectile.getEntityListName() == EntityList.CRYSTAL_BULLET) {
                         newProjectiles.addAll(((CrystalBullet) currentProjectile).getSplitProjectiles());
                     }
                 } else {
