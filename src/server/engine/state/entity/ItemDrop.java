@@ -13,7 +13,7 @@ import shared.lists.ItemType;
 
 public class ItemDrop extends Entity implements HasID, HasPhysics {
     public static final long DECAY_LENGTH = 10000; //10 seconds
-    public static final int DROP_FREEZE = 1000; // drop freeze of 1 second
+    public static final int DROP_FREEZE = 300; // drop freeze of 0.3 seconds
     public static final double DEFAULT_MASS = 0.3;
 
     private static int nextID = 0;

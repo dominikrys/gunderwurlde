@@ -2,9 +2,11 @@ package server.engine.state.entity.player;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashSet;
 
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.LivingEntity;
+import server.engine.state.entity.enemy.Drop;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
@@ -204,5 +206,12 @@ public class Player extends LivingEntity {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    @Override
+    public LinkedHashSet<Drop> getDrops() {
+        LinkedHashSet<Drop> drops = new LinkedHashSet<>();
+        items.stream().forEach((i) -> drops.add(new Drop(i, 1, 1)));
+        return drops;
     }
 }

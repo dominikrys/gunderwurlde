@@ -1,8 +1,12 @@
 package server.engine.state.entity;
 
+import java.util.LinkedHashSet;
+
 import server.engine.state.effect.StatusEffect;
+import server.engine.state.entity.enemy.Drop;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
+import server.engine.state.physics.Physics;
 import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
@@ -73,7 +77,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     }
 
     public double getMovementForce() {
-        return movementForce + (mass * 50);
+        return movementForce + (mass * 0.5 * Physics.GRAVITY);
     }
 
     public void setMovementForce(double movementForce) {
@@ -94,12 +98,16 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
 
     @Override
     public boolean damage(int amount) {
-        if (amount >= health) {
-            health = 0;
-            return true;
-        } else {
+        if (amount < health) {
             health -= amount;
             return false;
+        } else if (status == EntityStatus.DEAD) {
+            return false;
+        } else {
+            status = EntityStatus.DEAD;
+            currentAction = ActionList.DEAD;
+            health = 0;
+            return true;
         }
     }
 
@@ -164,5 +172,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     }
 
     public abstract Team getTeam();
+
+    public abstract LinkedHashSet<Drop> getDrops();
 
 }

@@ -230,8 +230,6 @@ public class ProcessGameState extends Thread {
 
                 if (currentPlayer.getHealth() <= 0) {
                     LOGGER.info("Player: " + playerID + " has died.");
-                    currentPlayer.setStatus(EntityStatus.DEAD);
-                    currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
@@ -443,7 +441,7 @@ public class ProcessGameState extends Thread {
 
                 currentEnemy.setCurrentAction(ai.getActionState());
 
-                if (currentEnemy.getHealth() > 0 && currentEnemy.getStatus() != EntityStatus.DEAD) {
+                if (currentEnemy.getStatus() != EntityStatus.DEAD) {
                     livingEntities.put(enemyID, currentEnemy);
                 } else {
                     enemiesToRemove.add(enemyID);
@@ -514,20 +512,8 @@ public class ProcessGameState extends Thread {
                                     }
                                     removed = true;
 
-                                    if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
-                                        enemyIDs.remove(entityID);
-                                        livingEntities.remove(entityID);
-
-                                        activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
-
-                                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
-                                        for (int[] enemyTileCords : enemyTilesOn) {
-                                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
-                                        }
-
-                                        Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
-
-                                        LinkedHashSet<Drop> drops = ((Enemy) entityBeingChecked).getDrops();
+                                    if (entityBeingChecked.damage(currentProjectile.getDamage())) {
+                                        LinkedHashSet<Drop> drops = entityBeingChecked.getDrops();
                                         for (Drop d : drops) {
                                             int dropAmount = d.getDrop();
                                             if (dropAmount != 0) {
@@ -549,6 +535,23 @@ public class ProcessGameState extends Thread {
 
                                             }
                                         }
+
+                                        if (entityBeingChecked instanceof Enemy) {
+                                            enemyIDs.remove(entityID);
+                                            livingEntities.remove(entityID);
+
+                                            activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
+
+                                            LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
+                                            for (int[] enemyTileCords : enemyTilesOn) {
+                                                tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
+                                            }
+
+                                            Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
+                                        } else {
+                                            livingEntities.put(entityID, entityBeingChecked);
+                                        }
+
                                     } else {
                                         livingEntities.put(entityID, entityBeingChecked);
                                     }

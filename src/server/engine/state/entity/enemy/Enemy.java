@@ -36,6 +36,7 @@ public abstract class Enemy extends LivingEntity {
         return scoreOnKill;
     }
 
+    @Override
     public LinkedHashSet<Drop> getDrops() {
         return drops;
     }
