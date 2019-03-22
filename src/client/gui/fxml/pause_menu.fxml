@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 15px; -fx-background-color: black; -fx-padding: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="client.render.PauseMenuController">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 15px; -fx-background-color: black; -fx-padding: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml" fx:controller="client.render.PauseMenuController">
    <children>
       <Label style="-fx-padding: 5px;" text="PAUSE">
          <font>
@@ -34,20 +34,20 @@
                   <Insets />
                </opaqueInsets>
             </Slider>
-            <Button fx:id="soundOnButton" defaultButton="true" mnemonicParsing="false" onAction="#soundOnButtonPress" style="-fx-padding: 5px;">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-                     <image>
-                        <Image url="file:assets/img/gui/sound_on.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
             <Button fx:id="soundOffButton" mnemonicParsing="false" onAction="#soundOffButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="file:assets/img/gui/sound_off.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="soundOnButton" defaultButton="true" mnemonicParsing="false" onAction="#soundOnButtonPress" style="-fx-padding: 5px;">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="file:assets/img/gui/sound_on.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -66,20 +66,20 @@
                   <Insets />
                </opaqueInsets>
             </Slider>
-            <Button fx:id="musicOnButton" defaultButton="true" mnemonicParsing="false" onAction="#musicOnButtonPress" style="-fx-padding: 5px;">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-                     <image>
-                        <Image url="file:assets/img/gui/sound_on.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
             <Button fx:id="musicOffButton" mnemonicParsing="false" onAction="#musicOffButtonPress" style="-fx-padding: 5px;">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="file:assets/img/gui/sound_off.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="musicOnButton" defaultButton="true" mnemonicParsing="false" onAction="#musicOnButtonPress" style="-fx-padding: 5px;">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="file:assets/img/gui/sound_on.png" />
                      </image>
                   </ImageView>
                </graphic>

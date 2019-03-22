@@ -449,6 +449,7 @@ public class GameRenderer implements Runnable {
         settings = pauseMenuController.getSettings();
 
         // TODO: update sound
+        Settings.
     }
 
     /**
