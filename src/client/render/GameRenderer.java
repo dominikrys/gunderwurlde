@@ -448,8 +448,8 @@ public class GameRenderer implements Runnable {
         // Get settings from controller and apply them
         settings = pauseMenuController.getSettings();
 
-        // TODO: update sound
-        Settings.
+        // Save settings to disk
+        settings.saveToDisk();
     }
 
     /**
