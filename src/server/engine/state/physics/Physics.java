@@ -5,8 +5,9 @@ import shared.Location;
 import shared.lists.TileState;
 
 public class Physics {
+    public static int GRAVITY = 100;
+
     private static int TIME_PER_SECOND = 1000;
-    private static int GRAVITY = 100;
     private static double OBJECT_BOUNCE = 0.9;
 
 
