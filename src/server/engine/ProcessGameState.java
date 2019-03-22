@@ -19,7 +19,6 @@ import server.engine.state.entity.LivingEntity;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.entity.enemy.Drop;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
 import server.engine.state.entity.projectile.CrystalBullet;
@@ -178,8 +177,10 @@ public class ProcessGameState extends Thread {
             LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
             LinkedHashMap<Integer, LivingEntity> livingEntities = gameState.getLivingEntities();
 
+            // views for the handler
             TileView[][] tileMapView = view.getTileMap();
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
+            LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
 
             // process player requests
             LinkedHashMap<Integer, Request> playerRequests = clientRequests.getPlayerRequests();
@@ -234,7 +235,22 @@ public class ProcessGameState extends Thread {
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
                     }
-                    continue; // TODO find proper way of dealing with player death?
+
+                    LinkedList<ItemDrop> drops = currentPlayer.getDrops();
+                    for (ItemDrop newDrop : drops) {
+                        items.put(newDrop.getID(), newDrop);
+                        // TODO spawned itemdrop status? is this needed?
+                        itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
+                                newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
+
+                        LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
+                        for (int[] itemTileCords : itemTilesOn) {
+                            tileMap[itemTileCords[0]][itemTileCords[1]].addItemDrop(newDrop.getID());
+                        }
+                    }
+
+                    currentPlayer.setCurrentAction(ActionList.DEAD);
+                    continue;
                 }
 
                 if (lastAction == ActionList.ATTACKING || lastAction == ActionList.THROW || lastAction == ActionList.ITEM_SWITCH)
@@ -328,7 +344,6 @@ public class ProcessGameState extends Thread {
                 continue;
 
             // process item drops
-            LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
             LinkedList<Integer> itemsToRemove = new LinkedList<>();
             for (ItemDrop i : items.values()) {
                 LinkedHashSet<int[]> tilesOn = tilesOn(i);
@@ -444,6 +459,7 @@ public class ProcessGameState extends Thread {
                 if (currentEnemy.getStatus() != EntityStatus.DEAD) {
                     livingEntities.put(enemyID, currentEnemy);
                 } else {
+                    // TODO check if current action should be set to dead
                     enemiesToRemove.add(enemyID);
                 }
 
@@ -453,12 +469,28 @@ public class ProcessGameState extends Thread {
             }
 
             for (Integer enemyID : enemiesToRemove) {
-                LinkedHashSet<int[]> enemyTilesOn = tilesOn(livingEntities.get(enemyID));
+                LivingEntity enemyToRemove = livingEntities.get(enemyID);
+                LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyToRemove);
                 for (int[] enemyTileCords : enemyTilesOn) {
                     tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
                 }
+
+                LinkedList<ItemDrop> drops = enemyToRemove.getDrops();
+                for (ItemDrop newDrop : drops) {
+                    items.put(newDrop.getID(), newDrop);
+                    // TODO spawned itemdrop status? is this needed?
+                    itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
+                            newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
+
+                    LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
+                    for (int[] itemTileCords : itemTilesOn) {
+                        tileMap[itemTileCords[0]][itemTileCords[1]].addItemDrop(newDrop.getID());
+                    }
+                }
+
                 livingEntities.remove(enemyID);
                 enemyIDs.remove(enemyID);
+                activeZones.get(enemyToRemove.getZoneID()).entityRemoved();
             }
 
             // process projectiles
@@ -499,7 +531,6 @@ public class ProcessGameState extends Thread {
 
                             for (Integer entityID : entitiesOnTile) {
                                 LivingEntity entityBeingChecked = livingEntities.get(entityID);
-                                Location entityLocation = entityBeingChecked.getLocation();
 
                                 if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
                                     entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
@@ -512,49 +543,10 @@ public class ProcessGameState extends Thread {
                                     }
                                     removed = true;
 
-                                    if (entityBeingChecked.damage(currentProjectile.getDamage())) {
-                                        LinkedHashSet<Drop> drops = entityBeingChecked.getDrops();
-                                        for (Drop d : drops) {
-                                            int dropAmount = d.getDrop();
-                                            if (dropAmount != 0) {
-                                                Item itemToDrop = d.getItem();
-                                                // TODO tweak values
-                                                int dropDirection = entityBeingChecked.getVelocity().getDirection() + random.nextInt(80) - 40;
-                                                double dropSpeed = entityBeingChecked.getVelocity().getSpeed() + 25 + random.nextInt(5);
-                                                Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
-                                                ItemDrop newDrop = new ItemDrop(itemToDrop, entityLocation, itemDropVelocity, dropAmount);
-                                                items.put(newDrop.getID(), newDrop);
-                                                // TODO spawned itemdrop status? is this needed?
-                                                itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(),
-                                                        newDrop.isCloaked(), newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
-
-                                                LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
-                                                for (int[] itemTileCords : itemTilesOn) {
-                                                    tileMap[itemTileCords[0]][itemTileCords[1]].addItemDrop(newDrop.getID());
-                                                }
-
-                                            }
-                                        }
-
-                                        if (entityBeingChecked instanceof Enemy) {
-                                            enemyIDs.remove(entityID);
-                                            livingEntities.remove(entityID);
-
-                                            activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
-
-                                            LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
-                                            for (int[] enemyTileCords : enemyTilesOn) {
-                                                tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
-                                            }
-
-                                            Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
-                                        } else {
-                                            livingEntities.put(entityID, entityBeingChecked);
-                                        }
-
-                                    } else {
-                                        livingEntities.put(entityID, entityBeingChecked);
+                                    if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
+                                        Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
                                     }
+                                    livingEntities.put(entityID, entityBeingChecked);
                                     break; // bullet was removed no need to check other enemies
                                 }
                             }

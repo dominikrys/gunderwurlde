@@ -2,11 +2,11 @@ package server.engine.state.entity.player;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
-import server.engine.state.entity.enemy.Drop;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
@@ -209,9 +209,9 @@ public class Player extends LivingEntity {
     }
 
     @Override
-    public LinkedHashSet<Drop> getDrops() {
-        LinkedHashSet<Drop> drops = new LinkedHashSet<>();
-        items.stream().forEach((i) -> drops.add(new Drop(i, 1, 1)));
-        return drops;
+    public LinkedList<ItemDrop> getDrops() {
+        LinkedList<ItemDrop> itemsToDrop = new LinkedList<>();
+        items.stream().forEach((i) -> itemsToDrop.add(toItemDrop(i, 1)));
+        return itemsToDrop;
     }
 }

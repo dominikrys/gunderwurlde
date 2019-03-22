@@ -1,9 +1,10 @@
 package server.engine.state.entity;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Random;
 
 import server.engine.state.effect.StatusEffect;
-import server.engine.state.entity.enemy.Drop;
+import server.engine.state.item.Item;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
 import server.engine.state.physics.Physics;
@@ -15,6 +16,7 @@ import shared.lists.Team;
 
 public abstract class LivingEntity extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
+    private static Random random = new Random();
 
     protected final int id;
     protected EntityList entityListName;
@@ -28,6 +30,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     protected Force resultantForce;
     protected double mass;
     protected StatusEffect effect;
+
 
     protected LivingEntity(int maxHealth, double movementForce, EntityList entityListName, int size, double mass) {
         super(size, entityListName);
@@ -105,7 +108,6 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
             return false;
         } else {
             status = EntityStatus.DEAD;
-            currentAction = ActionList.DEAD;
             health = 0;
             return true;
         }
@@ -173,6 +175,14 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
 
     public abstract Team getTeam();
 
-    public abstract LinkedHashSet<Drop> getDrops();
+    public abstract LinkedList<ItemDrop> getDrops();
+
+    protected ItemDrop toItemDrop(Item itemToDrop, int amount) {
+        // TODO tweak values
+        int dropDirection = this.velocity.getDirection() + random.nextInt(80) - 40;
+        double dropSpeed = this.velocity.getSpeed() + 25 + random.nextInt(5);
+        Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
+        return new ItemDrop(itemToDrop, this.pose, itemDropVelocity, amount);
+    }
 
 }
