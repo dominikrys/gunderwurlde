@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Settings;
+import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
@@ -179,6 +180,9 @@ public class GameRenderer implements Runnable {
     public void run() {
         // Set up GameView - change the stage
         setUpRenderer(gameView);
+
+        // When the window is closed by pressing the "x" button, stop rendering
+        stage.setOnCloseRequest(we -> running = false);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -422,11 +426,17 @@ public class GameRenderer implements Runnable {
                 (new Thread(() -> {
                     while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
+                            // Unpause and close the pause window
                             paused = false;
                             backToGameFromPauseMenu();
-                        } else if (pauseMenuController.getQuitToMenuPressed()){
+                        } else if (pauseMenuController.getQuitToMenuPressed()) {
+                            // Set pause to false and stop rendering
                             paused = false;
                             stop();
+
+                            // Go back to play menu with all player info still there
+                            (new PlayMenuController(stage, settings, getCurrentPlayer().getName(),
+                                    getCurrentPlayer().getTeam())).show();
                         }
 
                         //TODO: remove this, doesn't work otherwise for some reason
