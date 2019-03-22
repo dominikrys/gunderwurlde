@@ -420,13 +420,20 @@ public class GameRenderer implements Runnable {
 
                 // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
                 (new Thread(() -> {
-                    while (paused) {
+                    while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
                             paused = false;
                             backToGameFromPauseMenu();
                         } else if (pauseMenuController.getQuitToMenuPressed()){
                             paused = false;
                             stop();
+                        }
+
+                        //TODO: remove this, doesn't work otherwise for some reason
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
                         }
                     }
                 })
