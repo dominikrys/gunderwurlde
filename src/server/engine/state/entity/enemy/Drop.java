@@ -1,8 +1,8 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.state.item.Item;
-
 import java.util.Random;
+
+import server.engine.state.item.Item;
 
 public class Drop {
     
@@ -13,7 +13,7 @@ public class Drop {
     protected final int maxDrop;
     protected Item item;
 
-    Drop(Item item, double dropChance, int maxDrop, int minDrop) {
+    public Drop(Item item, double dropChance, int maxDrop, int minDrop) {
         assert (minDrop >= 0);
         assert (dropChance <= 1 && dropChance > 0);
         if (minDrop > maxDrop)
@@ -24,7 +24,7 @@ public class Drop {
         this.item = item;
     }
 
-    Drop(Item item, double dropChance, int dropAmount) {
+    public Drop(Item item, double dropChance, int dropAmount) {
         this(item, dropChance, dropAmount, dropAmount);
     }
 

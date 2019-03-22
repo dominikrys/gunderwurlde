@@ -97,7 +97,7 @@ public class ProcessGameState extends Thread {
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
         playerViews.add(toPlayerView(hostPlayer));
 
-        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView);
+        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
     }
 
@@ -230,8 +230,6 @@ public class ProcessGameState extends Thread {
 
                 if (currentPlayer.getHealth() <= 0) {
                     LOGGER.info("Player: " + playerID + " has died.");
-                    currentPlayer.setStatus(EntityStatus.DEAD);
-                    currentPlayer.setCurrentAction(ActionList.DEAD);
                     LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
@@ -312,7 +310,7 @@ public class ProcessGameState extends Thread {
 
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
-                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getMass()));
+                        currentPlayer.addNewForce(new Force(request.getMovementDirection(), currentPlayer.getMovementForce()));
                     }
 
                 }
@@ -359,7 +357,11 @@ public class ProcessGameState extends Thread {
             LinkedList<Integer> enemiesToRemove = new LinkedList<>();
 
             HashSet<Pose> playerPoses = new HashSet<>();
-            playerIDs.stream().forEach((p) -> playerPoses.add(livingEntities.get(p).getPose()));
+            for (Integer p : playerIDs) {
+                LivingEntity currentPlayer = livingEntities.get(p);
+                //if (currentPlayer.getStatus() != EntityStatus.DEAD)
+                    playerPoses.add(currentPlayer.getPose());
+            }
 
             for (Integer e : enemyIDs) {
                 Enemy currentEnemy = (Enemy) livingEntities.get(e);
@@ -372,7 +374,7 @@ public class ProcessGameState extends Thread {
                     currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
 
                 int enemyID = currentEnemy.getID();
-                double maxMovementForce = Physics.getForce(currentEnemy.getAcceleration(), 0, currentEnemy.getMass()).getForce();
+                double maxMovementForce = currentEnemy.getMovementForce();
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
@@ -391,14 +393,18 @@ public class ProcessGameState extends Thread {
                         case AOE:
                             AoeAttack aoeAttack = (AoeAttack) a;
                             LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
+                            LinkedHashSet<Integer> affectedPlayers = new LinkedHashSet<>();
 
                             for (int[] tileCords : tilesOn) {
                                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                                 LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
+                                    if (affectedPlayers.contains(playerID))
+                                        continue;
                                     Player playerBeingChecked = (Player) livingEntities.get(playerID);
                                     if (haveCollided(aoeAttack, playerBeingChecked)) {
+                                        affectedPlayers.add(playerID);
                                         playerBeingChecked.damage(aoeAttack.getDamage());
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.addNewForce(aoeAttack.getForce(playerBeingChecked.getPose(), currentEnemy.getLocation()));
@@ -435,7 +441,7 @@ public class ProcessGameState extends Thread {
 
                 currentEnemy.setCurrentAction(ai.getActionState());
 
-                if (currentEnemy.getHealth() > 0 && currentEnemy.getStatus() != EntityStatus.DEAD) {
+                if (currentEnemy.getStatus() != EntityStatus.DEAD) {
                     livingEntities.put(enemyID, currentEnemy);
                 } else {
                     enemiesToRemove.add(enemyID);
@@ -506,20 +512,8 @@ public class ProcessGameState extends Thread {
                                     }
                                     removed = true;
 
-                                    if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
-                                        enemyIDs.remove(entityID);
-                                        livingEntities.remove(entityID);
-
-                                        activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
-
-                                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
-                                        for (int[] enemyTileCords : enemyTilesOn) {
-                                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
-                                        }
-
-                                        Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
-
-                                        LinkedHashSet<Drop> drops = ((Enemy) entityBeingChecked).getDrops();
+                                    if (entityBeingChecked.damage(currentProjectile.getDamage())) {
+                                        LinkedHashSet<Drop> drops = entityBeingChecked.getDrops();
                                         for (Drop d : drops) {
                                             int dropAmount = d.getDrop();
                                             if (dropAmount != 0) {
@@ -541,6 +535,23 @@ public class ProcessGameState extends Thread {
 
                                             }
                                         }
+
+                                        if (entityBeingChecked instanceof Enemy) {
+                                            enemyIDs.remove(entityID);
+                                            livingEntities.remove(entityID);
+
+                                            activeZones.get(entityBeingChecked.getZoneID()).entityRemoved();
+
+                                            LinkedHashSet<int[]> enemyTilesOn = tilesOn(entityBeingChecked);
+                                            for (int[] enemyTileCords : enemyTilesOn) {
+                                                tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(entityID);
+                                            }
+
+                                            Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
+                                        } else {
+                                            livingEntities.put(entityID, entityBeingChecked);
+                                        }
+
                                     } else {
                                         livingEntities.put(entityID, entityBeingChecked);
                                     }
@@ -761,7 +772,28 @@ public class ProcessGameState extends Thread {
                 playersView.add(toPlayerView((Player) livingEntities.get(p)));
             }
 
-            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView);
+            // check win condition
+            Team remainingTeam = Team.NONE;
+            boolean gameOver = true;
+            if (playerIDs.size() != 1) {
+                for (Integer p : playerIDs) {
+                    LivingEntity playerBeingChecked = livingEntities.get(p);
+                    if (playerBeingChecked.getStatus() != EntityStatus.DEAD) {
+                        Team playerTeam = playerBeingChecked.getTeam();
+                        if (remainingTeam != playerTeam && remainingTeam != Team.NONE) {
+                            gameOver = false;
+                            break;
+                        } else {
+                            remainingTeam = playerTeam;
+                        }
+                    }
+                }
+
+                if (!gameOver)
+                    remainingTeam = Team.NONE;
+            }
+
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView, remainingTeam);
             handler.updateGameView(view);
         }
         LOGGER.info("Engine stopped!");
