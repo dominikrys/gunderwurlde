@@ -48,8 +48,7 @@ public class Main extends Application {
         stage.setOnCloseRequest(we -> {
             stage.close();
 
-            // TODO: remove this
-            //System.exit(0);
+            System.exit(0);
         });
 
         // Create the main menu and show it

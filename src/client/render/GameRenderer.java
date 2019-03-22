@@ -1,7 +1,6 @@
 package client.render;
 
 import client.Settings;
-import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
@@ -181,6 +180,9 @@ public class GameRenderer implements Runnable {
     public void run() {
         // Set up GameView - change the stage
         setUpRenderer(gameView);
+
+        // When the window is closed by pressing the "x" button, stop rendering
+        stage.setOnCloseRequest(we -> running = false);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -427,7 +429,7 @@ public class GameRenderer implements Runnable {
                             // Unpause and close the pause window
                             paused = false;
                             backToGameFromPauseMenu();
-                        } else if (pauseMenuController.getQuitToMenuPressed()){
+                        } else if (pauseMenuController.getQuitToMenuPressed()) {
                             // Set pause to false and stop rendering
                             paused = false;
                             stop();
