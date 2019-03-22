@@ -324,19 +324,18 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.facingExists() || request.movementExists()) {
-                    int facingDirection = playerPose.getDirection();
+                if (request.facingExists()) {
+                    currentPlayer.setPose(new Pose(playerPose, request.getFacing()));
+                }
 
-                    if (request.facingExists()) {
-                        facingDirection = request.getFacing();
-                        currentPlayer.setPose(new Pose(playerPose, facingDirection));
-                    }
-
-                    if (request.movementExists()) {
-                        currentPlayer.setMoving(true);
-                        currentPlayer.addNewForce(new Force(request.getMovementDirection(), currentPlayer.getMovementForce()));
-                    }
-
+                if (request.movementExists()) {
+                    currentPlayer.setMoving(true);
+                    currentPlayer.addNewForce(new Force(request.getMovementDirection(), currentPlayer.getMovementForce()));
+                } else if (currentPlayer.getVelocity().getSpeed() > 1) {
+                    int slowDirection = currentPlayer.getVelocity().getDirection() - 180;
+                    if (slowDirection < 0)
+                        slowDirection += 360;
+                    currentPlayer.addNewForce(new Force(slowDirection, currentPlayer.getMovementForce()));
                 }
 
                 if (request.selectItemAtExists()) {

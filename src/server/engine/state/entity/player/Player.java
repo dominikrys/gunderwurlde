@@ -18,11 +18,11 @@ import shared.lists.Team;
 
 public class Player extends LivingEntity {
     public static final int DEFAULT_HEALTH = 20;
-    public static final double DEFAULT_MOVEMENT_FORCE = 30;
+    public static final double DEFAULT_MOVEMENT_FORCE = 18;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
-    public static final double DEFAULT_MASS = 3;
+    public static final double DEFAULT_MASS = 2;
 
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
