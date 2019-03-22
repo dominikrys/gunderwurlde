@@ -1,9 +1,11 @@
 package server.engine.state.entity.enemy;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import server.engine.ai.EnemyAI;
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
 import shared.lists.Team;
@@ -37,8 +39,15 @@ public abstract class Enemy extends LivingEntity {
     }
 
     @Override
-    public LinkedHashSet<Drop> getDrops() {
-        return drops;
+    public LinkedList<ItemDrop> getDrops() {
+        LinkedList<ItemDrop> itemsToDrop = new LinkedList<>();
+        for (Drop d : drops) {
+            int dropAmount = d.getDrop();
+            if (dropAmount != 0) {
+                itemsToDrop.add(toItemDrop(d.getItem(), dropAmount));
+            }
+        }
+        return itemsToDrop;
     }
 
     @Override
