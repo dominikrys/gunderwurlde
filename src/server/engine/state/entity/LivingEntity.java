@@ -17,7 +17,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
-    protected double acceleration;
+    protected double movementForce;
     protected boolean takenDamage;
     protected boolean moving;
     protected Velocity velocity;
@@ -25,11 +25,11 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     protected double mass;
     protected StatusEffect effect;
 
-    protected LivingEntity(int maxHealth, double acceleration, EntityList entityListName, int size, double mass) {
+    protected LivingEntity(int maxHealth, double movementForce, EntityList entityListName, int size, double mass) {
         super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.acceleration = acceleration;
+        this.movementForce = movementForce;
         this.entityListName = entityListName;
         this.id = nextID++;
         this.takenDamage = false;
@@ -72,12 +72,12 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         this.moving = moving;
     }
 
-    public double getAcceleration() {
-        return acceleration;
+    public double getMovementForce() {
+        return movementForce + (mass * 50);
     }
 
-    public void setAcceleration(double acceleration) {
-        this.acceleration = acceleration;
+    public void setMovementForce(double movementForce) {
+        this.movementForce = movementForce;
     }
 
     @Override

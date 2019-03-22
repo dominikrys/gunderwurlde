@@ -42,7 +42,7 @@ public abstract class Enemy extends LivingEntity {
 
     @Override
     public Entity makeCopy(){
-        return new Zombie(entityListName, maxHealth, acceleration, size, drops, scoreOnKill, getNewAI(), mass);
+        return new Zombie(entityListName, maxHealth, movementForce, size, drops, scoreOnKill, getNewAI(), mass);
     }
 
     @Override

@@ -10,14 +10,13 @@ import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.Shotgun;
 import server.engine.state.item.weapon.gun.Smg;
-import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
 public class Player extends LivingEntity {
     public static final int DEFAULT_HEALTH = 20;
-    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
+    public static final double DEFAULT_MOVEMENT_FORCE = 30;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
@@ -43,7 +42,7 @@ public class Player extends LivingEntity {
     private boolean paused;
 
     public Player(Team team, String name) {
-        super(DEFAULT_HEALTH, DEFAULT_ACCELERATION, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
+        super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new Shotgun()); // TODO remove testing only

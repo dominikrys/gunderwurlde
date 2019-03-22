@@ -5,13 +5,12 @@ import java.util.LinkedHashSet;
 import server.engine.ai.EnemyAI;
 import server.engine.ai.MachineGunnerAI;
 import server.engine.state.item.weapon.gun.Ammo;
-import server.engine.state.map.tile.Tile;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class MachineGunner extends Zombie {
     public static final int DEFAULT_HEALTH = 15;
-    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 0.94;
+    public static final double DEFAULT_MOVEMENT_FORCE = 2;
     public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize()/2;
     public static final int DEFAULT_SCORE_ON_KILL = 100;
     public static final double DEFAULT_MASS = 10;
@@ -28,7 +27,8 @@ public class MachineGunner extends Zombie {
     private final int TURN_RATE;
 
     public MachineGunner(int attackWidth, int bulletsPerAttack, int turnRate) {
-        super(EntityList.MACHINE_GUNNER, DEFAULT_HEALTH, DEFAULT_ACCELERATION, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new MachineGunnerAI(attackWidth, bulletsPerAttack, turnRate), DEFAULT_MASS);
+        super(EntityList.MACHINE_GUNNER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL,
+                new MachineGunnerAI(attackWidth, bulletsPerAttack, turnRate), DEFAULT_MASS);
 
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;

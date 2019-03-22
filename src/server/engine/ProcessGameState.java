@@ -312,7 +312,7 @@ public class ProcessGameState extends Thread {
 
                     if (request.movementExists()) {
                         currentPlayer.setMoving(true);
-                        currentPlayer.addNewForce(Physics.getForce(currentPlayer.getAcceleration(), request.getMovementDirection(), currentPlayer.getMass()));
+                        currentPlayer.addNewForce(new Force(request.getMovementDirection(), currentPlayer.getMovementForce()));
                     }
 
                 }
@@ -376,7 +376,7 @@ public class ProcessGameState extends Thread {
                     currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
 
                 int enemyID = currentEnemy.getID();
-                double maxMovementForce = Physics.getForce(currentEnemy.getAcceleration(), 0, currentEnemy.getMass()).getForce();
+                double maxMovementForce = currentEnemy.getMovementForce();
                 EnemyAI ai = currentEnemy.getAI();
 
                 if (!ai.isProcessing())
@@ -395,14 +395,18 @@ public class ProcessGameState extends Thread {
                         case AOE:
                             AoeAttack aoeAttack = (AoeAttack) a;
                             LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
+                            LinkedHashSet<Integer> affectedPlayers = new LinkedHashSet<>();
 
                             for (int[] tileCords : tilesOn) {
                                 Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                                 LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
 
                                 for (Integer playerID : playersOnTile) {
+                                    if (affectedPlayers.contains(playerID))
+                                        continue;
                                     Player playerBeingChecked = (Player) livingEntities.get(playerID);
                                     if (haveCollided(aoeAttack, playerBeingChecked)) {
+                                        affectedPlayers.add(playerID);
                                         playerBeingChecked.damage(aoeAttack.getDamage());
                                         playerBeingChecked.setTakenDamage(true);
                                         playerBeingChecked.addNewForce(aoeAttack.getForce(playerBeingChecked.getPose(), currentEnemy.getLocation()));
