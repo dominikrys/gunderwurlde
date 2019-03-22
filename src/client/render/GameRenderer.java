@@ -448,6 +448,7 @@ public class GameRenderer implements Runnable {
      * Hide the pause money and apply its settings
      */
     private void backToGameFromPauseMenu() {
+        // Hide pause menu
         pausedOverlay.setVisible(false);
         stage.getScene().getRoot().setCursor(Cursor.NONE);
         cursorPane.setVisible(true);
