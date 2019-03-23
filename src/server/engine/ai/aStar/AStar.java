@@ -5,7 +5,6 @@ import server.engine.ai.enemyAI.AStarUsingEnemy;
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,15 +36,12 @@ public class AStar extends Thread {
         enemyTile = PoseToPairOfTileCoords(startPose);
         playerTile = PoseToPairOfTileCoords(endPose);
 
-//        System.out.println("\n\n\n\n" + findNodeToAddToWalkAroundSolidTile(new Node(19, 13), new Node(18, 14)) +
-//                "\n\n\n\n");
-//        for (Tile[] arr :
-//                this.tiles) {
-//            System.out.println(Arrays.toString(arr));
-//        }
-
-        myEnemy.setTilePath(generatePoseDirectionPath(addNodesForCorners(aStar(enemyTile, playerTile))));
-
+        LinkedList<Node> AStartPath = aStar(enemyTile, playerTile);
+        if(AStartPath != null) {
+            myEnemy.setTilePath(generatePoseDirectionPath(addNodesForCorners(AStartPath)));
+        }else{
+            myEnemy.setTilePath(null);
+        }
     }
 
     private LinkedList<Node> addNodesForCorners(LinkedList<Node> nodePath) {
@@ -68,11 +64,6 @@ public class AStar extends Thread {
 
     private Node findNodeToAddToWalkAroundSolidTile(Node node1, Node node2) {
         Node nodeToAdd = null;
-//
-//        System.out.println((node1.getIntX() + 1 == node2.getIntY()) && (node1.getIntY() + 1 == node2.getIntY()));
-//
-//        System.out.println("fist stm: " + (node1.getIntX() + 1 == node2.getIntX()) + " 2nd stm: "
-//                + (node1.getIntY() + 1 == node2.getIntY()));
 
         if ((node1.getX() + 1 == node2.getX()) && (node1.getY() - 1 == node2.getY())) {
             //  2
@@ -96,9 +87,7 @@ public class AStar extends Thread {
     }
     //TODO figure out a better name
     private Node takeNotSolid2(Node node, Node nodeToAdd) {
-//        System.out.println(node);
         int[] tile = {node.getIntY() - 1, node.getIntX()};
-//        System.out.println("upper right - Tile[0]: " + tile[0] + " Tile[1]: " + tile[1]);
         if (!EnemyAI.tileNotSolid(tile, tiles)) {
             //1 *
             //  2
@@ -106,7 +95,6 @@ public class AStar extends Thread {
         } else {
             tile[0] = (int) node.getY();
             tile[1] = (int) node.getX() - 1;
-//            System.out.println("lower left Tile[0]: " + tile[0] + " Tile[1]: " + tile[1]);
             if (!EnemyAI.tileNotSolid(tile, tiles)) {
                 //1
                 //* 2
@@ -140,7 +128,6 @@ public class AStar extends Thread {
     }
 
     private LinkedList<Node> generateNodePath(PriorityQueue<Node> path) {
-//        System.out.println(path.size());
         List<Node> list = new ArrayList<>(path);
         LinkedList<Node> finalPath = new LinkedList<>();
         LinkedList<Node> possibleNodesToAdd = new LinkedList<>();
@@ -152,19 +139,27 @@ public class AStar extends Thread {
         }
 
         if (currentNode == null) {
+            System.out.println("This shouldn't ever happen. AStar finished but didn't return the full path.");
             return null;
         }
-        finalPath.add(currentNode);
 
+        finalPath.add(currentNode);
+        System.out.println("Nodes that are still added:");
         while (!currentNode.getCoordinates().equals(enemyTile)) {
             for (Node node : list) {
                 if (node.getCostToGo() == currentNode.getCostToGo() - 1 && Node.nodesAdjacent(node, currentNode)) {
                     possibleNodesToAdd.add(node);
                 }
             }
-            currentNode = findBestNodeToAdd(possibleNodesToAdd, currentNode);
-            finalPath.add(currentNode);
-            possibleNodesToAdd.clear();
+            if(possibleNodesToAdd.size() != 0) {
+                currentNode = findBestNodeToAdd(possibleNodesToAdd, currentNode);
+                finalPath.add(currentNode);
+                System.out.println(currentNode);
+                possibleNodesToAdd.clear();
+            }else{
+                System.out.println("no possible nodes to add");
+                break;
+            }
         }
 
         return finalPath;
@@ -236,19 +231,6 @@ public class AStar extends Thread {
         // To store every opened node
         PriorityQueue<Node> opened = openNodes(startCoords, 0d);
 
-//        startWriting("Start coords: " + startCoords);
-//        appendToLog("End coords: " + endCoords);
-
-
-//        appendToLog("\ninit nodes");
-//        printOut(opened);
-//
-//        try {
-//            TimeUnit.SECONDS.sleep(100);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         //TODO do I need this?
         // You cannot expand start node
         closedCoords.add(startCoords);
@@ -278,22 +260,22 @@ public class AStar extends Thread {
 //            appendToLog("Nowhere to go for the enemy!");
             System.out.println("Nowhere to go for the enemy!");
             e.printStackTrace();
-            break;
+            return null;
         }
 
-        // Shorten the path by finding shortcuts
-//        closedCoords  = removeLeafs(closedCoords);
-//        System.out.println("Path Found!");
-
+//        try {
+//            printOut(closedNodes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return generateNodePath(closedNodes);
     }
 
     private void printOut(PriorityQueue<Node> queue) throws IOException {
         PriorityQueue<Node> queueToPrint = new PriorityQueue<>(queue);
 
-        appendToLog("\n\nOpen nodes");
         while (queueToPrint.size() != 0) {
-            appendToLog("\n" + queueToPrint.poll().toString());
+            System.out.println((queueToPrint.poll().toString()));
         }
     }
 

@@ -86,6 +86,7 @@ public abstract class EnemyAI {
         boolean tileNotSolid;
         int mapXDim = tileMap.length;
         int mapYDim = tileMap[0].length;
+
         try {
             tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
                     !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
@@ -153,7 +154,7 @@ public abstract class EnemyAI {
     // and wider acceptance range. But this would make it less precise. But maybe that's ok.
 
     // Left the prints for debugging if it's ever needed
-    public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap) {
+    public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap){
         int[] currentTile;
         Pose currentPose = startPose;
 //        System.out.println("\n\n\n\n\nstartPose:" + currentPose);
@@ -171,11 +172,11 @@ public abstract class EnemyAI {
 //                    e.printStackTrace();
 //                }
 
-            if (!tileNotSolid(currentTile, tileMap)) {
+            if(!tileNotSolid(currentTile, tileMap)) {
                 return false;
             }
 
-        } while (!Pose.compareLocation(currentPose, endPose, 15));
+        }while(!Pose.compareLocation(currentPose, endPose, 15));
 
         return true;
     }
