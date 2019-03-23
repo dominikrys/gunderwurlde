@@ -77,7 +77,7 @@ public abstract class Projectile extends Entity {
     public abstract Projectile createFor(Pose p, Team team);
 
     public Force getImpactForce() {
-        return new Force(pose.getDirection(), Math.pow(1.2, damage) * FORCE_PER_DMG);
+        return new Force(pose.getDirection(), Math.pow(damage, 1.2) * FORCE_PER_DMG);
     }
 
     public boolean isRemoved(Tile tile, Location tileLocation) {

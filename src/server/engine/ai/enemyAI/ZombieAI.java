@@ -1,20 +1,20 @@
 package server.engine.ai.enemyAI;
 
 import server.engine.ai.AIAction;
+import java.util.Random;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.physics.Force;
 import shared.Constants;
+import shared.Location;
 import shared.lists.ActionList;
-
-import java.util.Random;
-
 public class ZombieAI extends EnemyAI {
 
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     boolean randomizePath = true;
     private final int DISTANCE_TO_PLAYER_FOR_ATTACK;
+    protected Location attackLocation;
 
     public ZombieAI() {
         super();
@@ -40,11 +40,11 @@ public class ZombieAI extends EnemyAI {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
+            attackLocation = closestPlayer; // Prevents teleporting attacks onto the player
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;
     }
-
 
     protected Force generateMovementForce(){
         int angleToMove = getAngle(pose, closestPlayer);

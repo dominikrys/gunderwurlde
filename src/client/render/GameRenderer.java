@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Settings;
+import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
@@ -121,6 +122,11 @@ public class GameRenderer implements Runnable {
     private boolean spectator;
 
     /**
+     * Controller for the pause menu
+     */
+    private PauseMenuController pauseMenuController;
+
+    /**
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -174,6 +180,9 @@ public class GameRenderer implements Runnable {
     public void run() {
         // Set up GameView - change the stage
         setUpRenderer(gameView);
+
+        // When the window is closed by pressing the "x" button, stop rendering
+        stage.setOnCloseRequest(we -> running = false);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -255,13 +264,25 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        // Load pause FXML
         try {
-            pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            // Load pause FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            pausedOverlay = fxmlLoader.load();
+
+            // Set background - inline instead of CSS as then transparency works
+            pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
+            pausedOverlay.setSpacing(15);
+            pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
+
+            // Set controller and update its settings value
+            pauseMenuController = fxmlLoader.getController();
+            pauseMenuController.initialise(settings);
         } catch (Exception e) {
+            System.out.println("Couldn't load the pause menu .FXML!");
             e.printStackTrace();
         }
 
+        // Set pause array to the centre of the screen
         pausedOverlay.setAlignment(Pos.CENTER);
         pausedOverlay.setVisible(false);
     }
@@ -303,6 +324,31 @@ public class GameRenderer implements Runnable {
      * Render gameview
      */
     private void renderGameView() {
+        // Check if should be in spectator mode or not
+        checkSpectator();
+
+        // Render map
+        mapCanvas.renderMap(gameView, rendererResourceLoader);
+
+        // Render entities onto canvas
+        mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
+
+        // Check if end of game and if so, display end message
+        if (gameView.getWinningTeam() != null) {
+            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+        }
+
+        // Update HUD
+        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
+                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
+    }
+
+    /**
+     * Check if the player should be in spectator mode or not and set up appropriate code
+     */
+    private void checkSpectator() {
         // Check if player has died, in which case give them a free camera
         if (getCurrentPlayer().getStatus() == EntityStatus.DEAD) {
             if (!spectator) {
@@ -334,17 +380,6 @@ public class GameRenderer implements Runnable {
             // Center camera on player
             centerCamera();
         }
-
-        // Render map
-        mapCanvas.renderMap(gameView, rendererResourceLoader);
-
-        // Render entities onto canvas
-        mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
-
-        // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
-                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
     }
 
     /**
@@ -402,15 +437,57 @@ public class GameRenderer implements Runnable {
 
             // Show the pause overlay and perform any other necessary actions
             if (paused) {
+                pauseMenuController.initialise(settings);
                 pausedOverlay.setVisible(true);
                 stage.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 cursorPane.setVisible(false);
+
+                // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
+                (new Thread(() -> {
+                    while (paused && running) {
+                        if (pauseMenuController.getBackToGamePressed()) {
+                            // Unpause and close the pause window
+                            paused = false;
+                            backToGameFromPauseMenu();
+                        } else if (pauseMenuController.getQuitToMenuPressed()) {
+                            // Set pause to false and stop rendering
+                            paused = false;
+                            stop();
+
+                            // Go back to play menu with all player info still there
+                            (new PlayMenuController(stage, settings, getCurrentPlayer().getName(),
+                                    getCurrentPlayer().getTeam())).show();
+                        }
+
+                        //TODO: remove this, doesn't work otherwise for some reason
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                })
+                ).start();
             } else {
-                pausedOverlay.setVisible(false);
-                stage.getScene().getRoot().setCursor(Cursor.NONE);
-                cursorPane.setVisible(true);
+                backToGameFromPauseMenu();
             }
         }
+    }
+
+    /**
+     * Hide the pause money and apply its settings
+     */
+    private void backToGameFromPauseMenu() {
+        // Hide pause menu
+        pausedOverlay.setVisible(false);
+        stage.getScene().getRoot().setCursor(Cursor.NONE);
+        cursorPane.setVisible(true);
+
+        // Get settings from controller and apply them
+        settings = pauseMenuController.getSettings();
+
+        // Save settings to disk
+        settings.saveToDisk();
     }
 
     /**
