@@ -4,7 +4,7 @@ import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityStatus;
 
 public class FreezeEffect extends StatusEffect {
-    public static long DEFAULT_DURATION = 2000;
+    public static long DEFAULT_DURATION = 3000;
 
     protected double oldMovementForce;
 
@@ -22,15 +22,15 @@ public class FreezeEffect extends StatusEffect {
         e = super.applyEffect(e);
         if (e.getStatus() == status) {
             if (oldMovementForce == -1)
-                oldMovementForce = e.getMovementForce();
-            e.setMovementForce(oldMovementForce * 0.9);
+                oldMovementForce = e.getMovementForceAddition();
+            e.setMovementForceAddition(oldMovementForce * 0.99);
         }
         return e;
     }
 
     @Override
     public LivingEntity clearEffect(LivingEntity e) {
-        e.setMovementForce(oldMovementForce);
+        e.setMovementForceAddition(oldMovementForce);
         return e;
     }
 

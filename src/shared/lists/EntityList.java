@@ -15,7 +15,18 @@ public enum EntityList {
     PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    // TODO
     SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    PLASMA_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    MACHINE_GUN("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    CRYSTAL_LAUNCHER("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    FIRE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    ICE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    RING_OF_DEATH("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    HEAVY_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    ASSAULT_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    BUCKSHOT_SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
+    ROCKET_LAUNCHER("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
@@ -109,6 +120,10 @@ public enum EntityList {
      * Other renderable entities - some are items
      */
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
+    ENERGY("file:assets/img/other/ammo_clip.png"), // TODO maybe an electric bolt or something?
+    MAGIC_ESSENCE("file:assets/img/other/ammo_clip.png"), // TODO a glowing orb or something?
+    HEAVY_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
+    ROCKET_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
