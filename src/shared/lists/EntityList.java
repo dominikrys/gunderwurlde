@@ -18,6 +18,7 @@ public enum EntityList {
     // TODO
     SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
     PLASMA_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    MACHINE_GUN("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
 
     /**
      * Player standing

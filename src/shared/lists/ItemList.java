@@ -13,6 +13,7 @@ public enum ItemList {
     SMG(EntityList.SMG, null),
     SNIPER_RIFLE(EntityList.SNIPER_RIFLE, null),
     PLASMA_PISTOL(EntityList.PLASMA_PISTOL, null),
+    MACHINE_GUN(EntityList.MACHINE_GUN, null),
 
     // Ammo
     BASIC_AMMO(EntityList.AMMO_CLIP, AmmoList.BASIC_AMMO),
