@@ -13,6 +13,7 @@ import shared.Constants;
 import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+import shared.lists.Team;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
@@ -306,6 +307,7 @@ public class HUD extends BorderPane {
 
     /**
      * Display message after played dies
+     *
      * @param fontManaspace50 Font of size 50
      * @param fontManaspace18 Font of size 18
      */
@@ -330,6 +332,56 @@ public class HUD extends BorderPane {
         VBox deathMessageBox = new VBox(gameOverLabel, spectatorHintLabel);
         deathMessageBox.setAlignment(Pos.CENTER);
         this.setCenter(deathMessageBox);
+    }
+
+    /**
+     * Displays win message
+     *
+     * @param fontManaspace50 Font used by game of size 50
+     * @param fontManaspace28 Font used by game of size 28
+     * @param winningTeam The winning team
+     */
+    public void displayWinMessage(Font fontManaspace50, Font fontManaspace28, Team winningTeam) {
+        // Message already displayed, return
+        if (this.getBottom() != null) {
+            return;
+        }
+
+        // "Game Over" text
+        Label gameWinLabel = new Label("Game Over!");
+        gameWinLabel.setFont(fontManaspace50);
+        gameWinLabel.setTextFill(Color.RED);
+        gameWinLabel.setPadding(new Insets(10, 10, 10, 10));
+        gameWinLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+                new CornerRadii(0), new Insets(0, 0, 0, 0))));
+
+        // Label with which team won
+        Label teamLabel = new Label("Winning team: " + winningTeam.toString());
+        teamLabel.setFont(fontManaspace28);
+        switch (winningTeam) {
+            case RED:
+                teamLabel.setTextFill(Color.rgb(255, 0, 47));
+                break;
+            case BLUE:
+                teamLabel.setTextFill(Color.rgb(66, 173, 244));
+                break;
+            case GREEN:
+                teamLabel.setTextFill(Color.rgb(90, 240, 41));
+                break;
+            case YELLOW:
+                teamLabel.setTextFill(Color.rgb(232, 232, 0));
+                break;
+            default:
+                teamLabel.setTextFill(Color.BLACK);
+        }
+        teamLabel.setPadding(new Insets(10, 10, 10, 10));
+        teamLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+                new CornerRadii(0), new Insets(0, 0, 0, 0))));
+
+        // Add labels to VBox and display VBox
+        VBox winMessage = new VBox(gameWinLabel, teamLabel);
+        winMessage.setAlignment(Pos.CENTER);
+        this.setBottom(winMessage);
     }
 
     /**

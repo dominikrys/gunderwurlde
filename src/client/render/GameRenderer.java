@@ -273,6 +273,11 @@ public class GameRenderer implements Runnable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
             pausedOverlay = fxmlLoader.load();
 
+            // Set background - inline instead of CSS as then transparency works
+            pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
+            pausedOverlay.setSpacing(15);
+            pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
+
             // Set controller and update its settings value
             pauseMenuController = fxmlLoader.getController();
             pauseMenuController.initialise(settings);
@@ -281,6 +286,7 @@ public class GameRenderer implements Runnable {
             e.printStackTrace();
         }
 
+        // Set pause array to the centre of the screen
         pausedOverlay.setAlignment(Pos.CENTER);
         pausedOverlay.setVisible(false);
     }
@@ -322,6 +328,31 @@ public class GameRenderer implements Runnable {
      * Render gameview
      */
     private void renderGameView() {
+        // Check if should be in spectator mode or not
+        checkSpectator();
+
+        // Render map
+        mapCanvas.renderMap(gameView, rendererResourceLoader);
+
+        // Render entities onto canvas
+        mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
+
+        // Check if end of game and if so, display end message
+        if (gameView.getWinningTeam() != null) {
+            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+        }
+
+        // Update HUD
+        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
+                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
+    }
+
+    /**
+     * Check if the player should be in spectator mode or not and set up appropriate code
+     */
+    private void checkSpectator() {
         // Check if player has died, in which case give them a free camera
         if (getCurrentPlayer().getStatus() == EntityStatus.DEAD) {
             if (!spectator) {
@@ -353,17 +384,6 @@ public class GameRenderer implements Runnable {
             // Center camera on player
             centerCamera();
         }
-
-        // Render map
-        mapCanvas.renderMap(gameView, rendererResourceLoader);
-
-        // Render entities onto canvas
-        mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
-
-        // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
-                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
     }
 
     /**
