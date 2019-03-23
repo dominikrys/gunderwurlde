@@ -147,7 +147,6 @@ public class Server extends Thread implements HasEngine {
                         joinGameSocket.send(packet);
                     }
                     else{
-                        System.out.println("Wrong message");
                         continue;
                     }
                     int oldJoinedCount = joinedPlayers;
