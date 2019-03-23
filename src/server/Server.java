@@ -94,8 +94,6 @@ public class Server extends Thread implements HasEngine {
             sendPort = lowestavailableport;
             listenPort = lowestavailableport+1;
             updatedLowestAvailablePort();
-            System.out.println("S: ListenPort: " + listenPort);
-            System.out.println("S: SendPort: " + sendPort);
             // Start by setting up the threads that will be used during the actual game
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
@@ -104,8 +102,6 @@ public class Server extends Thread implements HasEngine {
             listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             updatedLowestAvailableAddress();
-            System.out.println("C: ListenAddress: " + listenAddress.toString());
-            System.out.println("C: SendAddress " + senderAddress.toString());
             System.out.println("S: ports and addresses set");
             isThreadsUp = true;
 
@@ -132,7 +128,6 @@ public class Server extends Thread implements HasEngine {
                     packet = new DatagramPacket(buffer, buffer.length);
                     // Wait to receive requests
                     joinGameSocket.receive(packet);
-                    System.out.println("Request received");
                     // When request is received shorten to only the message and translate to string
                     byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
                     String recievedString = new String(receivedBytes);

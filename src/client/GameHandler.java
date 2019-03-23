@@ -59,10 +59,8 @@ public class GameHandler extends Thread {
                 // Code for establishing local server
                 if (!serverStarted) {
                     server = new Server(map, playerName, team, 1, false);
-                    System.out.println("GH: server started ");
                     serverStarted = true;
                     client = new Client(stage, this, settings, 0);
-                    System.out.println("Starting client");
                     while(!server.isThreadsUp()){
                         Thread.yield();
                     }
@@ -75,11 +73,8 @@ public class GameHandler extends Thread {
                     System.out.println("Handler starting server");
                     server = new Server(MapList.MEADOW, playerName, team, numPlayers, true);
                     serverStarted = true;
-                    System.out.println("Handler creating client");
                     client = new Client(stage, this, settings, 0);
-                    System.out.println("Waiting for the go");
                     client.start();
-                    System.out.println("Host setup and ready");
                 }
                 // Code for setting up server, joining it, and waiting for players
                 break;
@@ -88,9 +83,7 @@ public class GameHandler extends Thread {
                 if(!serverStarted) {
                     serverStarted = true;
                     client = new Client(stage, this, settings, address, port, playerName, team);
-                    System.out.println("Waiting for the go");
                     client.start();
-                    System.out.println("Client received the go");
                     // Code for joining some server
                 }
                 break;

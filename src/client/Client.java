@@ -65,15 +65,10 @@ public class Client extends Thread {
            joinedGame = true;
            this.listenPort = lowestAvailablePort;
            this.sendPort = lowestAvailablePort + 1;
-           System.out.println("C: ListenPort: " + listenPort);
-           System.out.println("C: SendPort: " + sendPort);
            updateLowestAvailablePort();
            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
            updateLowestAvailableAddress();
-           System.out.println("C: ListenAddress: " + listenAddress.toString());
-           System.out.println("C: SendAddress " + senderAddress.toString());
-           System.out.println("C: addresses and ports set");
            this.stage = stage;
            this.handler = handler;
            this.settings = settings;
