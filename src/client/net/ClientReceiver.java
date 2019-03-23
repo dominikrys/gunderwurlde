@@ -109,4 +109,7 @@ public class ClientReceiver extends Thread {
             e.printStackTrace();
         }
     }
+    public void setRunning(boolean value){
+        running = value;
+    }
 }

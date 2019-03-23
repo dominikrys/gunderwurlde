@@ -1,5 +1,6 @@
 package client.render;
 
+import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
@@ -122,14 +123,11 @@ public class GameRenderer implements Runnable {
     private boolean spectator;
 
     /**
-<<<<<<< HEAD
-=======
      * Controller for the pause menu
      */
     private PauseMenuController pauseMenuController;
 
     /**
->>>>>>> dev
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -137,12 +135,15 @@ public class GameRenderer implements Runnable {
      * @param playerID        ID of player for whom this renderer is for
      * @param settings        Settings object
      */
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
+
+    private Client handler;
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.settings = settings;
+        this.handler = handler;
 
         // Set paused to false
         paused = false;
@@ -435,6 +436,7 @@ public class GameRenderer implements Runnable {
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
                             // Set pause to false and stop rendering
                             paused = false;
+                            handler.stopThreads();
                             stop();
 
                             // Go back to play menu with all player info still there

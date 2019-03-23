@@ -39,6 +39,7 @@ public class ClientSender extends Thread {
         while (running) {
             Thread.yield();
         }
+        System.out.println("Closing ClientSender");
     }
 
     public void send(Integer[] action) {
@@ -70,5 +71,9 @@ public class ClientSender extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRunning(boolean value){
+        running = value;
     }
 }

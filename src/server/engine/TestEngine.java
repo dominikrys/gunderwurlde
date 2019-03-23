@@ -59,7 +59,7 @@ public class TestEngine extends Application implements HasEngine {
         while (firstRender) {
             if (view != null) {
                 stage.show();
-                rend = new GameRenderer(stage, view, 0, new Settings());
+                //rend = new GameRenderer(stage, view, 0, new Settings(), );
                 firstRender = false;
                 rend.run();
                 System.out.println("Renderer started");

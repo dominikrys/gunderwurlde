@@ -17,8 +17,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public class Client extends Thread {
-    private static final int LISTENPORT = 4444;
-    private static final int SENDPORT = 4445;
+
+
     private MulticastSocket listenSocket;
     private MulticastSocket sendSocket;
     private MulticastSocket joinGameSocket;
@@ -143,13 +143,18 @@ public class Client extends Thread {
         this.view = view;
         if (firstView) {
             firstView = false;
-            renderer = new GameRenderer(stage, this.view, playerID, settings);
+            renderer = new GameRenderer(stage, this.view, playerID, settings, this);
             renderer.getKeyboardHandler().setGameHandler(handler);
             renderer.getMouseHandler().setGameHandler(handler);
             renderer.run();
         } else {
             renderer.updateGameView(this.view);
         }
+    }
+
+    public void stopThreads(){
+        sender.setRunning(false);
+        receiver.setRunning(false);
     }
 
     public void joinGame() {
@@ -216,7 +221,8 @@ public class Client extends Thread {
                 }
             }
         } catch (UnknownHostException e) {
-            //e.printStackTrace();
+
+            e.printStackTrace();
             System.out.println("Multiplayer not supported locally");
         } catch (SocketException e) {
             e.printStackTrace();
@@ -230,7 +236,5 @@ public class Client extends Thread {
     }
 
     public void close() {
-        sender.stopRunning();
-        receiver.stopRunning();
     }
 }
