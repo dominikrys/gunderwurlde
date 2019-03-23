@@ -17,7 +17,7 @@ public class ClientSender extends Thread {
     byte[] buffer;
     int playerID;
 
-    public ClientSender(InetAddress address, MulticastSocket socket, int port, int playerID) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port, int playerID) {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
@@ -34,7 +34,6 @@ public class ClientSender extends Thread {
         while (running) {
             Thread.yield();
         }
-        System.out.println("Closing ClientSender");
     }
 
     public void send(Integer[] action) {
@@ -65,7 +64,6 @@ public class ClientSender extends Thread {
 
         } catch (IOException e) {
             //e.printStackTrace();
-
             System.out.println("unable to send message");
         }
     }
@@ -76,6 +74,5 @@ public class ClientSender extends Thread {
 
     public void close(){
         running = false;
-
     }
 }

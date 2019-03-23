@@ -120,15 +120,8 @@ public class Client extends Thread {
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             threadsup = true;
-            // Waits for the sender to join as that will be the first thread to close
-            sender.join();
-            // Waits for the receiver thread to end as this will be the second thread to close
-            receiver.join();
-            // Closes the socket as communication has finished
-            sendSocket.close();
-            listenSocket.close();
             System.out.println("Closing client");
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -151,12 +144,14 @@ public class Client extends Thread {
         try {
             sender.join();
             sendSocket.close();
+            System.out.println("ClientSender ended");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         receiver.close();
         try {
             receiver.join();
+            System.out.println("ClientReceiver ended");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -238,7 +233,7 @@ public class Client extends Thread {
     }
 
     public void close() {
-
+        stopThreads();
     }
 
     public void send(ActionList action) {

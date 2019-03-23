@@ -85,8 +85,7 @@ public class ClientReceiver extends Thread {
                                 in.close();
                             }
                         } catch (IOException ex) {
-                            System.out.println("Closing socket");
-                            //ex.printStackTrace();
+                            ex.printStackTrace();
                         }
                     }
                 }
@@ -94,13 +93,13 @@ public class ClientReceiver extends Thread {
             System.out.println("Closing clientReceiver");
         }
         catch (SocketException e) {
-            System.out.println("Socket closed unexpectedly");
+            //e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public void close(){
-        listenSocket.close();
         running = false;
+        listenSocket.close();
     }
 }
