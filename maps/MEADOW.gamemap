@@ -4,7 +4,7 @@
 #Tiles
 #TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
 W WOOD SOLID 0.7
-G GRASS PASSABLE 0.3
+G GRASS PASSABLE 0.5
 D DOOR SOLID 0.9
 
 #Tile Map
@@ -50,7 +50,7 @@ G 1 2 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-MIDGET 1 2000
+ZOMBIE
 0 1000 1 1
 
 

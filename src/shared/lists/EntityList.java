@@ -87,16 +87,15 @@ public enum EntityList {
      * Projectiles
      */
     BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    //TODO
-    HEAVY_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4), 
-    PLASMA("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    FIRE("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    ICE("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    CRYSTAL("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    BOUNCE("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    ROCKET("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    PHANTOM("file:assets/img/entity/projectile/basic_bullet.png", 4),
-    STICKY("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    HEAVY_BULLET("file:assets/img/entity/projectile/heavy_bullet.png", 8),
+    PLASMA_BULLET("file:assets/img/entity/projectile/plasma_bullet.png", 6),
+    FIRE_BULLET("file:assets/img/entity/projectile/fire_bullet.png", 4),
+    ICE_BULLET("file:assets/img/entity/projectile/ice_bullet.png", 4),
+    CRYSTAL_BULLET("file:assets/img/entity/projectile/crystal_bullet.png", 5),
+    BOUNCE_BULLET("file:assets/img/entity/projectile/bounce_bullet.png", 4),
+    ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
+    PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 4),
+    STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 4),
     
 
     /**

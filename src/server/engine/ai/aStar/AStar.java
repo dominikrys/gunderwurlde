@@ -235,10 +235,8 @@ public class AStar extends Thread {
 
         //TODO do I need this?
         // You cannot expand start node
-        closedCoords.add(startCoords);
-        closedNodes.add(new Node(new Pose(startCoords.getValue(), startCoords.getKey()), 0, realDist[startCoords.getValue()][startCoords.getKey()]));
-
-
+            closedCoords.add(startCoords);
+            closedNodes.add(new Node(new Pose(startCoords.getValue(), startCoords.getKey()), 0, realDist[startCoords.getValue()][startCoords.getKey()]));
         // A* finishes only when the end node is expanded
         while (!closedCoords.contains(endCoords)) try {
 

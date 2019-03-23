@@ -1,31 +1,42 @@
 package server.engine.state.entity;
 
+import java.util.LinkedList;
+import java.util.Random;
+
+import server.engine.state.effect.StatusEffect;
+import server.engine.state.item.Item;
 import server.engine.state.physics.Force;
 import server.engine.state.physics.HasPhysics;
+import server.engine.state.physics.Physics;
 import server.engine.state.physics.Velocity;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
+import shared.lists.EntityStatus;
+import shared.lists.Team;
 
 public abstract class LivingEntity extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
+    private static Random random = new Random();
 
     protected final int id;
     protected EntityList entityListName;
     protected ActionList currentAction;
     protected int health;
     protected int maxHealth;
-    protected double acceleration;
+    protected double movementForce;
     protected boolean takenDamage;
     protected boolean moving;
     protected Velocity velocity;
     protected Force resultantForce;
     protected double mass;
+    protected StatusEffect effect;
 
-    protected LivingEntity(int maxHealth, double acceleration, EntityList entityListName, int size, double mass) {
+
+    protected LivingEntity(int maxHealth, double movementForce, EntityList entityListName, int size, double mass) {
         super(size, entityListName);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.acceleration = acceleration;
+        this.movementForce = movementForce;
         this.entityListName = entityListName;
         this.id = nextID++;
         this.takenDamage = false;
@@ -68,12 +79,12 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         this.moving = moving;
     }
 
-    public double getAcceleration() {
-        return acceleration;
+    public double getMovementForce() {
+        return movementForce + (mass * 0.5 * Physics.GRAVITY);
     }
 
-    public void setAcceleration(double acceleration) {
-        this.acceleration = acceleration;
+    public void setMovementForce(double movementForce) {
+        this.movementForce = movementForce;
     }
 
     @Override
@@ -90,12 +101,15 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
 
     @Override
     public boolean damage(int amount) {
-        if (amount >= health) {
-            health = 0;
-            return true;
-        } else {
+        if (amount < health) {
             health -= amount;
             return false;
+        } else if (status == EntityStatus.DEAD) {
+            return false;
+        } else {
+            status = EntityStatus.DEAD;
+            health = 0;
+            return true;
         }
     }
 
@@ -140,6 +154,35 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
     @Override
     public double getMass() {
         return mass;
+    }
+
+    public void addEffect(StatusEffect effect) {
+        this.effect = effect;
+    }
+
+    public boolean hasEffect() {
+        return (effect != null);
+    }
+
+    public StatusEffect getEffect() {
+        return effect;
+    }
+
+    public void clearStatusEffect() {
+        this.effect = null;
+        this.status = EntityStatus.NONE;
+    }
+
+    public abstract Team getTeam();
+
+    public abstract LinkedList<ItemDrop> getDrops();
+
+    protected ItemDrop toItemDrop(Item itemToDrop, int amount) {
+        // TODO tweak values
+        int dropDirection = this.velocity.getDirection() + random.nextInt(80) - 40;
+        double dropSpeed = this.velocity.getSpeed() + 25 + random.nextInt(5);
+        Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
+        return new ItemDrop(itemToDrop, this.pose, itemDropVelocity, amount);
     }
 
 }
