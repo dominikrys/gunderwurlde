@@ -23,7 +23,6 @@ public class ServerReceiver extends Thread {
     Boolean running;
     DatagramPacket packet;
     byte[] buffer;
-    int numOfPlayers;
     Server handler;
 
 
@@ -42,8 +41,10 @@ public class ServerReceiver extends Thread {
         return running;
     }
 
-    public void stopRunning() {
+    public void close() {
+        listenSocket.close();
         this.running = false;
+
     }
 
 
@@ -128,12 +129,8 @@ public class ServerReceiver extends Thread {
                 }
             }
             // Waits for the sender to finish its processes before ending itself
-            sender.join();
             // Running = false so the Thread ends gracefully
-            running = false;
-            System.out.println("Ending server receiver");
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
+            System.out.println("Closing serverreceiver");
         } catch (IOException e1) {
             e1.printStackTrace();
         }

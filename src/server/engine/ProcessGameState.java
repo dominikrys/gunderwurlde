@@ -80,11 +80,12 @@ public class ProcessGameState extends Thread {
         for (Map.Entry<String, Team> player : playersToAdd.entrySet()) {
             Player playerToAdd = new Player(player.getValue(), player.getKey());
             players.put(playerToAdd.getID(), playerToAdd);
+            System.out.println(player.getValue());
         }
 
 
         this.gameState = new GameState(MapReader.readMap(mapName), players);
-        System.out.println("PGS: players added to gameState");
+
         this.handlerClosing = false;
 
         // setup GameView
@@ -105,7 +106,6 @@ public class ProcessGameState extends Thread {
             Player playerToView = (Player) player.getValue();
             playerViews.add(toPlayerView(playerToView));
         }
-        System.out.println("PGC: Players added to gameview");
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");

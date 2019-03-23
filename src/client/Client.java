@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
+import client.input.ActionList;
 import client.net.Addressing;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
@@ -75,7 +77,6 @@ public class Client extends Thread {
            this.playerID = playerID;
            firstView = true;
            threadsup = false;
-           System.out.println("C: constructor finished");
        } catch (UnknownHostException e) {
            e.printStackTrace();
        }
@@ -98,7 +99,6 @@ public class Client extends Thread {
             this.sendPort = portValue + 1;
             this.listenAddress = InetAddress.getByName("230.0.0." + ipValue);
             this.senderAddress = InetAddress.getByName("230.0.1." + ipValue);
-            System.out.println("C: addresses and ports set");
             this.stage = stage;
             this.handler = handler;
             this.settings = settings;
@@ -120,7 +120,6 @@ public class Client extends Thread {
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             threadsup = true;
-            System.out.println("C: Threads up");
             // Waits for the sender to join as that will be the first thread to close
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
@@ -128,19 +127,19 @@ public class Client extends Thread {
             // Closes the socket as communication has finished
             sendSocket.close();
             listenSocket.close();
+            System.out.println("Closing client");
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setGameView(GameView view, Settings settings){
-        System.out.println("C: Setting GameView");
         this.view = view;
         if (firstView) {
             firstView = false;
             renderer = new GameRenderer(stage, this.view, playerID, settings, this);
-            renderer.getKeyboardHandler().setGameHandler(handler);
-            renderer.getMouseHandler().setGameHandler(handler);
+            renderer.getKeyboardHandler().setGameHandler(this);
+            renderer.getMouseHandler().setGameHandler(this);
             renderer.run();
         } else {
             renderer.updateGameView(this.view);
@@ -148,8 +147,20 @@ public class Client extends Thread {
     }
 
     public void stopThreads(){
-        sender.setRunning(false);
-        receiver.setRunning(false);
+        sender.close();
+        try {
+            sender.join();
+            sendSocket.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        receiver.close();
+        try {
+            receiver.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        handler.end();
     }
 
     public void joinGame() {
@@ -164,7 +175,6 @@ public class Client extends Thread {
             buffer = gameIPAddress.getBytes();
 
             packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
-            System.out.println("Sending join request ");
             joinGameSocket.send(packet);
 
             buffer = new byte[32];
@@ -179,7 +189,6 @@ public class Client extends Thread {
                     byte[] recievedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
                     String messageReceived = new String(recievedBytes);
                     String[] split = messageReceived.split("/");
-                    System.out.println("tcpADDRESS: " + split[2]);
                     if (("/" + split[1]).equals(listenAddress.toString())) {
                         tcpAddress = InetAddress.getByName(split[2]);
                         waiting = false;
@@ -197,7 +206,6 @@ public class Client extends Thread {
                 is.read(clientIDBytes);
                 ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
                 this.playerID = wrappedCommand.getInt();
-                System.out.println("PlayerID: " + playerID);
 
                 // Begin the join game Process
                 String data = (playerName + "/" + team);
@@ -216,7 +224,6 @@ public class Client extends Thread {
                 }
             }
         } catch (UnknownHostException e) {
-
             e.printStackTrace();
             System.out.println("Multiplayer not supported locally");
         } catch (SocketException e) {
@@ -231,5 +238,33 @@ public class Client extends Thread {
     }
 
     public void close() {
+
+    }
+
+    public void send(ActionList action) {
+        switch (action.toString()) {
+            case "ATTACK": // 0
+                getClientSender().send(new Integer[]{0});
+                break;
+            case "DROPITEM": // 1
+                getClientSender().send(new Integer[]{1});
+                break;
+            case "RELOAD": // 2
+                getClientSender().send(new Integer[]{2});
+                break;
+        }
+    }
+
+    public void send(ActionList action, int parameter) {
+        switch (action.toString()) {
+            case "CHANGEITEM": // 3
+                getClientSender().send(new Integer[]{3, parameter});
+                break;
+            case "MOVEMENT": // 4
+                getClientSender().send(new Integer[]{4, parameter});
+                break;
+            case "TURN": //5
+                getClientSender().send(new Integer[]{5, parameter});
+        }
     }
 }

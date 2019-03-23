@@ -45,12 +45,7 @@ public class ClientReceiver extends Thread {
         return running;
     }
 
-    public void stopRunning() {
-        this.running = false;
-    }
-
     public void run() {
-        System.out.println("CLIENT RECEIVER RUNNING");
         try {
             while (running) {
                 // creates a packet and waits to receive a message from the server
@@ -70,20 +65,16 @@ public class ClientReceiver extends Thread {
                     continue;
                 }
                 else {
-                    // System.out.println("Size of received packet" + packet.getData().length);
                     // Creates a bytearrayinputstream from the received packets data
                     ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                     //ObjectinputStream to turn the bytes back into an object.
                     ObjectInputStream in = null;
                     GameView view = null;
                     try {
-                        // System.out.println("Client received new gameview");
                         in = new ObjectInputStream(bis);
                         view = (GameView) in.readObject();
                         client.setGameView(view, settings);
-                        // renderer.updateGameView(view);
-                        // renderer.getKeyboardHandler().setGameView(view);
-                        // renderer.getMouseHandler().setGameView(view);
+
                     } catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
                     } catch (EOFException ex) {
@@ -94,12 +85,13 @@ public class ClientReceiver extends Thread {
                                 in.close();
                             }
                         } catch (IOException ex) {
-                            ex.printStackTrace();
+                            System.out.println("Closing socket");
+                            //ex.printStackTrace();
                         }
                     }
                 }
             }
-            System.out.println("Ending client receiver");
+            System.out.println("Closing clientReceiver");
         }
         catch (SocketException e) {
             System.out.println("Socket closed unexpectedly");
@@ -107,7 +99,8 @@ public class ClientReceiver extends Thread {
             e.printStackTrace();
         }
     }
-    public void setRunning(boolean value){
-        running = value;
+    public void close(){
+        listenSocket.close();
+        running = false;
     }
 }

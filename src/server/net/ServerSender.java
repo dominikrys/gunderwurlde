@@ -35,16 +35,15 @@ public class ServerSender extends Thread {
         return running;
     }
 
-    public void stopRunning() {
+    public void close() {
         this.running = false;
     }
 
     public void run() {
         while (running) {
             Thread.yield();
-
         }
-        System.out.println("Ending server sender");
+        System.out.println("Closing serversender");
     }
 
     // sends a confirmation back to the client that the message has been received

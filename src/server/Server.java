@@ -84,7 +84,6 @@ public class Server extends Thread implements HasEngine {
         this.multiplayer = multiplayer;
         this.clientRequests = null;
         isThreadsUp = false;
-        System.out.println("S: constructor done");
         this.start();
     }
 
@@ -102,7 +101,6 @@ public class Server extends Thread implements HasEngine {
             listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             updatedLowestAvailableAddress();
-            System.out.println("S: ports and addresses set");
             isThreadsUp = true;
 
             // Check if the game is going to be multiplayer
@@ -116,10 +114,7 @@ public class Server extends Thread implements HasEngine {
                 joinGameAddress = InetAddress.getByName("230.0.0.0");
                 joinGameSocket.joinGroup(joinGameAddress);
                 tcpAddress = Addressing.getAddress();
-                System.out.println("Server tcp address: " + tcpAddress.toString());
 
-                System.out.println("Expected: " + numOfPlayers);
-                System.out.println("Joined: " + joinedPlayers);
                 // loop until all players have joined
                 while(numOfPlayers > joinedPlayers) {
 
@@ -157,32 +152,20 @@ public class Server extends Thread implements HasEngine {
                 System.out.println("All players have joined the game");
                 tcpMananger.end();
                 joinGameSocket.close();
-                System.out.println("Multiplayer preparation finished");
             }
 
 
             // Create the threads that will run as sender and receiver
             sender = new ServerSender(senderAddress, senderSocket, sendPort);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
-            System.out.println("S: Threads up");
             isThreadsUp = true;
 
             // create the engine and start it
             this.engine = new ProcessGameState(this, mapName, playersToAdd);
             engine.start();
             this.clientRequests = new ClientRequests(numOfPlayers);
-            System.out.println("S: Engine started");
-
-            sender.join();
-            receiver.join();
-            engine.handlerClosing();
             // Socket is closed as server should end
-            senderSocket.close();
-            listenSocket.close();
-            System.out.println("Server ended successfully");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Server ended due an interrupt");
+            System.out.println("Closing server");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -233,8 +216,20 @@ public class Server extends Thread implements HasEngine {
     }
 
     public void close() {
-        sender.stopRunning();
-        receiver.stopRunning();
+        engine.handlerClosing();
+        sender.close();
+        try {
+            sender.join();
+            senderSocket.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        receiver.close();
+        try {
+            receiver.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isThreadsUp(){

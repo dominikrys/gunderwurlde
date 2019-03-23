@@ -436,6 +436,8 @@ public class GameRenderer implements Runnable {
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
                             // Set pause to false and stop rendering
                             paused = false;
+                            getMouseHandler().deactivate();
+                            getKeyboardHandler().deactivate();
                             handler.stopThreads();
                             stop();
 

@@ -102,6 +102,7 @@ public class GameHandler extends Thread {
         */
 
         // TODO: handle the game closing once all stuff is running as is supposed to
+        System.out.println("Ending GameHandler");
     }
 
     public void end() {
@@ -111,46 +112,5 @@ public class GameHandler extends Thread {
                 server.close();
             }
         }
-
-        // End client if running/exists
-        if (client != null) {
-            if (client.isAlive()) {
-                this.client.close();
-            }
-        }
-
-        // Close stage
-        Platform.runLater(() -> {
-            // Close stage
-            stage.close();
-        });
     }
-
-    public void send(ActionList action) {
-        switch (action.toString()) {
-            case "ATTACK": // 0
-                client.getClientSender().send(new Integer[]{0});
-                break;
-            case "DROPITEM": // 1
-                client.getClientSender().send(new Integer[]{1});
-                break;
-            case "RELOAD": // 2
-                client.getClientSender().send(new Integer[]{2});
-                break;
-        }
-    }
-
-    public void send(ActionList action, int parameter) {
-        switch (action.toString()) {
-            case "CHANGEITEM": // 3
-                client.getClientSender().send(new Integer[]{3, parameter});
-                break;
-            case "MOVEMENT": // 4
-                client.getClientSender().send(new Integer[]{4, parameter});
-                break;
-            case "TURN": //5
-                client.getClientSender().send(new Integer[]{5, parameter});
-        }
-    }
-
 }

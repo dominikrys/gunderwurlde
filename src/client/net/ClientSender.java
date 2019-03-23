@@ -1,7 +1,6 @@
 package client.net;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -29,10 +28,6 @@ public class ClientSender extends Thread {
 
     public boolean getRunning() {
         return running;
-    }
-
-    public void stopRunning() {
-        this.running = false;
     }
 
     public void run() {
@@ -69,11 +64,18 @@ public class ClientSender extends Thread {
             // TODO Will be set on a loop to send every ______ seconds
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+
+            System.out.println("unable to send message");
         }
     }
 
     public void setRunning(boolean value){
         running = value;
+    }
+
+    public void close(){
+        running = false;
+
     }
 }
