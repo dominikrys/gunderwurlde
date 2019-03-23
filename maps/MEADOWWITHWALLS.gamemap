@@ -4,7 +4,7 @@
 #Tiles
 #TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
 W WOOD SOLID 0.7
-G GRASS PASSABLE 0.3
+G GRASS PASSABLE 0.5
 D DOOR SOLID 0.9
 
 #Tile Map
