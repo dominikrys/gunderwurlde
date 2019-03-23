@@ -87,7 +87,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         return movementForce;
     }
 
-    public void setMovementForce(double movementForce) {
+    public void setMovementForceAddition(double movementForce) {
         this.movementForce = movementForce;
     }
 

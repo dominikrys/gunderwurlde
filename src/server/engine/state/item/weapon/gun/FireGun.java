@@ -6,7 +6,7 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
 public class FireGun extends Gun {
-    public static final ItemList NAME = ItemList.CRYSTAL_LAUNCHER;
+    public static final ItemList NAME = ItemList.FIRE_GUN;
     public static final int DEFAULT_CLIP_SIZE = 10;
     public static final int DEFAULT_RELOAD_TIME = 2800;
     public static final int DEFAULT_AMMO_PER_SHOT = 1;

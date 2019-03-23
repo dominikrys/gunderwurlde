@@ -8,8 +8,8 @@ import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
+import server.engine.state.item.weapon.gun.BuckshotShotgun;
 import server.engine.state.item.weapon.gun.Gun;
-import server.engine.state.item.weapon.gun.IceGun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.PlasmaPistol;
 import shared.lists.AmmoList;
@@ -48,7 +48,7 @@ public class Player extends LivingEntity {
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new PlasmaPistol()); // TODO remove testing only
-        items.add(new IceGun()); // TODO remove testing only
+        items.add(new BuckshotShotgun()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
@@ -59,6 +59,7 @@ public class Player extends LivingEntity {
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.ammo.put(AmmoList.MAGIC_ESSENCE, 16); // TODO remove testing only
+        this.ammo.put(AmmoList.HEAVY_AMMO, 40); // TODO remove testing only
         this.paused = false;
     }
 

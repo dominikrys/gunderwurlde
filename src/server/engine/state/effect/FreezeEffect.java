@@ -23,14 +23,14 @@ public class FreezeEffect extends StatusEffect {
         if (e.getStatus() == status) {
             if (oldMovementForce == -1)
                 oldMovementForce = e.getMovementForceAddition();
-            e.setMovementForce(oldMovementForce * 0.99);
+            e.setMovementForceAddition(oldMovementForce * 0.99);
         }
         return e;
     }
 
     @Override
     public LivingEntity clearEffect(LivingEntity e) {
-        e.setMovementForce(oldMovementForce);
+        e.setMovementForceAddition(oldMovementForce);
         return e;
     }
 
