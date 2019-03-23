@@ -88,9 +88,9 @@ public abstract class EnemyAI {
         int mapYDim = tileMap[0].length;
 
         try {
-            tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
-                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
-                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
+            tileNotSolid = (tileMap[tile[1]][tile[0]].getState() != TileState.SOLID);
+//                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
+//                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
             return false;
         }
@@ -104,6 +104,9 @@ public abstract class EnemyAI {
 //        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
         this.tileMap = transposeMatrix(tileMap);
+        int[] tile = {8,10};
+        tileNotSolid(tile,tileMap);
+        //        this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 

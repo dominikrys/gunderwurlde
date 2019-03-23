@@ -34,7 +34,7 @@ W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 #Team Spawns
 RED 25 4
 BLUE 30 1
-GREEN 2 2
+GREEN 6 10
 YELLOW 30 20
 
 #Zones TODO add doors
@@ -59,7 +59,7 @@ MIDGET 1 2000
 10 10
 
 #Triggers
-2 2
+6 10
 
 
 #Rounds wave per line

@@ -91,7 +91,7 @@ public class SniperAI extends AStarUsingEnemy {
             if (posePath == null) {
                 if(!AStartProcessing) {
                     Pose endPose = findPositionToAttack();
-                    new AStar(this, 1, tileMap, pose, endPose).start();
+                    new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
                     AStartProcessing = true;
                 }
             }else{
@@ -136,7 +136,7 @@ public class SniperAI extends AStarUsingEnemy {
             positionToAttack = poseInDistance(closestPlayer,
                     ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
                     ThreadLocalRandom.current().nextInt(RANGE_TO_RUN_AWAY, RANGE_TO_RUN_AWAY + 20));
-            expandedRange += 3;
+            expandedRange += 5;
         }while((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
                 || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
 

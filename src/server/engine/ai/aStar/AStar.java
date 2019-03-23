@@ -144,7 +144,7 @@ public class AStar extends Thread {
         }
 
         finalPath.add(currentNode);
-        System.out.println("Nodes that are still added:");
+//        System.out.println("Nodes that are still added:");
         while (!currentNode.getCoordinates().equals(enemyTile)) {
             for (Node node : list) {
                 if (node.getCostToGo() == currentNode.getCostToGo() - 1 && Node.nodesAdjacent(node, currentNode)) {
@@ -154,7 +154,7 @@ public class AStar extends Thread {
             if(possibleNodesToAdd.size() != 0) {
                 currentNode = findBestNodeToAdd(possibleNodesToAdd, currentNode);
                 finalPath.add(currentNode);
-                System.out.println(currentNode);
+//                System.out.println(currentNode);
                 possibleNodesToAdd.clear();
             }else{
                 System.out.println("no possible nodes to add");

@@ -82,7 +82,6 @@ public class MachineGunnerAI extends ZombieAI {
 
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
-        System.out.println(currentAndStartAngDiff);
         if (delayPast && isInAttackPosition) {
             return new Force(attackAngle, 0);
         } else {
