@@ -1,9 +1,10 @@
 package server.engine.state.entity.enemy;
 
+
 import java.util.LinkedHashSet;
 
-import server.engine.ai.EnemyAI;
-import server.engine.ai.SoldierZombieAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.SoldierZombieAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;

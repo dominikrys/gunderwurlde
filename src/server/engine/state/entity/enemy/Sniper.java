@@ -1,13 +1,13 @@
 package server.engine.state.entity.enemy;
 
 
-import java.util.LinkedHashSet;
-
-import server.engine.ai.EnemyAI;
-import server.engine.ai.SniperAI;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.SniperAI;
 import server.engine.state.item.weapon.gun.Ammo;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+
+import java.util.LinkedHashSet;
 
 public class Sniper extends Zombie {
 
@@ -34,5 +34,4 @@ public class Sniper extends Zombie {
     EnemyAI getNewAI() {
         return new SniperAI(RANGE_TO_RUN_WAY);
     }
-
 }

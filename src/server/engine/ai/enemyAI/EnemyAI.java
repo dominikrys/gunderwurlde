@@ -1,11 +1,6 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-
+import server.engine.ai.AIAction;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.map.tile.Tile;
@@ -13,6 +8,13 @@ import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 public abstract class EnemyAI {
 
     Enemy enemy;
@@ -21,28 +23,46 @@ public abstract class EnemyAI {
     static long MEDIUM_DELAY = 500;
     static long LONG_DELAY = 1000;
     protected Pose pose;
-//    double maxDistanceToMove;
+    //    double maxDistanceToMove;
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
-    protected Tile[][] tileMap;
-//    protected int mapXDim;
+    Tile[][] tileMap;
+    //    protected int mapXDim;
 //    protected int mapYDim;
     private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
+    long beginAttackTime;
+    boolean attacking = false;
 
-    protected EnemyAI() {
-        this.attackDelay = SHORT_DELAY;
+    protected EnemyAI(long attackDelay) {
+        this.attackDelay = attackDelay;
         isProcessing = false;
         actionState = ActionList.NONE;
     }
 
-    public abstract LinkedList<Attack> getAttacks();
+    public LinkedList<Attack> getAttacks() {
+        LinkedList<Attack> attacks = new LinkedList<>();
+        long now = System.currentTimeMillis();
+
+        if ((now - beginAttackTime) >= attackDelay) {
+            attacks.add(getAttackObj());
+            attacking = false;
+            this.actionState = ActionList.NONE;
+        }
+        return attacks;
+    }
+
+    protected abstract Attack getAttackObj();
 
     protected abstract Force generateMovementForce();
 
     public abstract AIAction getAction();
+
+    public Tile[][] getTileMap(){
+        return tileMap;
+    }
 
     public ActionList getActionState() {
         return actionState;
@@ -62,14 +82,15 @@ public abstract class EnemyAI {
     }
 
     //Static for RandomPoseGenerator
-    static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
+    public static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
         int mapXDim = tileMap.length;
         int mapYDim = tileMap[0].length;
+
         try {
-            tileNotSolid = (tileMap[tile[0]][tile[1]].getState() != TileState.SOLID) &&
-                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
-                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
+            tileNotSolid = (tileMap[tile[1]][tile[0]].getState() != TileState.SOLID);
+//                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
+//                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
             return false;
         }
@@ -82,10 +103,21 @@ public abstract class EnemyAI {
         this.pose = this.enemy.getPose();
 //        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
-        this.tileMap = tileMap;
-//        this.mapXDim = tileMap.length;
-//        this.mapYDim = tileMap[0].length;
+        this.tileMap = transposeMatrix(tileMap);
+        int[] tile = {8,10};
+        tileNotSolid(tile,tileMap);
+        //        this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
+    }
+
+    static Tile[][] transposeMatrix(Tile[][] m) {
+        Tile[][] temp = new Tile[m[0].length][m.length];
+
+        for (int i = 0; i < m.length; i++)
+            for (int j = 0; j < m[0].length; j++)
+                temp[j][i] = m[i][j];
+
+        return temp;
     }
 
     public boolean isProcessing() {
@@ -107,7 +139,7 @@ public abstract class EnemyAI {
         return closestPlayer;
     }
 
-    static int getAngle(Pose enemy, Pose player) {
+    public static int getAngle(Pose enemy, Pose player) {
         int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
         if (angle < 0) {
@@ -123,7 +155,7 @@ public abstract class EnemyAI {
 
     //TODO might be able to make this a bit more efficient with less steps to the enemy
     // and wider acceptance range. But this would make it less precise. But maybe that's ok.
-    
+
     // Left the prints for debugging if it's ever needed
     public static boolean pathUnobstructed(Pose startPose, Pose endPose, Tile[][] tileMap){
         int[] currentTile;
@@ -153,7 +185,7 @@ public abstract class EnemyAI {
     }
 
     // vec = dist * (cos(angle)i + sin(angle)j)
-    private static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
+    public static Pose poseInDistance(Pose startingPose, int angleToPose, int distanceToPose) {
         double vecI = Math.cos(Math.toRadians(angleToPose)) * distanceToPose;
         double vecJ = Math.sin(Math.toRadians(angleToPose)) * distanceToPose;
 

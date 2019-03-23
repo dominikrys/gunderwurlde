@@ -1,11 +1,11 @@
 package server.engine.state.map.tile;
 
-import java.util.LinkedHashSet;
-
 import shared.Constants;
 import shared.Location;
 import shared.lists.TileState;
 import shared.lists.TileType;
+
+import java.util.LinkedHashSet;
 
 public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
@@ -16,7 +16,7 @@ public class Tile {
 
     // State of tile, e.g. solid or passable
     protected TileState tileState;
-    
+
     protected LinkedHashSet<Integer> itemDropsOnTile;
     protected LinkedHashSet<Integer> enemiesOnTile;
     protected LinkedHashSet<Integer> playersOnTile;
@@ -41,7 +41,7 @@ public class Tile {
             this.bounceCoefficient = 0;
         }
     }
-    
+
     public void addTrigger(int zoneID) {
         zoneTriggers.add(zoneID);
     }
@@ -113,7 +113,7 @@ public class Tile {
     public boolean removeItemDrop(int itemID) {
         return itemDropsOnTile.remove(itemID);
     }
-
+    
     public TileType getType() {
         return tileType;
     }
@@ -136,7 +136,14 @@ public class Tile {
     }
 
     public static int[] locationToTile(Location location) {
-        int[] i = { ((int) (location.getX() - 1) / TILE_SIZE), ((int) (location.getY() - 1) / TILE_SIZE) };
+        int[] i = new int[2];
+        try {
+            i[0] = ((int) (location.getX() - 1) / TILE_SIZE);
+            i[1] = ((int) (location.getY() - 1) / TILE_SIZE);
+        } catch (Exception e) {
+            int[] j = {5, 5};
+            return j;
+        }
         return i;
     }
 
@@ -146,6 +153,18 @@ public class Tile {
 
     public double getDensity() {
         return DEFAULT_DENSITY;
+    }
+
+    @Override
+    public String toString() {
+        if (tileType == TileType.WOOD) {
+            return "W";
+        } else if (tileType == TileType.GRASS) {
+            return "G";
+        } else if (tileType == TileType.DOOR) {
+            return "D";
+        }
+        return "New state added";
     }
 
 }

@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import server.engine.ai.AIAction;
-import server.engine.ai.EnemyAI;
+import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.state.GameState;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
