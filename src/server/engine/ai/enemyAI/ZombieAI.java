@@ -17,14 +17,14 @@ public class ZombieAI extends EnemyAI {
     private final int DISTANCE_TO_PLAYER_FOR_ATTACK;
 
     public ZombieAI() {
-        super();
+        super(SHORT_DELAY);
         this.DISTANCE_TO_PLAYER_FOR_ATTACK = Constants.TILE_SIZE;
         this.beginAttackTime = System.currentTimeMillis();
         this.attacking = false;
     }
 
     public ZombieAI(int distanceToPlayerForAttack) {
-        super();
+        super(SHORT_DELAY);
         this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
         this.beginAttackTime = System.currentTimeMillis();
         this.attacking = false;

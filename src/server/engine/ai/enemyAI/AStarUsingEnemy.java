@@ -8,6 +8,10 @@ public abstract class AStarUsingEnemy extends EnemyAI {
     LinkedList<Pose> posePath;
     boolean AStartProcessing;
 
+    protected AStarUsingEnemy(long attackDelay) {
+        super(attackDelay);
+    }
+
     public abstract void setTilePath(LinkedList<Pose> aStar);
 
 }

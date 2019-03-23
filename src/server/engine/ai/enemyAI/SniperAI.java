@@ -5,6 +5,7 @@ import server.engine.ai.aStar.AStar;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.SniperRifle;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
@@ -12,7 +13,6 @@ import shared.Pose;
 import shared.lists.Team;
 
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SniperAI extends AStarUsingEnemy {
@@ -23,44 +23,46 @@ public class SniperAI extends AStarUsingEnemy {
     private boolean runningAway;
     private boolean inPositionToAttack = false;
     private boolean playerAiming = false;
-    private long beginAttackTime;
     private LinkedList<Pose> posePath;
     private boolean AStartProcessing = false;
     private int expandedRange = 5;
 
     public SniperAI(int rangeToRunAway) {
-        super();
+        super(LONG_DELAY * 2);
         this.RANGE_TO_RUN_AWAY = rangeToRunAway;
     }
 
     @Override
     public AIAction getAction() {
         if (attacking) {
-            return attackController();
-        } else if (inPositionToAttack) {
+            return AIAction.ATTACK;
+        } else if (stillInPositionToAttack() && inPositionToAttack) {
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
-            return attackController();
+            return AIAction.ATTACK;
         } else {
             return AIAction.MOVE;
         }
     }
 
-    public AIAction attackController() {
-        //Check if still in range or if player is not aiming at us
-        if (!(inRangeToRun() && playerAiming)) {
-            return AIAction.ATTACK;
-            //if aiming, run away
-        } else if (playerAiming) {
-            //Run away
+    private boolean stillInPositionToAttack() {
+        double distanceBetween = getDistToPlayer(closestPlayer);
+        boolean stillInPosition = distanceBetween > RANGE_TO_RUN_AWAY - RANGE_TO_RUN_AWAY * 0.05
+                && distanceBetween <= RANGE_TO_RUN_AWAY + RANGE_TO_RUN_AWAY * 0.2;
 
-            //if in range for a few secs, move away to safer location
-        } else {
-
-
+        if(stillInPosition){
+            return true;
+        }else{
+            inPositionToAttack = false;
+            return false;
         }
-        return AIAction.WAIT;
     }
+
+//    public AIAction attackController() {
+//
+//
+//        return AIAction.WAIT;
+//    }
 
     private boolean inRangeToRun() {
         return false;
@@ -75,8 +77,7 @@ public class SniperAI extends AStarUsingEnemy {
 
     @Override
     protected Force generateMovementForce() {
-        if (runAway()) {
-            //SNIPER 400
+        //SNIPER 400
 //            System.out.println(tileMap.length + " " + tileMap[0].length);
 //            int[] tile = new int[2];
 //
@@ -88,17 +89,17 @@ public class SniperAI extends AStarUsingEnemy {
 //                }
 //                System.out.println();
 //            }
-            if (posePath == null) {
-                if(!AStartProcessing) {
-                    Pose endPose = findPositionToAttack();
-                    new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
-                    AStartProcessing = true;
-                }
-            }else{
-                Force angle = getForceFromPath();
-                if (angle != null) return angle;
+        if (posePath == null) {
+            if (!AStartProcessing) {
+                Pose endPose = findPositionToAttack();
+                new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
+                AStartProcessing = true;
             }
+        } else {
+            Force angle = getForceFromPath();
+            if (angle != null) return angle;
         }
+
 //        else {
 //            if (posePath == null) {
 //                if (!AStartProcessing) {
@@ -124,6 +125,7 @@ public class SniperAI extends AStarUsingEnemy {
             posePath.pollLast();
             if (posePath.size() == 0) {
                 posePath = null;
+                inPositionToAttack = true;
             }
         }
         return null;
@@ -132,24 +134,19 @@ public class SniperAI extends AStarUsingEnemy {
     private Pose findPositionToAttack() {
         Pose positionToAttack;
         int angle = getAngle(closestPlayer, pose);
-        do{
+        do {
             positionToAttack = poseInDistance(closestPlayer,
                     ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
                     ThreadLocalRandom.current().nextInt(RANGE_TO_RUN_AWAY, RANGE_TO_RUN_AWAY + 20));
             expandedRange += 5;
-        }while((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
+        } while ((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
                 || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
 
         expandedRange = 5;
         return positionToAttack;
     }
 
-    private boolean runAway() {
-
-        return true;
-    }
-
-    public  void setTilePath(LinkedList<Pose> aStar){
+    public void setTilePath(LinkedList<Pose> aStar) {
 //        try {
 //            for (Pose pose : aStar) {
 //                System.out.println(Tile.locationToTile(pose)[0] + " " + Tile.locationToTile(pose)[1]);

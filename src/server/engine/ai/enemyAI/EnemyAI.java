@@ -36,8 +36,8 @@ public abstract class EnemyAI {
     long beginAttackTime;
     boolean attacking = false;
 
-    protected EnemyAI() {
-        this.attackDelay = SHORT_DELAY;
+    protected EnemyAI(long attackDelay) {
+        this.attackDelay = attackDelay;
         isProcessing = false;
         actionState = ActionList.NONE;
     }

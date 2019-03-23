@@ -15,6 +15,8 @@ import static java.lang.Math.sqrt;
 
 public class AStar extends Thread {
 
+    //TODO make it work with normal, not transposed matrix
+
     private final double COST_OF_TRAVEL;
     private double[][] realDist;
     private final Tile[][] tiles;

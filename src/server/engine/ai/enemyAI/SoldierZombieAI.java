@@ -26,6 +26,7 @@ public class SoldierZombieAI extends EnemyAI {
     private Pistol pistol = new Pistol();
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire) {
+        super(SHORT_DELAY);
         this.RANGE_TO_SHOOT = rangeToShoot;
         this.RATE_OF_FIRE = rateOfFire;
     }
