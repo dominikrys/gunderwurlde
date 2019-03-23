@@ -7,7 +7,6 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Team;
 
-
 /**
  * GameHandler class. Starts the game and all the necessary threads
  */

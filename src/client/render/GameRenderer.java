@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Settings;
+import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
@@ -121,6 +122,14 @@ public class GameRenderer implements Runnable {
     private boolean spectator;
 
     /**
+<<<<<<< HEAD
+=======
+     * Controller for the pause menu
+     */
+    private PauseMenuController pauseMenuController;
+
+    /**
+>>>>>>> dev
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -174,6 +183,9 @@ public class GameRenderer implements Runnable {
     public void run() {
         // Set up GameView - change the stage
         setUpRenderer(gameView);
+
+        // When the window is closed by pressing the "x" button, stop rendering
+        stage.setOnCloseRequest(we -> running = false);
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -255,10 +267,16 @@ public class GameRenderer implements Runnable {
      * Create the pause overlay
      */
     private void createPauseOverlay() {
-        // Load pause FXML
         try {
-            pausedOverlay = FXMLLoader.load(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            // Load pause FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
+            pausedOverlay = fxmlLoader.load();
+
+            // Set controller and update its settings value
+            pauseMenuController = fxmlLoader.getController();
+            pauseMenuController.initialise(settings);
         } catch (Exception e) {
+            System.out.println("Couldn't load the pause menu .FXML!");
             e.printStackTrace();
         }
 
@@ -342,19 +360,6 @@ public class GameRenderer implements Runnable {
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
         // Update HUD
-//<<<<<<< HEAD
-//        try {
-//            updateHUD();
-//        }
-//        catch(Exception ex){
-//
-//        }
-//        // If game is paused, add the paused overlay
-//        if (paused) {
-//            pausedOverlay.setVisible(true);
-//        } else {
-//            pausedOverlay.setVisible(false);
-//=======
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
                 rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
                 gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
@@ -377,7 +382,6 @@ public class GameRenderer implements Runnable {
         }
         if (e.getCode().toString().equals(settings.getKey(KeyAction.RIGHT))) {
             mapCanvas.setTranslateX(mapCanvas.getTranslateX() - 10);
-//>>>>>>> dev
         }
     }
 
@@ -416,15 +420,57 @@ public class GameRenderer implements Runnable {
 
             // Show the pause overlay and perform any other necessary actions
             if (paused) {
+                pauseMenuController.initialise(settings);
                 pausedOverlay.setVisible(true);
                 stage.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 cursorPane.setVisible(false);
+
+                // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
+                (new Thread(() -> {
+                    while (paused && running) {
+                        if (pauseMenuController.getBackToGamePressed()) {
+                            // Unpause and close the pause window
+                            paused = false;
+                            backToGameFromPauseMenu();
+                        } else if (pauseMenuController.getQuitToMenuPressed()) {
+                            // Set pause to false and stop rendering
+                            paused = false;
+                            stop();
+
+                            // Go back to play menu with all player info still there
+                            (new PlayMenuController(stage, settings, getCurrentPlayer().getName(),
+                                    getCurrentPlayer().getTeam())).show();
+                        }
+
+                        //TODO: remove this, doesn't work otherwise for some reason
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                })
+                ).start();
             } else {
-                pausedOverlay.setVisible(false);
-                stage.getScene().getRoot().setCursor(Cursor.NONE);
-                cursorPane.setVisible(true);
+                backToGameFromPauseMenu();
             }
         }
+    }
+
+    /**
+     * Hide the pause money and apply its settings
+     */
+    private void backToGameFromPauseMenu() {
+        // Hide pause menu
+        pausedOverlay.setVisible(false);
+        stage.getScene().getRoot().setCursor(Cursor.NONE);
+        cursorPane.setVisible(true);
+
+        // Get settings from controller and apply them
+        settings = pauseMenuController.getSettings();
+
+        // Save settings to disk
+        settings.saveToDisk();
     }
 
     /**
@@ -440,287 +486,12 @@ public class GameRenderer implements Runnable {
         return null;
     }
 
-//<<<<<<< HEAD
-//    // Update all HUD elements
-//    private void updateHUD() {
-//        // Get the player from gameview
-//        PlayerView currentPlayer = getCurrentPlayer();
-//
-//        if(playerScoreNumber == null){
-//            System.out.println("player score number is null");
-//        }
-//        // Update score
-//        playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
-//
-//        // Update hearts
-//        heartBox.getChildren().clear();
-//        int halfHearts = currentPlayer.getHealth() % 2;
-//        int wholeHearts = currentPlayer.getHealth() / 2;
-//        int lostHearts = (currentPlayer.getMaxHealth() - currentPlayer.getHealth()) / 2;
-//
-//        // Populate heart box in GUI
-//        for (int i = 0; i < wholeHearts; i++) {
-//            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_FULL)));
-//        }
-//        // Populate half heart
-//        for (int i = 0; i < halfHearts; i++) {
-//            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_HALF)));
-//        }
-//        // Populate lost hearts
-//        for (int i = 0; i < lostHearts; i++) {
-//            heartBox.getChildren().add(new ImageView(loadedSprites.get(EntityList.HEART_LOST)));
-//        }
-//
-//        // Update held items
-//        heldItems.getChildren().clear();
-//
-//        int currentItemIndex = 0; // Keep track of current item since iterator is used
-//
-//        for (ItemView currentItem : currentPlayer.getItems()) {
-//            // Make image view out of graphic
-//            ImageView itemImageView = new ImageView(loadedSprites.get(currentItem.getItemListName().getEntityList()));
-//
-//            // Pane for item image to go in - for border
-//            FlowPane itemPane = new FlowPane();
-//            itemPane.setPrefWidth(Constants.TILE_SIZE);
-//            itemPane.setPadding(new Insets(2, 2, 2, 2));
-//
-//            // Check if the item currently being checked is the current selected item, and if it is, show that
-//            if (currentItemIndex == currentPlayer.getCurrentItemIndex()) {
-//                DropShadow dropShadow = new DropShadow(25, Color.HOTPINK);
-//                dropShadow.setSpread(0.75);
-//                itemImageView.setEffect(dropShadow);
-//                itemPane.setBorder(new Border(new BorderStroke(Color.HOTPINK,
-//                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-//            } else {
-//                // Not selected item, add black border
-//                itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-//                        BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-//            }
-//
-//            // Add imageview to pane
-//            itemPane.getChildren().add(itemImageView);
-//
-//            // Add item to list
-//            heldItems.getChildren().add(itemPane);
-//
-//            // Increment current item index
-//            currentItemIndex++;
-//        }
-//
-//        // Add empty item slots
-//        while (currentItemIndex < 3) {
-//            HBox itemPane = new HBox();
-//            itemPane.setMinWidth(Constants.TILE_SIZE * 1.3);
-//            itemPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-//                    BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3))));
-//
-//            // Add box to item list
-//            heldItems.getChildren().add(itemPane);
-//
-//            currentItemIndex++;
-//        }
-//
-//        // Get currently selected item
-//        ItemView currentItem = currentPlayer.getCurrentItem();
-//
-//        // Clear ammo box
-//        ammoBox.getChildren().clear();
-//
-//        // Information about current gun - ammo in clip and clip size
-//        HBox currentGunInfo = new HBox();
-//
-//        // Add ammo amount to hud if the item has ammo
-//        if (currentItem.getAmmoType() != AmmoList.NONE) {
-//            // Make label for current ammo in item
-//            Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
-//                    new ImageView(loadedSprites.get(EntityList.AMMO_CLIP)));
-//            ammoInGun.setFont(fontManaspace28);
-//            ammoInGun.setTextFill(Color.BLACK);
-//            // Make label for total ammo in clip
-//            Label totalAmmoInClip = new Label("/" + currentItem.getClipSize());
-//            totalAmmoInClip.setFont(fontManaspace18);
-//            totalAmmoInClip.setTextFill(Color.BLACK);
-//
-//            //Make label for total amount of ammo the current item uses
-//            Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().get(currentItem.getAmmoType())));
-//            totalAmmoForCurrentItem.setFont(fontManaspace28);
-//            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
-//
-//            // Add info on current gun to the right element
-//            currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
-//            // Add the total amount of ammo the current gun uses under the gun info
-//            ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
-//        } else {
-//            // Make label for infinite use if it's not a weapon
-//            Label currentAmmo = new Label("∞");
-//            currentAmmo.setFont(new Font("Consolas", 32));
-//            currentAmmo.setTextFill(Color.BLACK);
-//
-//            // Add info on current gun to the right element and to ammo box
-//            currentGunInfo.getChildren().addAll(currentAmmo);
-//            ammoBox.getChildren().add(currentGunInfo);
-//        }
-//    }
-//
-//    // Render map from tiles
-//    private void renderMap() {
-//        // Get map X and Y dimensions
-//        int mapX = gameView.getXDim();
-//        int mapY = gameView.getYDim();
-//
-//        // Iterate through the map, rending each tile on canvas
-//        for (int x = 0; x < mapX; x++) {
-//            for (int y = 0; y < mapY; y++) {
-//                // Get tile graphic
-//                Image tileImage = loadedSprites.get(gameView.getTileMap()[x][y].getTileType().getEntityListName());
-//
-//                // Add tile to canvas
-//                mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
-//                        Constants.TILE_SIZE);
-//            }
-//        }
-//    }
-//
-//    // Create HUD and initialise all elements
-//    private VBox createHUD() {
-//        // Make HUD
-//        VBox HUDBox = new VBox();
-//        HUDBox.setPadding(new Insets(5, 5, 5, 5));
-//        HUDBox.setMaxWidth(Constants.TILE_SIZE * 6);
-//        HUDBox.setMaxHeight(300);
-//        HUDBox.setSpacing(5);
-//
-//        // Get the current player from the player list
-//        PlayerView currentPlayer = getCurrentPlayer();
-//
-//        // If for some reason the player hasn't been found, return an empty HUD
-//        if (currentPlayer == null) {
-//            return new VBox();
-//        }
-//
-//        playerScoreNumber = new Label();
-//        playerScoreNumber.setFont(fontManaspace28);
-//        playerScoreNumber.setTextFill(Color.BLACK);
-//
-//        // Label with player name to tell which player this part of the HUD is for
-//        Label playerLabel = new Label(currentPlayer.getName());
-//        playerLabel.setFont(fontManaspace28);
-//        playerLabel.setTextFill(Color.BLACK);
-//
-//        // Player score
-//        Label playerScoreLabel = new Label("SCORE: ");
-//        playerScoreLabel.setFont(fontManaspace28);
-//        playerScoreLabel.setTextFill(Color.BLACK);
-//
-//        // Flowpane to hold heart graphics. Have it overflow onto the next "line" after 5 hearts displayed
-//        heartBox = new FlowPane();
-//        heartBox.setMaxWidth(Constants.TILE_SIZE * 5);
-//
-//        // Iterate through held items list and add to the HUD
-//        heldItems = new FlowPane(3, 0); // Make flowpane for held items - supports unlimited amount of them
-//
-//        // Declare ammo vbox - populated dynamically
-//        ammoBox = new VBox();
-//
-//        // Change background according to team
-//        switch (currentPlayer.getTeam()) {
-//            case RED:
-//                HUDBox.setStyle("-fx-background-color: rgba(255, 0, 47, 0.4); -fx-background-radius: 0 0 165 0;");
-//                HUDBox.setEffect(new DropShadow(25, Color.rgb(255, 0, 47)));
-//                break;
-//            case BLUE:
-//                HUDBox.setStyle("-fx-background-color: rgba(66, 173, 244, 0.4); -fx-background-radius: 0 0 165 0;");
-//                HUDBox.setEffect(new DropShadow(25, Color.rgb(66, 173, 244)));
-//                break;
-//            case GREEN:
-//                HUDBox.setStyle("-fx-background-color: rgba(90, 240, 41, 0.4); -fx-background-radius: 0 0 165 0;");
-//                HUDBox.setEffect(new DropShadow(25, Color.rgb(90, 240, 41)));
-//                break;
-//            case YELLOW:
-//                HUDBox.setStyle("-fx-background-color: rgba(232, 232, 0, 0.4); -fx-background-radius: 0 0 165 0;");
-//                HUDBox.setEffect(new DropShadow(25, Color.rgb(232, 232, 0)));
-//                break;
-//            default:
-//                HUDBox.setStyle("-fx-background-color: rgba(178, 177, 169, 0.65); -fx-background-radius: 0 0 165 0;");
-//                HUDBox.setEffect(new DropShadow(25, Color.rgb(178, 177, 169)));
-//                break;
-//        }
-//
-//        // Add elements of HUD for player to HUD
-//        HUDBox.getChildren().addAll(playerLabel, heartBox, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
-//
-//        return HUDBox;
-//    }
-//
-//    // Set transform for the GraphicsContext to rotate around a pivot point.
-//    private void rotate(GraphicsContext gc, double angle, double xPivotCoordinate, double yPivotCoordinate) {
-//        Rotate r = new Rotate(angle, xPivotCoordinate, yPivotCoordinate);
-//        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-//    }
-//
-//    // Get image from the HashMap of loaded images according to the entity name
-//    private Image getImageFromEntity(EntityList entityName) {
-//        // Try to get the correct sprite, if not found then return default
-//        Image image = loadedSprites.get(entityName);
-//
-//        if (image != null && !image.isError()) {
-//            return image;
-//        } else {
-//            System.out.println("Couldn't find the graphic for " + entityName.name() + " so loading default...");
-//            return loadedSprites.get(EntityList.DEFAULT);
-//        }
-//    }
-//
-//    // Create an Image object from specified colour
-//    private Image createImageFromColor(Color color) {
-//        WritableImage image = new WritableImage(1, 1);
-//        image.getPixelWriter().setColor(0, 0, color);
-//        return image;
-//    }
-//
-//    // Scale image by integer value through resampling - useful for large enemies/powerups
-//    private Image resampleImage(Image inputImage, int scaleFactor) {
-//        final int inputImageWidth = (int) inputImage.getWidth();
-//        final int inputImageHeight = (int) inputImage.getHeight();
-//
-//        // Set up output image
-//        WritableImage outputImage = new WritableImage(inputImageWidth * scaleFactor,
-//                inputImageHeight * scaleFactor);
-//
-//        // Set up pixel reader and writer
-//        PixelReader reader = inputImage.getPixelReader();
-//        PixelWriter writer = outputImage.getPixelWriter();
-//
-//        // Resample image
-//        for (int y = 0; y < inputImageHeight; y++) {
-//            for (int x = 0; x < inputImageWidth; x++) {
-//                final int argb = reader.getArgb(x, y);
-//                for (int dy = 0; dy < scaleFactor; dy++) {
-//                    for (int dx = 0; dx < scaleFactor; dx++) {
-//                        writer.setArgb(x * scaleFactor + dx, y * scaleFactor + dy, argb);
-//                    }
-//                }
-//            }
-//        }
-//        return outputImage;
-//    }
-//
-//    public void setClientSender(ClientSender sender) {
-//        this.sender = sender;
-//    }
-//
-//    public GameView getView() {
-//        return this.gameView;
-//    }
-//
-//=======
     /**
      * Get keyboard handler
      *
      * @return Keyboard handler
      */
-//>>>>>>> dev
+
     public KeyboardHandler getKeyboardHandler() {
         return this.kbHandler;
     }

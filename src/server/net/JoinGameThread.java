@@ -1,14 +1,13 @@
 package server.net;
 
 import server.Server;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class JoinGameThread extends Thread {
     public Socket connection;
@@ -34,21 +33,21 @@ public class JoinGameThread extends Thread {
             String nameAndTeam = new String(buffer).trim();
             String[] split = nameAndTeam.split("/");
             String playerName = split[0];
-            Teams team;
+            Team team;
             if(split[1].equals("RED")){
-                team = Teams.RED;
+                team = Team.RED;
             }
             else if(split[1].equals("BLUE")){
-                team = Teams.BLUE;
+                team = Team.BLUE;
             }
             else if(split[1].equals("GREEN")){
-                team = Teams.GREEN;
+                team = Team.GREEN;
             }
             else if(split[1].equals("YELLOW")){
-                team = Teams.YELLOW;
+                team = Team.YELLOW;
             }
             else{
-                team = Teams.NONE;
+                team = Team.NONE;
             }
             System.out.println("Adding player to game");
             server.addPlayer(playerName, team);

@@ -17,8 +17,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public class Client extends Thread {
-
-    // Sockets to listen and send on
+    private static final int LISTENPORT = 4444;
+    private static final int SENDPORT = 4445;
     private MulticastSocket listenSocket;
     private MulticastSocket sendSocket;
     private MulticastSocket joinGameSocket;
@@ -46,7 +46,6 @@ public class Client extends Thread {
 
     private String playerName;
     private Team team;
-
     private GameView view;
     private GameRenderer renderer;
     private ClientSender sender;

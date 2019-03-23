@@ -1,12 +1,13 @@
 package shared.view;
 
+import java.io.Serializable;
+import java.util.LinkedHashSet;
+
+import shared.lists.Team;
 import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
-
-import java.io.Serializable;
-import java.util.LinkedHashSet;
 
 public class GameView implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -15,11 +16,12 @@ public class GameView implements Serializable {
     protected LinkedHashSet<ProjectileView> projectiles;
     protected LinkedHashSet<ItemDropView> itemDrops;
     protected TileView[][] tileMap;
+    protected Team winningTeam; // NONE if nobody has won yet
     protected int xDim;
     protected int yDim;
 
     public GameView(LinkedHashSet<PlayerView> players, LinkedHashSet<EnemyView> enemies, LinkedHashSet<ProjectileView> projectiles,
-                    LinkedHashSet<ItemDropView> itemDrops, TileView[][] tileMap) {
+            LinkedHashSet<ItemDropView> itemDrops, TileView[][] tileMap, Team winningTeam) {
         this.players = players;
         this.enemies = enemies;
         this.projectiles = projectiles;
@@ -55,6 +57,10 @@ public class GameView implements Serializable {
 
     public TileView[][] getTileMap() {
         return tileMap;
+    }
+
+    public Team getWinningTeam() {
+        return winningTeam;
     }
 
 }

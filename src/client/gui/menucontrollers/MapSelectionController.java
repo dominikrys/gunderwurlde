@@ -54,7 +54,6 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     private Team selectedTeam;
 
-
     @FXML
     private Button meadowButton;
 
@@ -193,7 +192,7 @@ public class MapSelectionController extends VBox implements MenuController {
         displayMapLoading();
 
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS)).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS, playerNumberLabel.getText())).start();
     }
 
     /**

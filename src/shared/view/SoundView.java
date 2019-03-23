@@ -76,10 +76,6 @@ public class SoundView {
 					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
-			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
-				// TODO MAJOR ERROR FOR ALL PLAYERS WHEN ONE DIES
-				playing.get(p.getID()).stop();
-			}
 		}
 	}
 	

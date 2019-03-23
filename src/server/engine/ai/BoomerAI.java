@@ -1,11 +1,11 @@
 package server.engine.ai;
 
+import java.util.LinkedList;
+
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import shared.Constants;
 import shared.lists.ActionList;
-
-import java.util.LinkedList;
 
 public class BoomerAI extends ZombieAI {
 
@@ -21,7 +21,7 @@ public class BoomerAI extends ZombieAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new AoeAttack(pose, 50, 3));
+            attacks.add(new AoeAttack(pose, 90, 3));
             attacking = false;
             this.actionState = ActionList.NONE;
             enemy.damage(5);

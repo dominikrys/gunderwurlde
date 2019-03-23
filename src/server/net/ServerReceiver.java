@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.net.Addressing;
-import shared.lists.Teams;
+import shared.lists.Team;
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
@@ -151,21 +151,21 @@ public class ServerReceiver extends Thread {
             System.out.println("Part 2 is " + seperateData[1]);
             System.out.println("Player name");
             String playerName = seperateData[0];
-            Teams team = null;
+            Team team = null;
             if(seperateData[1].equals("RED")){
-                team = Teams.RED;
+                team = Team.RED;
             }
             else if(seperateData[1].equals("BLUE")){
-                team = Teams.BLUE;
+                team = Team.BLUE;
             }
             else if(seperateData[1].equals("GREEN")){
-                team = Teams.GREEN;
+                team = Team.GREEN;
             }
             else if(seperateData[1].equals("YELLOW")){
-                team = Teams.YELLOW;
+                team = Team.YELLOW;
             }
             else{
-                team = Teams.NONE;
+                team = Team.NONE;
             }
             // call add player from the server
             handler.addPlayer(playerName, team);

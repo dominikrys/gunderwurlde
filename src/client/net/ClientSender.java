@@ -1,7 +1,5 @@
 package client.net;
 
-import shared.lists.Teams;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -69,27 +67,6 @@ public class ClientSender extends Thread {
             }
             // TODO Will be set on a loop to send every ______ seconds
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void joinGame(String playerName, Teams playerTeam){
-        try{
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream out;
-            out = new DataOutputStream(bos);
-            String data = (playerName + "/" + playerTeam);
-            // Instead of actions followed by clientID
-            // write the joinGame command followed by the required data
-            out.writeInt(99);
-            out.writeUTF(data);
-            out.flush();
-            buffer = bos.toByteArray();
-            // send the packet
-            packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-            senderSocket.send(packet);
-            System.out.println("Join game request sent");
         } catch (IOException e) {
             e.printStackTrace();
         }

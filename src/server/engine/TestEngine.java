@@ -48,7 +48,9 @@ public class TestEngine extends Application implements HasEngine {
     @Override
     public void start(Stage stage) throws Exception {
         firstRender = true;
-        this.engine = new ProcessGameState(this, MapList.MEADOWWITHWALLS, "Bob", Team.RED);
+        LinkedHashMap<String, Team> playersToAdd = new LinkedHashMap<>();
+        playersToAdd.put("Bob", Team.RED);
+        this.engine = new ProcessGameState(this, MapList.MEADOW, playersToAdd);
         stage.setResizable(true);
         stage.setScene(new Scene(new VBox()));
         engine.start();
