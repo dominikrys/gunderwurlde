@@ -78,12 +78,11 @@ public class ServerSender extends Thread {
                     senderSocket.send(packet);
                 }
 
-
                 buffer = bos.toByteArray();
                 // System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                // System.out.println("Packet sent from serversender");
+                System.out.println("Packet sent from serversender");
 
             } finally {
                 try {

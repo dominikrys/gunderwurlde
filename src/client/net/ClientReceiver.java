@@ -50,13 +50,15 @@ public class ClientReceiver extends Thread {
     }
 
     public void run() {
+        System.out.println("CLIENT RECEIVER RUNNING");
         try {
             while (running) {
-
                 // creates a packet and waits to receive a message from the server
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
+                System.out.println("Listening for request");
                 listenSocket.receive(packet);
+                System.out.println("Client received a packet");
                 if(packet.getLength() == 8){
                     byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
                     byte[] ValueBytes = Arrays.copyOfRange(packet.getData(), 4, 8);

@@ -59,9 +59,15 @@ public class GameHandler extends Thread {
                 // Code for establishing local server
                 if (!serverStarted) {
                     server = new Server(map, playerName, team, 1, false);
+                    System.out.println("GH: server started ");
                     serverStarted = true;
                     client = new Client(stage, this, settings, 0);
+                    System.out.println("Starting client");
+                    while(!server.isThreadsUp()){
+                        Thread.yield();
+                    }
                     client.start();
+                    System.out.println("GH: client started");
                 }
                 break;
             case MULTI_PLAYER_HOST:

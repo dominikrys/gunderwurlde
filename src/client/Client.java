@@ -65,20 +65,25 @@ public class Client extends Thread {
            joinedGame = true;
            this.listenPort = lowestAvailablePort;
            this.sendPort = lowestAvailablePort + 1;
+           System.out.println("C: ListenPort: " + listenPort);
+           System.out.println("C: SendPort: " + sendPort);
            updateLowestAvailablePort();
            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
            updateLowestAvailableAddress();
+           System.out.println("C: ListenAddress: " + listenAddress.toString());
+           System.out.println("C: SendAddress " + senderAddress.toString());
+           System.out.println("C: addresses and ports set");
            this.stage = stage;
            this.handler = handler;
            this.settings = settings;
            this.playerID = playerID;
            firstView = true;
            threadsup = false;
+           System.out.println("C: constructor finished");
        } catch (UnknownHostException e) {
            e.printStackTrace();
        }
-
     }
 
     private void updateLowestAvailableAddress() {
@@ -98,6 +103,7 @@ public class Client extends Thread {
             this.sendPort = portValue + 1;
             this.listenAddress = InetAddress.getByName("230.0.0." + ipValue);
             this.senderAddress = InetAddress.getByName("230.0.1." + ipValue);
+            System.out.println("C: addresses and ports set");
             this.stage = stage;
             this.handler = handler;
             this.settings = settings;
@@ -113,16 +119,14 @@ public class Client extends Thread {
     public void run() {
         try {
             listenSocket = new MulticastSocket(listenPort);
+            listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
-
-            System.out.println("Setting threads");
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
             threadsup = true;
-            System.out.println("Client running");
+            System.out.println("C: Threads up");
             // Waits for the sender to join as that will be the first thread to close
-            System.out.println("Waiting to receive ");
             sender.join();
             // Waits for the receiver thread to end as this will be the second thread to close
             receiver.join();
@@ -135,16 +139,17 @@ public class Client extends Thread {
     }
 
     public void setGameView(GameView view, Settings settings){
-            this.view = view;
-            if (firstView) {
-                firstView = false;
-                renderer = new GameRenderer(stage, this.view, playerID, settings);
-                renderer.getKeyboardHandler().setGameHandler(handler);
-                renderer.getMouseHandler().setGameHandler(handler);
-                renderer.run();
-            } else {
-                renderer.updateGameView(this.view);
-            }
+        System.out.println("C: Setting GameView");
+        this.view = view;
+        if (firstView) {
+            firstView = false;
+            renderer = new GameRenderer(stage, this.view, playerID, settings);
+            renderer.getKeyboardHandler().setGameHandler(handler);
+            renderer.getMouseHandler().setGameHandler(handler);
+            renderer.run();
+        } else {
+            renderer.updateGameView(this.view);
+        }
     }
 
     public void joinGame() {
@@ -174,6 +179,7 @@ public class Client extends Thread {
                     byte[] recievedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
                     String messageReceived = new String(recievedBytes);
                     String[] split = messageReceived.split("/");
+                    System.out.println("tcpADDRESS: " + split[2]);
                     if (("/" + split[1]).equals(listenAddress.toString())) {
                         tcpAddress = InetAddress.getByName(split[2]);
                         waiting = false;
@@ -210,7 +216,8 @@ public class Client extends Thread {
                 }
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Multiplayer not supported locally");
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -225,14 +232,5 @@ public class Client extends Thread {
     public void close() {
         sender.stopRunning();
         receiver.stopRunning();
-    }
-
-    public boolean isThreadsup() {
-        return threadsup;
-    }
-
-
-    public boolean joinedGame() {
-        return joinedGame;
     }
 }

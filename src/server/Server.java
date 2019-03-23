@@ -44,8 +44,8 @@ public class Server extends Thread implements HasEngine {
     static int lowestAvailableAddress = 1;
 
     // Ports to be sent and received on
-    static int sendport;
-    static int listenport;
+    static int sendPort;
+    static int listenPort;
     static int JOINPORT = 8080;
     static int lowestavailableport = 4444;
 
@@ -80,30 +80,34 @@ public class Server extends Thread implements HasEngine {
         this.numOfPlayers = numOfPlayers;
         this.playersToAdd = new LinkedHashMap<>();
         this.playersToAdd.put(hostName, hostTeam);
-        System.out.println("Host added to game");
         System.out.println(playersToAdd);
         this.multiplayer = multiplayer;
         this.clientRequests = null;
         isThreadsUp = false;
+        System.out.println("S: constructor done");
         this.start();
     }
 
     public void run(){
         try {
             // Declare ports to be used
-            sendport = lowestavailableport;
-            listenport = lowestavailableport+1;
+            sendPort = lowestavailableport;
+            listenPort = lowestavailableport+1;
             updatedLowestAvailablePort();
-
+            System.out.println("S: ListenPort: " + listenPort);
+            System.out.println("S: SendPort: " + sendPort);
             // Start by setting up the threads that will be used during the actual game
-            listenSocket = new MulticastSocket(listenport);
+            listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
             senderSocket = new MulticastSocket();
             Addressing.setInterfaces(senderSocket);
             listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             updatedLowestAvailableAddress();
-            System.out.println("Server starting");
+            System.out.println("C: ListenAddress: " + listenAddress.toString());
+            System.out.println("C: SendAddress " + senderAddress.toString());
+            System.out.println("S: ports and addresses set");
+            isThreadsUp = true;
 
             // Check if the game is going to be multiplayer
             if(multiplayer){
@@ -116,6 +120,7 @@ public class Server extends Thread implements HasEngine {
                 joinGameAddress = InetAddress.getByName("230.0.0.0");
                 joinGameSocket.joinGroup(joinGameAddress);
                 tcpAddress = Addressing.getAddress();
+                System.out.println("Server tcp address: " + tcpAddress.toString());
 
                 System.out.println("Expected: " + numOfPlayers);
                 System.out.println("Joined: " + joinedPlayers);
@@ -158,27 +163,22 @@ public class Server extends Thread implements HasEngine {
                 System.out.println("All players have joined the game");
                 tcpMananger.end();
                 joinGameSocket.close();
+                System.out.println("Multiplayer preparation finished");
             }
 
-            System.out.println("Multiplayer preparation finished");
-            System.out.println("Starting threads");
+
             // Create the threads that will run as sender and receiver
-            sender = new ServerSender(senderAddress, senderSocket, sendport);
+            sender = new ServerSender(senderAddress, senderSocket, sendPort);
             receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
-            System.out.println("Threads up");
+            System.out.println("S: Threads up");
             isThreadsUp = true;
-
-            // check everything is ready
-            if(playersToAdd.size() != numOfPlayers){
-                System.out.println("ERROR PLAYER NOT ADDED");
-            }
 
             // create the engine and start it
             this.engine = new ProcessGameState(this, mapName, playersToAdd);
             engine.start();
             this.clientRequests = new ClientRequests(numOfPlayers);
+            System.out.println("S: Engine started");
 
-            System.out.println("Server ready and waiting");
             sender.join();
             receiver.join();
             engine.handlerClosing();
@@ -215,9 +215,8 @@ public class Server extends Thread implements HasEngine {
     // Add player request from the serverReceiver sent to the engine
     public void addPlayer(String playerName, Team playerTeam){
         if(playersToAdd.containsKey(playerName)){
-            playerName = playerName + "(1)";
+            playerName = playerName + "_";
         }
-
         playersToAdd.put(playerName, playerTeam);
         joinedPlayers++;
         System.out.println(playersToAdd);
@@ -242,10 +241,6 @@ public class Server extends Thread implements HasEngine {
     public void close() {
         sender.stopRunning();
         receiver.stopRunning();
-    }
-
-    public boolean isServerFull(){
-        return (numOfPlayers > joinedPlayers);
     }
 
     public boolean isThreadsUp(){

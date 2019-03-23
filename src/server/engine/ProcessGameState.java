@@ -84,6 +84,7 @@ public class ProcessGameState extends Thread {
 
 
         this.gameState = new GameState(MapReader.readMap(mapName), players);
+        System.out.println("PGS: players added to gameState");
         this.handlerClosing = false;
 
         // setup GameView
@@ -104,6 +105,7 @@ public class ProcessGameState extends Thread {
             Player playerToView = (Player) player.getValue();
             playerViews.add(toPlayerView(playerToView));
         }
+        System.out.println("PGC: Players added to gameview");
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
@@ -117,10 +119,6 @@ public class ProcessGameState extends Thread {
         LOGGER.info("Stopping engine.");
         this.handlerClosing = true;
         this.interrupt();
-    }
-
-    public void addPlayer(String playerName, Team team) { // TODO remove if not used
-        gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override
