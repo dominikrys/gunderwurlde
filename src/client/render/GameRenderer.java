@@ -333,6 +333,12 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
+        // Check if end of game and if so, display end message
+        if (gameView.getWinningTeam() != null) {
+            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+        }
+
         // Update HUD
         hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
                 rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
