@@ -269,6 +269,11 @@ public class GameRenderer implements Runnable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
             pausedOverlay = fxmlLoader.load();
 
+            // Set background - inline instead of CSS as then transparency works
+            pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
+            pausedOverlay.setSpacing(15);
+            pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
+
             // Set controller and update its settings value
             pauseMenuController = fxmlLoader.getController();
             pauseMenuController.initialise(settings);

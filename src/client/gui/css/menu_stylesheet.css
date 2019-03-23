@@ -4,8 +4,11 @@
 }
 
 .root {
-    -fx-background-color: black;
     -fx-cursor: default
+}
+
+.background {
+    -fx-background-color: black;
 }
 
 .menuTitle {
