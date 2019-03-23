@@ -18,7 +18,10 @@ public enum ItemList {
     // Ammo
     BASIC_AMMO(EntityList.AMMO_CLIP, AmmoList.BASIC_AMMO),
     SHOTGUN_ROUND(EntityList.AMMO_CLIP, AmmoList.SHOTGUN_ROUND),
-    ENERGY(EntityList.ENERGY, AmmoList.ENERGY);
+    ENERGY(EntityList.ENERGY, AmmoList.ENERGY),
+    MAGIC_ESSENCE(EntityList.MAGIC_ESSENCE, AmmoList.MAGIC_ESSENCE),
+    HEAVY_AMMO(EntityList.HEAVY_AMMO, AmmoList.HEAVY_AMMO),
+    ROCKET_AMMO(EntityList.ROCKET_AMMO, AmmoList.ROCKET_AMMO);
 
     private String spritePath;
     private EntityList entityListName;
