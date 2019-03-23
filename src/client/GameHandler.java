@@ -1,14 +1,16 @@
 package client;
 
-import client.gui.Settings;
 import client.input.ActionList;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import server.Server;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 
+/**
+ * GameHandler class. Starts the game and all the necessary threads
+ */
 public class GameHandler extends Thread {
     // Server variables
     private ConnectionType connectionType;
@@ -26,10 +28,10 @@ public class GameHandler extends Thread {
     private Settings settings;
     private String playerName;
     private MapList map;
-    private Teams team;
+    private Team team;
     private int numPlayers;
 
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers) {
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Team team, MapList map, String numOfPlayers) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;
@@ -38,7 +40,8 @@ public class GameHandler extends Thread {
         this.team = team;
         this.numPlayers = Integer.parseInt(numOfPlayers);
     }
-    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Teams team, MapList map, String numOfPlayers, String ipValue, String portValue) {
+
+    public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Team team, MapList map, String numOfPlayers, String ipValue, String portValue) {
         this.stage = stage;
         this.connectionType = connectionType;
         this.settings = settings;

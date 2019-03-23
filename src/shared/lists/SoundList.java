@@ -1,7 +1,9 @@
 package shared.lists;
 
+/**
+ * SoundsList enum. Contains all sounds that can be played in the game
+ */
 public enum SoundList {
-	
 	GUN_COCK("file:assets/sound/gun/gun_cock.wav"),
 	HEAVY_MACHINE_GUN("file:assets/sound/gun/heavy_machine_gun.wav"),
 	HEAVY_PISTOL("file:assets/sound/gun/heavy_pistol.wav"),
@@ -25,14 +27,25 @@ public enum SoundList {
 	SHOTGUN2("file:assets/sound/gun/shotgun2.wav"),
 	SMG("file:assets/sound/gun/smg.wav"),
 	SNIPER("file:assets/sound/gun/sniper.wav");
-	
+
+	/**
+	 * Path to sound file
+	 */
 	private String soundPath;
-	
+
+	/**
+	 * Constructor
+	 * @param soundPath Path to sound file
+	 */
 	SoundList(String soundPath) {
         this.soundPath = soundPath;
     }
 
-    public String getPath() {
+	/**
+	 * Get path to sound file
+	 * @return Path to sound file
+	 */
+	public String getPath() {
         return soundPath;
     }
 

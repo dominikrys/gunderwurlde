@@ -164,7 +164,6 @@
     -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
     -fx-cursor: hand;
-    /*-fx-effect: dropshadow(gaussian, white, 5, 0.2, 0, 0);*/
 }
 
 .mapButton:hover {
@@ -172,4 +171,12 @@
     -fx-border-color: lightgrey;
     -fx-background-color: lightgrey;
     -fx-cursor: hand;
+}
+
+.backToGameButton {
+    -fx-font-size: 28px;
+}
+
+.backToMenuButton {
+    -fx-font-size: 12px;
 }

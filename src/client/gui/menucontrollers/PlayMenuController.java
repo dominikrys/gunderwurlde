@@ -1,7 +1,7 @@
 package client.gui.menucontrollers;
 
 import client.ConnectionType;
-import client.gui.Settings;
+import client.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,14 +11,30 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import shared.lists.Teams;
+import shared.lists.Team;
 
 import java.io.IOException;
 
+/**
+ * PlayMenuController class. Contains loader and controller for the play menu
+ *
+ * @author Dominik Rys
+ */
 public class PlayMenuController extends VBox implements MenuController {
+    /**
+     * Stage to display menu on
+     */
     private Stage stage;
+
+    /**
+     * Settings object
+     */
     private Settings settings;
-    private Teams selectedTeam;
+
+    /**
+     * Selected team
+     */
+    private Team selectedTeam;
 
     @FXML
     private TextField nameField;
@@ -43,7 +59,16 @@ public class PlayMenuController extends VBox implements MenuController {
     @FXML
     private ImageView tick;
 
-    public PlayMenuController(Stage stage, Settings settings, String playerName, Teams selectedTeam) {
+    /**
+     * Constructor
+     *
+     * @param stage        Stage to display menu on
+     * @param settings     Settings object
+     * @param playerName   Player name
+     * @param selectedTeam Team selected by player
+     */
+    public PlayMenuController(Stage stage, Settings settings, String playerName, Team selectedTeam) {
+        // Set variables
         this.stage = stage;
         this.settings = settings;
 
@@ -89,10 +114,18 @@ public class PlayMenuController extends VBox implements MenuController {
         checkButtons();
     }
 
+    /**
+     * Show menu on stage
+     */
     public void show() {
         this.stage.getScene().setRoot(this);
     }
 
+    /**
+     * Go back to main menu
+     *
+     * @param event Back button press
+     */
     @FXML
     void backButtonPress(ActionEvent event) {
         // Switch to main menu and clear this object
@@ -100,20 +133,33 @@ public class PlayMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Check which buttons should be enabled according to the name entered
+     *
+     * @param event Text entered
+     */
     @FXML
     void handleNameInput(ActionEvent event) {
         // Check if correct input
         checkButtons();
     }
 
+    /**
+     * Select blue team
+     *
+     * @param event Blue team button press
+     */
     @FXML
     void teamBlueButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectBlueTeam();
     }
 
+    /**
+     * Select blue team and set all the appropriate elements in the menu
+     */
     private void selectBlueTeam() {
-        selectedTeam = Teams.BLUE;
+        selectedTeam = Team.BLUE;
         teamBlueButton.setEffect(ControllerUtils.getMenuDropshadow());
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(null);
@@ -121,14 +167,22 @@ public class PlayMenuController extends VBox implements MenuController {
         checkButtons();
     }
 
+    /**
+     * Select green team
+     *
+     * @param event Green team button press
+     */
     @FXML
     void teamGreenButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectGreenTeam();
     }
 
+    /**
+     * Select green team and set all the appropriate elements in the menu
+     */
     private void selectGreenTeam() {
-        selectedTeam = Teams.GREEN;
+        selectedTeam = Team.GREEN;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(ControllerUtils.getMenuDropshadow());
         teamRedButton.setEffect(null);
@@ -136,14 +190,22 @@ public class PlayMenuController extends VBox implements MenuController {
         checkButtons();
     }
 
+    /**
+     * Select red team
+     *
+     * @param event Red team button press
+     */
     @FXML
     void teamRedButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectRedTeam();
     }
 
+    /**
+     * Select red team and set all the appropriate elements in the menu
+     */
     private void selectRedTeam() {
-        selectedTeam = Teams.RED;
+        selectedTeam = Team.RED;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(ControllerUtils.getMenuDropshadow());
@@ -151,14 +213,22 @@ public class PlayMenuController extends VBox implements MenuController {
         checkButtons();
     }
 
+    /**
+     * Select yellow team
+     *
+     * @param event Yellow team button press
+     */
     @FXML
     void teamYellowButtonPress(ActionEvent event) {
         // Set correct team and highlight buttons
         selectYellowTeam();
     }
 
+    /**
+     * Select yellow team and set all the appropriate elements in the menu
+     */
     private void selectYellowTeam() {
-        selectedTeam = Teams.YELLOW;
+        selectedTeam = Team.YELLOW;
         teamBlueButton.setEffect(null);
         teamGreenButton.setEffect(null);
         teamRedButton.setEffect(null);
@@ -166,6 +236,11 @@ public class PlayMenuController extends VBox implements MenuController {
         checkButtons();
     }
 
+    /**
+     * Go to map selection screen which will be set for single player
+     *
+     * @param event Single player button press
+     */
     @FXML
     void singlePlayerButtonPress(ActionEvent event) {
         // Go to map selection screen  and clear menu
@@ -173,6 +248,11 @@ public class PlayMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to map selection screen which will be set up for multi player hosting
+     *
+     * @param event Multiplayer hosting button press
+     */
     @FXML
     void multiCreateGameButtonPress(ActionEvent event) {
         // Go to map selection screen and clear menu
@@ -180,6 +260,11 @@ public class PlayMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Go to server selection screen
+     *
+     * @param event Multiplayer join game button press
+     */
     @FXML
     void multiJoinGameButtonPress(ActionEvent event) {
         // Go to server joining screen and clear this menu
@@ -187,13 +272,16 @@ public class PlayMenuController extends VBox implements MenuController {
         this.getChildren().clear();
     }
 
+    /**
+     * Check all elements according to the name entered, and modify them accordingly
+     */
     private void checkButtons() {
         // Only allow going into single or multi player if a name has been entered
-        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() < 12) {
+        if (nameField.getCharacters().length() > 0 && nameField.getCharacters().length() <= 10) {
             characterErrorText.setManaged(false);
             characterErrorText.setVisible(false);
             tick.setVisible(true);
-            if (selectedTeam != Teams.NONE) {
+            if (selectedTeam != Team.NONE) {
                 singlePlayerButton.setDisable(false);
                 multiJoinGameButton.setDisable(false);
                 multiCreateGameButton.setDisable(false);

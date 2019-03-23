@@ -1,6 +1,6 @@
 package shared.view;
 
-import client.gui.Settings;
+import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.scene.media.AudioClip;
 import shared.GameSound;

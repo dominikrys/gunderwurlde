@@ -6,18 +6,15 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import client.gui.Settings;
 import client.net.Addressing;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
-import shared.lists.Teams;
+import shared.lists.Team;
 import shared.view.GameView;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class Client extends Thread {
 
@@ -48,7 +45,8 @@ public class Client extends Thread {
 
 
     private String playerName;
-    private Teams team;
+    private Team team;
+
     private GameView view;
     private GameRenderer renderer;
     private ClientSender sender;
@@ -92,7 +90,7 @@ public class Client extends Thread {
         lowestAvailablePort += 2;
     }
 
-    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName, Teams team) {
+    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName, Team team) {
         try {
             joinedGame = false;
             this.playerName = playerName;
@@ -113,13 +111,9 @@ public class Client extends Thread {
         }
     }
 
-    public void run(){
-        try{
-            System.out.println("Client run cycle started");
-            // Create the sockets to be communicated on
+    public void run() {
+        try {
             listenSocket = new MulticastSocket(listenPort);
-            Addressing.setInterfaces(listenSocket);
-            listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
 
@@ -136,13 +130,7 @@ public class Client extends Thread {
             // Closes the socket as communication has finished
             sendSocket.close();
             listenSocket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -160,8 +148,8 @@ public class Client extends Thread {
             }
     }
 
-    public void joinGame(){
-        try{
+    public void joinGame() {
+        try {
             // Start creating the joinGame Information
             joinGameSocket = new MulticastSocket(JOINPORT);
             Addressing.setInterfaces(joinGameSocket);
@@ -178,12 +166,12 @@ public class Client extends Thread {
             buffer = new byte[32];
             packet = new DatagramPacket(buffer, buffer.length);
             waiting = true;
-            while(waiting){
+            while (waiting) {
                 joinGameSocket.receive(packet);
                 // message that we want to receive will always be 2 IP addresses
                 // one for ID, one for value
                 // 11 is largest value for sending just 1 IP so has to be greater than that
-                if(packet.getLength() > 12) {
+                if (packet.getLength() > 12) {
                     byte[] recievedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
                     String messageReceived = new String(recievedBytes);
                     String[] split = messageReceived.split("/");
@@ -193,8 +181,7 @@ public class Client extends Thread {
                     } else {
                         continue;
                     }
-                }
-                else{
+                } else {
                     continue;
                 }
                 // We have received the servers IP address so can begin TCP communication
@@ -204,8 +191,8 @@ public class Client extends Thread {
                 byte[] clientIDBytes = new byte[4];
                 is.read(clientIDBytes);
                 ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
-                this.playerID =  wrappedCommand.getInt();
-                System.out.println("PlayerID: "+ playerID);
+                this.playerID = wrappedCommand.getInt();
+                System.out.println("PlayerID: " + playerID);
 
                 // Begin the join game Process
                 String data = (playerName + "/" + team);
@@ -216,11 +203,10 @@ public class Client extends Thread {
                 is.read(confirmationBytes);
                 wrappedCommand = ByteBuffer.wrap(confirmationBytes);
                 int confirmation = wrappedCommand.getInt();
-                if(confirmation == 1){
+                if (confirmation == 1) {
                     System.out.println("Player successfully joined");
                     joinedGame = true;
-                }
-                else{
+                } else {
                     System.out.println("player failed to join");
                 }
             }

@@ -12,7 +12,7 @@ import server.net.JoinGameManager;
 import server.net.ServerReceiver;
 import server.net.ServerSender;
 import shared.lists.MapList;
-import shared.lists.Teams;
+import shared.lists.Team;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
@@ -66,13 +66,17 @@ public class Server extends Thread implements HasEngine {
 
     boolean isThreadsUp;
     // The players that need to be added to the engine
-    LinkedHashMap<String, Teams> playersToAdd;
+    LinkedHashMap<String, Team> playersToAdd;
 
     MapList mapName;
+    String hostName;
+    Team hostTeam;
 
 
-    public Server(MapList mapName, String hostName, Teams hostTeam, int numOfPlayers, boolean multiplayer) {
+    public Server(MapList mapName, String hostName, Team hostTeam, int numOfPlayers, boolean multiplayer) {
         this.mapName = mapName;
+        this.hostName = hostName;
+        this.hostTeam = hostTeam;
         this.numOfPlayers = numOfPlayers;
         this.playersToAdd = new LinkedHashMap<>();
         this.playersToAdd.put(hostName, hostTeam);
@@ -209,10 +213,11 @@ public class Server extends Thread implements HasEngine {
     }
 
     // Add player request from the serverReceiver sent to the engine
-    public void addPlayer(String playerName, Teams playerTeam){
+    public void addPlayer(String playerName, Team playerTeam){
         if(playersToAdd.containsKey(playerName)){
             playerName = playerName + "(1)";
         }
+
         playersToAdd.put(playerName, playerTeam);
         joinedPlayers++;
         System.out.println(playersToAdd);
