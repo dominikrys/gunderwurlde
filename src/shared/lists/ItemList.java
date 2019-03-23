@@ -14,6 +14,14 @@ public enum ItemList {
     SNIPER_RIFLE(EntityList.SNIPER_RIFLE, null),
     PLASMA_PISTOL(EntityList.PLASMA_PISTOL, null),
     MACHINE_GUN(EntityList.MACHINE_GUN, null),
+    CRYSTAL_LAUNCHER(EntityList.CRYSTAL_LAUNCHER, null),
+    FIRE_GUN(EntityList.FIRE_GUN, null),
+    ICE_GUN(EntityList.ICE_GUN, null),
+    RING_OF_DEATH(EntityList.RING_OF_DEATH, null),
+    HEAVY_PISTOL(EntityList.HEAVY_PISTOL, null),
+    ASSAULT_RIFLE(EntityList.ASSAULT_RIFLE, null),
+    BUCKSHOT_SHOTGUN(EntityList.BUCKSHOT_SHOTGUN, null),
+    ROCKET_LAUNCHER(EntityList.ROCKET_LAUNCHER, null),
 
     // Ammo
     BASIC_AMMO(EntityList.AMMO_CLIP, AmmoList.BASIC_AMMO),
