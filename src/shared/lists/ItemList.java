@@ -12,10 +12,12 @@ public enum ItemList {
     SHOTGUN(EntityList.SHOTGUN, null),
     SMG(EntityList.SMG, null),
     SNIPER_RIFLE(EntityList.SNIPER_RIFLE, null),
+    PLASMA_PISTOL(EntityList.PLASMA_PISTOL, null),
 
     // Ammo
     BASIC_AMMO(EntityList.AMMO_CLIP, AmmoList.BASIC_AMMO),
-    SHOTGUN_ROUND(EntityList.AMMO_CLIP, AmmoList.SHOTGUN_ROUND);
+    SHOTGUN_ROUND(EntityList.AMMO_CLIP, AmmoList.SHOTGUN_ROUND),
+    ENERGY(EntityList.ENERGY, AmmoList.ENERGY);
 
     private String spritePath;
     private EntityList entityListName;

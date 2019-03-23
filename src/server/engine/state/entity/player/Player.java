@@ -10,7 +10,7 @@ import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
-import server.engine.state.item.weapon.gun.Shotgun;
+import server.engine.state.item.weapon.gun.PlasmaPistol;
 import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
@@ -47,7 +47,7 @@ public class Player extends LivingEntity {
         super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
-        items.add(new Shotgun()); // TODO remove testing only
+        items.add(new PlasmaPistol()); // TODO remove testing only
         items.add(new Smg()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;

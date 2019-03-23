@@ -285,9 +285,9 @@ public class ProcessGameState extends Thread {
 
                 if (request.getShoot()) {
                     if (currentItem.getItemType() == ItemType.GUN) {
-                        currentPlayer.setCurrentAction(ActionList.ATTACKING);
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
+                            currentPlayer.setCurrentAction(ActionList.ATTACKING);
                             LinkedList<Projectile> shotProjectiles = currentGun.getShotProjectiles(playerPose, currentPlayer.getTeam());
                             for (Projectile p : shotProjectiles) {
                                 newProjectiles.add(p);

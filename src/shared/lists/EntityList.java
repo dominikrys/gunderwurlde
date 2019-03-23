@@ -15,7 +15,9 @@ public enum EntityList {
     PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    // TODO
     SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    PLASMA_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
@@ -108,6 +110,7 @@ public enum EntityList {
      * Other renderable entities - some are items
      */
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
+    ENERGY("file:assets/img/other/ammo_clip.png"), // TODO maybe an electric bolt or something?
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
