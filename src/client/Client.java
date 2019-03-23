@@ -139,25 +139,6 @@ public class Client extends Thread {
         }
     }
 
-    public void stopThreads(){
-        sender.close();
-        try {
-            sender.join();
-            sendSocket.close();
-            System.out.println("ClientSender ended");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        receiver.close();
-        try {
-            receiver.join();
-            System.out.println("ClientReceiver ended");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        handler.end();
-    }
-
     public void joinGame() {
         try {
             // Start creating the joinGame Information
@@ -233,7 +214,17 @@ public class Client extends Thread {
     }
 
     public void close() {
-        stopThreads();
+        try {
+            sender.close();
+            sender.join();
+            sendSocket.close();
+            System.out.println("ClientSender ended");
+            receiver.close();
+            receiver.join();
+            handler.end();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void send(ActionList action) {

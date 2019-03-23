@@ -2,6 +2,7 @@ package server.net;
 
 import server.Server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,6 +11,7 @@ public class JoinGameManager extends Thread {
     private static int lowestAvailableID;
     boolean running;
     private Server server;
+    ServerSocket joinSocket;
     public JoinGameManager(Server server){
         lowestAvailableID = 0;
         this.running = true;
@@ -18,7 +20,7 @@ public class JoinGameManager extends Thread {
 
     public void run(){
         try {
-            ServerSocket joinSocket = new ServerSocket(8081);
+            joinSocket = new ServerSocket(8081);
             while (running) {
                 // For each connection spin off a new protocol instance.
                 Socket connection = joinSocket.accept();
@@ -37,7 +39,8 @@ public class JoinGameManager extends Thread {
         lowestAvailableID++;
     }
 
-    public void end(){
+    public void close() throws IOException {
         running = false;
+        joinSocket.close();
     }
 }

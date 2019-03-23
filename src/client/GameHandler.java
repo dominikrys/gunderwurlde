@@ -55,51 +55,73 @@ public class GameHandler extends Thread {
 
     public void run() {
         switch (connectionType) {
+            // single player works, dont touch it
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    server = new Server(map, playerName, team, 1, false);
-                    serverStarted = true;
-                    client = new Client(stage, this, settings, 0);
-                    while(!server.isThreadsUp()){
-                        Thread.yield();
+                    try {
+                        // Create the server
+                        server = new Server(map, playerName, team, 1, false);
+                        // create the client
+                        client = new Client(stage, this, settings, 0);
+                        // start client threads ready to receive and send
+                        client.start();
+                        // wait for threads to be setup completely
+                        client.join();
+                        // start server threads ready to send and receive
+                        server.start();
+                        serverStarted = true;
+                        // wait for threads to be setup completely
+                        server.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    client.start();
-                    System.out.println("GH: client started");
                 }
                 break;
+                //multiplayer needs lots of testing
             case MULTI_PLAYER_HOST:
                 if(!serverStarted) {
-                    System.out.println("Handler starting server");
-                    server = new Server(MapList.MEADOW, playerName, team, numPlayers, true);
-                    serverStarted = true;
-                    client = new Client(stage, this, settings, 0);
-                    client.start();
+                    try {
+                        // create server
+                        server = new Server(MapList.MEADOW, playerName, team, numPlayers, true);
+                        // start the server as it needs to listen to requests
+                        server.start();
+                        serverStarted = true;
+                        // When TCP manager setup create and start the client
+                        while(!server.isReceiving()){
+                            Thread.yield();
+                        }
+                        client = new Client(stage, this, settings, 0);
+                        // setup clients threads
+                        client.start();
+                        //wait for all threads to finish setting up and client to join the game fully
+                        client.join();
+                        // wait for the server to receive all players before ending
+                        server.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 // Code for setting up server, joining it, and waiting for players
                 break;
             case MULTI_PLAYER_JOIN:
-                // TODO: Potential menu for choosing host address and port number?
                 if(!serverStarted) {
-                    serverStarted = true;
-                    client = new Client(stage, this, settings, address, port, playerName, team);
-                    client.start();
+                    try {
+                        serverStarted = true;
+                        // create a client
+                        client = new Client(stage, this, settings, address, port, playerName, team);
+                        // setup the threads for that client
+                        client.start();
+                        // wait for that client to officially join the game
+                        client.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     // Code for joining some server
                 }
                 break;
         }
 
-
-
-        //CODE FOR RUNNING THE GAME???
-
-        /*
-        Implement user leaving game
-
-        public void requestToLeave() {
-            sender.requestLeave();
-        }
-        */
 
         // TODO: handle the game closing once all stuff is running as is supposed to
         System.out.println("Ending GameHandler");
@@ -112,5 +134,6 @@ public class GameHandler extends Thread {
                 server.close();
             }
         }
+        // Client and threads end on their own
     }
 }

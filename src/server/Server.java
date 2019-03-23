@@ -71,6 +71,7 @@ public class Server extends Thread implements HasEngine {
     MapList mapName;
     String hostName;
     Team hostTeam;
+    boolean receiving;
 
 
     public Server(MapList mapName, String hostName, Team hostTeam, int numOfPlayers, boolean multiplayer) {
@@ -84,7 +85,7 @@ public class Server extends Thread implements HasEngine {
         this.multiplayer = multiplayer;
         this.clientRequests = null;
         isThreadsUp = false;
-        this.start();
+        this.receiving = false;
     }
 
     public void run(){
@@ -106,8 +107,8 @@ public class Server extends Thread implements HasEngine {
             // Check if the game is going to be multiplayer
             if(multiplayer){
                 // Create the TCP threads to handle the join protocol
-                tcpMananger = new JoinGameManager(this);
-                tcpMananger.start();
+                // Setup a TCP manager to receive join requests
+                (new JoinGameManager(this)).start();
 
                 joinGameSocket = new MulticastSocket(JOINPORT);
                 Addressing.setInterfaces(joinGameSocket);
@@ -116,8 +117,8 @@ public class Server extends Thread implements HasEngine {
                 tcpAddress = Addressing.getAddress();
 
                 // loop until all players have joined
+                receiving = true;
                 while(numOfPlayers > joinedPlayers) {
-
                     // create a packet to hold the request
                     buffer = new byte[32];
                     packet = new DatagramPacket(buffer, buffer.length);
@@ -150,8 +151,7 @@ public class Server extends Thread implements HasEngine {
                     e.printStackTrace();
                 }
                 System.out.println("All players have joined the game");
-                tcpMananger.end();
-                joinGameSocket.close();
+                tcpMananger.close();
             }
 
 
@@ -236,4 +236,7 @@ public class Server extends Thread implements HasEngine {
         return isThreadsUp;
     }
 
+    public boolean isReceiving() {
+        return receiving;
+    }
 }
