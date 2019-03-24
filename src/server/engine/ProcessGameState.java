@@ -25,6 +25,7 @@ import server.engine.state.entity.projectile.CrystalBullet;
 import server.engine.state.entity.projectile.HasEffect;
 import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.Item;
+import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
@@ -703,14 +704,36 @@ public class ProcessGameState extends Thread {
                             int dropQuantity = currentItemDrop.getQuantity();
                             ArrayList<Item> playerItems = currentPlayer.getItems();
 
-                            switch (currentItemDrop.getItemType()) {
+                            ItemType dropType = currentItemDrop.getItemType();
+                            switch (dropType) {
+                            case HEALTH:
+                                int healthDiff = currentPlayer.getMaxHealth() - currentPlayer.getHealth();
+                                if (healthDiff > 0) {
+                                    if (dropQuantity > healthDiff) {
+                                        dropQuantity -= healthDiff;
+                                        currentPlayer.setHealth(currentPlayer.getMaxHealth());
+                                        if (dropQuantity == 1) {
+                                            currentItemDrop.setItem(Health.makeHealth(1));
+                                        }
+                                    } else {
+                                        currentPlayer.setHealth(currentPlayer.getHealth() + dropQuantity);
+                                        dropQuantity = 0;
+                                    }
+                                }
+                                break;
                             case AMMO:
                                 AmmoList ammoType = currentItemDrop.getItemName().toAmmoList();
                                 dropQuantity -= currentPlayer.addAmmo(ammoType, dropQuantity);
                                 break;
-                            case GUN: // TODO change case to include melee as well
+                            case CONSUMEABLE:
+                            case MELEE_WEAPON:
+                            case GUN:
                                 if (playerItems.stream().anyMatch((i) -> i.getItemListName() == currentItemDrop.getItemName())) {
-                                    // player already has that item TODO take some ammo from it
+                                    if (dropType == ItemType.CONSUMEABLE) {
+                                        // TODO stack the amount
+                                    } else if (dropType == ItemType.GUN) {
+                                        // TODO take some ammo from it
+                                    }
                                 } else if (playerItems.size() < currentPlayer.getMaxItems()
                                         && (lastProcessTime - currentItemDrop.getDropTime()) > ItemDrop.DROP_FREEZE) {
                                     playerItems.add(currentItemDrop.getItem());

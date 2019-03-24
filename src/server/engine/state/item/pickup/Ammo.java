@@ -1,4 +1,4 @@
-package server.engine.state.item.weapon.gun;
+package server.engine.state.item.pickup;
 
 import server.engine.state.item.Item;
 import shared.lists.AmmoList;
