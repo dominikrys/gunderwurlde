@@ -306,10 +306,12 @@ public class Client extends Thread {
                 else {
                     continue;
                 }
-                                // We have received the servers IP address so can begin TCP communication
+                // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
+
+                // Listen for playerID to be sent
                 byte[] clientIDBytes = new byte[4];
                 is.read(clientIDBytes);
                 ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
@@ -320,6 +322,7 @@ public class Client extends Thread {
                 byte[] nameAndTeamBytes = data.getBytes();
                 os.write(nameAndTeamBytes);
 
+                // Listen for confirmation joinGame request has been passed on
                 byte[] confirmationBytes = new byte[4];
                 is.read(confirmationBytes);
                 wrappedCommand = ByteBuffer.wrap(confirmationBytes);
@@ -329,9 +332,15 @@ public class Client extends Thread {
                 } else {
                     System.out.println("player failed to join");
                 }
+                is.close();
+                os.close();
             }
+            // Close sockets and streams
+            joinGameSocket.close();
+            tcpSocket.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
         } catch (SocketException e) {
             e.printStackTrace();
@@ -340,55 +349,73 @@ public class Client extends Thread {
         }
     }
 
-    public ClientSender getClientSender() {
-        return this.sender;
-    }
-
+    /**
+     * Method to end this thread
+     */
     public void close() {
         try {
+            // Close sender first
             sender.close();
+            // When sender has joined close the socket
             sender.join();
             sendSocket.close();
-            System.out.println("ClientSender ended");
+            // Close receiver
             receiver.close();
+            // when receiver has joined tell handler to close server if exists
             receiver.join();
+            // no need to close socket as its closed within receiver
             handler.end();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method to send requests that do no require parameters to the server
+     * @param action the list of actions to be sent to the server
+     */
     public void send(ActionList action) {
         switch (action.toString()) {
             case "ATTACK": // 0
-                getClientSender().send(new Integer[]{0});
+                sender.send(new Integer[]{0});
                 break;
             case "DROPITEM": // 1
-                getClientSender().send(new Integer[]{1});
+                sender.send(new Integer[]{1});
                 break;
             case "RELOAD": // 2
-                getClientSender().send(new Integer[]{2});
+                sender.send(new Integer[]{2});
                 break;
         }
     }
 
+    /**
+     * Method to send requests that do require parameters to the server
+     * @param action the list of actions to be sent to the server
+     * @param parameter the parameters that actionlist requires
+     */
     public void send(ActionList action, int parameter) {
         switch (action.toString()) {
             case "CHANGEITEM": // 3
-                getClientSender().send(new Integer[]{3, parameter});
+                sender.send(new Integer[]{3, parameter});
                 break;
             case "MOVEMENT": // 4
-                getClientSender().send(new Integer[]{4, parameter});
+                sender.send(new Integer[]{4, parameter});
                 break;
             case "TURN": //5
-                getClientSender().send(new Integer[]{5, parameter});
+                sender.send(new Integer[]{5, parameter});
         }
     }
 
+    /**
+     * method to update the next assignable address
+     */
     private void updateLowestAvailableAddress() {
         lowestAvailableAddress++;
     }
 
+    /**
+     * method to update the next asssignable port
+     */
     private void updateLowestAvailablePort() {
         lowestAvailablePort += 2;
     }
