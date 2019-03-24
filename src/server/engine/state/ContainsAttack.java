@@ -1,7 +1,7 @@
-package server.engine.state.entity.projectile;
+package server.engine.state;
 
 import server.engine.state.entity.attack.Attack;
 
-public interface AttackOnRemove {
+public interface ContainsAttack {
     public Attack getAttack();
 }

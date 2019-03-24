@@ -2,6 +2,7 @@ package server.engine.state.entity.projectile;
 
 import java.util.LinkedList;
 
+import server.engine.state.ContainsAttack;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
@@ -11,7 +12,7 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
-public class CrystalBullet extends Projectile implements AttackOnRemove {
+public class CrystalBullet extends Projectile implements ContainsAttack {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = EntityList.CRYSTAL_BULLET.getSize() / 2;

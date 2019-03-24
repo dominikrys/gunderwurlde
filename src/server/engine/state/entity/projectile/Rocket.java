@@ -1,5 +1,6 @@
 package server.engine.state.entity.projectile;
 
+import server.engine.state.ContainsAttack;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
@@ -8,7 +9,7 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
-public class Rocket extends Projectile implements AttackOnRemove {
+public class Rocket extends Projectile implements ContainsAttack {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 32;
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = EntityList.ROCKET.getSize() / 2;

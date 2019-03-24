@@ -26,6 +26,7 @@ public enum EntityList {
     HEAVY_PISTOL("file:assets/img/entity/item/heavy_pistol.png", Constants.TILE_SIZE),
     BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
     ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
+    GRENADE("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE), // TODO
 
     /**
      * Player standing
