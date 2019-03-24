@@ -1,5 +1,6 @@
 package client.input;
 
+import client.Client;
 import client.GameHandler;
 import client.Settings;
 import javafx.animation.AnimationTimer;
@@ -18,7 +19,7 @@ import java.util.TimerTask;
 
 public class KeyboardHandler extends UserInteraction {
     private int playerID;
-    private GameHandler handler;
+    private Client handler;
     private Scene fscene;
     private GameView gameView;
     private PlayerView playerView;
@@ -62,7 +63,7 @@ public class KeyboardHandler extends UserInteraction {
     }
 
     @Override
-    public void setGameHandler(GameHandler handler) {
+    public void setGameHandler(Client handler) {
         this.handler = handler;
     }
 

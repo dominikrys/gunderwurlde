@@ -5,9 +5,14 @@ import server.Server;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.*;
-import java.util.Enumeration;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
+import client.net.Addressing;
+import shared.lists.Team;
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client. Also controls server behaviour
 
@@ -18,18 +23,17 @@ public class ServerReceiver extends Thread {
     Boolean running;
     DatagramPacket packet;
     byte[] buffer;
-    int numOfPlayers;
     Server handler;
 
 
-    public ServerReceiver(InetAddress address, MulticastSocket listenSocket, ServerSender sender, Server handler) {
-        this.listenSocket = listenSocket;
+    public ServerReceiver(InetAddress address, MulticastSocket socket, ServerSender sender, Server handler) {
+        this.listenSocket = socket;
         this.listenAddress = address;
         this.sender = sender;
         this.handler = handler;
         buffer = new byte[255];
         running = true;
-        setInterfaces(listenSocket);
+        Addressing.setInterfaces(listenSocket);
         this.start();
     }
 
@@ -37,88 +41,81 @@ public class ServerReceiver extends Thread {
         return running;
     }
 
-    public void stopRunning() {
+    public void close() {
+        listenSocket.close();
         this.running = false;
+
     }
 
-    public void setInterfaces(MulticastSocket listenSocket) {
-        Enumeration<NetworkInterface> interfaces;
-        // attempt to set the sockets interface to all the addresses of the machine
-        try {
-            // for all interfaces that are not loopback or up get the addresses associated with thos
-            // interfaces and set the sockets interface to that address
-            interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    listenSocket.setInterface(addr);
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-    }
 
     public void run() {
         try {
+            // join the multicast group
             listenSocket.joinGroup(listenAddress);
-
             while (running) {
                 // packet to receive incoming messages
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
 
-                // System.out.println("Packet recieved by ServerReceiver");
+                // check for a joinGame command
+                byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
+                ByteBuffer checkWrap = ByteBuffer.wrap(commandBytes);
+                int command = checkWrap.getInt();
+                // if it is the joinGame command then call joinGame and continue
+                if(command == 99){
+                    joinGame(packet);
+                    continue;
+                }
 
-                // Creates a bytearrayinputstream from the received packets data
-                ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
-                //ObjectinputStream to turn the bytes back into an object.
+                // if not joinGame then must be action request
+                // Split the byte array into the clientID and the received requests
+                byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
+                byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength()-4);
+
+                // Convert the byteArray clientID to the int clientID
+                ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
+                int playerID = wrapped.getInt();
+
+                ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
                 ObjectInputStream in = null;
                 try {
+                    // Turn the requests bytearray into a requests Integer[]
                     in = new ObjectInputStream(bis);
-
                     Integer[] received =  (Integer[]) in.readObject();
-                    //Request request = new Request();
+
+                    // Based on the request perform the specified action
                     switch(received[0]) {
-                    	case 0 : // ATTACK
-                    		//request.requestShoot();
-                    		handler.getClientRequests().playerRequestShoot(0);
-                    		break;
-                    	case 1 : // DROPITEM
-                    		//request.requestDrop();
-                    		handler.getClientRequests().playerRequestDrop(0);
-                    		break;
-                    	case 2 : // RELOAD
-                    		//request.requestReload();
-                    		handler.getClientRequests().playerRequestReload(0);
-                    		break;
-                    	case 3 : // CHANGEITEM
-                    		//request.setSelectItem(received[1]);
-                    		handler.getClientRequests().playerRequestSelectItem(0, received[1]);
-                    		break;
-                    	case 4 : // MOVEMENT
-                    		//request.setMovementDirection(received[1]);
-                    		handler.getClientRequests().playerRequestMovement(0, received[1]);
-                    		break;
-                    	case 5 : // TURN
-                    		//request.setFacing(received[1]);
-                    		handler.getClientRequests().playerRequestFacing(0, received[1]);
+                        case 0 : // ATTACK
+                            //request.requestShoot();
+                            handler.getClientRequests().playerRequestShoot(playerID);
+                            break;
+                        case 1 : // DROPITEM
+                            //request.requestDrop();
+                            handler.getClientRequests().playerRequestDrop(playerID);
+                            break;
+                        case 2 : // RELOAD
+                            //request.requestReload();
+                            handler.getClientRequests().playerRequestReload(playerID);
+                            break;
+                        case 3 : // CHANGEITEM
+                            //request.setSelectItem(received[1]);
+                            handler.getClientRequests().playerRequestSelectItem(playerID, received[1]);
+                            break;
+                        case 4 : // MOVEMENT
+                            //request.setMovementDirection(received[1]);
+                            handler.getClientRequests().playerRequestMovement(playerID, received[1]);
+                            break;
+                        case 5 : // TURN
+                            //request.setFacing(received[1]);
+                            handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                     }
-                    
                     /*
                     // Send the request to the Engine
                     handler.setClientRequests(requests);
-                    
+
                     handler.setClientRequests(null);
                     */
-                    
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {
@@ -132,14 +129,47 @@ public class ServerReceiver extends Thread {
                 }
             }
             // Waits for the sender to finish its processes before ending itself
-            sender.join();
             // Running = false so the Thread ends gracefully
-            running = false;
-            System.out.println("Ending server receiver");
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
+            System.out.println("Closing serverreceiver");
         } catch (IOException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public void joinGame(DatagramPacket packet){
+        try {
+            System.out.println("join game request received");
+            // turn the dataBytes into the strings
+            byte[] dataBytes = Arrays.copyOfRange(packet.getData(), 4, packet.getLength());
+            String data = new String(dataBytes);
+            // split on the space to seperate the data
+            String[] seperateData = data.split(" ");
+            System.out.println("Part 1 is " + seperateData[0]);
+            System.out.println("Part 2 is " + seperateData[1]);
+            System.out.println("Player name");
+            String playerName = seperateData[0];
+            Team team = null;
+            if(seperateData[1].equals("RED")){
+                team = Team.RED;
+            }
+            else if(seperateData[1].equals("BLUE")){
+                team = Team.BLUE;
+            }
+            else if(seperateData[1].equals("GREEN")){
+                team = Team.GREEN;
+            }
+            else if(seperateData[1].equals("YELLOW")){
+                team = Team.YELLOW;
+            }
+            else{
+                team = Team.NONE;
+            }
+            // call add player from the server
+            handler.addPlayer(playerName, team);
+            System.out.println("Player added to game");
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

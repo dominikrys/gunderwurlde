@@ -1,5 +1,6 @@
 package server.engine;
 
+import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -73,12 +74,19 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Team hostTeam) {
+
+    public ProcessGameState(HasEngine handler, MapList mapName, LinkedHashMap<String, Team> playersToAdd) {
         this.handler = handler;
         LinkedHashMap<Integer, LivingEntity> players = new LinkedHashMap<>();
-        Player hostPlayer = new Player(hostTeam, hostName);
-        players.put(hostPlayer.getID(), hostPlayer);
+        for (Map.Entry<String, Team> player : playersToAdd.entrySet()) {
+            Player playerToAdd = new Player(player.getValue(), player.getKey());
+            players.put(playerToAdd.getID(), playerToAdd);
+            System.out.println(player.getValue());
+        }
+
+
         this.gameState = new GameState(MapReader.readMap(mapName), players);
+
         this.handlerClosing = false;
 
         // setup GameView
@@ -95,7 +103,10 @@ public class ProcessGameState extends Thread {
         }
 
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
-        playerViews.add(toPlayerView(hostPlayer));
+        for (Map.Entry<Integer, LivingEntity> player : players.entrySet()) {
+            Player playerToView = (Player) player.getValue();
+            playerViews.add(toPlayerView(playerToView));
+        }
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
@@ -109,10 +120,6 @@ public class ProcessGameState extends Thread {
         LOGGER.info("Stopping engine.");
         this.handlerClosing = true;
         this.interrupt();
-    }
-
-    public void addPlayer(String playerName, Team team) { // TODO remove if not used
-        gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override
@@ -543,7 +550,6 @@ public class ProcessGameState extends Thread {
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
                             LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
-
                             for (Integer entityID : entitiesOnTile) {
                                 LivingEntity entityBeingChecked = livingEntities.get(entityID);
 

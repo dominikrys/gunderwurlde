@@ -3,34 +3,31 @@ package client.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.*;
-import java.util.Enumeration;
-import java.util.Scanner;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
 
 public class ClientSender extends Thread {
-    private MulticastSocket senderSocket;
-    private InetAddress senderAddress;
-    private Boolean running;
-    private DatagramPacket packet = null;
-    private int port;
-    private byte[] buffer;
-    private Scanner scan;
+    MulticastSocket senderSocket;
+    InetAddress senderAddress;
+    Boolean running;
+    DatagramPacket packet = null;
+    int port;
+    byte[] buffer;
+    int playerID;
 
-    public ClientSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ClientSender(InetAddress address, MulticastSocket socket, int port, int playerID) {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
+        this.playerID = playerID;
         running = true;
-        senderSocket.setInterface(findInetAddress());
         this.start();
     }
 
     public boolean getRunning() {
         return running;
-    }
-
-    public void stopRunning() {
-        this.running = false;
     }
 
     public void run() {
@@ -41,19 +38,20 @@ public class ClientSender extends Thread {
 
     public void send(Integer[] action) {
         try {
+            //Create streams that will turn the data into a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out = null;
-               try {
+            ObjectOutputStream out;
+            try {
+                // pass the ByteArray stream into the object stream
                 out = new ObjectOutputStream(bos);
-                // Writes the view object into the BAOutputStream
+                // Write the actions to be performed followed by the client performing them to the byte array
                 out.writeObject(action);
-                //flushes anything in the OOutputStream
+                out.writeInt(playerID);
                 out.flush();
-                // Writes the info in the BOutputStream to a byte array to be transmitted
+                // set the buffer to the array and send to the server
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                // System.out.println("Packet sent from clientSender");
             } finally {
                 try {
                     bos.close();
@@ -64,31 +62,17 @@ public class ClientSender extends Thread {
             }
             // TODO Will be set on a loop to send every ______ seconds
 
-        } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("unable to send message");
         }
     }
 
-    private InetAddress findInetAddress() {
-        InetAddress addr = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
+    public void setRunning(boolean value){
+        running = value;
+    }
 
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    addr = addresses.nextElement();
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-        return addr;
+    public void close(){
+        running = false;
     }
 }

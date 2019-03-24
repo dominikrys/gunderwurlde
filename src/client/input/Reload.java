@@ -1,5 +1,6 @@
 package client.input;
 
+import client.Client;
 import client.GameHandler;
 import shared.lists.AmmoList;
 import shared.view.ItemView;
@@ -7,10 +8,10 @@ import shared.view.entity.PlayerView;
 
 public class Reload extends Action {
 
-    private GameHandler handler;
+    private Client handler;
     private PlayerView playerView;
 
-    public Reload(GameHandler handler, PlayerView playerView) {
+    public Reload(Client handler, PlayerView playerView) {
         super(handler, playerView);
         this.handler = handler;
         this.playerView = playerView;

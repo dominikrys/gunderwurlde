@@ -10,8 +10,12 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.*;
-import java.util.Enumeration;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 // Gets messages from other clients via the server (by the
 // serverclientthreads.ServerSender thread).
@@ -26,15 +30,14 @@ public class ClientReceiver extends Thread {
     private GameRenderer renderer;
     private Settings settings;
 
-    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket listenSocket, Client client, Settings settings) {
-        this.listenSocket = listenSocket;
+    public ClientReceiver(GameRenderer renderer, InetAddress listenAddress, MulticastSocket socket, Client client, Settings settings) {
+        this.listenSocket = socket;
         this.listenAddress = listenAddress;
         this.client = client;
         this.renderer = renderer;
         this.settings = settings;
-        buffer = new byte[35000];
+        buffer = new byte[2000000];
         running = true;
-        setInterfaces(listenSocket);
         this.start();
     }
 
@@ -42,79 +45,61 @@ public class ClientReceiver extends Thread {
         return running;
     }
 
-    public void stopRunning() {
-        this.running = false;
-    }
-
-    public void setInterfaces(MulticastSocket listenSocket) {
-        Enumeration<NetworkInterface> interfaces = null;
-        // attempt to set the sockets interface to all the addresses of the machine
-        try {
-            // for all interfaces that are not loopback or up get the addresses associated with thos
-            // interfaces and set the sockets interface to that address
-//			}
-            interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    listenSocket.setInterface(addr);
-                }
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void run() {
         try {
-            listenSocket.joinGroup(listenAddress);
             while (running) {
-
                 // creates a packet and waits to receive a message from the server
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
-                
-                // Creates a bytearrayinputstream from the received packets data
-                ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
-                //ObjectinputStream to turn the bytes back into an object.
-                ObjectInputStream in = null;
-                GameView view = null;
-                try {
-                    in = new ObjectInputStream(bis);
-                    view = (GameView)in.readObject();
-                    client.setGameView(view, settings);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (EOFException ex) {
-                    ex.printStackTrace();
+                if(packet.getLength() == 8){
+                    byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
+                    byte[] ValueBytes = Arrays.copyOfRange(packet.getData(), 4, 8);
+                    ByteBuffer wrappedCommand = ByteBuffer.wrap(commandBytes);
+                    int command = wrappedCommand.getInt();
+                    ByteBuffer wrappedValue = ByteBuffer.wrap(ValueBytes);
+                    int value = wrappedValue.getInt();
+                    if(command == 1){
+                        buffer = new byte[value];
                     }
-                    finally {
+                    continue;
+                }
+                else {
+                    // Creates a bytearrayinputstream from the received packets data
+                    ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
+                    //ObjectinputStream to turn the bytes back into an object.
+                    ObjectInputStream in = null;
+                    GameView view = null;
                     try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
+                        in = new ObjectInputStream(bis);
+                        view = (GameView) in.readObject();
+                        client.setGameView(view, settings);
+
+                    } catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
+                    } catch (EOFException ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        try {
+                            if (in != null) {
+                                in.close();
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-
-                // TODO how do threads exit?
             }
-            System.out.println("Ending client receiver");
+            System.out.println("Closing clientReceiver");
         }
-          catch (SocketException e) {
-            System.out.println("Socket closed unexpectedly");
+        catch (SocketException e) {
+            //e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void close(){
+        running = false;
+        listenSocket.close();
     }
 }
