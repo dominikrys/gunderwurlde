@@ -28,7 +28,10 @@ public class Player extends LivingEntity {
 
     static {
         DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
-        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
+        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 180);
+        DEFAULT_MAX_AMMO.put(AmmoList.MAGIC_ESSENCE, 80);
+        DEFAULT_MAX_AMMO.put(AmmoList.HEAVY_AMMO, 120);
+        DEFAULT_MAX_AMMO.put(AmmoList.ROCKET_AMMO, 20);
     }
 
     protected static EnumMap<Team, Integer> teamScore = new EnumMap<>(Team.class);
