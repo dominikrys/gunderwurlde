@@ -1,7 +1,6 @@
 package server.net;
 
 import server.Server;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,26 +9,46 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
 import client.net.Addressing;
 import shared.lists.Team;
-// Gets messages from client and puts them in a queue, for another
-// thread to forward to the appropriate client. Also controls server behaviour
 
+/**
+ * Thread to handle receiving client requests
+ */
 public class ServerReceiver extends Thread {
-    MulticastSocket listenSocket;
-    InetAddress listenAddress;
-    ServerSender sender;
-    Boolean running;
-    DatagramPacket packet;
-    byte[] buffer;
-    Server handler;
 
+    /**
+     * Socket to receive Client requests on
+     */
+    private MulticastSocket listenSocket;
 
-    public ServerReceiver(InetAddress address, MulticastSocket socket, ServerSender sender, Server handler) {
+    /**
+     * Boolean to tell if the thread should keep running
+     */
+    private Boolean running;
+
+    /**
+     * packet used to accept incoming client requests
+     */
+    private DatagramPacket packet;
+
+    /**
+     * byte array to hold incoming client requests data
+     */
+    private byte[] buffer;
+
+    /**
+     * reference to server so we can add to the ClientRequests object
+     */
+    private Server handler;
+
+    /**
+     * Constructor
+     * @param socket Socket to receive Client requests on
+     * @param handler reference to server so we can add to the ClientRequests object
+     */
+    public ServerReceiver( MulticastSocket socket, Server handler) {
         this.listenSocket = socket;
-        this.listenAddress = address;
-        this.sender = sender;
         this.handler = handler;
         buffer = new byte[255];
         running = true;
@@ -37,139 +56,75 @@ public class ServerReceiver extends Thread {
         this.start();
     }
 
+    /**
+     * method to get if the thread is still running
+     * @return
+     */
     public boolean getRunning() {
         return running;
     }
 
+    /**
+     * Method to close the thread
+     */
     public void close() {
-        listenSocket.close();
         this.running = false;
-
+        // Causes Exception which closes the thread
+        listenSocket.close();
     }
 
-
+    /**
+     * run method to receive client Requests and pass them onto the server
+     */
     public void run() {
         try {
-            // join the multicast group
-            listenSocket.joinGroup(listenAddress);
             while (running) {
-                // packet to receive incoming messages
+                // Create a packet and listen for incoming requests
                 packet = new DatagramPacket(buffer, buffer.length);
-                // blocking method that waits until a packet is received
                 listenSocket.receive(packet);
 
-                // check for a joinGame command
-                byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
-                ByteBuffer checkWrap = ByteBuffer.wrap(commandBytes);
-                int command = checkWrap.getInt();
-                // if it is the joinGame command then call joinGame and continue
-                if(command == 99){
-                    joinGame(packet);
-                    continue;
-                }
-
-                // if not joinGame then must be action request
                 // Split the byte array into the clientID and the received requests
                 byte[] clientIDBytes = Arrays.copyOfRange(packet.getData(), packet.getLength()-4, packet.getLength());
                 byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength()-4);
 
-                // Convert the byteArray clientID to the int clientID
+                // Create a playerID from the bytes
                 ByteBuffer wrapped = ByteBuffer.wrap(clientIDBytes);
                 int playerID = wrapped.getInt();
-
+                // Create streams to turn the bytes into an integer list
                 ByteArrayInputStream bis = new ByteArrayInputStream(receivedBytes);
-                ObjectInputStream in = null;
+                ObjectInputStream ins = new ObjectInputStream(bis);
                 try {
-                    // Turn the requests bytearray into a requests Integer[]
-                    in = new ObjectInputStream(bis);
-                    Integer[] received =  (Integer[]) in.readObject();
-
+                    Integer[] received =  (Integer[]) ins.readObject();
                     // Based on the request perform the specified action
                     switch(received[0]) {
                         case 0 : // ATTACK
-                            //request.requestShoot();
                             handler.getClientRequests().playerRequestShoot(playerID);
                             break;
                         case 1 : // DROPITEM
-                            //request.requestDrop();
                             handler.getClientRequests().playerRequestDrop(playerID);
                             break;
                         case 2 : // RELOAD
-                            //request.requestReload();
                             handler.getClientRequests().playerRequestReload(playerID);
                             break;
                         case 3 : // CHANGEITEM
-                            //request.setSelectItem(received[1]);
                             handler.getClientRequests().playerRequestSelectItem(playerID, received[1]);
                             break;
                         case 4 : // MOVEMENT
-                            //request.setMovementDirection(received[1]);
                             handler.getClientRequests().playerRequestMovement(playerID, received[1]);
                             break;
                         case 5 : // TURN
-                            //request.setFacing(received[1]);
                             handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                     }
-                    /*
-                    // Send the request to the Engine
-                    handler.setClientRequests(requests);
-
-                    handler.setClientRequests(null);
-                    */
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    ins.close();
+                    bis.close();
                 }
             }
-            // Waits for the sender to finish its processes before ending itself
-            // Running = false so the Thread ends gracefully
             System.out.println("Closing serverreceiver");
         } catch (IOException e1) {
             e1.printStackTrace();
-        }
-    }
-
-    public void joinGame(DatagramPacket packet){
-        try {
-            System.out.println("join game request received");
-            // turn the dataBytes into the strings
-            byte[] dataBytes = Arrays.copyOfRange(packet.getData(), 4, packet.getLength());
-            String data = new String(dataBytes);
-            // split on the space to seperate the data
-            String[] seperateData = data.split(" ");
-            System.out.println("Part 1 is " + seperateData[0]);
-            System.out.println("Part 2 is " + seperateData[1]);
-            System.out.println("Player name");
-            String playerName = seperateData[0];
-            Team team = null;
-            if(seperateData[1].equals("RED")){
-                team = Team.RED;
-            }
-            else if(seperateData[1].equals("BLUE")){
-                team = Team.BLUE;
-            }
-            else if(seperateData[1].equals("GREEN")){
-                team = Team.GREEN;
-            }
-            else if(seperateData[1].equals("YELLOW")){
-                team = Team.YELLOW;
-            }
-            else{
-                team = Team.NONE;
-            }
-            // call add player from the server
-            handler.addPlayer(playerName, team);
-            System.out.println("Player added to game");
-        }
-        catch(Exception e){
-            e.printStackTrace();
         }
     }
 }

@@ -59,12 +59,12 @@ public class Server extends Thread implements HasEngine {
     private MulticastSocket joinGameSocket;
 
     /**
-     * Address the server will receive requests on
+     * Address the server will receive requests from
      */
     private InetAddress listenAddress;
 
     /**
-     * Address the server will send GameViews on
+     * Address the server will send GameViews to
      */
     private InetAddress senderAddress;
 
@@ -186,9 +186,11 @@ public class Server extends Thread implements HasEngine {
             // Set sockets and address to be used
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
+
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
             listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            listenSocket.joinGroup(listenAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             updatedLowestAvailableAddress();
         } catch (UnknownHostException e) {
@@ -249,7 +251,7 @@ public class Server extends Thread implements HasEngine {
 
             // Create the threads that will run as sender and receiver
             sender = new ServerSender(senderAddress, sendSocket, sendPort);
-            receiver = new ServerReceiver(listenAddress, listenSocket, sender, this);
+            receiver = new ServerReceiver(listenSocket, this);
 
 
             this.clientRequests = new ClientRequests(numOfPlayers);
