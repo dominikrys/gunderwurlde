@@ -1,6 +1,6 @@
 # Meadow map
 #Dimensions X,Y:
-32 22
+70 46
 #Tiles
 #TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
 W WOOD SOLID 0.7
@@ -90,3 +90,6 @@ ZOMBIE
 #Round1
 ZOMBIE
 0 1000 1 1
+
+
+

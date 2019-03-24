@@ -40,7 +40,6 @@ public class GameHandler extends Thread {
             case SINGLE_PLAYER:
                 // Code for establishing local server
                 if (!serverStarted) {
-                    System.out.println(map.toString());
                     server = new Server(map, playerName, team);
                     serverStarted = true;
                     client = new Client(stage, playerName, 0, this, settings);
