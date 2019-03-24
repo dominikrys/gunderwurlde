@@ -156,7 +156,7 @@ public class MapSizeOption {
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(widthTextField.getText().matches("\\d+") && heightTextField.getText().matches("\\d+")) {
+				if(widthTextField.getText().matches("\\d+") && !widthTextField.getText().equals("0") && heightTextField.getText().matches("\\d+") && !heightTextField.getText().equals("0")) {
 					int newWidth = Integer.parseInt(widthTextField.getText());
 					int newHeight = Integer.parseInt(heightTextField.getText());
 					if (newWidth < mapWidth || newHeight < mapHeight) {
@@ -324,7 +324,7 @@ public class MapSizeOption {
 	private void sizeErrorPopup() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
-		alert.setHeaderText("Please only enter a number");
+		alert.setHeaderText("Please only enter non-zero numbers");
 		alert.show();
 	}
 

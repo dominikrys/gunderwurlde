@@ -2,7 +2,9 @@ package mapeditor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.event.ActionEvent;
@@ -15,8 +17,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,13 +30,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import server.engine.state.map.Round;
-import server.engine.state.map.Zone;
-import server.engine.state.map.tile.Door;
+import shared.lists.EntityList;
 import shared.lists.TileState;
+import shared.lists.TileType;
 
 public class WaveSetter {
 	
+	private WaveSetter waveSetter = this;
 	private MapEditor mapEditor;
 	private Stage stage;
 	private StackPane root;
@@ -60,12 +65,29 @@ public class WaveSetter {
 	private Button triggerAdd;
 	private Button triggerSet;
 	private Button triggerDelete;
+	private HBox roundLabelComboBoxHBox;
+	private Label roundLabel;
+	private ComboBox<String> roundComboBox;
+	private HBox roundAddDeleteHBox;
+	private Button roundAdd;
+	private Button roundDelete;
+	private ScrollPane waveScrollPane;
+	private GridPane waveGridPane;
+	private HashMap<EntityList, Label> enemyStartTimeLabels;
+	private HashMap<EntityList, Label> enemySpawnIntervalLabels;
+	private HashMap<EntityList, Label> enemyAmountPerSpawnLabels;
+	private HashMap<EntityList, Label> enemyTotalLabels;
+	private HashMap<EntityList, Label> enemyReadyLabels;
+	private HashMap<EntityList, Button> enemySetButtons;
 	private HashMap<String, ZoneSettings> zoneMap;
+	private HashMap<EntityList, ImageView> enemySprite;
 	private int[] selectedXY;
 	
 	public WaveSetter(MapEditor mapEditor) {
 		this.mapEditor = mapEditor;
 		this.zoneMap = new HashMap<String, ZoneSettings>();
+		this.selectedXY = new int[] {0, 0};
+		loadEnemySprite();
 		this.init();
 	}
 	
@@ -161,8 +183,10 @@ public class WaveSetter {
 			public void handle(ActionEvent event) {
 				if(!zoneComboBox.getItems().isEmpty()) {
 					enemySpawnComboBox.getItems().clear();
-					for(int i = 0 ; i < zoneMap.get(zoneComboBox.getValue()).getEnemySpawns().size() ; i++) {
-						enemySpawnComboBox.getItems().add(Arrays.toString(zoneMap.get(zoneComboBox.getValue()).getEnemySpawns().get(i)));
+					if(zoneComboBox.getValue() != null) {
+						for(int i = 0 ; i < zoneMap.get(zoneComboBox.getValue()).getEnemySpawns().size() ; i++) {
+							enemySpawnComboBox.getItems().add(Arrays.toString(zoneMap.get(zoneComboBox.getValue()).getEnemySpawns().get(i)));
+						}
 					}
 					enemySpawnComboBox.getSelectionModel().select(0);
 					if(!enemySpawnComboBox.getItems().isEmpty()) {
@@ -170,16 +194,58 @@ public class WaveSetter {
 						enemySpawnSet.setDisable(false);
 						enemySpawnDelete.setDisable(false);
 					}
+					else {
+						enemySpawnComboBox.setDisable(true);
+						enemySpawnSet.setDisable(true);
+						enemySpawnDelete.setDisable(true);
+					}
 					
 					triggerComboBox.getItems().clear();
-					for(int i = 0 ; i < zoneMap.get(zoneComboBox.getValue()).getTriggers().size() ; i++) {
-						triggerComboBox.getItems().add(Arrays.toString(zoneMap.get(zoneComboBox.getValue()).getTriggers().get(i)));
+					if(zoneComboBox.getValue() != null) {
+						for(int i = 0 ; i < zoneMap.get(zoneComboBox.getValue()).getTriggers().size() ; i++) {
+							triggerComboBox.getItems().add(Arrays.toString(zoneMap.get(zoneComboBox.getValue()).getTriggers().get(i)));
+						}
 					}
 					triggerComboBox.getSelectionModel().select(0);
 					if(!triggerComboBox.getItems().isEmpty()) {
 						triggerComboBox.setDisable(false);
 						triggerSet.setDisable(false);
 						triggerDelete.setDisable(false);
+					}
+					else {
+						triggerComboBox.setDisable(true);
+						triggerSet.setDisable(true);
+						triggerDelete.setDisable(true);
+					}
+					
+					roundComboBox.getItems().clear();
+					if(zoneComboBox.getValue() != null) {
+						for(Map.Entry<String, RoundSettings> entry : zoneMap.get(zoneComboBox.getValue()).getRounds().entrySet()) {
+							roundComboBox.getItems().add(entry.getKey());
+						}
+					}
+					roundComboBox.getSelectionModel().select(0);
+					if(!roundComboBox.getItems().isEmpty()) {
+						roundComboBox.setDisable(false);
+						roundDelete.setDisable(false);
+						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+							WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
+							if(wave != null) {
+								setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+							}
+							else {
+								setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							}
+							entry.getValue().setDisable(false);
+						}
+					}
+					else {
+						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							entry.getValue().setDisable(true);
+						}
+						roundDelete.setDisable(true);
+						roundComboBox.setDisable(true);
 					}
 				}
 			}
@@ -205,11 +271,12 @@ public class WaveSetter {
 				if(name.isPresent() && !name.get().equals("") && !zoneComboBox.getItems().contains(name.get())) {
 					zoneComboBox.getItems().add(name.get());
 					zoneMap.put(name.get(), new ZoneSettings(name.get()));
-					zoneComboBox.getSelectionModel().select(zoneComboBox.getItems().size() - 1);
+					zoneComboBox.getSelectionModel().selectLast();
 					zoneComboBox.setDisable(false);
 					zoneDelete.setDisable(false);
 					enemySpawnAdd.setDisable(false);
 					triggerAdd.setDisable(false);
+					roundAdd.setDisable(false);
 					
 				}
 				else {
@@ -236,8 +303,8 @@ public class WaveSetter {
 				
 				Optional<ButtonType> result = alert.showAndWait();
 				if(result.get() == ButtonType.OK) {
-					zoneComboBox.getItems().remove(zoneComboBox.getSelectionModel().getSelectedIndex());
 					zoneMap.remove(zoneComboBox.getValue());
+					zoneComboBox.getItems().remove(zoneComboBox.getSelectionModel().getSelectedIndex());
 					if(zoneComboBox.getItems().isEmpty()) {
 						zoneComboBox.setDisable(true);
 						zoneDelete.setDisable(true);
@@ -249,6 +316,13 @@ public class WaveSetter {
 						triggerAdd.setDisable(true);
 						triggerSet.setDisable(true);
 						triggerDelete.setDisable(true);
+						roundComboBox.setDisable(true);
+						roundAdd.setDisable(true);
+						roundDelete.setDisable(true);
+						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							entry.getValue().setDisable(true);
+						}
 					}
 					else {
 						zoneComboBox.getSelectionModel().selectNext();
@@ -258,7 +332,7 @@ public class WaveSetter {
 		});
 		
 		// > > > Selected X & Y
-		selectedXYLabel = new Label();
+		selectedXYLabel = new Label(Arrays.toString(selectedXY));
 		zoneInfo.getChildren().add(selectedXYLabel);
 		
 		// > > > Enemy Spawn Label & Combo box HBox
@@ -455,6 +529,181 @@ public class WaveSetter {
 			}
 		});
 		
+		// > > > Round Label & ComboBox HBox
+		roundLabelComboBoxHBox = new HBox();
+		zoneInfo.getChildren().add(roundLabelComboBoxHBox);
+		roundLabelComboBoxHBox.setAlignment(Pos.CENTER);
+		roundLabelComboBoxHBox.setSpacing(10);
+		
+		// > > > > Round Label
+		roundLabel = new Label("Round:");
+		roundLabelComboBoxHBox.getChildren().add(roundLabel);
+		
+		// > > > > Round ComboBox
+		roundComboBox = new ComboBox<>();
+		roundLabelComboBoxHBox.getChildren().add(roundComboBox);
+		roundComboBox.setDisable(true);
+		roundComboBox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(!roundComboBox.getItems().isEmpty() && zoneComboBox.getValue() != null) {
+					for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+						WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
+						if(wave != null) {
+							setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+						}
+						else {
+							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+						}
+					}
+				}
+				else {
+					
+				}
+			}
+		});
+		
+		
+		// > > > Round Add & Delete HBox
+		roundAddDeleteHBox = new HBox();
+		zoneInfo.getChildren().add(roundAddDeleteHBox);
+		roundAddDeleteHBox.setAlignment(Pos.CENTER);
+		roundAddDeleteHBox.setSpacing(10);
+		
+		// > > > > Round Add
+		roundAdd = new Button("Add");
+		roundAddDeleteHBox.getChildren().add(roundAdd);
+		roundAdd.setDisable(true);
+		roundAdd.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				TextInputDialog dialog = new TextInputDialog();
+				dialog.setTitle("New round");
+				dialog.setHeaderText("Please enter a name");
+				
+				Optional<String> name = dialog.showAndWait();
+				if(name.isPresent() && !name.get().equals("") && !roundComboBox.getItems().contains(name.get())) {
+					roundComboBox.getItems().add(name.get());
+					zoneMap.get(zoneComboBox.getValue()).getRounds().put(name.get(), new RoundSettings());
+					roundComboBox.getSelectionModel().selectLast();
+					roundComboBox.setDisable(false);
+					roundDelete.setDisable(false);
+					for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+						entry.getValue().setDisable(false);
+					}
+				}
+				else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("Error with round name");
+					alert.setContentText("Input name is empty of is a duplicate");
+					alert.showAndWait();
+				}
+			}
+		});
+		
+		// > > > > Round Delete
+		roundDelete = new Button("Delete");
+		roundAddDeleteHBox.getChildren().add(roundDelete);
+		roundDelete.setDisable(true);
+		roundDelete.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Alert");
+				alert.setHeaderText("Round Deletion");
+				alert.setContentText("Do you want to delete this round " + roundComboBox.getValue() + "?");
+				
+				Optional<ButtonType> result = alert.showAndWait();
+				if(result.get() == ButtonType.OK) {
+					zoneMap.get(zoneComboBox.getValue()).getRounds().remove(roundComboBox.getValue());
+					roundComboBox.getItems().remove(roundComboBox.getSelectionModel().getSelectedIndex());
+					if(roundComboBox.getItems().isEmpty()) {
+						roundComboBox.setDisable(true);
+						roundDelete.setDisable(true);
+						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
+							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							entry.getValue().setDisable(true);
+						}
+					}
+					else {
+						roundComboBox.getSelectionModel().selectNext();
+						for(Map.Entry<EntityList, ImageView> entry : enemySprite.entrySet()) {
+							WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
+							setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+						}
+					}
+				}
+			}
+		});
+		
+		// > > Wave ScrollPane
+		waveScrollPane = new ScrollPane();
+		mainViewer.add(waveScrollPane, 1, 0);
+		waveScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		waveScrollPane.setPrefHeight(scene.getHeight());
+		waveScrollPane.setPrefWidth(scene.getWidth() - 300);
+		
+		// > > > Wave GridPane
+		waveGridPane = new GridPane();
+		waveScrollPane.setContent(waveGridPane);
+		waveGridPane.setGridLinesVisible(true);
+		ColumnConstraints eCol = new ColumnConstraints();
+		eCol.setPrefWidth(250);
+		eCol.setHalignment(HPos.CENTER);
+		waveGridPane.getColumnConstraints().addAll(eCol,eCol);
+		int row = 0;
+		int column = 0;
+		enemyStartTimeLabels = new HashMap<EntityList, Label>();
+		enemySpawnIntervalLabels = new HashMap<EntityList, Label>();
+		enemyAmountPerSpawnLabels = new HashMap<EntityList, Label>();
+		enemyTotalLabels = new HashMap<EntityList, Label>();
+		enemyReadyLabels = new HashMap<EntityList, Label>();
+		enemySetButtons = new HashMap<EntityList, Button>();
+		for(Map.Entry<EntityList,ImageView> entry : enemySprite.entrySet()) {
+			VBox vBox = new VBox();
+			vBox.getChildren().add(entry.getValue());
+			vBox.setAlignment(Pos.CENTER);
+			vBox.setSpacing(10);
+			Label enemyLabel = new Label(entry.getKey().toString());
+			vBox.getChildren().add(enemyLabel);
+			Label startTimeLabel = new Label("Start Time: 0");
+			vBox.getChildren().add(startTimeLabel);
+			enemyStartTimeLabels.put(entry.getKey(), startTimeLabel);
+			Label spawnIntervalLabel = new Label("Spawn Interval: 0");
+			vBox.getChildren().add(spawnIntervalLabel);
+			enemySpawnIntervalLabels.put(entry.getKey(), spawnIntervalLabel);
+			Label amountPerSpawnLabel = new Label("Amount Per Spawn: 0");
+			vBox.getChildren().add(amountPerSpawnLabel);
+			enemyAmountPerSpawnLabels.put(entry.getKey(), amountPerSpawnLabel);
+			Label totalLabel = new Label("Total: 0");
+			vBox.getChildren().add(totalLabel);
+			enemyTotalLabels.put(entry.getKey(), totalLabel);
+			Label readyLabel = new Label("Ready: false");
+			vBox.getChildren().add(readyLabel);
+			enemyReadyLabels.put(entry.getKey(), readyLabel);
+			Button button = new Button("Set");
+			vBox.getChildren().add(button);
+			enemySetButtons.put(entry.getKey(), button);
+			button.setDisable(true);
+			button.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					if(!zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().containsKey(entry.getKey())) {
+						zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().put(entry.getKey(), new WaveSettings(waveSetter, entry.getKey()));
+					}
+					zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey()).show();
+				}
+			});
+			
+			waveGridPane.add(vBox, column, row);
+			if(column++ == 1) {
+				row++;
+				column = 0;
+			}
+		}
+		
+		
 		stage.setOnCloseRequest(we -> {
 			stage.close();
         });
@@ -464,6 +713,39 @@ public class WaveSetter {
 		stage.show();
 	}
 	
+	// Load entity sprites
+	private void loadEnemySprite() {
+		enemySprite = new HashMap<EntityList, ImageView>();
+		EnumSet.allOf(EntityList.class).forEach(entityList -> {
+			ImageView sprite;
+			sprite = new ImageView(entityList.getPath());
+			sprite.setEffect(entityList.getColorAdjust());
+			switch(entityList) {
+				case ZOMBIE:
+					enemySprite.put(EntityList.ZOMBIE, sprite);
+					break;
+				case RUNNER:
+					enemySprite.put(EntityList.RUNNER, sprite);
+					break;
+				case SOLDIER:
+					enemySprite.put(EntityList.SOLDIER, sprite);
+					break;
+				case MIDGET:
+					enemySprite.put(EntityList.MIDGET, sprite);
+					break;
+				case BOOMER:
+					enemySprite.put(EntityList.BOOMER, sprite);
+					break;
+				case MACHINE_GUNNER:
+					enemySprite.put(EntityList.MACHINE_GUNNER, sprite);
+					break;
+				case SNIPER:
+					enemySprite.put(EntityList.SNIPER, sprite);
+					break;
+			}
+		});
+	}
+	
 	private boolean checkDuplicate(ArrayList<int[]> list, int[] selectedXY) {
 		for(int i = 0 ; i < list.size() ; i++) {
 			if(Arrays.toString(list.get(i)).equals(Arrays.toString(selectedXY))) {
@@ -471,6 +753,14 @@ public class WaveSetter {
 			}
 		}
 		return true;
+	}
+	
+	public void setEnemyInfo(EntityList enemy, String startTime, String spawnInterval, String amountPerSpawn, String total, String ready) {
+		enemyStartTimeLabels.get(enemy).setText("Start Time: " + startTime);
+		enemySpawnIntervalLabels.get(enemy).setText("Spawn Interval: " + spawnInterval);
+		enemyAmountPerSpawnLabels.get(enemy).setText("Amount Per Spawn: " + amountPerSpawn);
+		enemyTotalLabels.get(enemy).setText("Total: " + total);
+		enemyReadyLabels.get(enemy).setText("Ready: " + ready);
 	}
 	
 	private void selectionError(String source) {

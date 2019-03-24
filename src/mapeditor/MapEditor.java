@@ -581,6 +581,18 @@ public class MapEditor {
 	
 	// Tile selection
 	private void selectTile(int tileX, int tileY) {
+		if(tileX < 0) {
+			tileX = 0;
+		}
+		else if(tileX > mapWidth - 1) {
+			tileX = mapWidth - 1;
+		}
+		if(tileY < 0) {
+			tileY = 0;
+		}
+		else if(tileY > mapHeight - 1) {
+			tileY = mapHeight - 1;
+		}
 		selectedX = tileX;
 		selectedY = tileY;
 		waveSetter.setSelectedXY(new int[] {selectedX, selectedY});

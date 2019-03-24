@@ -1,10 +1,8 @@
 package mapeditor;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 
-import server.engine.state.map.Round;
 import server.engine.state.map.tile.Door;
 
 public class ZoneSettings {
@@ -12,15 +10,15 @@ public class ZoneSettings {
 	protected String zoneName;
 	protected ArrayList<int[]> enemySpawns;
 	protected ArrayList<int[]> triggers;
-	protected ArrayList<Round> rounds; 
-    protected LinkedHashMap<int[], Door> doors;
+	protected HashMap<String, RoundSettings> rounds; 
+    protected HashMap<int[], Door> doors;
     
     public ZoneSettings(String zoneName) {
     	this.zoneName = zoneName;
     	this.enemySpawns = new ArrayList<>();
     	this.triggers = new ArrayList<>();
-    	this.rounds = new ArrayList<>();
-    	this.doors = new LinkedHashMap<>();
+    	this.rounds = new HashMap<String, RoundSettings>();
+    	this.doors = new HashMap<int[], Door>();
     }
     
     public String getZoneName() {
@@ -47,19 +45,19 @@ public class ZoneSettings {
     	this.triggers = triggers;
     }
     
-    public ArrayList<Round> getRounds() {
+    public HashMap<String, RoundSettings> getRounds() {
     	return this.rounds;
     }
     
-    public void setRounds(ArrayList<Round> rounds) {
+    public void setRounds(HashMap<String, RoundSettings> rounds) {
     	this.rounds = rounds;
     }
     
-    public LinkedHashMap<int[], Door> getDoors() {
+    public HashMap<int[], Door> getDoors() {
     	return this.doors;
     }
     
-    public void setDoors(LinkedHashMap<int[], Door> doors) {
+    public void setDoors(HashMap<int[], Door> doors) {
     	this.doors = doors;
     }
 
