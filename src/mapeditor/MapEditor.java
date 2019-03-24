@@ -1,5 +1,6 @@
 package mapeditor;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +115,7 @@ public class MapEditor {
 	public MapEditor(int resWidth, int resHeight) {
 		this.resWidth = resWidth;
 		this.resHeight = resHeight;
+		this.waveSetter = new WaveSetter(mapEditor);
 		this.init();
 	}
 	
@@ -139,6 +141,10 @@ public class MapEditor {
 	
 	public void setMapHeight(int mapHeight) {
 		this.mapHeight = mapHeight;
+	}
+	
+	public int[] getSelectedXY() {
+		return new int[]{selectedX, selectedY};
 	}
 	
 	// Initialize
@@ -394,9 +400,6 @@ public class MapEditor {
 		waveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(waveSetter == null) {
-					waveSetter = new WaveSetter();
-				}
 				waveSetter.show();
 			}
 		});
@@ -569,6 +572,7 @@ public class MapEditor {
 	private void selectTile(int tileX, int tileY) {
 		selectedX = tileX;
 		selectedY = tileY;
+		waveSetter.setSelectedXY(new int[] {selectedX, selectedY});
 		if(!paintCheckbox.isSelected()) {
 			mapGc.drawImage(mapSnapshot, 0, 0);
 			drawEdge(tileX, tileY, Color.YELLOW);
@@ -691,7 +695,7 @@ public class MapEditor {
 	}
 	
 	// Check if tile is a spawn etc.
-	private boolean checkTile(int tileX, int tileY) {
+	public boolean checkTile(int tileX, int tileY) {
 		for(Map.Entry<Team, int[]> entry : teamSpawns.entrySet()) {
 			if(entry.getValue()[0] == tileX && entry.getValue()[1] == tileY) {
 				if(tileOverWritePopUp(entry.getKey().toString() + " spawn")) {
@@ -700,6 +704,38 @@ public class MapEditor {
 				}
 				else {
 					return false;
+				}
+			}
+		}
+		for(Map.Entry<String, ZoneSettings> entry : waveSetter.getZoneMap().entrySet()) {
+			for(int i = 0 ; i < entry.getValue().getEnemySpawns().size() ; i++) {
+				if(Arrays.toString(entry.getValue().getEnemySpawns().get(i)).equals(Arrays.toString(new int[] {tileX, tileY}))) {
+					if(tileOverWritePopUp("enemy spawn at (" + tileX + ", " + tileY + ") of zone " + entry.getKey() + "?")) {
+						entry.getValue().getEnemySpawns().remove(i);
+						if(waveSetter.getZoneComboBox().getValue().equals(entry.getKey())) {
+							waveSetter.getEnemySpawnComboBox().getItems().remove(Arrays.toString(new int[] {tileX, tileY}));
+							if(waveSetter.getEnemySpawnComboBox().getItems().isEmpty()) {
+								waveSetter.getEnemySpawnComboBox().setDisable(true);
+								waveSetter.getEnemySpawnSet().setDisable(true);
+								waveSetter.getEnemySpawnDelete().setDisable(true);
+							}
+						}
+					}
+				}
+			}
+			for(int i = 0 ; i < entry.getValue().getTriggers().size() ; i++) {
+				if(Arrays.toString(entry.getValue().getTriggers().get(i)).equals(Arrays.toString(new int[] {tileX, tileY}))) {
+					if(tileOverWritePopUp("trigger at (" + tileX + ", " + tileY + ") of zone " + entry.getKey() + "?")) {
+						entry.getValue().getTriggers().remove(i);
+						if(waveSetter.getZoneComboBox().getValue().equals(entry.getKey())) {
+							waveSetter.getTriggerComboBox().getItems().remove(Arrays.toString(new int[] {tileX, tileY}));
+							if(waveSetter.getTriggerComboBox().getItems().isEmpty()) {
+								waveSetter.getTriggerComboBox().setDisable(true);
+								waveSetter.getTriggerSet().setDisable(true);
+								waveSetter.getTriggerDelete().setDisable(true);
+							}
+						}
+					}
 				}
 			}
 		}
