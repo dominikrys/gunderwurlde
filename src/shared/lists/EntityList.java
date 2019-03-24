@@ -18,15 +18,14 @@ public enum EntityList {
     SNIPER_RIFLE("file:assets/img/entity/item/sniper_rifle.png", Constants.TILE_SIZE),
     PLASMA_PISTOL("file:assets/img/entity/item/plasma_pistol.png", Constants.TILE_SIZE),
     MACHINE_GUN("file:assets/img/entity/item/machine_gun.png", Constants.TILE_SIZE),
-    
-    CRYSTAL_LAUNCHER("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
-    FIRE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    ASSAULT_RIFLE("file:assets/img/entity/item/assault_rifle.png", Constants.TILE_SIZE),
+    CRYSTAL_LAUNCHER("file:assets/img/entity/item/crystal_launcher.png", Constants.TILE_SIZE),
+    FIRE_GUN("file:assets/img/entity/item/fire_gun.png", Constants.TILE_SIZE),
     ICE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
-    RING_OF_DEATH("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
-    HEAVY_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
-    ASSAULT_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
-    BUCKSHOT_SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
-    ROCKET_LAUNCHER("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    RING_OF_DEATH("file:assets/img/entity/item/ring_of_death.png", Constants.TILE_SIZE),
+    HEAVY_PISTOL("file:assets/img/entity/item/heavy_pistol.png", Constants.TILE_SIZE),
+    BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
+    ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
