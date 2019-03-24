@@ -9,7 +9,7 @@ import shared.lists.EntityList;
 import shared.lists.Team;
 
 public abstract class Projectile extends Entity {
-    private static final int FORCE_PER_DMG = 1000;
+    private static final int FORCE_PER_DMG = 300;
 
     protected int speed; // max ~1800
     protected int damage;
