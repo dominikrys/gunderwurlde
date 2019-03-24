@@ -14,7 +14,7 @@ import shared.lists.Team;
 public class BouncyBullet extends Projectile implements HasPhysics { // TODO find a cleaner way
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = EntityList.BOUNCE.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.BOUNCE_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
     public static final int DEFAULT_BOUNCE_COUNT = 2;
 
@@ -25,12 +25,12 @@ public class BouncyBullet extends Projectile implements HasPhysics { // TODO fin
     }
 
     public BouncyBullet(int speed, int damage, int size, int range, int bounces) {
-        super(speed, damage, EntityList.BOUNCE, size, range);
+        super(speed, damage, EntityList.BOUNCE_BULLET, size, range);
         this.bouncesLeft = bounces;
     }
 
     public BouncyBullet(int speed, int damage, int size, int range, Pose p, Team team, int bounces) {
-        super(speed, damage, EntityList.BOUNCE, size, range, p, team);
+        super(speed, damage, EntityList.BOUNCE_BULLET, size, range, p, team);
         this.bouncesLeft = bounces;
     }
 

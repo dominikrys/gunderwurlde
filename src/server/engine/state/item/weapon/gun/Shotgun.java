@@ -26,6 +26,11 @@ public class Shotgun extends Gun {
                 DEFAULT_PROJECTILE, DEFAULT_AMMO_TYPE, spread, coolDown, projectilesPerShot, DEFAULT_ACCURACY);
     }
 
+    Shotgun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, Projectile projectile, AmmoList ammoType, int spread, int coolDown,
+            int projectilesPerShot, int accuracy) {
+        super(gunName, clipSize, reloadTime, ammoPerShot, projectile, ammoType, spread, coolDown, projectilesPerShot, accuracy);
+    }
+
     @Override
     public int reload(int amountAvailable) {
         int amountTaken = 0;

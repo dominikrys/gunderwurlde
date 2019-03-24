@@ -11,7 +11,7 @@ import shared.lists.Team;
 public class IceBullet extends Projectile implements HasEffect {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 18;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = EntityList.ICE.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.ICE_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = Tile.TILE_SIZE * 20;
 
     public IceBullet() {
@@ -19,11 +19,11 @@ public class IceBullet extends Projectile implements HasEffect {
     }
 
     public IceBullet(int speed, int damage, int size, int range) {
-        super(speed, damage, EntityList.ICE, size, range);
+        super(speed, damage, EntityList.ICE_BULLET, size, range);
     }
 
     public IceBullet(int speed, int damage, int size, int range, Pose p, Team team) {
-        super(speed, damage, EntityList.ICE, size, range, p, team);
+        super(speed, damage, EntityList.ICE_BULLET, size, range, p, team);
     }
 
     @Override

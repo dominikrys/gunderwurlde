@@ -82,20 +82,16 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 // blocking method waiting to receive a message from the server
                 listenSocket.receive(packet);
-                // System.out.println("Size of received packet" + packet.getData().length);
+                
                 // Creates a bytearrayinputstream from the received packets data
                 ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
                 //ObjectinputStream to turn the bytes back into an object.
                 ObjectInputStream in = null;
                 GameView view = null;
                 try {
-                    // System.out.println("Client received new gameview");
                     in = new ObjectInputStream(bis);
                     view = (GameView)in.readObject();
                     client.setGameView(view, settings);
-                    // renderer.updateGameView(view);
-                    // renderer.getKeyboardHandler().setGameView(view);
-                    // renderer.getMouseHandler().setGameView(view);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (EOFException ex) {

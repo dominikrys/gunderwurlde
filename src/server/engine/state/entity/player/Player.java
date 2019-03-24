@@ -2,32 +2,36 @@ package server.engine.state.entity.player;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedList;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
+import server.engine.state.item.weapon.gun.BuckshotShotgun;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
-import server.engine.state.item.weapon.gun.Shotgun;
-import server.engine.state.item.weapon.gun.Smg;
-import server.engine.state.map.tile.Tile;
+import server.engine.state.item.weapon.gun.PlasmaPistol;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
 public class Player extends LivingEntity {
     public static final int DEFAULT_HEALTH = 20;
-    public static final double DEFAULT_ACCELERATION = Tile.TILE_SIZE * 1.2;
+    public static final double DEFAULT_MOVEMENT_FORCE = 18;
     public static final int DEFAULT_SCORE = 0;
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
-    public static final double DEFAULT_MASS = 3;
+    public static final double DEFAULT_MASS = 2;
 
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
     static {
         DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
-        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 120);
+        DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 180);
+        DEFAULT_MAX_AMMO.put(AmmoList.MAGIC_ESSENCE, 80);
+        DEFAULT_MAX_AMMO.put(AmmoList.HEAVY_AMMO, 120);
+        DEFAULT_MAX_AMMO.put(AmmoList.ROCKET_AMMO, 20);
     }
 
     protected static EnumMap<Team, Integer> teamScore = new EnumMap<>(Team.class);
@@ -43,11 +47,11 @@ public class Player extends LivingEntity {
     private boolean paused;
 
     public Player(Team team, String name) {
-        super(DEFAULT_HEALTH, DEFAULT_ACCELERATION, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
+        super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
-        items.add(new Shotgun()); // TODO remove testing only
-        items.add(new Smg()); // TODO remove testing only
+        items.add(new PlasmaPistol()); // TODO remove testing only
+        items.add(new BuckshotShotgun()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
@@ -57,6 +61,8 @@ public class Player extends LivingEntity {
         this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
+        this.ammo.put(AmmoList.MAGIC_ESSENCE, 16); // TODO remove testing only
+        this.ammo.put(AmmoList.HEAVY_AMMO, 40); // TODO remove testing only
         this.paused = false;
     }
 
@@ -171,7 +177,7 @@ public class Player extends LivingEntity {
 
     public void setCurrentItemIndex(int slot) {
         if (slot < 0)
-            slot = 0;
+            slot = items.size() - 1;
         else if (slot > items.size() - 1)
             slot = items.size() - 1;
         if (slot != currentItem) {
@@ -185,6 +191,7 @@ public class Player extends LivingEntity {
         return teamScore.get(team);
     }
 
+    @Override
     public Team getTeam() {
         return team;
     }
@@ -204,5 +211,12 @@ public class Player extends LivingEntity {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    @Override
+    public LinkedList<ItemDrop> getDrops() {
+        LinkedList<ItemDrop> itemsToDrop = new LinkedList<>();
+        items.stream().forEach((i) -> itemsToDrop.add(toItemDrop(i, 1)));
+        return itemsToDrop;
     }
 }

@@ -1,5 +1,7 @@
-package server.engine.ai;
+package server.engine.ai.enemyAI;
 
+import server.engine.ai.AIAction;
+import server.engine.ai.newPoseGenerators.RandomPoseGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Pistol;
@@ -24,38 +26,39 @@ public class SoldierZombieAI extends EnemyAI {
     private Pistol pistol = new Pistol();
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire) {
+        super(SHORT_DELAY);
         this.RANGE_TO_SHOOT = rangeToShoot;
         this.RATE_OF_FIRE = rateOfFire;
     }
 
     @Override
     public AIAction getAction() {
-            if (attacking) {                                //If attacking, continue to attack
-                return AIAction.ATTACK;
-            } else if (moving) {                            //If moving, continue to move
+        if (attacking) {                                //If attacking, continue to attack
+            return AIAction.ATTACK;
+        } else if (moving) {                            //If moving, continue to move
+            return AIAction.MOVE;
+        } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
+            //1 in 80 change it will decide to move
+            if (rand.nextInt(80) == 0) {
                 return AIAction.MOVE;
-            } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
-                //1 in 80 change it will decide to move
-                if (rand.nextInt(80) == 0) {
-                    return AIAction.MOVE;
-                } else {
-                    return AIAction.WAIT;
-                }
-            } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
-                int decision = rand.nextInt(100);
-                //Will decide whether to attack based on the RATE_OF_FIRE
-                if (decision <= RATE_OF_FIRE && decision >= 2) {
-                    attacking = true;
-                    beginAttackTime = System.currentTimeMillis();
-                    return AIAction.ATTACK;
-                } else if (decision < 2 && decision > 0) {
-                    return AIAction.MOVE;
-                } else {
-                    return AIAction.WAIT;
-                }
+            } else {
+                return AIAction.WAIT;
             }
-            return AIAction.WAIT;
+        } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT) {
+            int decision = rand.nextInt(100);
+            //Will decide whether to attack based on the RATE_OF_FIRE
+            if (decision <= RATE_OF_FIRE && decision >= 2) {
+                attacking = true;
+                beginAttackTime = System.currentTimeMillis();
+                return AIAction.ATTACK;
+            } else if (decision < 2 && decision > 0) {
+                return AIAction.MOVE;
+            } else {
+                return AIAction.WAIT;
+            }
         }
+        return AIAction.WAIT;
+    }
 
 
     //TODO this method could probably live in EnemyAI
@@ -65,15 +68,13 @@ public class SoldierZombieAI extends EnemyAI {
         long now = System.currentTimeMillis();
 
         if ((now - beginAttackTime) >= attackDelay) {
-            attacks.add(new ProjectileAttack(pistol.getShotProjectiles(
-                    new Pose(pose, getAngle(pose, closestPlayer)), Team.ENEMY)));
             attacking = false;
             this.actionState = ActionList.NONE;
         }
         return attacks;
     }
 
-    synchronized void setPoseToGo(Pose pose) {
+    public synchronized void setPoseToGo(Pose pose) {
         poseToGo = pose;
         setProcessing(false);
     }
@@ -103,6 +104,13 @@ public class SoldierZombieAI extends EnemyAI {
 
         return new Force();
     }
+
+    @Override
+    protected Attack getAttackObj() {
+        int angle = getAngle(pose, closestPlayer);
+        return new ProjectileAttack(pistol.getShotProjectiles(new Pose(pose, angle), Team.ENEMY));
+    }
+
 
     //    protected synchronized Pose generateNextPose() {
 //        pose = checkIfInSpawn();

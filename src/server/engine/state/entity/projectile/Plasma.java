@@ -9,7 +9,7 @@ import shared.lists.Team;
 public class Plasma extends Projectile {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 32;
     public static final int DEFAULT_DAMAGE = 1;
-    public static final int DEFAULT_SIZE = EntityList.PLASMA.getSize() / 2;
+    public static final int DEFAULT_SIZE = EntityList.PLASMA_BULLET.getSize() / 2;
     public static final int DEFAULT_RANGE = 0;
 
     public Plasma() {
@@ -17,11 +17,11 @@ public class Plasma extends Projectile {
     }
 
     public Plasma(int speed, int damage, int size, int range) {
-        super(speed, damage, EntityList.PLASMA, size, range);
+        super(speed, damage, EntityList.PLASMA_BULLET, size, range);
     }
 
     public Plasma(int speed, int damage, int size, int range, Pose p, Team team) {
-        super(speed, damage, EntityList.PLASMA, size, range, p, team);
+        super(speed, damage, EntityList.PLASMA_BULLET, size, range, p, team);
     }
 
     @Override

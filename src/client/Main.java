@@ -48,8 +48,7 @@ public class Main extends Application {
         stage.setOnCloseRequest(we -> {
             stage.close();
 
-            // TODO: remove this, this is purely for debugging and the program shouldn't be getting ended like this
-            System.exit(0);
+            //System.exit(0); todo: remove this once threads close
         });
 
         // Create the main menu and show it

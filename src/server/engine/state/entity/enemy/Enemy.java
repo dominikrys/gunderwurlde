@@ -1,11 +1,15 @@
 package server.engine.state.entity.enemy;
 
+import server.engine.ai.enemyAI.EnemyAI;
 import java.util.LinkedHashSet;
-
-import server.engine.ai.EnemyAI;
+import java.util.LinkedList;
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
+import shared.lists.Team;
+
+import java.util.LinkedHashSet;
 
 public abstract class Enemy extends LivingEntity {
     protected final LinkedHashSet<Drop> drops;
@@ -35,13 +39,26 @@ public abstract class Enemy extends LivingEntity {
         return scoreOnKill;
     }
 
-    public LinkedHashSet<Drop> getDrops() {
-        return drops;
+    @Override
+    public LinkedList<ItemDrop> getDrops() {
+        LinkedList<ItemDrop> itemsToDrop = new LinkedList<>();
+        for (Drop d : drops) {
+            int dropAmount = d.getDrop();
+            if (dropAmount != 0) {
+                itemsToDrop.add(toItemDrop(d.getItem(), dropAmount));
+            }
+        }
+        return itemsToDrop;
     }
 
     @Override
     public Entity makeCopy(){
-        return new Zombie(entityListName, maxHealth, acceleration, size, drops, scoreOnKill, getNewAI(), mass);
+        return new Zombie(entityListName, maxHealth, movementForce, size, drops, scoreOnKill, getNewAI(), mass);
+    }
+
+    @Override
+    public Team getTeam() {
+        return Team.ENEMY;
     }
 
 }
