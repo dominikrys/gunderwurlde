@@ -114,7 +114,7 @@ public enum EntityList {
      */
     GRASS_TILE("file:assets/img/tiles/grass.png", Constants.TILE_SIZE),
     WOOD_TILE("file:assets/img/tiles/wood.png", Constants.TILE_SIZE),
-    //TODO
+    DOOR_TILE("file:assets/img/tiles/door.png", Constants.TILE_SIZE),
     RUINS_FLOOR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
     RUINS_PATTERN("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
     RUINS_WALL("file:assets/img/tiles/default.png", Constants.TILE_SIZE),

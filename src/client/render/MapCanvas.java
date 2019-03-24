@@ -87,7 +87,7 @@ public class MapCanvas extends Canvas {
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 // Get tile graphic
-                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
+                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTile().getEntityListName());
 
                 // Add tile to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
