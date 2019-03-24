@@ -1,7 +1,7 @@
 package shared.lists;
 
 /**
- * TileType enum. Contains all tile types in the game
+ * Tile enum. Contains all tile types in the game
  */
 public enum TileType {
     // Meadow Tiles
