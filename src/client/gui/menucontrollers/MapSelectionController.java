@@ -189,7 +189,7 @@ public class MapSelectionController extends VBox implements MenuController {
     void map2ButtonPress(ActionEvent event) {
         // Clear the screen and show loading screen
         displayMapLoading();
-
+        System.out.println(MapList.BIGTESTMAP.toString() + "tsetas");
         // Start gamehandler with correct connectiontype, map and team
         (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS)).start();
     }
@@ -201,6 +201,10 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void map3ButtonPress(ActionEvent event) {
+        // Clear the screen and show loading screen
+        displayMapLoading();
 
+        // Start gamehandler with correct connectiontype, map and team
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP)).start();
     }
 }

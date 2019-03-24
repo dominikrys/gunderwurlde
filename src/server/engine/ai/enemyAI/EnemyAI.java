@@ -106,6 +106,7 @@ public abstract class EnemyAI {
         this.tileMap = transposeMatrix(tileMap);
         int[] tile = {8,10};
         tileNotSolid(tile,tileMap);
+        System.out.println(tileMap.length + " " + tileMap[0].length);
         //        this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
