@@ -18,7 +18,7 @@ public class Collision {
 	
 	/*
 	private void getBoundary(GameMap map) {
-		Tile[][] tileMap = map.getTileMap();
+		TileList[][] tileMap = map.getTileMap();
 		ArrayList<Integer> columns = new ArrayList<Integer>();
 		for(int row = 0 ; row < map.getXDim() ; row++) {
 			columns = new ArrayList<Integer>();

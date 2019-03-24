@@ -89,8 +89,8 @@ public abstract class EnemyAI {
 
         try {
             tileNotSolid = (tileMap[tile[1]][tile[0]].getState() != TileState.SOLID);
-//                    !((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2) ||
-//                            ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)));
+//                    !((tileList[0] == 0 && tileList[1] == (mapYDim - 2) / 2) ||
+//                            ((tileList[0] == mapXDim - 1 && tileList[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
             return false;
         }
@@ -245,7 +245,7 @@ public abstract class EnemyAI {
 //        }
 //
 //        if (newPose != null) {
-//            if (tileNotSolid(Tile.locationToTile(newPose), tileMap)) {
+//            if (tileNotSolid(TileList.locationToTile(newPose), tileMap)) {
 //                return newPose;
 //            }
 //        }
@@ -255,15 +255,15 @@ public abstract class EnemyAI {
 //    }
 
 //    private Pose moveOutOfSpawn(Pose pose) {
-//        int[] tile = Tile.locationToTile(pose);
+//        int[] tileList = TileList.locationToTile(pose);
 //
-//        if ((tile[0] == 0 && tile[1] == (mapYDim - 2) / 2)
-//                || (tile[0] == 1 && tile[1] == (mapYDim - 2) / 2)) {
+//        if ((tileList[0] == 0 && tileList[1] == (mapYDim - 2) / 2)
+//                || (tileList[0] == 1 && tileList[1] == (mapYDim - 2) / 2)) {
 //            return new Pose(pose.getX() + maxDistanceToMove, pose.getY(), 90);
 //        }
 //
-//        if ((tile[0] == mapXDim - 1 && tile[1] == (mapYDim - 2) / 2)
-//                || (tile[0] == mapXDim - 2 && tile[1] == (mapYDim - 2) / 2)) {
+//        if ((tileList[0] == mapXDim - 1 && tileList[1] == (mapYDim - 2) / 2)
+//                || (tileList[0] == mapXDim - 2 && tileList[1] == (mapYDim - 2) / 2)) {
 //            return new Pose(pose.getX() - maxDistanceToMove, pose.getY(), 270);
 //
 //        }

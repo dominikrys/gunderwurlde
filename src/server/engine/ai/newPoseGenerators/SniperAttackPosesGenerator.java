@@ -19,7 +19,7 @@ public class SniperAttackPosesGenerator extends Thread {
 //        do{
 //
 ////            pose
-//        }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), ai.tileMap));
+//        }while(!EnemyAI.tileNotSolid(TileList.locationToTile(pose), ai.tileMap));
 //
 //        ai.setPoseToGo(pose);
     }
