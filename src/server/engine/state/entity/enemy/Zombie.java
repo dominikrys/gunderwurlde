@@ -1,12 +1,13 @@
 package server.engine.state.entity.enemy;
 
+import java.util.LinkedHashSet;
+
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.ZombieAI;
-import server.engine.state.item.weapon.gun.Ammo;
+import server.engine.state.item.pickup.Ammo;
+import server.engine.state.item.pickup.Health;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-
-import java.util.LinkedHashSet;
 
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
@@ -19,6 +20,7 @@ public class Zombie extends Enemy {
     static {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.01, 1));
     }
 
     public Zombie() {

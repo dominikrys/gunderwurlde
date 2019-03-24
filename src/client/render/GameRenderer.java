@@ -2,6 +2,7 @@ package client.render;
 
 import client.Client;
 import client.Settings;
+import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
@@ -273,8 +274,12 @@ public class GameRenderer implements Runnable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/pause_menu.fxml"));
             pausedOverlay = fxmlLoader.load();
 
-            // Set background - inline instead of CSS as then transparency works
+            // Set background - inline instead of CSS so transparency works
             pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
+            /*
+            pausedOverlay.setBackground(new Background(new BackgroundImage(rendererResourceLoader.getSprite(EntityList.HEART_HALF),
+            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
+             */
             pausedOverlay.setSpacing(15);
             pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
 
@@ -462,8 +467,7 @@ public class GameRenderer implements Runnable {
                             stop();
 
                             // Go back to play menu with all player info still there
-                            (new PlayMenuController(stage, settings, getCurrentPlayer().getName(),
-                                    getCurrentPlayer().getTeam())).show();
+                            (new MainMenuController(stage, settings)).show();
                         }
 
                         //TODO: remove this, doesn't work otherwise for some reason

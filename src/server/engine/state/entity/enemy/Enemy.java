@@ -1,15 +1,14 @@
 package server.engine.state.entity.enemy;
 
-import server.engine.ai.enemyAI.EnemyAI;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+
+import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
 import shared.lists.Team;
-
-import java.util.LinkedHashSet;
 
 public abstract class Enemy extends LivingEntity {
     protected final LinkedHashSet<Drop> drops;

@@ -15,7 +15,17 @@ public enum EntityList {
     PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
-    SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    SNIPER_RIFLE("file:assets/img/entity/item/sniper_rifle.png", Constants.TILE_SIZE),
+    PLASMA_PISTOL("file:assets/img/entity/item/plasma_pistol.png", Constants.TILE_SIZE),
+    MACHINE_GUN("file:assets/img/entity/item/machine_gun.png", Constants.TILE_SIZE),
+    ASSAULT_RIFLE("file:assets/img/entity/item/assault_rifle.png", Constants.TILE_SIZE),
+    CRYSTAL_LAUNCHER("file:assets/img/entity/item/crystal_launcher.png", Constants.TILE_SIZE),
+    FIRE_GUN("file:assets/img/entity/item/fire_gun.png", Constants.TILE_SIZE),
+    ICE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
+    RING_OF_DEATH("file:assets/img/entity/item/ring_of_death.png", Constants.TILE_SIZE),
+    HEAVY_PISTOL("file:assets/img/entity/item/heavy_pistol.png", Constants.TILE_SIZE),
+    BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
+    ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
@@ -72,6 +82,7 @@ public enum EntityList {
     BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
     MACHINE_GUNNER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
     SNIPER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
+    THEBOSS ("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE * 5),
 
     /**
      * Enemy walking
@@ -103,16 +114,28 @@ public enum EntityList {
      */
     GRASS_TILE("file:assets/img/tiles/grass.png", Constants.TILE_SIZE),
     WOOD_TILE("file:assets/img/tiles/wood.png", Constants.TILE_SIZE),
+    //TODO
+    RUINS_FLOOR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    RUINS_PATTERN("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    RUINS_WALL("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    RUINS_PILLAR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    RUINS_WATER("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    RUINS_DOOR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
     DEFAULT("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
 
     /**
      * Other renderable entities - some are items
      */
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
+    ENERGY("file:assets/img/other/ammo_clip.png"), // TODO maybe an electric bolt or something?
+    MAGIC_ESSENCE("file:assets/img/other/ammo_clip.png"), // TODO a glowing orb or something?
+    HEAVY_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
+    ROCKET_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
     CROSSHAIR("file:assets/img/gui/crosshair.png"),
+    PAUSE_BG("file:assets/img/gui/pause_bg.png"),
 
     /**
      * Smoke cloud animation

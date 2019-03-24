@@ -4,7 +4,8 @@ import java.util.LinkedHashSet;
 
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.MachineGunnerAI;
-import server.engine.state.item.weapon.gun.Ammo;
+import server.engine.state.item.pickup.Ammo;
+import server.engine.state.item.pickup.Health;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -19,8 +20,10 @@ public class MachineGunner extends Zombie {
 
     //TODO think about this
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.6, 3, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.05, 2));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
     }
 
     private final int ATTACK_WIDTH;
