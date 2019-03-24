@@ -108,8 +108,8 @@ public class MapSelectionController extends VBox implements MenuController {
         if (connectionType == ConnectionType.MULTI_PLAYER_HOST) {
             playerAmountBox.setManaged(true);
             playerSlider.setMax(Constants.MAX_PLAYERS);
-            playerSlider.setMin(1);
-            playerSlider.setValue(1);
+            playerSlider.setMin(2);
+            playerSlider.setValue(2);
             playerSlider.setMajorTickUnit(1);
             playerNumberLabel.setText(Long.toString(Math.round(playerSlider.getValue())));
         } else {
@@ -157,9 +157,10 @@ public class MapSelectionController extends VBox implements MenuController {
     void meadowButtonPress(ActionEvent event) {
         // Clear the screen and show loading screen
         displayMapLoading();
-
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW)).start();
+
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW, playerNumberLabel.getText())).start();
+
     }
 
     /**
@@ -190,7 +191,7 @@ public class MapSelectionController extends VBox implements MenuController {
         // Clear the screen and show loading screen
         displayMapLoading();
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS)).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS, playerNumberLabel.getText())).start();
     }
 
     /**
@@ -204,6 +205,6 @@ public class MapSelectionController extends VBox implements MenuController {
         displayMapLoading();
 
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP)).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP, playerNumberLabel.getText())).start();
     }
 }

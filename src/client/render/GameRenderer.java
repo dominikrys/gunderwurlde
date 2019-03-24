@@ -1,5 +1,6 @@
 package client.render;
 
+import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PlayMenuController;
@@ -135,12 +136,15 @@ public class GameRenderer implements Runnable {
      * @param playerID        ID of player for whom this renderer is for
      * @param settings        Settings object
      */
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
+
+    private Client handler;
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.settings = settings;
+        this.handler = handler;
 
         // Set paused to false
         paused = false;
@@ -457,6 +461,9 @@ public class GameRenderer implements Runnable {
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
                             // Set pause to false and stop rendering
                             paused = false;
+                            getKeyboardHandler().deactivate();
+                            getMouseHandler().deactivate();
+                            handler.close();
                             stop();
 
                             // Go back to play menu with all player info still there
@@ -512,6 +519,7 @@ public class GameRenderer implements Runnable {
      *
      * @return Keyboard handler
      */
+
     public KeyboardHandler getKeyboardHandler() {
         return this.kbHandler;
     }

@@ -36,7 +36,7 @@ public class AoeAttack extends Entity implements Attack {
         Location locationToUse = this.pose;
         double[] components = Physics.fromComponents(location.getX() - locationToUse.getX(), location.getY() - locationToUse.getY());
         double force = Math.pow(damage, 1.5) * FORCE_SCALING;
-        
+
         double falloffDist = this.size * FALL_OFF;
 
         if (components[1] > falloffDist) {

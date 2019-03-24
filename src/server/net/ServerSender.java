@@ -5,9 +5,13 @@ import shared.view.GameView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.*;
-import java.util.Enumeration;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
 
+import client.net.Addressing;
 
 public class ServerSender extends Thread {
     MulticastSocket senderSocket;
@@ -16,13 +20,14 @@ public class ServerSender extends Thread {
     DatagramPacket packet;
     int port;
     byte[] buffer;
+    int maxBufferSize;
 
     public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;
         running = true;
-        senderSocket.setInterface(findInetAddress());
+        Addressing.setInterfaces(senderSocket);
         this.start();
     }
 
@@ -30,21 +35,22 @@ public class ServerSender extends Thread {
         return running;
     }
 
-    public void stopRunning() {
+    public void close() {
         this.running = false;
     }
 
     public void run() {
         while (running) {
             Thread.yield();
-
         }
-        System.out.println("Ending server sender");
+        System.out.println("Closing serversender");
     }
 
     // sends a confirmation back to the client that the message has been received
     // in future will be used to send the continuous game state to the user/users
     public void send(GameView view) {
+
+
         // System.out.println("Server received new GameView");
         try {
             // Turn the received GameView into a byte array
@@ -61,11 +67,19 @@ public class ServerSender extends Thread {
                 //flushes anything in the OOutputStream
                 out.flush();
                 // Writes the info in the BOutputStream to a byte array to be transmitted
+
+                int buffersize = bos.toByteArray().length;
+                if(buffersize > maxBufferSize){
+                    buffer = ByteBuffer.allocate(8).putInt(1).putInt(buffersize).array();
+                    maxBufferSize = buffersize;
+                    packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
+                    senderSocket.send(packet);
+                }
+
                 buffer = bos.toByteArray();
                 // System.out.println("Size of packet to be sent " + buffer.length);
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
-                // System.out.println("Packet sent from serversender");
 
             } finally {
                 try {
@@ -83,26 +97,6 @@ public class ServerSender extends Thread {
         }
     }
 
-    private InetAddress findInetAddress() {
-        InetAddress addr = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    addr = addresses.nextElement();
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-        return addr;
-    }
 }
+
 

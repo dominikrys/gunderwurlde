@@ -188,5 +188,4 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         Velocity itemDropVelocity = new Velocity(dropDirection, dropSpeed);
         return new ItemDrop(itemToDrop, this.pose, itemDropVelocity, amount);
     }
-
 }
