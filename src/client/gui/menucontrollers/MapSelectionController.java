@@ -205,6 +205,6 @@ public class MapSelectionController extends VBox implements MenuController {
         displayMapLoading();
 
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP)).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP, playerNumberLabel.getText())).start();
     }
 }
