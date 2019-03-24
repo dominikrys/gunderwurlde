@@ -4,12 +4,14 @@ import server.engine.ai.AIAction;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
+import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.weapon.gun.*;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class TheBossAI extends ZombieAI {
@@ -28,6 +30,9 @@ public class TheBossAI extends ZombieAI {
         gunList.add(new CrystalLauncher());
         gunList.add(new IceGun());
         gunList.add(new RingOfDeath());
+        gunList.add(new PlasmaPistol());
+        gunList.add(new Smg());
+        gunList.add(new MachineGun());
     }
 
     @Override
@@ -49,7 +54,13 @@ public class TheBossAI extends ZombieAI {
     protected Attack getAttackObj() {
         int attackAngle = getAngle(pose, closestPlayer);
         int weapon = rand.nextInt(gunList.size());
-        return new ProjectileAttack(gunList.get(weapon).getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+        LinkedList<Projectile> attackProjectiles = new LinkedList<>(gunList.get(weapon).getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+
+        weapon = rand.nextInt(gunList.size());
+        attackProjectiles.addAll(gunList.get(weapon).getShotProjectiles(new Pose(pose, attackAngle - 10), Team.ENEMY));
+        weapon = rand.nextInt(gunList.size());
+        attackProjectiles.addAll(gunList.get(weapon).getShotProjectiles(new Pose(pose, attackAngle + 10), Team.ENEMY));
+        return new ProjectileAttack(attackProjectiles);
     }
 
 
