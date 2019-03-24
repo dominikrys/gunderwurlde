@@ -138,19 +138,12 @@ public enum EntityList {
     PAUSE_BG("file:assets/img/gui/pause_bg.png"),
 
     /**
-     * Smoke cloud animation
+     * Animations
      */
     SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
-
-    /**
-     * Blood explosion animation
-     */
     BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png"),
-
-    /**
-     * White smoke cloud animation
-     */
-    WHITE_SMOKE_CLOUD("file:assets/img/misc_animations/white_smoke_cloud.png");
+    WHITE_SMOKE_CLOUD("file:assets/img/misc_animations/white_smoke_cloud.png"),
+    EXPLOSION("file:assets/img/misc_animations/explosion.png");
 
     /**
      * Path to sprite
