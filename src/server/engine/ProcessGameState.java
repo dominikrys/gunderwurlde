@@ -1,6 +1,5 @@
 package server.engine;
 
-import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -559,7 +558,7 @@ public class ProcessGameState extends Thread {
 
                                     if (currentProjectile instanceof HasEffect) {
                                         if (entityBeingChecked.hasEffect())
-                                            entityBeingChecked = (Enemy) entityBeingChecked.getEffect().clearEffect(entityBeingChecked);
+                                            entityBeingChecked = entityBeingChecked.getEffect().clearEffect(entityBeingChecked);
                                         entityBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
                                     }
                                     removed = true;
