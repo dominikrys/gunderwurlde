@@ -135,6 +135,7 @@ public enum EntityList {
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
     CROSSHAIR("file:assets/img/gui/crosshair.png"),
+    PAUSE_BG("file:assets/img/gui/pause_bg.png"),
 
     /**
      * Smoke cloud animation
