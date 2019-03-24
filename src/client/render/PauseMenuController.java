@@ -53,6 +53,9 @@ public class PauseMenuController {
     @FXML
     private Button backToGameButton;
 
+    @FXML
+    private Button confirmButton;
+
     /**
      * Close the pause menu and go back to the game
      *
@@ -64,13 +67,16 @@ public class PauseMenuController {
     }
 
     /**
-     * Go back to the main menu and quit the game
+     * Show button to confirm to quit to main menu
      *
      * @param event "Back to menu" button press
      */
     @FXML
     void backToMenuButtonPress(ActionEvent event) {
-        quitToMenuPressed = true;
+        // Enable confirm button
+        confirmButton.setManaged(true);
+        confirmButton.setVisible(true);
+        confirmButton.setStyle("-fx-text-fill: red");
     }
 
     /**
@@ -142,6 +148,16 @@ public class PauseMenuController {
     }
 
     /**
+     * Confirm that the user wants to quit to the main menu and quit to it
+     *
+     * @param event Confirm button press
+     */
+    @FXML
+    void confirmButtonPress(ActionEvent event) {
+        quitToMenuPressed = true;
+    }
+
+    /**
      * Intialise the settings object and update all relevant elements
      *
      * @param settings New settings object
@@ -153,6 +169,10 @@ public class PauseMenuController {
         // Initialise booleans TODO: find a better way of doing this
         quitToMenuPressed = false;
         backToGamePressed = false;
+
+        // Disable the confirm button
+        confirmButton.setVisible(false);
+        confirmButton.setManaged(false);
 
         // Set up menu according to settings object
         soundVolumeSlider.setValue(settings.getSoundVolume());
@@ -186,6 +206,7 @@ public class PauseMenuController {
 
     /**
      * Return whether quit to menu has been pressed
+     *
      * @return Quit to menu has been pressed
      */
     public boolean getQuitToMenuPressed() {
@@ -194,9 +215,10 @@ public class PauseMenuController {
 
     /**
      * Return whether back to menu has been pressed
+     *
      * @return Back to menu has been pressed
      */
-    public boolean getBackToGamePressed(){
+    public boolean getBackToGamePressed() {
         return backToGamePressed;
     }
 }

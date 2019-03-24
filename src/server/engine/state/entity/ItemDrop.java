@@ -18,16 +18,16 @@ public class ItemDrop extends Entity implements HasID, HasPhysics {
 
     private static int nextID = 0;
 
-    private final Item item;
     private final int id;
 
     protected int quantity;
     protected long dropTime;
     protected Velocity velocity;
     protected Force resultantForce;
+    protected Item item;
 
     public ItemDrop(Item item, Location location, Velocity velocity, int quantity) {
-        super(new Pose(location), Tile.TILE_SIZE / 2, item.getItemListName().getEntityList());
+        super(new Pose(location), Tile.TILE_SIZE / 2, item.getItemListName().getEntityList()); // TODO change size to match item
         this.item = item;
         this.quantity = quantity;
         this.id = nextID++;
@@ -70,6 +70,10 @@ public class ItemDrop extends Entity implements HasID, HasPhysics {
 
     public Item getItem() {
         return item;
+    }
+
+    public void setItem(Item i) {
+        this.item = i;
     }
 
     @Override
