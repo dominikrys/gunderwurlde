@@ -285,9 +285,9 @@ public class ProcessGameState extends Thread {
 
                 if (request.getShoot()) {
                     if (currentItem.getItemType() == ItemType.GUN) {
-                        currentPlayer.setCurrentAction(ActionList.ATTACKING);
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
+                            currentPlayer.setCurrentAction(ActionList.ATTACKING);
                             LinkedList<Projectile> shotProjectiles = currentGun.getShotProjectiles(playerPose, currentPlayer.getTeam());
                             for (Projectile p : shotProjectiles) {
                                 newProjectiles.add(p);
@@ -382,7 +382,7 @@ public class ProcessGameState extends Thread {
             HashSet<Pose> playerPoses = new HashSet<>();
             for (Integer p : playerIDs) {
                 LivingEntity currentPlayer = livingEntities.get(p);
-                //if (currentPlayer.getStatus() != EntityStatus.DEAD)
+                // if (currentPlayer.getStatus() != EntityStatus.DEAD)
                     playerPoses.add(currentPlayer.getPose());
             }
 
@@ -823,8 +823,10 @@ public class ProcessGameState extends Thread {
 
     private static double getDistanceMoved(long timeDiff, double speed) {
         double distMoved = Physics.normaliseTime(timeDiff) * speed; // time in millis
-        if (distMoved >= Tile.TILE_SIZE)
-            LOGGER.warning("Entity moving too fast!");
+        if (distMoved >= Tile.TILE_SIZE) {
+            LOGGER.warning("Entity moving too fast! Slowing it down...");
+            distMoved = Tile.TILE_SIZE;
+        }
         return distMoved;
     }
 
