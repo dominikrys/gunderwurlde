@@ -469,6 +469,15 @@ public class MapEditor {
 				}
 			}
 		});
+		mapCanvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				selectTile((int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
+				if(event.getClickCount() == 2 && !paintCheckbox.isSelected()) {
+					TileSelector tileSelector = new TileSelector(mapEditor, (int)event.getX()/Constants.TILE_SIZE, (int)event.getY()/Constants.TILE_SIZE);
+				}
+			}
+		});
 		
 		setRedSpawn.setDisable(false);
 		setBlueSpawn.setDisable(false);
@@ -482,7 +491,7 @@ public class MapEditor {
 	
 	// Draw a tile
 	protected void drawTile(int tileX, int tileY, Tile tile) {
-		if(checkTile(tileX, tileY)) {
+		if(checkTile(tileX, tileY) && 0 <= tileX && tileX < mapTiles.length && 0 <= tileY && tileY < mapTiles[0].length) {
 			mapGc.drawImage(mapSnapshot, 0, 0);
 			mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
 			drawEdge(tileX, tileY, Color.GREY);
@@ -498,17 +507,19 @@ public class MapEditor {
 	
 	// Tile remove
 	protected void removeTile(int tileX, int tileY) {
-		if(mapTiles[tileX][tileY] != null && checkTile(tileX, tileY)) {
-			mapGc.drawImage(mapSnapshot, 0, 0);
-			mapGc.drawImage(mapEditorAssets.get(MapEditorAssetList.VOID), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
-			drawEdge(tileX, tileY, Color.BLACK);
-			drawEdge(tileX, tileY, Color.GREY);
-			SnapshotParameters params = new SnapshotParameters();
-			params.setFill(Color.TRANSPARENT);
-			mapSnapshot = mapCanvas.snapshot(params, null);
-			mapTiles[tileX][tileY] = null;
-			if(!paintCheckbox.isSelected()) {
-				selectTile(tileX, tileY);
+		if(checkTile(tileX, tileY) && 0 <= tileX && tileX < mapTiles.length && 0 <= tileY && tileY < mapTiles[0].length) {
+			if(mapTiles[tileX][tileY] != null) {
+				mapGc.drawImage(mapSnapshot, 0, 0);
+				mapGc.drawImage(mapEditorAssets.get(MapEditorAssetList.VOID), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
+				drawEdge(tileX, tileY, Color.BLACK);
+				drawEdge(tileX, tileY, Color.GREY);
+				SnapshotParameters params = new SnapshotParameters();
+				params.setFill(Color.TRANSPARENT);
+				mapSnapshot = mapCanvas.snapshot(params, null);
+				mapTiles[tileX][tileY] = null;
+				if(!paintCheckbox.isSelected()) {
+					selectTile(tileX, tileY);
+				}
 			}
 		}
 	}
