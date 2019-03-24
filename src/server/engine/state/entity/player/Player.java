@@ -8,7 +8,7 @@ import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
-import server.engine.state.item.weapon.gun.BuckshotShotgun;
+import server.engine.state.item.weapon.gun.CrystalLauncher;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.PlasmaPistol;
@@ -51,7 +51,7 @@ public class Player extends LivingEntity {
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new PlasmaPistol()); // TODO remove testing only
-        items.add(new BuckshotShotgun()); // TODO remove testing only
+        items.add(new CrystalLauncher()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
