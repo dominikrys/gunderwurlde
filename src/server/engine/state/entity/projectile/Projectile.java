@@ -19,7 +19,7 @@ public abstract class Projectile extends Entity {
     protected Team team;
 
     Projectile(int speed, int damage, EntityList entityListName, int size, int max_range, Pose pose, Team team) {
-        super(pose, size, entityListName);
+        super(pose, size + 1, entityListName);
         this.speed = speed;
         this.damage = damage;
         this.max_range = max_range;

@@ -912,7 +912,15 @@ public class ProcessGameState extends Thread {
         LinkedHashSet<Integer> affectedEntities = new LinkedHashSet<>();
 
         for (int[] tileCords : tilesOn) {
-            Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+            Tile tileOn;
+
+            // easy way to handle attack clipping out of the map.
+            try {
+                tileOn = tileMap[tileCords[0]][tileCords[1]];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                continue;
+            }
+
             LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
 
             for (Integer entitiyID : entitiesOnTile) {
