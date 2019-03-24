@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 15; -fx-background-color: black; -fx-padding: 15;" styleClass="pause_menu_bg" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="client.render.PauseMenuController">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 15; -fx-background-color: black; -fx-padding: 15;" styleClass="pause_menu_bg" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="client.render.PauseMenuController">
    <children>
       <Label style="-fx-padding: 5px;" text="PAUSE">
          <font>
@@ -109,6 +109,11 @@
             <String fx:value="manaspaceFontWhite" />
             <String fx:value="backToMenuButton" />
          </styleClass>
+      </Button>
+      <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#confirmButtonPress" styleClass="nameTooLong" text="Confirm, leave game">
+         <font>
+            <Font name="Consolas" size="22.0" />
+         </font>
       </Button>
    </children>
 </VBox>

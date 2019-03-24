@@ -1,12 +1,13 @@
 package server.engine.state.entity.enemy;
 
+import java.util.LinkedHashSet;
+
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.SniperAI;
-import server.engine.state.item.weapon.gun.Ammo;
+import server.engine.state.item.pickup.Ammo;
+import server.engine.state.item.pickup.Health;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-
-import java.util.LinkedHashSet;
 
 public class Sniper extends Zombie {
 
@@ -17,7 +18,9 @@ public class Sniper extends Zombie {
 
     static {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.8, 3, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.03, 2));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.2, 1));
     }
 
     private final int RANGE_TO_RUN_WAY;
