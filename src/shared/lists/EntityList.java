@@ -135,10 +135,10 @@ public enum EntityList {
      * Other renderable entities - some are items
      */
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
-    ENERGY("file:assets/img/other/ammo_clip.png"), // TODO maybe an electric bolt or something?
-    MAGIC_ESSENCE("file:assets/img/other/ammo_clip.png"), // TODO a glowing orb or something?
-    HEAVY_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
-    ROCKET_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
+    ENERGY("file:assets/img/other/energy.png"),
+    MAGIC_ESSENCE("file:assets/img/other/magic_essence.png"),
+    HEAVY_AMMO("file:assets/img/other/heavy_ammo_clip.png"),
+    ROCKET_AMMO("file:assets/img/other/rocket_ammo.png"),
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
