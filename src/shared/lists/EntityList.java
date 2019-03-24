@@ -15,10 +15,10 @@ public enum EntityList {
     PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     SHOTGUN("file:assets/img/entity/item/shotgun.png", Constants.TILE_SIZE),
     SMG("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
-    // TODO
-    SNIPER_RIFLE("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
-    PLASMA_PISTOL("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
-    MACHINE_GUN("file:assets/img/entity/item/smg.png", Constants.TILE_SIZE),
+    SNIPER_RIFLE("file:assets/img/entity/item/sniper_rifle.png", Constants.TILE_SIZE),
+    PLASMA_PISTOL("file:assets/img/entity/item/plasma_pistol.png", Constants.TILE_SIZE),
+    MACHINE_GUN("file:assets/img/entity/item/machine_gun.png", Constants.TILE_SIZE),
+    
     CRYSTAL_LAUNCHER("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     FIRE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
     ICE_GUN("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE),
