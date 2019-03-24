@@ -11,6 +11,7 @@ import shared.lists.TileState;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -198,6 +199,30 @@ public abstract class EnemyAI {
         return enemy;
     }
 
+    Pose findPoseAroundPlayer(int distanceFromPlayer, boolean pathUnobstructed) {
+        Pose positionToAttack;
+        int expandedRange = 5;
+        int angle = getAngle(closestPlayer, pose);
+        if(pathUnobstructed) {
+            do {
+                positionToAttack = poseInDistance(closestPlayer,
+                        ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
+                        ThreadLocalRandom.current().nextInt(
+                                distanceFromPlayer, distanceFromPlayer + expandedRange));
+                expandedRange += 5;
+            } while ((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
+                    || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
+        }else{
+            do {
+                positionToAttack = poseInDistance(closestPlayer,
+                        ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
+                        ThreadLocalRandom.current().nextInt(distanceFromPlayer, distanceFromPlayer + 20));
+                expandedRange += 5;
+            } while ((pathUnobstructed(positionToAttack, closestPlayer, tileMap))
+                    || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
+        }
+        return positionToAttack;
+    }
 
 //    protected abstract Pose generateNextPose();
 

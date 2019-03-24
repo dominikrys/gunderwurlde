@@ -5,15 +5,12 @@ import server.engine.ai.aStar.AStar;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Gun;
-import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.SniperRifle;
-import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
 
 import java.util.LinkedList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SniperAI extends AStarUsingEnemy {
 
@@ -25,7 +22,6 @@ public class SniperAI extends AStarUsingEnemy {
     private boolean playerAiming = false;
     private LinkedList<Pose> posePath;
     private boolean AStartProcessing = false;
-    private int expandedRange = 5;
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -91,7 +87,7 @@ public class SniperAI extends AStarUsingEnemy {
 //            }
         if (posePath == null) {
             if (!AStartProcessing) {
-                Pose endPose = findPositionToAttack();
+                Pose endPose = findPoseAroundPlayer(RANGE_TO_RUN_AWAY, true);
                 new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
                 AStartProcessing = true;
             }
@@ -129,21 +125,6 @@ public class SniperAI extends AStarUsingEnemy {
             }
         }
         return null;
-    }
-
-    private Pose findPositionToAttack() {
-        Pose positionToAttack;
-        int angle = getAngle(closestPlayer, pose);
-        do {
-            positionToAttack = poseInDistance(closestPlayer,
-                    ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
-                    ThreadLocalRandom.current().nextInt(RANGE_TO_RUN_AWAY, RANGE_TO_RUN_AWAY + 20));
-            expandedRange += 5;
-        } while ((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
-                || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
-
-        expandedRange = 5;
-        return positionToAttack;
     }
 
     public void setTilePath(LinkedList<Pose> aStar) {
