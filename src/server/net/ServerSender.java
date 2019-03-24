@@ -22,7 +22,7 @@ public class ServerSender extends Thread {
     byte[] buffer;
     int maxBufferSize;
 
-    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
+    public ServerSender(InetAddress address, MulticastSocket socket, int port) {
         this.senderAddress = address;
         this.senderSocket = socket;
         this.port = port;

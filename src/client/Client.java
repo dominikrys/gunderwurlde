@@ -18,6 +18,9 @@ import shared.view.GameView;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+/**
+ * Class to initialise the sender, receiver threads and join the game
+ */
 public class Client extends Thread {
 
 
@@ -58,7 +61,7 @@ public class Client extends Thread {
     private InetAddress joinGameAddress;
 
     /**
-     * The variable to hold the server machines IP address
+     * The server machines IP address
      */
     private InetAddress tcpAddress;
 
