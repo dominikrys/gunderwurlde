@@ -232,7 +232,7 @@ public class Client extends Thread {
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
-            receiver = new ClientReceiver(renderer, listenAddress, listenSocket, this, settings);
+            receiver = new ClientReceiver(listenSocket, this, settings);
             System.out.println("Closing client");
         } catch (IOException e) {
             e.printStackTrace();
@@ -306,32 +306,28 @@ public class Client extends Thread {
                 else {
                     continue;
                 }
-
-                // Now we have the correct TCP address we can create the TCP socket
+                                // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
-
-                // Listen for the players clientID to be sent across
                 byte[] clientIDBytes = new byte[4];
                 is.read(clientIDBytes);
                 ByteBuffer wrappedCommand = ByteBuffer.wrap(clientIDBytes);
                 this.playerID = wrappedCommand.getInt();
 
-
-                // Now we have the playerID we can request to join the game on the server side
-                // Send across the playerName and team
+                // Begin the join game Process
                 String data = (playerName + "/" + team);
                 byte[] nameAndTeamBytes = data.getBytes();
                 os.write(nameAndTeamBytes);
 
-                // Once confirmation that this has been received we end the process
                 byte[] confirmationBytes = new byte[4];
                 is.read(confirmationBytes);
                 wrappedCommand = ByteBuffer.wrap(confirmationBytes);
                 int confirmation = wrappedCommand.getInt();
                 if (confirmation == 1) {
                     System.out.println("Player successfully joined");
+                } else {
+                    System.out.println("player failed to join");
                 }
             }
         } catch (UnknownHostException e) {
@@ -344,9 +340,10 @@ public class Client extends Thread {
         }
     }
 
-    /**
-     * Method for closing down all threads stemming from this client and forwarding the close request to the handler
-     */
+    public ClientSender getClientSender() {
+        return this.sender;
+    }
+
     public void close() {
         try {
             sender.close();
@@ -361,52 +358,37 @@ public class Client extends Thread {
         }
     }
 
-    /**
-     * Method for sending requests that do not require parameters
-     * @param action The action that the server needs to process
-     */
     public void send(ActionList action) {
         switch (action.toString()) {
             case "ATTACK": // 0
-                sender.send(new Integer[]{0});
+                getClientSender().send(new Integer[]{0});
                 break;
             case "DROPITEM": // 1
-                sender.send(new Integer[]{1});
+                getClientSender().send(new Integer[]{1});
                 break;
             case "RELOAD": // 2
-                sender.send(new Integer[]{2});
+                getClientSender().send(new Integer[]{2});
                 break;
         }
     }
 
-    /**
-     * Method for sending requests that do require a parameter
-     * @param action The action that the server needs to process
-     * @param parameter The value that this action takes
-     */
     public void send(ActionList action, int parameter) {
         switch (action.toString()) {
             case "CHANGEITEM": // 3
-                sender.send(new Integer[]{3, parameter});
+                getClientSender().send(new Integer[]{3, parameter});
                 break;
             case "MOVEMENT": // 4
-                sender.send(new Integer[]{4, parameter});
+                getClientSender().send(new Integer[]{4, parameter});
                 break;
             case "TURN": //5
-                sender.send(new Integer[]{5, parameter});
+                getClientSender().send(new Integer[]{5, parameter});
         }
     }
 
-    /**
-     * Method to update the next assignable IP address
-     */
     private void updateLowestAvailableAddress() {
         lowestAvailableAddress++;
     }
 
-    /**
-     * Method to update the next assignable port
-     */
     private void updateLowestAvailablePort() {
         lowestAvailablePort += 2;
     }

@@ -6,17 +6,54 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.SocketException;
 
+/**
+ * Thread that handles the sending of requests to the server
+ */
 public class ClientSender extends Thread {
-    MulticastSocket senderSocket;
-    InetAddress senderAddress;
-    Boolean running;
-    DatagramPacket packet = null;
-    int port;
-    byte[] buffer;
-    int playerID;
 
+    /**
+     * Socket to send client requests to the sever
+     */
+    private MulticastSocket senderSocket;
+
+    /**
+     * Address to send client requests to
+     */
+    private InetAddress senderAddress;
+
+    /**
+     * boolean to state if the thread should keep running
+     */
+    private Boolean running;
+
+    /**
+     * packet to be transmitted to the server
+     */
+    private DatagramPacket packet;
+
+    /**
+     * Port to send client requests on
+     */
+    private int port;
+
+    /**
+     * byte array to hold information to be sent
+     */
+    private byte[] buffer;
+
+    /**
+     * identification so the server knows who sent the packet
+     */
+    private int playerID;
+
+    /**
+     * Constructor
+     * @param address Address to send client requests to
+     * @param socket Socket to send client requests to the sever
+     * @param port Port to send client requests on
+     * @param playerID identification so the server knows who sent the packet
+     */
     public ClientSender(InetAddress address, MulticastSocket socket, int port, int playerID) {
         this.senderAddress = address;
         this.senderSocket = socket;
@@ -26,52 +63,63 @@ public class ClientSender extends Thread {
         this.start();
     }
 
+    /**
+     * Method to say if the thread is still running
+     * @return true if the server is still running
+     */
     public boolean getRunning() {
         return running;
     }
 
+    /**
+     * run method to keep the thread alive
+     */
     public void run() {
         while (running) {
             Thread.yield();
         }
     }
 
+    /**
+     * Method to send requests that dont need parameters to the server
+     * @param action
+     */
     public void send(Integer[] action) {
         try {
-            //Create streams that will turn the data into a byte array
+            // byte stream to turn the objects into a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out;
+            // object stream to collect the objects together
+            ObjectOutputStream out = new ObjectOutputStream(bos);
             try {
-                // pass the ByteArray stream into the object stream
-                out = new ObjectOutputStream(bos);
-                // Write the actions to be performed followed by the client performing them to the byte array
+                // Write the objects to the object stream
                 out.writeObject(action);
                 out.writeInt(playerID);
                 out.flush();
-                // set the buffer to the array and send to the server
+                // convert the objects to a byte array, packet them and send it to the server
                 buffer = bos.toByteArray();
                 packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
                 senderSocket.send(packet);
             } finally {
-                try {
-                    bos.close();
-                }
-                catch(IOException ex){
-                    ex.printStackTrace();
-                }
+                out.close();
+                bos.close();
             }
-            // TODO Will be set on a loop to send every ______ seconds
-
         } catch (IOException e) {
             //e.printStackTrace();
             System.out.println("unable to send message");
         }
     }
 
+    /**
+     * method to set the value of the bool running
+     * @param value the new value of running
+     */
     public void setRunning(boolean value){
         running = value;
     }
 
+    /**
+     * Method to end the thread
+     */
     public void close(){
         running = false;
     }
