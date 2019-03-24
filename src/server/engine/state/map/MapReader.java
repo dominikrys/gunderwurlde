@@ -131,7 +131,7 @@ public class MapReader {
         case SNIPER:
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
         case THEBOSS:
-                return new TheBoss();
+                return new TheBoss(Long.valueOf(entityParams.removeFirst()));
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
