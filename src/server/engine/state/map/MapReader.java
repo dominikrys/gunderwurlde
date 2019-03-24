@@ -32,7 +32,7 @@ public class MapReader {
         while (!line.isEmpty()) {
             LinkedList<String> tileComp = getComponents(line);
             char ID = tileComp.removeFirst().charAt(0);
-            Tile type = Tile.valueOf(tileComp.removeFirst());
+            TileList type = TileList.valueOf(tileComp.removeFirst());
             TileState state = TileState.valueOf(tileComp.removeFirst());
             double value = Double.valueOf(tileComp.removeFirst());
             tiles.put(ID, new server.engine.state.map.tile.Tile(type, state, value));

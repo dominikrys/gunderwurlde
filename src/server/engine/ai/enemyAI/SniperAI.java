@@ -79,13 +79,13 @@ public class SniperAI extends AStarUsingEnemy {
     protected Force generateMovementForce() {
         //SNIPER 400
 //            System.out.println(tileMap.length + " " + tileMap[0].length);
-//            int[] tile = new int[2];
+//            int[] tileList = new int[2];
 //
 //            for(int i = 0; i <= tileMap.length; i ++){
 //                for(int j = 0; j <= tileMap[0].length; j ++){
-//                    tile[0] = i;
-//                    tile[1] = j;
-//                    System.out.print(tileNotSolid(tile, tileMap));
+//                    tileList[0] = i;
+//                    tileList[1] = j;
+//                    System.out.print(tileNotSolid(tileList, tileMap));
 //                }
 //                System.out.println();
 //            }
@@ -149,7 +149,7 @@ public class SniperAI extends AStarUsingEnemy {
     public void setTilePath(LinkedList<Pose> aStar) {
 //        try {
 //            for (Pose pose : aStar) {
-//                System.out.println(Tile.locationToTile(pose)[0] + " " + Tile.locationToTile(pose)[1]);
+//                System.out.println(TileList.locationToTile(pose)[0] + " " + TileList.locationToTile(pose)[1]);
 //            }
 //        }catch (Exception e){
 //            System.out.println("AStar returned null");

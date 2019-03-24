@@ -1,11 +1,9 @@
 package shared.lists;
 
-import shared.Constants;
-
 /**
- * Tile enum. Contains all tile types in the game
+ * TileList enum. Contains all tile types in the game
  */
-public enum Tile {
+public enum TileList {
     // Meadow Tiles
     GRASS(EntityList.GRASS_TILE, TileState.PASSABLE, 0.5),
     WOOD(EntityList.WOOD_TILE, TileState.SOLID, 0.7),
@@ -26,22 +24,22 @@ public enum Tile {
     WATER(EntityList.WATER, TileState.PASSABLE, 0.8);
 
     /**
-     * Corresponding name of this tile in the entity list
+     * Corresponding name of this tileList in the entity list
      */
     EntityList entityListName;
 
     /**
-     * State of the tile
+     * State of the tileList
      */
     TileState tileState;
 
     /**
-     * Friction coefficient of tile
+     * Friction coefficient of tileList
      */
     double friction;
 
     /**
-     * Bounce coefficient of tile
+     * Bounce coefficient of tileList
      */
     double bounceCoefficient;
 
@@ -49,11 +47,11 @@ public enum Tile {
      * Constructor
      *
      * @param entityListName    EntityList equivalent
-     * @param tilestate         State of the tile
-     * @param friction          Friction coefficient of tile
-     * @param bounceCoefficient Bounce coefficient of tile
+     * @param tilestate         State of the tileList
+     * @param friction          Friction coefficient of tileList
+     * @param bounceCoefficient Bounce coefficient of tileList
      */
-    Tile(EntityList entityListName, TileState tilestate, double friction, double bounceCoefficient) {
+    TileList(EntityList entityListName, TileState tilestate, double friction, double bounceCoefficient) {
         this.entityListName = entityListName;
         this.tileState = tilestate;
         this.friction = friction;
@@ -63,11 +61,11 @@ public enum Tile {
     /**
      * Constructor without bounce coefficient
      *
-     * @param entityListName    EntityList equivalent
-     * @param tilestate         State of the tile
-     * @param friction          Friction coefficient of tile
+     * @param entityListName EntityList equivalent
+     * @param tilestate      State of the tileList
+     * @param friction       Friction coefficient of tileList
      */
-    Tile(EntityList entityListName, TileState tilestate, double friction) {
+    TileList(EntityList entityListName, TileState tilestate, double friction) {
         this(entityListName, tilestate, friction, friction);
     }
 
@@ -81,9 +79,9 @@ public enum Tile {
     }
 
     /**
-     * Get tile state of this tile
+     * Get tileList state of this tileList
      *
-     * @return Tile state
+     * @return TileList state
      */
     public TileState getTileState() {
         return tileState;
@@ -92,14 +90,14 @@ public enum Tile {
     /**
      * Get friciton coefficient of this stile
      *
-     * @return Friction coefficient of tile
+     * @return Friction coefficient of tileList
      */
     public double getFriction() {
         return friction;
     }
 
     /**
-     * Get boune coefficient of tile
+     * Get boune coefficient of tileList
      *
      * @return Bounce coefficient
      */

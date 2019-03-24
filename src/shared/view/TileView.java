@@ -3,34 +3,34 @@ package shared.view;
 import java.io.Serializable;
 
 import shared.Constants;
+import shared.lists.TileList;
 import shared.lists.TileState;
-import shared.lists.Tile;
 
 public class TileView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final int TILE_SIZE = Constants.TILE_SIZE;
 
-    // Type of tile
-    protected Tile tile;
+    // Type of tileList
+    protected TileList tileList;
 
-    // State of tile, e.g. solid or passable
+    // State of tileList, e.g. solid or passable
     protected TileState tileState;
 
     private boolean wasHit;
 
-    public TileView(Tile tile, TileState tileState) {
-        this(tile, tileState, false);
+    public TileView(TileList tileList, TileState tileState) {
+        this(tileList, tileState, false);
     }
 
-    public TileView(Tile tile, TileState tileState, boolean wasHit) {
-        this.tile = tile;
+    public TileView(TileList tileList, TileState tileState, boolean wasHit) {
+        this.tileList = tileList;
         this.tileState = tileState;
         this.wasHit = wasHit;
     }
 
-    public Tile getTile() {
-        return tile;
+    public TileList getTileList() {
+        return tileList;
     }
 
     public TileState getTileState() {

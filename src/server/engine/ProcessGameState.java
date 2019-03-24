@@ -536,10 +536,10 @@ public class ProcessGameState extends Thread {
                             break;
                         }
 
-                        // remove if projectile hit solid tile
+                        // remove if projectile hit solid tileList
                         if (tileOn.getState() == TileState.SOLID) {
                             removed = currentProjectile.isRemoved(tileOn, Tile.tileToLocation(tileCords[0], tileCords[1]));
-                            tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
+                            tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // TileList hit
                             break;
                         }
                     }
@@ -784,7 +784,7 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                // process zone tile changes
+                // process zone tileList changes
                 for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
                     int[] cords = tileChanged.getKey();
                     Tile newTile = tileChanged.getValue();
@@ -947,7 +947,7 @@ public class ProcessGameState extends Thread {
                 frictionCoefficient += tileOn.getFrictionCoefficient();
                 density += tileOn.getDensity();
             } else {
-                LOGGER.info("Object clipped in tile.");
+                LOGGER.info("Object clipped in tileList.");
             }
         }
 
@@ -979,11 +979,11 @@ public class ProcessGameState extends Thread {
         Location newLocation = Location.calculateNewLocation(e.getLocation(), currentVelocity.getDirection(), distanceMoved);
         e.setLocation(newLocation);
 
-        // tile collisions
+        // tileList collisions
         tilesOn = tilesOn((Entity) e);
         int[] mostSigTileCords = getMostSignificatTile(newLocation, tilesOn, tileMap);
         if (mostSigTileCords[0] != -1) {
-            // TODO add hit sound to tile if velocity is high
+            // TODO add hit sound to tileList if velocity is high
             Location mostSigTileLoc = Tile.tileToLocation(mostSigTileCords[0], mostSigTileCords[1]);
             e = Physics.tileCollision(e, mostSigTileLoc, tileMap[mostSigTileCords[0]][mostSigTileCords[1]].getBounceCoefficient());
         }
