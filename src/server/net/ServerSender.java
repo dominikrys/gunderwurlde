@@ -1,7 +1,6 @@
 package server.net;
 
 import shared.view.GameView;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -10,10 +9,13 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-
 import client.net.Addressing;
 
+/**
+ * Thread to handle sending of GameViews to the clients
+ */
 public class ServerSender extends Thread {
+    
     MulticastSocket senderSocket;
     InetAddress senderAddress;
     Boolean running;
