@@ -9,10 +9,13 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -250,7 +253,9 @@ public class GameRenderer implements Runnable {
         stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
 
         // Set root to scene
-        stage.getScene().setRoot(root);
+        Platform.runLater(() -> {
+            stage.getScene().setRoot(root);
+        });
 
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);

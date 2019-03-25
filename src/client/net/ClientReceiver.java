@@ -58,7 +58,7 @@ public class ClientReceiver extends Thread {
         this.listenSocket = socket;
         this.client = client;
         this.settings = settings;
-        buffer = new byte[200000];
+        buffer = new byte[2000000];
         running = true;
         this.start();
     }

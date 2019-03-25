@@ -218,7 +218,6 @@ public class Client extends Thread {
             this.handler = handler;
             this.settings = settings;
             firstView = true;
-            // Start the joinGame process
             joinGame();
         } catch (UnknownHostException e) {
             e.printStackTrace();
