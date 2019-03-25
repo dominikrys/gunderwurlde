@@ -361,6 +361,7 @@ public class Server extends Thread implements HasEngine {
      */
     public void close() {
         // close the engine down
+        System.out.println("CLOSING SERVER THREADS");
         engine.handlerClosing();
         sender.close();
         try {
@@ -380,5 +381,9 @@ public class Server extends Thread implements HasEngine {
 
     public boolean isReceiving() {
         return receiving;
+    }
+
+    public boolean isThreadsRunning(){
+        return sender.isAlive() && receiver.isAlive();
     }
 }

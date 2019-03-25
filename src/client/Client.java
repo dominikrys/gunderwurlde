@@ -278,6 +278,7 @@ public class Client extends Thread {
             Addressing.setInterfaces(joinGameSocket);
             joinGameAddress = InetAddress.getByName("230.0.0.0");
             joinGameSocket.joinGroup(joinGameAddress);
+            joinGameSocket.setSoTimeout(5000);
 
             // Prepare the gameIPAddress to transmission
             String gameIPAddress = listenAddress.toString();
@@ -316,6 +317,7 @@ public class Client extends Thread {
                 }
                 // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
+                tcpSocket.setSoTimeout(5000);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
 
@@ -350,7 +352,10 @@ public class Client extends Thread {
             e.printStackTrace();
             // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
-        } catch (SocketException e) {
+        } catch (SocketTimeoutException ex){
+            System.out.println("Failed to reach server, Is the IP and port correct");
+        }
+        catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

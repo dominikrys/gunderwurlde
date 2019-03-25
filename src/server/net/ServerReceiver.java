@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import client.net.Addressing;
@@ -121,8 +122,12 @@ public class ServerReceiver extends Thread {
                     bis.close();
                 }
             }
-            System.out.println("Closing serverreceiver");
-        } catch (IOException e1) {
+
+        }catch(SocketException ex){
+            System.out.println("closing ServerReceiver");
+            // Server Receiver told to close
+        }
+        catch (IOException e1) {
             e1.printStackTrace();
         }
     }

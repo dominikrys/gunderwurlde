@@ -200,8 +200,9 @@ public class GameHandler extends Thread {
 
     public void end() {
         // End server if running/exists
+        System.out.println("Told to end server threads");
         if (server != null) {
-            if (server.isAlive()) {
+            if (server.isThreadsRunning()) {
                 server.close();
             }
         }

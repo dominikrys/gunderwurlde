@@ -78,6 +78,7 @@ public class ClientSender extends Thread {
         while (running) {
             Thread.yield();
         }
+        System.out.println("Closing clientSender");
     }
 
     /**

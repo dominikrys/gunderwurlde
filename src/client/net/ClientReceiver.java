@@ -121,13 +121,14 @@ public class ClientReceiver extends Thread {
                     }
                 }
             }
+            System.out.println("ClientReceiver ending");
         }catch(SocketException ex){
-            System.out.println("End thread Received");
+            System.out.println("Closing clientReceiver");
         }
         catch (IOException e1) {
             e1.printStackTrace();
         }
-        System.out.println("Closing clientReceiver");
+
     }
 
     /**
