@@ -301,8 +301,7 @@ public class HUD extends BorderPane {
         }
 
         // Update minimap
-        miniMapPane = createMiniMap(gameView, currentPlayer);
-        miniMapPane.setAlignment(Pos.TOP_RIGHT);
+        updateMiniMap(gameView, currentPlayer);
     }
 
     /**
@@ -311,10 +310,7 @@ public class HUD extends BorderPane {
      * @param currentPlayer PlayerView for who the hud is
      * @return MiniMap as stackpane
      */
-    private StackPane createMiniMap(GameView gameView, PlayerView currentPlayer) {
-        // Create pane for minimap
-        StackPane miniMapPane = new StackPane();
-
+    private void updateMiniMap(GameView gameView, PlayerView currentPlayer) {
         // Make indicator for player location on minimap
         int playerRectangleSize = 4;
         Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
@@ -328,9 +324,9 @@ public class HUD extends BorderPane {
                 (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
 
         // Add all elements to the minimap and return
+        miniMapPane.getChildren().clear();
         miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
-
-        return miniMapPane;
+        miniMapPane.setAlignment(Pos.TOP_RIGHT);
     }
 
     /**
