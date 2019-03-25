@@ -1,7 +1,6 @@
-package client.render;
+package client.gui.menucontrollers;
 
 import client.Settings;
-import client.gui.menucontrollers.ControllerUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

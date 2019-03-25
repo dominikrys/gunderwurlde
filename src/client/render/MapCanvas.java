@@ -12,8 +12,8 @@ import javafx.scene.transform.Rotate;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
-import shared.lists.AmmoList;
 import shared.lists.EntityList;
+import shared.lists.EntityStatus;
 import shared.lists.ItemType;
 import shared.view.GameView;
 import shared.view.GunView;
@@ -45,14 +45,9 @@ public class MapCanvas extends Canvas {
     private Map<Integer, AnimatedSprite> enemiesOnMapAnimations;
 
     /**
-     * Player locations in last gameview object - used for checking if any players died
+     * Entity locations in last gameview object - used for spawn animation
      */
-    private Map<Integer, Pose> lastPlayerLocations;
-
-    /**
-     * Enemy locations in last gameview object - used for checking if any enemies died
-     */
-    private Map<Integer, Pose> lastEnemyLocations;
+    private Map<Integer, Pose> lastEntityLocations;
 
     /**
      * Constructor
@@ -70,8 +65,7 @@ public class MapCanvas extends Canvas {
         enemiesOnMapAnimations = new HashMap<>();
 
         // Initialise last location hashmaps for animations
-        lastPlayerLocations = new HashMap<>();
-        lastEnemyLocations = new HashMap<>();
+        lastEntityLocations = new HashMap<>();
     }
 
     /**
@@ -107,23 +101,20 @@ public class MapCanvas extends Canvas {
      */
     public void renderEntitiesFromGameViewToCanvas(GameView gameView, int playerID, RendererResourceLoader rendererResourceLoader) {
         // Render enemy and player spawn animations
-        renderEntitySpawns(EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
-        renderEntitySpawns(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
+        renderEntitySpawns(gameView, rendererResourceLoader);
 
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
             // Make item flicker when timer on it is expiring
-            if (currentItem.getTimeLeft() < 6000  && currentItem.getTimeLeft() >= 3500) {
+            if (currentItem.getTimeLeft() < 6000 && currentItem.getTimeLeft() >= 3500) {
                 if (currentItem.getTimeLeft() % 400 < 200) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
-            }
-            else if (currentItem.getTimeLeft() < 3500  && currentItem.getTimeLeft() >= 1500) {
+            } else if (currentItem.getTimeLeft() < 3500 && currentItem.getTimeLeft() >= 1500) {
                 if (currentItem.getTimeLeft() % 250 < 125) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
-            }
-            else if (currentItem.getTimeLeft() < 1500  && currentItem.getTimeLeft() >= 0) {
+            } else if (currentItem.getTimeLeft() < 1500 && currentItem.getTimeLeft() >= 0) {
                 if (currentItem.getTimeLeft() % 100 < 50) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
@@ -134,11 +125,21 @@ public class MapCanvas extends Canvas {
 
         // Render players
         for (PlayerView currentPlayer : gameView.getPlayers()) {
+            // Check if dead and if do, render death animation
+            if (currentPlayer.getStatus() == EntityStatus.DEAD) {
+                renderDeathAnimation(rendererResourceLoader, currentPlayer.getPose());
+            }
+
             renderPlayerView(playerID, rendererResourceLoader, currentPlayer);
         }
 
         // Render enemies
         for (EnemyView currentEnemy : gameView.getEnemies()) {
+            // Check if dead and if do, render death animation
+            if (currentEnemy.getStatus() == EntityStatus.DEAD) {
+                renderDeathAnimation(rendererResourceLoader, currentEnemy.getPose());
+            }
+
             renderEnemyView(rendererResourceLoader, currentEnemy);
         }
 
@@ -146,16 +147,37 @@ public class MapCanvas extends Canvas {
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntityView(currentProjectile, rendererResourceLoader);
         }
+    }
 
-        // Render enemy and player death animations
-        renderEntityDeaths(EntityDeathAnimation.ENEMY, gameView, rendererResourceLoader);
-        renderEntityDeaths(EntityDeathAnimation.PLAYER, gameView, rendererResourceLoader);
+    /**
+     * Method for rendering death animation at a certain position
+     *
+     * @param rendererResourceLoader Renderer resources
+     * @param pose                   Pose to render animation at
+     */
+    private void renderDeathAnimation(RendererResourceLoader rendererResourceLoader, Pose pose) {
+        // Set up animationtimer that will handle the animation
+        new AnimationTimer() {
+            int frameCount = 32;
+            AnimatedSprite deathAnimation = new AnimatedSprite(
+                    rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
+                    frameCount, 25, 1, AnimationType.NONE);
+
+            @Override
+            public void handle(long now) {
+                // Check if animation still running - if not, stop animation
+                if (runDeathSpawnAnimation(deathAnimation, pose, frameCount)) {
+                    this.stop();
+                }
+            }
+        }.start();
     }
 
     /**
      * Render enemy off of enemyview + healthbar
+     *
      * @param rendererResourceLoader Renderer resources
-     * @param currentEnemy Enemy to be rendered
+     * @param currentEnemy           Enemy to be rendered
      */
     private void renderEnemyView(RendererResourceLoader rendererResourceLoader, EnemyView currentEnemy) {
         // Update animation hashmap to track entity
@@ -211,14 +233,15 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
 
         // Put enemy into enemy locations hashmap
-        lastEnemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
+        lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
     }
 
     /**
      * Render player off of PlayerView
-     * @param playerID ID of player to render
+     *
+     * @param playerID               ID of player to render
      * @param rendererResourceLoader Renderer resources
-     * @param currentPlayer PlayerView to render
+     * @param currentPlayer          PlayerView to render
      */
     private void renderPlayerView(int playerID, RendererResourceLoader rendererResourceLoader, PlayerView currentPlayer) {
         // Update animation hashmap to track entity
@@ -369,104 +392,32 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
 
         // Put player into player locations hashmap
-        lastPlayerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
+        lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
     }
 
     /**
-     * Check which entities have died relative to the previous gameview object and display their death animations
+     * Render entity spawn animations
      *
-     * @param entityType             EntityType to check deaths for
-     * @param gameView               GameView to get data from
-     * @param rendererResourceLoader Renderer resources
-     */
-    private void renderEntityDeaths(EntityDeathAnimation entityType, GameView gameView,
-                                    RendererResourceLoader rendererResourceLoader) {
-        // Make a hashmap of all entities  on map to ease calculations and find dead entities
-        Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
-        HashMap<Integer, Pose> deadEntities = new HashMap<>();
-        switch (entityType) {
-            case PLAYER:
-                for (PlayerView playerView : gameView.getPlayers()) {
-                    gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
-                }
-
-                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastPlayerLocations, gameViewEntityPoses);
-                break;
-            case ENEMY:
-                for (EnemyView enemyView : gameView.getEnemies()) {
-                    gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
-                }
-
-                deadEntities = (HashMap<Integer, Pose>) mapDifference(lastEnemyLocations, gameViewEntityPoses);
-                break;
-        }
-
-        // Go through list of dead entities
-        for (Map.Entry<Integer, Pose> entry : deadEntities.entrySet()) {
-            // Set up an animationtimer with a one-off animation for every enemy
-            new AnimationTimer() {
-                Pose pose = entry.getValue();
-                int frameCount = 32;
-                AnimatedSprite deathAnimation = new AnimatedSprite(
-                        rendererResourceLoader.getSprite(EntityList.BLOOD_EXPLOSION), 32, 32,
-                        frameCount, 25, 1, AnimationType.NONE);
-
-                @Override
-                public void handle(long now) {
-                    // Check if animation still running - if not, stop animation
-                    if (deathAnimation.getCurrentFrame() < frameCount - 1) {
-                        drawRotatedImageFromSpritesheet(deathAnimation.getImage(), 0, pose.getX(),
-                                pose.getY(), deathAnimation.getXOffset(), deathAnimation.getYOffset(),
-                                deathAnimation.getIndividualImageWidth(), deathAnimation.getIndividualImageHeight());
-                    } else {
-                        this.stop();
-                    }
-                }
-            }.start();
-
-            // Remove entry from last locations so it isn't played again
-            switch (entityType) {
-                case PLAYER:
-                    lastPlayerLocations.remove(entry.getKey());
-                    break;
-                case ENEMY:
-                    lastEnemyLocations.remove(entry.getKey());
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Render enemy spawn animations
-     * @param entityType Entity to render spawn animation for
-     * @param gameView GameView storing data
+     * @param gameView               GameView storing data
      * @param rendererResourceLoader Renderer resource loader
      */
-    private void renderEntitySpawns(EntityDeathAnimation entityType, GameView gameView,
-                                    RendererResourceLoader rendererResourceLoader) {
-        // Make a hashmap of all entities  on map to ease calculations and find dead entities
+    private void renderEntitySpawns(GameView gameView, RendererResourceLoader rendererResourceLoader) {
+        // Make a hashmap of all entities on map to ease calculations and find dead entities
         Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
-        HashMap<Integer, Pose> newEntities = new HashMap<>();
-        switch (entityType) {
-            case PLAYER:
-                for (PlayerView playerView : gameView.getPlayers()) {
-                    gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
-                }
-
-                newEntities = (HashMap<Integer, Pose>) mapDifference(gameViewEntityPoses, lastPlayerLocations);
-                break;
-            case ENEMY:
-                for (EnemyView enemyView : gameView.getEnemies()) {
-                    gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
-                }
-
-                newEntities = (HashMap<Integer, Pose>) mapDifference(gameViewEntityPoses, lastEnemyLocations);
-                break;
+        for (PlayerView playerView : gameView.getPlayers()) {
+            gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
         }
+
+        for (EnemyView enemyView : gameView.getEnemies()) {
+            gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
+        }
+
+        // Get the new entities
+        Map<Integer, Pose> newEntities = mapDifference(gameViewEntityPoses, lastEntityLocations);
 
         // Go through list of new entities
         for (Map.Entry<Integer, Pose> entry : newEntities.entrySet()) {
-            // Set up an animationtimer with a one-off animation for every enemy
+            // Set up an animationtimer with a one-off animation for every entity
             new AnimationTimer() {
                 Pose pose = entry.getValue();
                 int frameCount = 32;
@@ -477,16 +428,32 @@ public class MapCanvas extends Canvas {
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (spawnAnimation.getCurrentFrame() < frameCount - 1) {
-                        drawRotatedImageFromSpritesheet(spawnAnimation.getImage(), 0, pose.getX(),
-                                pose.getY(), spawnAnimation.getXOffset(), spawnAnimation.getYOffset(),
-                                spawnAnimation.getIndividualImageWidth(), spawnAnimation.getIndividualImageHeight());
-                    } else {
+                    if (runDeathSpawnAnimation(spawnAnimation, pose, frameCount)) {
                         this.stop();
                     }
                 }
             }.start();
         }
+    }
+
+    /**
+     * See if the death or spawn animation should still run, in which case update it, otherwise return true
+     *
+     * @param animation  Running animation to check
+     * @param pose       Pose to render animation at
+     * @param frameCount Total amount of frames for animation
+     * @return True if animation finished
+     */
+    private boolean runDeathSpawnAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
+        if (animation.getCurrentFrame() < frameCount - 1) {
+            drawRotatedImageFromSpritesheet(animation.getImage(), 0, pose.getX(),
+                    pose.getY(), animation.getXOffset(), animation.getYOffset(),
+                    animation.getIndividualImageWidth(), animation.getIndividualImageHeight());
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -666,12 +633,5 @@ public class MapCanvas extends Canvas {
         WritableImage image = new WritableImage(1, 1);
         image.getPixelWriter().setColor(0, 0, color);
         return image;
-    }
-
-    /**
-     * Enum containing entities that have death animations for the MapCanvas class
-     */
-    enum EntityDeathAnimation {
-        PLAYER, ENEMY
     }
 }

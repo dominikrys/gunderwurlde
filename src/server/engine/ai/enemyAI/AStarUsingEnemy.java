@@ -4,14 +4,25 @@ import shared.Pose;
 
 import java.util.LinkedList;
 
-public abstract class AStarUsingEnemy extends EnemyAI {
+public abstract class AStarUsingEnemy extends PoseGeneratorUsingEnemy {
     LinkedList<Pose> posePath;
-    boolean AStartProcessing;
+    private boolean AStartProcessing;
 
     protected AStarUsingEnemy(long attackDelay) {
         super(attackDelay);
     }
 
-    public abstract void setTilePath(LinkedList<Pose> aStar);
+    public synchronized void setTilePath(LinkedList<Pose> aStar){
+        posePath = aStar;
+        AStartProcessing = false;
+    }
+
+    public synchronized void setAStarProcessing(boolean processing){
+        this.AStartProcessing = processing;
+    }
+
+    synchronized boolean getAStarProcessing(){
+        return AStartProcessing;
+    }
 
 }

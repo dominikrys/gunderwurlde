@@ -52,7 +52,6 @@ public class ChangeItem extends Action{
 	}
 	
 	public void changeTo(int number) {
-		System.out.println(playerView.getItems().size());
 		if(playerView.getCurrentItemIndex() + 1 == number) {
 			// do nothing
 		}

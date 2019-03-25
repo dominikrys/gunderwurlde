@@ -140,6 +140,7 @@ public class ProcessGameState extends Thread {
         // Zones
         LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
         LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
+        boolean tileMapChanged = true;
 
         // pause tracking variables
         boolean paused = false;
@@ -419,6 +420,9 @@ public class ProcessGameState extends Thread {
                     playerPoses.add(currentPlayer.getPose());
             }
 
+            if (tileMapChanged)
+                EnemyAI.setTileMap(tileMap);
+
             for (Integer e : enemyIDs) {
                 Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
@@ -433,8 +437,9 @@ public class ProcessGameState extends Thread {
                 double maxMovementForce = currentEnemy.getMovementForce();
                 EnemyAI ai = currentEnemy.getAI();
 
-                if (!ai.isProcessing())
-                    ai.setInfo(currentEnemy, playerPoses, tileMap);
+                if (!ai.isProcessing()) {
+                    ai.setInfo(currentEnemy, playerPoses);
+                }
 
                 // handle enemyAI action
                 AIAction enemyAction = ai.getAction();
@@ -472,7 +477,21 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 case UPDATE:
+                    Location oldLoc = currentEnemy.getLocation();
                     currentEnemy = ai.getUpdatedEnemy();
+                    Location newLoc = currentEnemy.getLocation();
+                    if (!newLoc.equals(oldLoc)) {
+                        currentEnemy.setLocation(oldLoc);
+                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                        }
+                        currentEnemy.setLocation(newLoc);
+                        enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
+                        }
+                    }
                     break;
                 default:
                     LOGGER.severe("AIAction " + enemyAction.toString() + " not known!");
@@ -492,6 +511,8 @@ public class ProcessGameState extends Thread {
                         currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                         currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
             }
+
+            tileMapChanged = false;
 
             // process and remove dead enemies
             for (Integer enemyID : enemiesToRemove) {
@@ -815,6 +836,7 @@ public class ProcessGameState extends Thread {
 
                 // process zone tile changes
                 for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
+                    tileMapChanged = true;
                     int[] cords = tileChanged.getKey();
                     Tile newTile = tileChanged.getValue();
                     tileMap[cords[0]][cords[1]] = newTile;
