@@ -161,7 +161,7 @@ public class ProcessGameState extends Thread {
             }
 
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
-            if (timeDiff > 5) {
+            if (timeDiff > 0) {
                 try {
                     Thread.sleep(timeDiff);
                 } catch (InterruptedException e1) {
