@@ -52,8 +52,15 @@ public class MapReader {
             LinkedList<String> tileComp = getComponents(line);
             char ID = tileComp.removeFirst().charAt(0);
             TileList type = TileList.valueOf(tileComp.removeFirst());
-            TileState state = TileState.valueOf(tileComp.removeFirst());
-            double value = Double.valueOf(tileComp.removeFirst());
+            TileState state;
+            double value;
+            if (tileComp.isEmpty()) {
+                state = type.getTileState();
+                value = type.getFriction();
+            } else {
+                state = TileState.valueOf(tileComp.removeFirst());
+                value = Double.valueOf(tileComp.removeFirst());
+            }
             tiles.put(ID, new Tile(type, state, value));
             line = file.removeFirst();
         }
