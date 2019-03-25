@@ -108,7 +108,7 @@ public class SoldierZombieAI extends EnemyAI {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(pistol.getShotProjectiles(new Pose(pose, angle), Team.ENEMY));
+        return new ProjectileAttack(pistol.getProjectiles(new Pose(pose, angle), Team.ENEMY));
     }
 
 

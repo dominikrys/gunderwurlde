@@ -72,7 +72,7 @@ public class SniperAI extends AStarUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getShotProjectiles(new Pose(pose, angle), Team.ENEMY));
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY));
     }
 
     @Override

@@ -354,9 +354,8 @@ public class GameRenderer implements Runnable {
         }
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
-                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
+        hud.updateHUD(gameView, rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer());
     }
 
     /**
