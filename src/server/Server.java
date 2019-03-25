@@ -186,12 +186,12 @@ public class Server extends Thread implements HasEngine {
             // Set sockets and address to be used
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
-
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
             listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
             listenSocket.joinGroup(listenAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            Addressing.setInterfaces(sendSocket);
             updatedLowestAvailableAddress();
             System.out.println("Server constructor finished");
         } catch (UnknownHostException e) {
@@ -205,6 +205,10 @@ public class Server extends Thread implements HasEngine {
      * Check if the game is multiplayer and then create the sender and receiver for the server
      */
     public void run(){
+        System.out.println("Server Listen Address: " + listenAddress);
+        System.out.println("Server Listen Port: " + listenPort);
+        System.out.println("Server Sender Address: " + senderAddress);
+        System.out.println("Server Sender Port: " + sendPort);
         try {
             // Check if the game is going to be multiplayer
             if(multiplayer) {

@@ -4,6 +4,7 @@ import server.Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Thread to manage players trying to join the game
@@ -54,7 +55,9 @@ public class JoinGameManager extends Thread {
                 Thread instance = new Thread(new JoinGameThread(connection, lowestAvailableID, server));
                 instance.start();
             }
-        } catch (Exception e) {
+        } catch (SocketException e) {
+            System.out.println("TCPManager ended");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

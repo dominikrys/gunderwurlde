@@ -231,9 +231,14 @@ public class Client extends Thread {
     public void run() {
         try {
             listenSocket = new MulticastSocket(listenPort);
+            Addressing.setInterfaces(listenSocket);
             listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
+            System.out.println("Client Listen Address: " + listenAddress);
+            System.out.println("Client Listen Port: " + listenPort);
+            System.out.println("Client Sender Address: " + senderAddress);
+            System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             receiver = new ClientReceiver(listenSocket, this, settings);
             System.out.println("Closing client");

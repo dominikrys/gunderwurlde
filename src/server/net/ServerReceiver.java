@@ -52,7 +52,6 @@ public class ServerReceiver extends Thread {
         this.handler = handler;
         buffer = new byte[255];
         running = true;
-        Addressing.setInterfaces(listenSocket);
         this.start();
     }
 
