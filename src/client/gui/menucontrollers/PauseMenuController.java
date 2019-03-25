@@ -1,4 +1,4 @@
-package client.render;
+package client.gui.menucontrollers;
 
 import client.Settings;
 import client.gui.menucontrollers.ControllerUtils;

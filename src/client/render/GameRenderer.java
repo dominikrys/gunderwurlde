@@ -3,6 +3,7 @@ package client.render;
 import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
+import client.gui.menucontrollers.PauseMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
@@ -284,7 +285,7 @@ public class GameRenderer implements Runnable {
             pauseMenuController = fxmlLoader.getController();
             pauseMenuController.initialise(settings);
         } catch (Exception e) {
-            System.out.println("Couldn't load the pause menu .FXML!");
+            System.out.println("Couldn't load the pause menu FXML!");
             e.printStackTrace();
         }
 
