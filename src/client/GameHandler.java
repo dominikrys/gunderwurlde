@@ -136,10 +136,8 @@ public class GameHandler extends Thread {
      * Method to initialise server and client to start the game for the player
      */
     public void run() {
-        // Load loading screen
+        // Load loading screen and set it to stage
         loadLoadingScreen();
-
-        // Set loading screen
         stage.getScene().setRoot(loadScreen);
 
         switch (connectionType) {
@@ -240,7 +238,7 @@ public class GameHandler extends Thread {
 
             // Set controller and update its settings value
             loadScreenController = fxmlLoader.getController();
-            loadScreenController.update();
+            loadScreenController.initialise();
         } catch (Exception e) {
             System.out.println("Couldn't load the load screen FXML!");
             e.printStackTrace();

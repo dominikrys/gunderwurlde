@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 20px; -fx-padding: 20px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml" fx:controller="client.gui.menucontrollers.LoadScreenController">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-spacing: 35; -fx-padding: 10px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="client.gui.menucontrollers.LoadScreenController">
    <children>
       <Label style="-fx-padding: 5px;" text="Loading...">
          <font>
@@ -17,7 +17,7 @@
             <String fx:value="menuTitle" />
          </styleClass>
       </Label>
-      <ProgressIndicator prefHeight="100.0" prefWidth="100.0" style="-fx-progress-color: white;" />
+      <ProgressIndicator prefHeight="125.0" prefWidth="125.0" style="-fx-progress-color: white;" />
       <Label fx:id="ipLabel" styleClass="serverColon" />
       <Label fx:id="portLabel" styleClass="serverColon" />
    </children>
