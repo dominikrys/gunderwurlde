@@ -585,7 +585,7 @@ public class ProcessGameState extends Thread {
                                 for (Integer entityID : entitiesOnTile) {
                                     LivingEntity entityBeingChecked = livingEntities.get(entityID);
 
-                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
+                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(entityBeingChecked, projectileCoverage)) {
                                         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                         entityBeingChecked.setTakenDamage(true);
 
@@ -926,19 +926,23 @@ public class ProcessGameState extends Thread {
     }
 
     private static boolean haveCollided(Entity e, Laser l) {
-        Location e_loc = e.getLocation();
-        int e_radius = e.getSize();
-        double e_x = e_loc.getX();
-        double e_y = e_loc.getY();
+        Location eLoc = e.getLocation();
+        int eRadius = e.getSize();
+        double eX = eLoc.getX();
+        double eY = eLoc.getY();
 
         Location start = l.getStart();
         Location end = l.getEnd();
         double size = l.getSize();
-        double c = start.getY();
-        double m = l.getLength() / (end.getX() - start.getX());
+        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double c = start.getY() - (m * start.getX());
 
-        // TODO finish
+        double yDist = (((eX * m) + c) - eY) / 2;
+        double xDist = (((eY - c) / m) - eX) / 2;
 
+        double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
+
+        return (eRadius >= laserDist);
     }
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map?
@@ -947,13 +951,13 @@ public class ProcessGameState extends Thread {
         double x = loc.getX();
         double y = loc.getY();
 
-        int[] max_loc = Tile.locationToTile(new Location(x + radius, y + radius));
-        int[] min_loc = Tile.locationToTile(new Location(x - radius, y - radius));
+        int[] maxLoc = Tile.locationToTile(new Location(x + radius, y + radius));
+        int[] minLoc = Tile.locationToTile(new Location(x - radius, y - radius));
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
-        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
-            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
+        for (int t_x = minLoc[0]; t_x <= maxLoc[0]; t_x++) {
+            for (int t_y = minLoc[1]; t_y <= maxLoc[1]; t_y++) {
                 tilesOn.add(new int[] { t_x, t_y });
             }
         }
@@ -965,8 +969,8 @@ public class ProcessGameState extends Thread {
         Location start = l.getStart();
         Location end = l.getEnd();
         double size = l.getSize();
-        double c = start.getY();
-        double m = l.getLength() / (end.getX() - start.getX());
+        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double c = start.getY() - (m * start.getX());
         double maxX = start.getX();
         double maxY = start.getY();
         double minX = end.getX();
@@ -1001,8 +1005,10 @@ public class ProcessGameState extends Thread {
                 maxY = tileLoc.getY() + offSet;
                 double y1 = (minX * m) + c;
                 double y2 = (maxX * m) + c;
+                double x1 = (minY - c) / m;
+                double x2 = (maxY - c) / m;
 
-                if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY))
+                if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY) || (x1 <= maxX && x1 >= minX) || (x2 <= maxX && x2 >= minX))
                     tilesOn.add(new int[] { t_x, t_y });
             }
         }
