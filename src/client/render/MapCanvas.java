@@ -154,7 +154,14 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    /**
+     * Method for rendering death animation at a certain position
+     *
+     * @param rendererResourceLoader Renderer resources
+     * @param pose                   Pose to render animation at
+     */
     private void renderDeathAnimation(RendererResourceLoader rendererResourceLoader, Pose pose) {
+        // Set up animationtimer that will handle the animation
         new AnimationTimer() {
             int frameCount = 32;
             AnimatedSprite deathAnimation = new AnimatedSprite(
@@ -164,11 +171,7 @@ public class MapCanvas extends Canvas {
             @Override
             public void handle(long now) {
                 // Check if animation still running - if not, stop animation
-                if (deathAnimation.getCurrentFrame() < frameCount - 1) {
-                    drawRotatedImageFromSpritesheet(deathAnimation.getImage(), 0, pose.getX(),
-                            pose.getY(), deathAnimation.getXOffset(), deathAnimation.getYOffset(),
-                            deathAnimation.getIndividualImageWidth(), deathAnimation.getIndividualImageHeight());
-                } else {
+                if (runDeathSpawnAnimation(deathAnimation, pose, frameCount)) {
                     this.stop();
                 }
             }
@@ -435,16 +438,32 @@ public class MapCanvas extends Canvas {
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (spawnAnimation.getCurrentFrame() < frameCount - 1) {
-                        drawRotatedImageFromSpritesheet(spawnAnimation.getImage(), 0, pose.getX(),
-                                pose.getY(), spawnAnimation.getXOffset(), spawnAnimation.getYOffset(),
-                                spawnAnimation.getIndividualImageWidth(), spawnAnimation.getIndividualImageHeight());
-                    } else {
+                    if (runDeathSpawnAnimation(spawnAnimation, pose, frameCount)) {
                         this.stop();
                     }
                 }
             }.start();
         }
+    }
+
+    /**
+     * See if the death or spawn animation should still run, in which case update it, otherwise return true
+     *
+     * @param animation  Running animation to check
+     * @param pose       Pose to render animation at
+     * @param frameCount Total amount of frames for animation
+     * @return True if animation finished
+     */
+    private boolean runDeathSpawnAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
+        if (animation.getCurrentFrame() < frameCount - 1) {
+            drawRotatedImageFromSpritesheet(animation.getImage(), 0, pose.getX(),
+                    pose.getY(), animation.getXOffset(), animation.getYOffset(),
+                    animation.getIndividualImageWidth(), animation.getIndividualImageHeight());
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
