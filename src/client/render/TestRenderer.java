@@ -3,9 +3,6 @@ package client.render;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import client.Settings;
 import javafx.application.Application;
@@ -23,6 +20,7 @@ import shared.lists.ItemList;
 import shared.lists.MapList;
 import shared.lists.Team;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
@@ -52,7 +50,7 @@ public class TestRenderer extends Application {
         }
         LinkedHashSet<PlayerView> playersView = new LinkedHashSet<>();
         ArrayList<ItemView> playerItems = new ArrayList<>();
-        playerItems.add(new ItemView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true, 3000));
+        playerItems.add(new GunView(ItemList.PISTOL, AmmoList.BASIC_AMMO, 12, 12, true, 3000));
         EnumMap<AmmoList, Integer> playerAmmo = new EnumMap<AmmoList, Integer>(AmmoList.class);
         playerAmmo.put(AmmoList.BASIC_AMMO, 36);
         PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Team.RED, false, EntityStatus.NONE,

@@ -7,6 +7,7 @@ import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.SoundList;
+import shared.view.GunView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
@@ -111,7 +112,7 @@ public class GameSound {
 							break;
 						case SHOTGUN:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN_SINGLE_RELOAD);
-							if(((PlayerView) entity).getAmmo().get(AmmoList.SHOTGUN_ROUND) > 0 && ((PlayerView) entity).getCurrentItem().getAmmoInClip() + 1 != 8) {
+							if(((PlayerView) entity).getAmmo().get(AmmoList.SHOTGUN_ROUND) > 0 && ((GunView)((PlayerView) entity).getCurrentItem()).getAmmoInClip() + 1 != 8) {
 								this.timer.schedule(checkReplay, Shotgun.DEFAULT_RELOAD_TIME + 50);
 							}
 							break;

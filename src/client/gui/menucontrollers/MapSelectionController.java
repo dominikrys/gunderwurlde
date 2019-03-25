@@ -9,13 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import shared.Constants;
 import shared.lists.MapList;
@@ -155,30 +151,7 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void meadowButtonPress(ActionEvent event) {
-        // Clear the screen and show loading screen
-        displayMapLoading();
-        // Start gamehandler with correct connectiontype, map and team
-
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW, playerNumberLabel.getText())).start();
-
-    }
-
-    /**
-     * Display loading screen when starting server and loading files
-     */
-    private void displayMapLoading() {
-        // Clear the screen
-        this.getChildren().clear();
-
-        // Add creating game label
-        Label loadingLabel = new Label("Creating game...");
-        loadingLabel.setFont(new Font("Consolas", 50));
-        loadingLabel.setTextFill(Color.WHITE);
-
-        // Get loading gif - used because javafx loading indicator broke the renderer
-        ImageView progressIndicator = new ImageView(new Image("file:assets/img/gui/loading.gif"));
-        this.setSpacing(40);
-        this.getChildren().addAll(loadingLabel, progressIndicator);
+        startGame(MapList.MEADOW);
     }
 
     /**
@@ -188,10 +161,7 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void map2ButtonPress(ActionEvent event) {
-        // Clear the screen and show loading screen
-        displayMapLoading();
-        // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOWWITHWALLS, playerNumberLabel.getText())).start();
+        startGame(MapList.MEADOWWITHWALLS);
     }
 
     /**
@@ -201,10 +171,19 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void map3ButtonPress(ActionEvent event) {
-        // Clear the screen and show loading screen
-        displayMapLoading();
+        startGame(MapList.BIGTESTMAP);
+    }
+
+    /**
+     * Start the gamehandler with the specified map and clear the screen
+     *
+     * @param mapList Chosen map
+     */
+    private void startGame(MapList mapList) {
+        // Clear the screen
+        this.getChildren().clear();
 
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.BIGTESTMAP, playerNumberLabel.getText())).start();
+        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, mapList, playerNumberLabel.getText())).start();
     }
 }
