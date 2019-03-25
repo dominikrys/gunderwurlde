@@ -4,11 +4,13 @@ import server.engine.ai.AIAction;
 import server.engine.ai.newPoseGenerators.PoseAroundPlayerGen;
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.item.weapon.gun.FireGun;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.IceGun;
 import server.engine.state.physics.Force;
+import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
 
@@ -62,7 +64,6 @@ public class MageAI extends PoseGeneratorUsingEnemy {
                         this, DISTANCE_TO_PLAYER, true, closestPlayer, pose)).start();
             }
         }
-        System.out.println("wait");
         return AIAction.WAIT;
     }
 
@@ -71,7 +72,6 @@ public class MageAI extends PoseGeneratorUsingEnemy {
         lastTeleport = System.currentTimeMillis();
         enemy.setPose(poseToGo);
         poseToGo = null;
-        System.out.println("update");
         return enemy;
     }
 
@@ -106,9 +106,9 @@ public class MageAI extends PoseGeneratorUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         teleportAway = true;
-//        int attackAngle = getAngle(pose, closestPlayer);
-//        return new ProjectileAttack(gun.getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
-        return new AoeAttack(closestPlayer, 24, 0, Team.ENEMY);
+        int attackAngle = getAngle(pose, closestPlayer);
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+//        return new AoeAttack(closestPlayer, 24, 0, Team.ENEMY);
     }
 
     @Override
