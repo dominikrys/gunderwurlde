@@ -17,7 +17,7 @@ public abstract class AStarUsingEnemy extends PoseGeneratorUsingEnemy {
         AStartProcessing = false;
     }
 
-    synchronized void setAStarProcessing(boolean processing){
+    public synchronized void setAStarProcessing(boolean processing){
         this.AStartProcessing = processing;
     }
 

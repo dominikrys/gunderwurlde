@@ -75,40 +75,11 @@ public class MageAI extends PoseGeneratorUsingEnemy {
         return enemy;
     }
 
-//    @Override
-//    public Enemy getUpdatedEnemy() {
-//        if(teleportAway){
-//            if (poseToGo != null) {
-//                teleportAway = false;
-//                lastTeleport = System.currentTimeMillis();
-//                enemy.setPose(poseToGo);
-//                poseToGo = null;
-//            }else if(!isProcessing()) {
-//                    (new PoseAroundPlayerGen(
-//                            this, DISTANCE_TO_PLAYER, false, closestPlayer, pose)).start();
-//                }
-//
-//        }else {
-//            if(poseToGo != null){
-//                enemy.setPose(poseToGo);
-//                poseToGo = null;
-//                attacking = true;
-//                lastTeleport = System.currentTimeMillis();
-//            }else if (!isProcessing()){
-//                (new PoseAroundPlayerGen(
-//                        this, DISTANCE_TO_PLAYER, true, closestPlayer, pose)).start();
-//            }
-//        }
-//
-//        return enemy;
-//    }
-
     @Override
     protected Attack getAttackObj() {
         teleportAway = true;
         int attackAngle = getAngle(pose, closestPlayer);
         return new ProjectileAttack(gun.getProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
-//        return new AoeAttack(closestPlayer, 24, 0, Team.ENEMY);
     }
 
     @Override

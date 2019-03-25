@@ -17,11 +17,7 @@ public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
     Gun gun = new SniperRifle();
-    private Pose poseToGo;
-    private boolean runningAway;
     private boolean inPositionToAttack = false;
-    private boolean playerAiming = false;
-    private LinkedList<Pose> posePath;
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -54,16 +50,6 @@ public class SniperAI extends AStarUsingEnemy {
         }
     }
 
-//    public AIAction attackController() {
-//
-//
-//        return AIAction.WAIT;
-//    }
-
-    private boolean inRangeToRun() {
-        return false;
-    }
-
 
     @Override
     protected Attack getAttackObj() {
@@ -73,23 +59,10 @@ public class SniperAI extends AStarUsingEnemy {
 
     @Override
     protected Force generateMovementForce() {
-        //SNIPER 400
-//            System.out.println(tileMap.length + " " + tileMap[0].length);
-//            int[] tileList = new int[2];
-//
-//            for(int i = 0; i <= tileMap.length; i ++){
-//                for(int j = 0; j <= tileMap[0].length; j ++){
-//                    tileList[0] = i;
-//                    tileList[1] = j;
-//                    System.out.print(tileNotSolid(tileList, tileMap));
-//                }
-//                System.out.println();
-//            }
         if (posePath == null) {
             if (!getAStarProcessing()) {
                 if(poseToGo != null) {
                     new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo).start();
-                    setAStarProcessing(true);
                     poseToGo = null;
                 }else if (!isProcessing()){
                     (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();
@@ -99,21 +72,6 @@ public class SniperAI extends AStarUsingEnemy {
             Force angle = getForceFromPath();
             if (angle != null) return angle;
         }
-
-//        else {
-//            if (posePath == null) {
-//                if (!AStartProcessing) {
-//                    (new AStar(this, 1, tileMap, pose, closestPlayer)).start();
-//                    AStartProcessing = true;
-//                } else {
-//                    //cloak and move somewhere?
-//                }
-//            } else {
-////                System.out.println("pose to go: " + posePath.peekLast());
-//                Force force = getForceFromPath();
-//                if (force != null) return force;
-//            }
-//        }
         return new Force(pose.getDirection(), 0);
     }
 
