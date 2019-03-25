@@ -29,6 +29,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.Zone;
@@ -49,6 +50,7 @@ import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.EnemyView;
@@ -138,6 +140,7 @@ public class ProcessGameState extends Thread {
         // Zones
         LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
         LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
+        boolean tileMapChanged = true;
 
         // pause tracking variables
         boolean paused = false;
@@ -291,7 +294,8 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.getShoot()) {
+                long useTime = currentPlayer.getLastUseTime();
+                if (request.getShoot() && useTime < lastProcessTime) {
                     if (currentItem.getItemType() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
@@ -302,10 +306,10 @@ public class ProcessGameState extends Thread {
                                 projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
                         }
-                    } else if (currentItem.getItemType() == ItemType.CONSUMEABLE) {
+                    } else if (currentItem.getItemType() == ItemType.CONSUMEABLE
+                            && (lastProcessTime - useTime) > Player.CONSUMABLE_COOLDOWN) {
                         Consumable currentConsumable = (Consumable) currentItem;
                         // TODO use enum to improve performance?
-                        // TODO Add consumable cooldown to player.
                         if (currentItem instanceof CreatesProjectiles) {
                             newProjectiles.addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam()));
                         } else if (currentItem instanceof HasEffect) {
@@ -317,10 +321,12 @@ public class ProcessGameState extends Thread {
                         }
 
                         if (currentConsumable.isRemoved()) {
-                            // TODO add cooldown to shoot request.
+                            currentPlayer.setUseTime(lastProcessTime + 150); // TODO better if this could be solved client-side
                             if (!currentPlayer.removeItem(currentPlayer.getCurrentItemIndex())) {
                                 LOGGER.warning("Player: " + playerID + "Failed to remove consumable.");
                             }
+                        } else {
+                            currentPlayer.setUseTime(lastProcessTime);
                         }
                     }
                 }
@@ -414,6 +420,9 @@ public class ProcessGameState extends Thread {
                     playerPoses.add(currentPlayer.getPose());
             }
 
+            if (tileMapChanged)
+                EnemyAI.setTileMap(tileMap);
+
             for (Integer e : enemyIDs) {
                 Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
@@ -428,8 +437,9 @@ public class ProcessGameState extends Thread {
                 double maxMovementForce = currentEnemy.getMovementForce();
                 EnemyAI ai = currentEnemy.getAI();
 
-                if (!ai.isProcessing())
-                    ai.setInfo(currentEnemy, playerPoses, tileMap);
+                if (!ai.isProcessing()) {
+                    ai.setInfo(currentEnemy, playerPoses);
+                }
 
                 // handle enemyAI action
                 AIAction enemyAction = ai.getAction();
@@ -467,7 +477,28 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 case UPDATE:
+                    Location oldLoc = currentEnemy.getLocation();
+                    int oldSize = currentEnemy.getSize();
                     currentEnemy = ai.getUpdatedEnemy();
+                    Location newLoc = currentEnemy.getLocation();
+                    int newSize = currentEnemy.getSize();
+                    if (!newLoc.equals(oldLoc) || newSize < oldSize) {
+                        currentEnemy.setLocation(oldLoc);
+                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                        }
+                        currentEnemy.setLocation(newLoc);
+                        enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
+                        }
+                    } else if (newSize > oldSize) {
+                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
+                        }
+                    }
                     break;
                 default:
                     LOGGER.severe("AIAction " + enemyAction.toString() + " not known!");
@@ -487,6 +518,8 @@ public class ProcessGameState extends Thread {
                         currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                         currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
             }
+
+            tileMapChanged = false;
 
             // process and remove dead enemies
             for (Integer enemyID : enemiesToRemove) {
@@ -530,8 +563,9 @@ public class ProcessGameState extends Thread {
                         // move the projectile
                         Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
                                 distanceMoved);
+                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0);
                         currentProjectile.setLocation(newLocation);
-                        LinkedHashSet<int[]> tilesOn = tilesOn(currentProjectile);
+                        LinkedHashSet<int[]> tilesOn = tilesOn(projectileCoverage);
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = null;
                             try {
@@ -558,7 +592,7 @@ public class ProcessGameState extends Thread {
                                 for (Integer entityID : entitiesOnTile) {
                                     LivingEntity entityBeingChecked = livingEntities.get(entityID);
 
-                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
+                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(entityBeingChecked, projectileCoverage)) {
                                         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                         entityBeingChecked.setTakenDamage(true);
 
@@ -809,6 +843,7 @@ public class ProcessGameState extends Thread {
 
                 // process zone tile changes
                 for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
+                    tileMapChanged = true;
                     int[] cords = tileChanged.getKey();
                     Tile newTile = tileChanged.getValue();
                     tileMap[cords[0]][cords[1]] = newTile;
@@ -897,20 +932,91 @@ public class ProcessGameState extends Thread {
         return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
+    private static boolean haveCollided(Entity e, Laser l) {
+        Location eLoc = e.getLocation();
+        int eRadius = e.getSize();
+        double eX = eLoc.getX();
+        double eY = eLoc.getY();
+
+        Location start = l.getStart();
+        Location end = l.getEnd();
+        double size = l.getSize();
+        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double c = start.getY() - (m * start.getX());
+
+        double yDist = (((eX * m) + c) - eY) / 2;
+        double xDist = (((eY - c) / m) - eX) / 2;
+
+        double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
+
+        return (eRadius >= laserDist);
+    }
+
     private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map?
         Location loc = e.getLocation();
         int radius = e.getSize();
         double x = loc.getX();
         double y = loc.getY();
 
-        int[] max_loc = Tile.locationToTile(new Location(x + radius, y + radius));
-        int[] min_loc = Tile.locationToTile(new Location(x - radius, y - radius));
+        int[] maxLoc = Tile.locationToTile(new Location(x + radius, y + radius));
+        int[] minLoc = Tile.locationToTile(new Location(x - radius, y - radius));
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
+        for (int t_x = minLoc[0]; t_x <= maxLoc[0]; t_x++) {
+            for (int t_y = minLoc[1]; t_y <= maxLoc[1]; t_y++) {
+                tilesOn.add(new int[] { t_x, t_y });
+            }
+        }
+
+        return tilesOn;
+    }
+
+    private static LinkedHashSet<int[]> tilesOn(Laser l) { // TODO return tilesOn ordered from start to end
+        Location start = l.getStart();
+        Location end = l.getEnd();
+        double size = l.getSize();
+        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double c = start.getY() - (m * start.getX());
+        double maxX = start.getX();
+        double maxY = start.getY();
+        double minX = end.getX();
+        double minY = end.getY();
+
+        if (minX > maxX) {
+            maxX = minX;
+            minX = start.getX();
+        }
+
+        if (minY > maxY) {
+            maxY = minY;
+            minY = start.getY();
+        }
+
+        maxX += size;
+        maxY += size;
+        minX -= size;
+        minY -= size;
+
+        int[] max_loc = Tile.locationToTile(new Location(maxX, maxY));
+        int[] min_loc = Tile.locationToTile(new Location(minX, minY));
+
+        LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
+        double offSet = (Tile.TILE_SIZE / 2) + size;
         for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
             for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
-                tilesOn.add(new int[] { t_x, t_y });
+                Location tileLoc = Tile.tileToLocation(t_x, t_y);
+                minX = tileLoc.getX() - offSet;
+                maxX = tileLoc.getX() + offSet;
+                minY = tileLoc.getY() - offSet;
+                maxY = tileLoc.getY() + offSet;
+                double y1 = (minX * m) + c;
+                double y2 = (maxX * m) + c;
+                double x1 = (minY - c) / m;
+                double x2 = (maxY - c) / m;
+
+                if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY) || (x1 <= maxX && x1 >= minX) || (x2 <= maxX && x2 >= minX))
+                    tilesOn.add(new int[] { t_x, t_y });
             }
         }
 
@@ -920,11 +1026,11 @@ public class ProcessGameState extends Thread {
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
-            if (i instanceof Gun) {
+            if (i.getItemType() == ItemType.GUN) {
                 Gun g = (Gun) i;
-                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
+                playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
             } else {
-                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0, false, 0));
+                playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),

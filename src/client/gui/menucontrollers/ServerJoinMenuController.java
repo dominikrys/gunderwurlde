@@ -87,10 +87,6 @@ public class ServerJoinMenuController extends VBox implements MenuController {
             throw new RuntimeException(exception);
         }
 
-        // Divert focus away from text boxes so tips are shown
-        IPField.setFocusTraversable(false);
-        portField.setFocusTraversable(false);
-
         // Disable join button
         joinServerButton.setDisable(true);
     }
@@ -142,10 +138,12 @@ public class ServerJoinMenuController extends VBox implements MenuController {
      */
     @FXML
     void joinServerButtonPress(ActionEvent event) {
+        // Disable join button to prevent double joins
+        joinServerButton.setDisable(true);
+
         // Grab the specified map from the server attempting to connect to
         System.out.println("joining game");
         (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, MapList.MEADOW, "1", IPField.getText(), portField.getText())).start();
-        // TODO: Clear screen, add joining message + start gamehandler with IP and port + ADD TEAM TO THIS
     }
 
     /**

@@ -3,19 +3,17 @@ package client.render;
 import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
-import client.gui.menucontrollers.PlayMenuController;
+import client.gui.menucontrollers.PauseMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -141,6 +139,7 @@ public class GameRenderer implements Runnable {
      */
 
     private Client handler;
+
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
@@ -219,7 +218,8 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
+        mapCanvas = new MapCanvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
@@ -279,10 +279,6 @@ public class GameRenderer implements Runnable {
 
             // Set background - inline instead of CSS so transparency works
             pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
-            /*
-            pausedOverlay.setBackground(new Background(new BackgroundImage(rendererResourceLoader.getSprite(EntityList.HEART_HALF),
-            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
-             */
             pausedOverlay.setSpacing(15);
             pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
 
@@ -290,7 +286,7 @@ public class GameRenderer implements Runnable {
             pauseMenuController = fxmlLoader.getController();
             pauseMenuController.initialise(settings);
         } catch (Exception e) {
-            System.out.println("Couldn't load the pause menu .FXML!");
+            System.out.println("Couldn't load the pause menu FXML!");
             e.printStackTrace();
         }
 
@@ -423,7 +419,6 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Ratio for how sensitive the map is to mouse movements
-        // Proportional to position of player: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
         double cameraMouseSensitivity = 0.25;
 
         // Adjust map horizontally

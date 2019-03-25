@@ -1,7 +1,6 @@
 package client.input;
 
 import client.Client;
-import client.GameHandler;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 

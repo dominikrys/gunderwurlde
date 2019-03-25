@@ -146,7 +146,7 @@ public class Physics {
         return components;
     }
 
-    public static double[] fromComponents(double xComp, double yComp) {
+    public static double[] fromComponents(double xComp, double yComp) { // TODO use Line instead?
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
         int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
 
