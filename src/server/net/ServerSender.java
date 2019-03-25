@@ -116,7 +116,6 @@ public class ServerSender extends Thread {
                 buffer = bos.toByteArray();
                 // Create a packet and send it to the clients
                 packet = new DatagramPacket(buffer, buffer.length, sendAddress, port);
-                System.out.println("Sending view");
                 sendSocket.send(packet);
             } finally {
                 try {
