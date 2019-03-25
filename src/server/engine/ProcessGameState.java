@@ -535,8 +535,9 @@ public class ProcessGameState extends Thread {
                         // move the projectile
                         Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
                                 distanceMoved);
+                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0);
                         currentProjectile.setLocation(newLocation);
-                        LinkedHashSet<int[]> tilesOn = tilesOn(currentProjectile);
+                        LinkedHashSet<int[]> tilesOn = tilesOn(projectileCoverage);
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = null;
                             try {
@@ -900,6 +901,22 @@ public class ProcessGameState extends Thread {
         double dist_between_squared = Math.pow(Math.abs(e1_x - e2_x), 2) + Math.pow(Math.abs(e1_y - e2_y), 2);
 
         return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
+    }
+
+    private static boolean haveCollided(Entity e, Laser l) {
+        Location e_loc = e.getLocation();
+        int e_radius = e.getSize();
+        double e_x = e_loc.getX();
+        double e_y = e_loc.getY();
+
+        Location start = l.getStart();
+        Location end = l.getEnd();
+        double size = l.getSize();
+        double c = start.getY();
+        double m = l.getLength() / (end.getX() - start.getX());
+
+        // TODO finish
+
     }
 
     private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map?
