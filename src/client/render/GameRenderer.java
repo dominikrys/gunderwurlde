@@ -3,19 +3,16 @@ package client.render;
 import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
-import client.gui.menucontrollers.PlayMenuController;
 import client.input.KeyAction;
 import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -141,6 +138,7 @@ public class GameRenderer implements Runnable {
      */
 
     private Client handler;
+
     public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
