@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import shared.Constants;
-import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
 import shared.view.GameView;
@@ -255,25 +254,25 @@ public class HUD extends BorderPane {
         HBox currentGunInfo = new HBox();
 
         // Set up ammo informaton in hud
-        Label ammoInGun = new Label();
-        Label totalAmmoInClip = new Label();
-        Label totalAmmoForCurrentItem = new Label();
+        Label ammoInGun;
+        Label totalAmmoInClip;
+        Label totalAmmoForCurrentItem;
 
         switch (currentItem.getItemType()) {
             case GUN:
                 GunView currentGun = (GunView) currentItem;
-                if (currentGun.getAmmoType() != AmmoList.NONE) {
-                    ammoInGun = new Label(Integer.toString(currentGun.getAmmoInClip()),
-                            new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
-                    ammoInGun.setFont(fontManaspace28);
 
-                    totalAmmoInClip = new Label("/" + currentGun.getClipSize());
-                    totalAmmoInClip.setFont(fontManaspace18);
+                ammoInGun = new Label(Integer.toString(currentGun.getAmmoInClip()),
+                        new ImageView(rendererResourceLoader.getSprite(currentGun.getAmmoType().getItemListName().getEntityList())));
+                ammoInGun.setFont(fontManaspace28);
 
-                    totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentGun.getAmmoType(),
-                            0)));
-                    totalAmmoForCurrentItem.setFont(fontManaspace28);
-                }
+                totalAmmoInClip = new Label("/" + currentGun.getClipSize());
+                totalAmmoInClip.setFont(fontManaspace18);
+
+                totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentGun.getAmmoType(),
+                        0)));
+                totalAmmoForCurrentItem.setFont(fontManaspace28);
+
                 break;
             case CONSUMEABLE:
                 ammoInGun = new Label(Integer.toString(1), new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
@@ -285,6 +284,7 @@ public class HUD extends BorderPane {
                 totalAmmoForCurrentItem = new Label(Integer.toString(0));
                 totalAmmoForCurrentItem.setFont(fontManaspace28);
                 break;
+            case MELEE_WEAPON:
             default:
                 ammoInGun = new Label("∞", new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
                 ammoInGun.setFont(new Font("Consolas", 28));
