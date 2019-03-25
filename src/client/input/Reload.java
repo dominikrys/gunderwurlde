@@ -1,7 +1,6 @@
 package client.input;
 
 import client.Client;
-import client.GameHandler;
 import shared.lists.AmmoList;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
@@ -23,7 +22,7 @@ public class Reload extends Action {
     }
 
     public void gunReload(ItemView itemView, AmmoList ammo) {
-        if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().get(ammo) > 0) {
+        if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().getOrDefault(ammo, 0) > 0) {
             // TODO: send reload request
             handler.send(ActionList.RELOAD);
         } else {
