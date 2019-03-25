@@ -44,14 +44,9 @@ public class MapCanvas extends Canvas {
     private Map<Integer, AnimatedSprite> enemiesOnMapAnimations;
 
     /**
-     * Player locations in last gameview object - used for spawn animation
+     * Entity locations in last gameview object - used for spawn animation
      */
-    private Map<Integer, Pose> lastPlayerLocations;
-
-    /**
-     * Enemy locations in last gameview object - used for spawn animation
-     */
-    private Map<Integer, Pose> lastEnemyLocations;
+    private Map<Integer, Pose> lastEntityLocations;
 
     /**
      * Constructor
@@ -69,8 +64,7 @@ public class MapCanvas extends Canvas {
         enemiesOnMapAnimations = new HashMap<>();
 
         // Initialise last location hashmaps for animations
-        lastPlayerLocations = new HashMap<>();
-        lastEnemyLocations = new HashMap<>();
+        lastEntityLocations = new HashMap<>();
     }
 
     /**
@@ -238,7 +232,7 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
 
         // Put enemy into enemy locations hashmap
-        lastEnemyLocations.put(currentEnemy.getID(), currentEnemy.getPose());
+        lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
     }
 
     /**
@@ -397,7 +391,7 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
 
         // Put player into player locations hashmap
-        lastPlayerLocations.put(currentPlayer.getID(), currentPlayer.getPose());
+        lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
     }
 
     /**
@@ -408,22 +402,17 @@ public class MapCanvas extends Canvas {
      */
     private void renderEntitySpawns(GameView gameView, RendererResourceLoader rendererResourceLoader) {
         // Make a hashmap of all entities on map to ease calculations and find dead entities
-        Map<Integer, Pose> gameViewPlayerPoses = new HashMap<>();
+        Map<Integer, Pose> gameViewEntityPoses = new HashMap<>();
         for (PlayerView playerView : gameView.getPlayers()) {
-            gameViewPlayerPoses.put(playerView.getID(), playerView.getPose());
+            gameViewEntityPoses.put(playerView.getID(), playerView.getPose());
         }
 
-        Map<Integer, Pose> gameViewEnemyPoses = new HashMap<>();
         for (EnemyView enemyView : gameView.getEnemies()) {
-            gameViewEnemyPoses.put(enemyView.getID(), enemyView.getPose());
+            gameViewEntityPoses.put(enemyView.getID(), enemyView.getPose());
         }
 
         // Get the new entities
-        Map<Integer, Pose> newEnemies = mapDifference(gameViewEnemyPoses, lastEnemyLocations);
-        Map<Integer, Pose> newPlayers = mapDifference(gameViewPlayerPoses, lastPlayerLocations);
-        Map<Integer, Pose> newEntities = new HashMap<>();
-        newEntities.putAll(newPlayers);
-        newEntities.putAll(newEnemies);
+        Map<Integer, Pose> newEntities = mapDifference(gameViewEntityPoses, lastEntityLocations);
 
         // Go through list of new entities
         for (Map.Entry<Integer, Pose> entry : newEntities.entrySet()) {
