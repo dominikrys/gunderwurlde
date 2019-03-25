@@ -1,6 +1,10 @@
 package server.engine.state.item.weapon.gun;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 import server.engine.state.entity.projectile.Projectile;
+import server.engine.state.item.CreatesProjectiles;
 import server.engine.state.item.Limited;
 import server.engine.state.item.weapon.Weapon;
 import shared.Pose;
@@ -8,10 +12,7 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
-import java.util.LinkedList;
-import java.util.Random;
-
-public abstract class Gun extends Weapon implements Limited {
+public abstract class Gun extends Weapon implements Limited, CreatesProjectiles {
 
     private static Random random = new Random();
 
@@ -184,7 +185,8 @@ public abstract class Gun extends Weapon implements Limited {
         this.reloading = false;
     }
 
-    public LinkedList<Projectile> getShotProjectiles(Pose gunPose, Team team) {
+    @Override
+    public LinkedList<Projectile> getProjectiles(Pose gunPose, Team team) {
         LinkedList<Projectile> shotProjectiles = new LinkedList<>();
 
         int bulletSpacing = 0;

@@ -2,8 +2,8 @@ package server.engine.state.map.tile;
 
 import shared.Constants;
 import shared.Location;
+import shared.lists.TileList;
 import shared.lists.TileState;
-import shared.lists.TileType;
 
 import java.util.LinkedHashSet;
 
@@ -11,10 +11,10 @@ public class Tile {
     public static final int TILE_SIZE = Constants.TILE_SIZE;
     public static final double DEFAULT_DENSITY = 200;
 
-    // Type of tile
-    protected TileType tileType;
+    // Type of tileList
+    protected TileList tileList;
 
-    // State of tile, e.g. solid or passable
+    // State of tileList, e.g. solid or passable
     protected TileState tileState;
 
     protected LinkedHashSet<Integer> itemDropsOnTile;
@@ -25,8 +25,8 @@ public class Tile {
     protected double frictionCoefficient;
     protected double bounceCoefficient;
 
-    public Tile(TileType tileType, TileState tileState, double value) {
-        this.tileType = tileType;
+    public Tile(TileList tileList, TileState tileState, double value) {
+        this.tileList = tileList;
         this.tileState = tileState;
         this.itemDropsOnTile = new LinkedHashSet<>();
         this.enemiesOnTile = new LinkedHashSet<>();
@@ -114,8 +114,8 @@ public class Tile {
         return itemDropsOnTile.remove(itemID);
     }
     
-    public TileType getType() {
-        return tileType;
+    public TileList getType() {
+        return tileList;
     }
 
     public TileState getState() {
@@ -148,7 +148,7 @@ public class Tile {
     }
 
     public Tile getCopy() {
-        return new Tile(this.tileType, this.tileState, this.bounceCoefficient + this.frictionCoefficient);
+        return new Tile(this.tileList, this.tileState, this.bounceCoefficient + this.frictionCoefficient);
     }
 
     public double getDensity() {
@@ -157,11 +157,11 @@ public class Tile {
 
     @Override
     public String toString() {
-        if (tileType == TileType.WOOD) {
+        if (tileList == TileList.WOOD) {
             return "W";
-        } else if (tileType == TileType.GRASS) {
+        } else if (tileList == TileList.GRASS) {
             return "G";
-        } else if (tileType == TileType.DOOR) {
+        } else if (tileList == TileList.DOOR) {
             return "D";
         }
         return "New state added";
