@@ -15,7 +15,7 @@ public class Attack extends Action {
         this.playerView = playerView;
     }
 
-    public void attack() {
+    public void attack(double distance) {
         ItemView itemView = playerView.getCurrentItem();
         String itemName = itemView.getItemListName().toString();
         shoot(itemView);

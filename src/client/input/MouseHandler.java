@@ -13,9 +13,7 @@ import shared.view.entity.PlayerView;
 public class MouseHandler extends UserInteraction {
 
 	private int playerID;
-    private Scene scene;
     private Canvas mapCanvas;
-    private GameView gameView;
     private PlayerView playerView;
     private Attack attack;
     private ChangeItem changeItem;
@@ -29,6 +27,7 @@ public class MouseHandler extends UserInteraction {
     private AnimationTimer t;
     private boolean activated;
     private boolean hold;
+    private double distance;
 
     public MouseHandler(int playerID) {
         super();
@@ -91,7 +90,8 @@ public class MouseHandler extends UserInteraction {
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			if(e.isPrimaryButtonDown()) {
 				mouseMovement(e);
-				attack.attack();
+				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+				attack.attack(distance);
 				this.hold = true;
 			}
 			else {
@@ -101,7 +101,8 @@ public class MouseHandler extends UserInteraction {
 		
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(e.isPrimaryButtonDown()) {
-				attack.attack();
+				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+				attack.attack(distance);
 				this.hold = true;
 			}
 		});
@@ -151,9 +152,11 @@ public class MouseHandler extends UserInteraction {
         this.t = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				
 				if(hold == true) {
 					if(playerView.getCurrentItem().isAutoFire()) {
-						attack.attack();
+						distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+						attack.attack(distance);
 					}
 				}
 			}
