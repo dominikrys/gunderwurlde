@@ -1,7 +1,6 @@
 package client.input;
 
 import client.Client;
-import client.GameHandler;
 import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -44,7 +43,6 @@ public class KeyboardHandler extends UserInteraction {
 
     public KeyboardHandler(int playerID, Settings settings) {
         super();
-        this.t = null;
         this.playerID = playerID;
         this.settings = settings;
     }
@@ -96,16 +94,16 @@ public class KeyboardHandler extends UserInteraction {
                     if (settings.getKey(KeyAction.INTERACT).equals(pressed)) {
                         interactPressed = true;
                     }
-                    if(settings.getKey(KeyAction.ITEM1).equals(pressed)) {
+                    if (settings.getKey(KeyAction.ITEM1).equals(pressed)) {
                         changeItem.changeTo(1);
                     }
-                    if(settings.getKey(KeyAction.ITEM2).equals(pressed)) {
+                    if (settings.getKey(KeyAction.ITEM2).equals(pressed)) {
                         changeItem.changeTo(2);
                     }
-                    if(settings.getKey(KeyAction.ITEM3).equals(pressed)) {
+                    if (settings.getKey(KeyAction.ITEM3).equals(pressed)) {
                         changeItem.changeTo(3);
                     }
-                    if(settings.getKey(KeyAction.ESC).equals(pressed)) {
+                    if (settings.getKey(KeyAction.ESC).equals(pressed)) {
                         // TODO: escape menu
                     }
                 }
@@ -167,50 +165,42 @@ public class KeyboardHandler extends UserInteraction {
         
         this.timer = new Timer();
         this.task = new TimerTask() {
-			@Override
-			public void run() {
-				if (upPressed || leftPressed || downPressed || rightPressed) {
-                	if((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
-                		movement.move("up");
-                	}
-                	else if((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
-                		movement.move("left");
-                	}
-                	else if((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
-                		movement.move("down");
-                	}
-                	else if((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
-                		movement.move("right");
-                	}
-                	else if(upPressed && leftPressed && !downPressed && !rightPressed) {
-                		movement.move("upLeft");
-                	}
-                	else if(upPressed && !leftPressed && !downPressed && rightPressed) {
-                		movement.move("upRight");
-                	}
-                	else if(!upPressed && leftPressed && downPressed && !rightPressed) {
-                		movement.move("downLeft");
-                	}
-                	else if(!upPressed && !leftPressed && downPressed && rightPressed) {
-                		movement.move("downRight");
-                	}
-                	else {
-                		// do nothing
-                	}
+            @Override
+            public void run() {
+                if (upPressed || leftPressed || downPressed || rightPressed) {
+                    if ((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
+                        movement.move("up");
+                    } else if ((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
+                        movement.move("left");
+                    } else if ((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
+                        movement.move("down");
+                    } else if ((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
+                        movement.move("right");
+                    } else if (upPressed && leftPressed && !downPressed && !rightPressed) {
+                        movement.move("upLeft");
+                    } else if (upPressed && !leftPressed && !downPressed && rightPressed) {
+                        movement.move("upRight");
+                    } else if (!upPressed && leftPressed && downPressed && !rightPressed) {
+                        movement.move("downLeft");
+                    } else if (!upPressed && !leftPressed && downPressed && rightPressed) {
+                        movement.move("downRight");
+                    } else {
+                        // do nothing
+                    }
                 }
-                if(reloadPressed) {
+                if (reloadPressed) {
                     reload.reload();
                 }
-                if(dropPressed) {
+                if (dropPressed) {
                     dropItem.drop();
                 }
-                if(interactPressed) {
+                if (interactPressed) {
 
                 }
-			}
-		};
-		
-		timer.scheduleAtFixedRate(task, 0, 1);
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 1);
     }
 
     @Override

@@ -5,24 +5,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import shared.Constants;
-import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.ItemType;
@@ -31,9 +18,6 @@ import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
-
-import java.nio.file.StandardWatchEventKinds;
-import java.util.Stack;
 
 /**
  * HUD class. Contains the HUD for the game
@@ -181,7 +165,8 @@ public class HUD extends BorderPane {
 
     /**
      * Update HUD with new data
-     * @param gameView GameView object
+     *
+     * @param gameView               GameView object
      * @param rendererResourceLoader Resources for renderer
      * @param fontManaspace28        Font of size 28
      * @param fontManaspace18        Font of size 18
@@ -311,27 +296,58 @@ public class HUD extends BorderPane {
 
     /**
      * Create minimap
-     * @param gameView GameView object representing the current state of the game
+     *
+     * @param gameView      GameView object representing the current state of the game
      * @param currentPlayer PlayerView for who the hud is
      * @return MiniMap as stackpane
      */
     private void updateMiniMap(GameView gameView, PlayerView currentPlayer) {
-        // Make indicator for player location on minimap
-        int playerRectangleSize = 4;
-        Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
-        playerRectangle.setFill(Color.WHITE);
-
-        // Set correct position of player location on minimap
-        AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
-        AnchorPane.setLeftAnchor(playerRectangle, (currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
-                (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
-        AnchorPane.setTopAnchor(playerRectangle, (currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
-                (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
-
-        // Add all elements to the minimap and return
+        // Clear minimap pane and set background and alignment
         miniMapPane.getChildren().clear();
-        miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
+        miniMapPane.getChildren().add(miniMapRectangle);
         miniMapPane.setAlignment(Pos.TOP_RIGHT);
+
+        // Size for player indicators
+        int playerRectangleSize = 4;
+
+        // Loop through all players, placing them on the minimap
+        for (PlayerView playerView : gameView.getPlayers()) {
+            // Create new player indicator
+            Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
+
+            // If current player, set box to white
+            if (playerView.getID() == currentPlayer.getID()) {
+                playerRectangle.setFill(Color.WHITE);
+            } else {
+                switch (playerView.getTeam()) {
+                    case RED:
+                        playerRectangle.setFill(Color.rgb(255, 0, 47));
+                        break;
+                    case BLUE:
+                        playerRectangle.setFill(Color.rgb(66, 173, 244));
+                        break;
+                    case GREEN:
+                        playerRectangle.setFill(Color.rgb(90, 240, 41));
+                        break;
+                    case YELLOW:
+                        playerRectangle.setFill(Color.rgb(232, 232, 0));
+                        break;
+                    default:
+                        playerRectangle.setFill(Color.rgb(178, 177, 169));
+                        break;
+                }
+            }
+
+            // Set correct position of player location on minimap
+            AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
+            AnchorPane.setLeftAnchor(playerRectangle, (currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
+                    (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
+            AnchorPane.setTopAnchor(playerRectangle, (currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
+                    (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
+
+            // Add indicator to minimap pane
+            miniMapPane.getChildren().add(playerRectanglePane);
+        }
     }
 
     /**
@@ -368,7 +384,7 @@ public class HUD extends BorderPane {
      *
      * @param fontManaspace50 Font used by game of size 50
      * @param fontManaspace28 Font used by game of size 28
-     * @param winningTeam The winning team
+     * @param winningTeam     The winning team
      */
     public void displayWinMessage(Font fontManaspace50, Font fontManaspace28, Team winningTeam) {
         // Message already displayed, return

@@ -1,5 +1,8 @@
 package client;
 
+import client.gui.menucontrollers.LoadScreenController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import server.Server;
 import shared.lists.MapList;
@@ -41,8 +44,9 @@ public class GameHandler extends Thread {
      */
     private int port;
 
-    // TODO I dont know what this
-    // the screen of the application?
+    /**
+     * Stage to be drawn to
+     */
     private Stage stage;
 
     /**
@@ -72,15 +76,25 @@ public class GameHandler extends Thread {
     private int numPlayers;
 
     /**
+     * VBox holding the loading screen
+     */
+    private VBox loadScreen;
+
+    /**
+     * Controller for loading screen
+     */
+    private LoadScreenController loadScreenController;
+
+    /**
      * Constructor for single player and multiplayer host instances.
      *
      * @param stage
      * @param connectionType A variable stating if the game is single player, multiplayer host or multiplayer join
-     * @param settings Object to hold the machines saved settings
-     * @param name The name of the player creating/joining the game
-     * @param team The team of the player joining/creating the game
-     * @param map The map the game is being played on
-     * @param numOfPlayers The number of players the game will have
+     * @param settings       Object to hold the machines saved settings
+     * @param name           The name of the player creating/joining the game
+     * @param team           The team of the player joining/creating the game
+     * @param map            The map the game is being played on
+     * @param numOfPlayers   The number of players the game will have
      */
     public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Team team, MapList map, String numOfPlayers) {
         this.stage = stage;
@@ -94,15 +108,16 @@ public class GameHandler extends Thread {
 
     /**
      * Constructor for multiplayer join instances
+     *
      * @param stage
      * @param connectionType A variable stating if the game is single player, multiplayer host or multiplayer join
-     * @param settings Object to hold the machines saved settings
-     * @param name The name of the player creating/joining the game
-     * @param team The team of the player joining/creating the game
-     * @param map The map the game is being played on
-     * @param numOfPlayers The number of players the game will have
-     * @param ipValue The IP address the player will connect to
-     * @param portValue The port the player will communicate across
+     * @param settings       Object to hold the machines saved settings
+     * @param name           The name of the player creating/joining the game
+     * @param team           The team of the player joining/creating the game
+     * @param map            The map the game is being played on
+     * @param numOfPlayers   The number of players the game will have
+     * @param ipValue        The IP address the player will connect to
+     * @param portValue      The port the player will communicate across
      */
     public GameHandler(Stage stage, ConnectionType connectionType, Settings settings, String name, Team team, MapList map, String numOfPlayers, String ipValue, String portValue) {
         this.stage = stage;
@@ -121,6 +136,10 @@ public class GameHandler extends Thread {
      * Method to initialise server and client to start the game for the player
      */
     public void run() {
+        // Load loading screen and set it to stage
+        loadLoadingScreen();
+        stage.getScene().setRoot(loadScreen);
+
         switch (connectionType) {
             case SINGLE_PLAYER:
                 if (!serverStarted) {
@@ -144,7 +163,7 @@ public class GameHandler extends Thread {
                 }
                 break;
             case MULTI_PLAYER_HOST:
-                if(!serverStarted) {
+                if (!serverStarted) {
                     try {
                         // create the server
                         server = new Server(map, playerName, team, numPlayers, true);
@@ -152,7 +171,7 @@ public class GameHandler extends Thread {
                         server.start();
                         serverStarted = true;
                         // Wait for TCPManager to be up and receiving
-                        while(!server.isReceiving()){
+                        while (!server.isReceiving()) {
                             Thread.yield();
                         }
                         System.out.println("Server setup and waiting");
@@ -174,7 +193,7 @@ public class GameHandler extends Thread {
                 }
                 break;
             case MULTI_PLAYER_JOIN:
-                if(!serverStarted) {
+                if (!serverStarted) {
                     try {
                         // if joining server must already be started
                         serverStarted = true;
@@ -206,5 +225,23 @@ public class GameHandler extends Thread {
             }
         }
         // Client and threads end on their own when renderer calls
+    }
+
+    /**
+     * Load the loading screen FXML and set its constructor
+     */
+    private void loadLoadingScreen() {
+        try {
+            // Load loading screen FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/gui/fxml/load_screen.fxml"));
+            loadScreen = fxmlLoader.load();
+
+            // Set controller and update its settings value
+            loadScreenController = fxmlLoader.getController();
+            loadScreenController.initialise();
+        } catch (Exception e) {
+            System.out.println("Couldn't load the load screen FXML!");
+            e.printStackTrace();
+        }
     }
 }
