@@ -193,6 +193,7 @@ public class Server extends Thread implements HasEngine {
             listenSocket.joinGroup(listenAddress);
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             updatedLowestAvailableAddress();
+            System.out.println("Server constructor finished");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -206,7 +207,7 @@ public class Server extends Thread implements HasEngine {
     public void run(){
         try {
             // Check if the game is going to be multiplayer
-            if(multiplayer){
+            if(multiplayer) {
                 // Create the TCP threads to handle the join protocol
                 // Setup a TCP manager to receive join requests
                 tcpMananger = new JoinGameManager(this);
@@ -214,52 +215,61 @@ public class Server extends Thread implements HasEngine {
 
                 // Create the socket that will give joining players the TCP address
                 joinGameSocket = new MulticastSocket(JOINPORT);
+                //joinGameSocket.setSoTimeout(2000);
                 Addressing.setInterfaces(joinGameSocket);
                 joinGameAddress = InetAddress.getByName("230.0.0.0");
                 joinGameSocket.joinGroup(joinGameAddress);
                 tcpAddress = Addressing.getAddress();
-
+                System.out.println("Server tcpaddress: " + tcpAddress);
                 // loop until all players have joined
                 receiving = true;
-                while(numOfPlayers > joinedPlayers) {
-                    // create a packet to hold the request
-                    buffer = new byte[32];
-                    packet = new DatagramPacket(buffer, buffer.length);
-                    // Wait to receive requests
-                    joinGameSocket.receive(packet);
-                    // When request is received turn to string
-                    byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
-                    String recievedString = new String(receivedBytes);
+                System.out.println("Waiting for players to join");
+                System.out.println("Expected: " +numOfPlayers);
+                System.out.println("Joined: " + joinedPlayers);
+                while (numOfPlayers > joinedPlayers) {
+                    System.out.println("check while loop");
+                        // create a packet to hold the request
+                        buffer = new byte[32];
+                        packet = new DatagramPacket(buffer, buffer.length);
+                        // Wait to receive requests
+                        System.out.println("Server receiving");
+                        joinGameSocket.receive(packet);
+                        // When request is received turn to string
+                        byte[] receivedBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
+                        String recievedString = new String(receivedBytes);
 
-                    // if the sent message is the same as the address of senderAddress
-                    //  The player wants to join this game so reply with the TCP address
-                    if(recievedString.equals(senderAddress.toString())){
-                        String message = senderAddress.toString() + tcpAddress.toString();
-                        buffer = message.getBytes();
-                        packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
-                        joinGameSocket.send(packet);
+                        // if the sent message is the same as the address of senderAddress
+                        //  The player wants to join this game so reply with the TCP address
+                        if (recievedString.equals(senderAddress.toString())) {
+                            String message = senderAddress.toString() + tcpAddress.toString();
+                            buffer = message.getBytes();
+                            packet = new DatagramPacket(buffer, buffer.length, joinGameAddress, JOINPORT);
+                            joinGameSocket.send(packet);
+                        }
+                        // else not talking to this server so continue
+                        else {
+                            continue;
+                        }
+                        // stops the thread until the joinedplayers has increased
+                        int oldJoinedCount = joinedPlayers;
+                        while (oldJoinedCount == joinedPlayers) {
+                            Thread.yield();
+                        }
                     }
-                    // else not talking to this server so continue
-                    else{
-                        continue;
+                        System.out.println("All players have joined the game");
+                        tcpMananger.close();
+                        joinGameSocket.close();
                     }
-                }
-                System.out.println("All players have joined the game");
-                tcpMananger.close();
-                joinGameSocket.close();
-            }
+                // Create the threads that will run as sender and receiver
+                sender = new ServerSender(senderAddress, sendSocket, sendPort);
+                receiver = new ServerReceiver(listenSocket, this);
 
-            // Create the threads that will run as sender and receiver
-            sender = new ServerSender(senderAddress, sendSocket, sendPort);
-            receiver = new ServerReceiver(listenSocket, this);
-
-
-            this.clientRequests = new ClientRequests(numOfPlayers);
-            // create the engine and start it
-            this.engine = new ProcessGameState(this, mapName, playersToAdd);
-            engine.start();
-            System.out.println("Closing server");
-        } catch (UnknownHostException e) {
+                this.clientRequests = new ClientRequests(numOfPlayers);
+                // create the engine and start it
+                this.engine = new ProcessGameState(this, mapName, playersToAdd);
+                engine.start();
+                System.out.println("Closing server");
+            } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

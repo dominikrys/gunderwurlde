@@ -298,6 +298,7 @@ public class Client extends Thread {
                     // if the first half is the address you sent then its the correct message
                     if (("/" + split[1]).equals(listenAddress.toString())) {
                         tcpAddress = InetAddress.getByName(split[2]);
+                        System.out.println("tcpAddress: " + tcpAddress.toString());
                         waiting = false;
                     }
                     // If a different start then ignore as its not meant for this client

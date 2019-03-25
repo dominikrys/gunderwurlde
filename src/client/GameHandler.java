@@ -155,14 +155,19 @@ public class GameHandler extends Thread {
                         while(!server.isReceiving()){
                             Thread.yield();
                         }
+                        System.out.println("Server setup and waiting");
                         // create the client
                         client = new Client(stage, this, settings, 0);
                         // setup clients threads
                         client.start();
+                        System.out.println("Client started");
                         //wait for all threads to finish setting up and client to join the game fully
                         client.join();
+                        System.out.println("Client joined");
                         // wait for the server to receive all players before ending
                         server.join();
+                        System.out.println("Server joined");
+                        System.out.println("Client setup and waiting");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -176,11 +181,14 @@ public class GameHandler extends Thread {
                         // create a client
                         client = new Client(stage, this, settings, address, port, playerName, team);
                         // Wait for the client to fully join the game
+                        System.out.println("client joined");
                         client.join();
                         // setup the threads for that client
                         client.start();
+                        System.out.println("client started");
                         // wait for threads to completely setup
                         client.join();
+                        System.out.println("Client joined again");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
