@@ -29,6 +29,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.Zone;
@@ -915,6 +916,55 @@ public class ProcessGameState extends Thread {
         for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
             for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
                 tilesOn.add(new int[] { t_x, t_y });
+            }
+        }
+
+        return tilesOn;
+    }
+
+    private static LinkedHashSet<int[]> tilesOn(Laser l) {
+        Location start = l.getStart();
+        Location end = l.getEnd();
+        double size = l.getSize();
+        double c = start.getY();
+        double m = l.getLength() / (end.getX() - start.getX());
+        double maxX = start.getX();
+        double maxY = start.getY();
+        double minX = end.getX();
+        double minY = end.getY();
+
+        if (minX > maxX) {
+            maxX = minX;
+            minX = start.getX();
+        }
+
+        if (minY > maxY) {
+            maxY = minY;
+            minY = start.getY();
+        }
+
+        maxX += size;
+        maxY += size;
+        minX -= size;
+        minY -= size;
+
+        int[] max_loc = Tile.locationToTile(new Location(maxX, maxY));
+        int[] min_loc = Tile.locationToTile(new Location(minX, minY));
+
+        LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
+        double offSet = (Tile.TILE_SIZE / 2) + size;
+        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
+            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
+                Location tileLoc = Tile.tileToLocation(t_x, t_y);
+                minX = tileLoc.getX() - offSet;
+                maxX = tileLoc.getX() + offSet;
+                minY = tileLoc.getY() - offSet;
+                maxY = tileLoc.getY() + offSet;
+                double y1 = (minX * m) + c;
+                double y2 = (maxX * m) + c;
+
+                if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY))
+                    tilesOn.add(new int[] { t_x, t_y });
             }
         }
 
