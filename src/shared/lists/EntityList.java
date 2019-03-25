@@ -140,6 +140,7 @@ public enum EntityList {
     MAGIC_ESSENCE("file:assets/img/other/magic_essence.png"),
     HEAVY_AMMO("file:assets/img/other/heavy_ammo_clip.png"),
     ROCKET_AMMO("file:assets/img/other/rocket_ammo.png"),
+    MELEE("file:assets/img/other/melee.png"),
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),

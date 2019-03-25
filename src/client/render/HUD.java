@@ -275,7 +275,7 @@ public class HUD extends BorderPane {
 
                 break;
             case CONSUMEABLE:
-                ammoInGun = new Label(Integer.toString(1), new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
+                ammoInGun = new Label(Integer.toString(1));
                 ammoInGun.setFont(fontManaspace28);
 
                 totalAmmoInClip = new Label("/" + 1);
@@ -286,7 +286,7 @@ public class HUD extends BorderPane {
                 break;
             case MELEE_WEAPON:
             default:
-                ammoInGun = new Label("∞", new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
+                ammoInGun = new Label("∞", new ImageView(rendererResourceLoader.getSprite(EntityList.MELEE)));
                 ammoInGun.setFont(new Font("Consolas", 28));
 
                 totalAmmoInClip = new Label("/∞");
