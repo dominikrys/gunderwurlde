@@ -7,30 +7,101 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import shared.Constants;
-import shared.lists.ItemType;
 import shared.view.GameView;
-import shared.view.GunView;
 import shared.view.entity.PlayerView;
 
+/**
+ * MouseHandler class. This is the class for mouse inputs.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class MouseHandler extends UserInteraction {
 
+	/**
+     * PlayerID for identification
+     */
 	private int playerID;
+	
+	/**
+     * Map canvas for location calculation
+     */
     private Canvas mapCanvas;
+    
+    /**
+     * PlayerView that contains player info
+     */
     private PlayerView playerView;
+    
+    /**
+     * Attack class for player attacks
+     */
     private Attack attack;
+    
+    /**
+     * ChangeItem class for changing items
+     */
     private ChangeItem changeItem;
+    
+    /**
+     * Mouse cursor X coordinate on screen
+     */
     private double mouseX;
+    
+    /**
+     * Mouse cursor Y coordinate on screen
+     */
     private double mouseY;
+    
+    /**
+     * Player X coordinate on screen
+     */
     private double playerX;
+    
+    /**
+     * Player Y coordinate on screen
+     */
     private double playerY;
+    
+    /**
+     * Angle between player and mouse cursor
+     */
     private double mouseDegree;
+    
+    /**
+     * Angle player is facing
+     */
     private double playerDegree;
+    
+    /**
+     * Amount to rotate when mouse cursor moves
+     */
     private double toRotate;
+    
+    /**
+     * AnimationTimer that loops, checks for requests and sends them 
+     */
     private AnimationTimer t;
+    
+    /**
+     * Boolean whether this mouse handler is active
+     */
     private boolean activated;
+    
+    /**
+     * Boolean whether the primary mouse button is being pressed
+     */
     private boolean hold;
+    
+    /**
+     * Distance between player and cursor
+     */
     private double distance;
 
+    /**
+     * Constructor
+     *
+     * @param playerID Player ID
+     */
     public MouseHandler(int playerID) {
         super();
         this.t = null;
@@ -38,9 +109,18 @@ public class MouseHandler extends UserInteraction {
         this.hold = false;
     }
 
-    private static int quarter(double playerX, double playerY, double destinationX, double destinationY) {
-        double xDif = destinationX - playerX;
-        double yDif = destinationY - playerY;
+    /**
+     * Calculate which quarter of the screen is the mouse cursor at
+     *
+     * @param playerX Player X coordinate on screen
+     * @param playerY Player Y coordinate on screen
+     * @param mouseX Mouse cursor X coordinate on screen
+     * @param mouseY Mouse cursor Y coordinate on screen
+     * @return 1 = top left, 2 = top right, 3 = bottom left, 4 = bottom right
+     */
+    private static int quarter(double playerX, double playerY, double mouseX, double mouseY) {
+        double xDif = mouseX - playerX;
+        double yDif = mouseY - playerY;
         if (xDif <= 0 && yDif < 0) {
             return 1;
         } else if (xDif > 0 && yDif < 0) {
@@ -50,15 +130,16 @@ public class MouseHandler extends UserInteraction {
         } else return 4;
     }
 
+    /**
+     * Method for converting mouse movement to player rotation requests
+     *
+     * @param e MouseEvent
+     */
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
         playerX = mapCanvas.getTranslateX() + playerView.getPose().getX() + Constants.TILE_SIZE / 2;
         playerY = mapCanvas.getTranslateY() + playerView.getPose().getY() + Constants.TILE_SIZE / 2;
-        // System.out.println("mouseX: " + mouseX);
-        // System.out.println("mouseY: " + mouseY);
-        // System.out.println("playerX: " + playerX);
-        // System.out.println("playerY: " + playerY);
 
         toRotate = Math.toDegrees(Math.atan((mouseX - playerX) / (mouseY - playerY)));
         int quarter = quarter(playerX, playerY, mouseX, mouseY);
@@ -75,12 +156,14 @@ public class MouseHandler extends UserInteraction {
             mouseDegree = 0;
         }
         playerDegree = mouseDegree;
-        // System.out.println("playerDegree: " + playerDegree);
-        // TODO: send changes(playerDegree) to server
         handler.send(CommandList.TURN, (int) playerDegree - 90);
-
     }
 
+    /**
+     * Setter for all mouse captures on scene
+     *
+     * @param scene scene
+     */
     @Override
     public void setScene(Scene scene) {
         super.setScene(scene);
@@ -124,16 +207,24 @@ public class MouseHandler extends UserInteraction {
 				else if(event.getDeltaY() < 0) {
 					changeItem.nextItem();
 				}
-				//System.out.println(playerView.getCurrentItemIndex());
-				// TODO: send changes(item change) to server
 			}
 		});
     }
 
+    /**
+     * Setter for mapCanvas
+     *
+     * @param mapCanvas Map canvas
+     */
     public void setCanvas(Canvas mapCanvas) {
         this.mapCanvas = mapCanvas;
     }
 
+    /**
+     * Setter for game view and initialize actions
+     *
+     * @param gameView Game view
+     */
     @Override
     public void setGameView(GameView gameView) {
         super.setGameView(gameView);
@@ -148,6 +239,10 @@ public class MouseHandler extends UserInteraction {
         this.changeItem = new ChangeItem(handler, playerView);
     }
 
+    /**
+     * Method for activating the timer for capturing mouse inputs
+     *
+     */
     @Override
     public void activate() {
         super.activate();
@@ -166,12 +261,21 @@ public class MouseHandler extends UserInteraction {
 		this.t.start();
     }
 
+    /**
+     * Method for deactivating the timer
+     *
+     */
     @Override
     public void deactivate() {
         super.deactivate();
         this.t.stop();
     }
 
+    /**
+     * Check if timer is activated
+     *
+     * @return Boolean whether the timer is activated
+     */
     @Override
     public boolean isActivated() {
         return super.isActivated();

@@ -258,8 +258,8 @@ public class Client extends Thread {
         if (firstView) {
             firstView = false;
             renderer = new GameRenderer(stage, this.view, playerID, settings, this);
-            renderer.getKeyboardHandler().setGameHandler(this);
-            renderer.getMouseHandler().setGameHandler(this);
+            renderer.getKeyboardHandler().setClientHandler(this);
+            renderer.getMouseHandler().setClientHandler(this);
             renderer.run();
         }
         //else just update the GameView

@@ -2,7 +2,6 @@ package client.input;
 
 import client.Client;
 import shared.view.GunView;
-import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
 /**
@@ -50,6 +49,7 @@ public class Attack extends Action {
     			handler.send(CommandList.CONSUMABLE, (int)distance);
     			break;
     		case MELEE_WEAPON:
+    			// TODO: add melee attack
     			break;
     	}
     }
