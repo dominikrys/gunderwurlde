@@ -77,13 +77,13 @@ public enum EntityList {
      * Enemy standing
      */
     ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
-    RUNNER("file:assets/img/entity/enemy/zombie.png", Constants.TILE_SIZE),
-    SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust, Constants.TILE_SIZE),
-    MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust, Constants.TILE_SIZE),
-    BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
-    MACHINE_GUNNER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
-    SNIPER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
-    THEBOSS ("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE * 5),
+    RUNNER("file:assets/img/entity/enemy/runner.png", Constants.TILE_SIZE),
+    SOLDIER("file:assets/img/entity/enemy/soldier.png", 34),
+    MIDGET("file:assets/img/entity/enemy/midget.png", 24),
+    BOOMER("file:assets/img/entity/enemy/boomer.png", 40),
+    MACHINE_GUNNER("file:assets/img/entity/enemy/soldier.png", Constants.machineGunnerColorAdjust, 34),
+    SNIPER("file:assets/img/entity/enemy/sniper.png"),
+    THEBOSS("file:assets/img/entity/enemy/boss.png", Constants.TILE_SIZE * 5),
 
     /**
      * Enemy walking
@@ -108,7 +108,7 @@ public enum EntityList {
     ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
-    
+
 
     /**
      * Tiles
