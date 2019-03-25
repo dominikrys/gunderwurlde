@@ -277,10 +277,6 @@ public class GameRenderer implements Runnable {
 
             // Set background - inline instead of CSS so transparency works
             pausedOverlay.setStyle("-fx-background-image: url('file:assets/img/gui/pause_bg.png');-fx-background-repeat: repeat; ");
-            /*
-            pausedOverlay.setBackground(new Background(new BackgroundImage(rendererResourceLoader.getSprite(EntityList.HEART_HALF),
-            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
-             */
             pausedOverlay.setSpacing(15);
             pausedOverlay.setPadding(new Insets(15, 15, 15, 15));
 
