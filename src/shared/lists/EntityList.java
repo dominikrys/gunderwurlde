@@ -83,6 +83,7 @@ public enum EntityList {
     BOOMER("file:assets/img/entity/enemy/boomer.png", 40),
     MACHINE_GUNNER("file:assets/img/entity/enemy/soldier.png", Constants.machineGunnerColorAdjust, 34),
     SNIPER("file:assets/img/entity/enemy/sniper.png"),
+    MAGE("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
     THEBOSS("file:assets/img/entity/enemy/boss.png", Constants.TILE_SIZE * 5),
 
     /**

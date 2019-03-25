@@ -22,28 +22,30 @@ public class AStar extends Thread {
     private final Tile[][] tiles;
     private final Pose endPose;
     private final Pose startPose;
-    private final AStarUsingEnemy myEnemy;
+    private final AStarUsingEnemy ai;
     private Pair<Integer, Integer> enemyTile;
     private Pair<Integer, Integer> playerTile;
 
-    public AStar(AStarUsingEnemy myEnemy, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose) {
+    public AStar(AStarUsingEnemy ai, double cost_of_travel, Tile[][] tiles, Pose startPose, Pose endPose) {
         COST_OF_TRAVEL = cost_of_travel;
         this.tiles = tiles;
         this.startPose = startPose;
         this.endPose = endPose;
-        this.myEnemy = myEnemy;
+        this.ai = ai;
     }
 
     public void run() {
+        ai.setAStarProcessing(true);
         enemyTile = PoseToPairOfTileCoords(startPose);
         playerTile = PoseToPairOfTileCoords(endPose);
 
         LinkedList<Node> AStartPath = aStar(enemyTile, playerTile);
         if(AStartPath != null) {
-            myEnemy.setTilePath(generatePoseDirectionPath(addNodesForCorners(AStartPath)));
+            ai.setTilePath(generatePoseDirectionPath(addNodesForCorners(AStartPath)));
         }else{
-            myEnemy.setTilePath(null);
+            ai.setTilePath(null);
         }
+        ai.setAStarProcessing(false);
     }
 
     private LinkedList<Node> addNodesForCorners(LinkedList<Node> nodePath) {

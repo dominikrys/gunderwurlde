@@ -2,30 +2,22 @@ package server.engine.ai.enemyAI;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.aStar.AStar;
+import server.engine.ai.newPoseGenerators.PoseAroundPlayerGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Gun;
-import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.SniperRifle;
-import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
 
 import java.util.LinkedList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
     Gun gun = new SniperRifle();
-    private Pose poseToGo;
-    private boolean runningAway;
     private boolean inPositionToAttack = false;
-    private boolean playerAiming = false;
-    private LinkedList<Pose> posePath;
-    private boolean AStartProcessing = false;
-    private int expandedRange = 5;
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -58,16 +50,6 @@ public class SniperAI extends AStarUsingEnemy {
         }
     }
 
-//    public AIAction attackController() {
-//
-//
-//        return AIAction.WAIT;
-//    }
-
-    private boolean inRangeToRun() {
-        return false;
-    }
-
 
     @Override
     protected Attack getAttackObj() {
@@ -77,43 +59,19 @@ public class SniperAI extends AStarUsingEnemy {
 
     @Override
     protected Force generateMovementForce() {
-        //SNIPER 400
-//            System.out.println(tileMap.length + " " + tileMap[0].length);
-//            int[] tileList = new int[2];
-//
-//            for(int i = 0; i <= tileMap.length; i ++){
-//                for(int j = 0; j <= tileMap[0].length; j ++){
-//                    tileList[0] = i;
-//                    tileList[1] = j;
-//                    System.out.print(tileNotSolid(tileList, tileMap));
-//                }
-//                System.out.println();
-//            }
         if (posePath == null) {
-            if (!AStartProcessing) {
-                Pose endPose = findPositionToAttack();
-                new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
-                AStartProcessing = true;
+            if (!getAStarProcessing()) {
+                if(poseToGo != null) {
+                    new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo).start();
+                    poseToGo = null;
+                }else if (!isProcessing()){
+                    (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();
+                }
             }
         } else {
             Force angle = getForceFromPath();
             if (angle != null) return angle;
         }
-
-//        else {
-//            if (posePath == null) {
-//                if (!AStartProcessing) {
-//                    (new AStar(this, 1, tileMap, pose, closestPlayer)).start();
-//                    AStartProcessing = true;
-//                } else {
-//                    //cloak and move somewhere?
-//                }
-//            } else {
-////                System.out.println("pose to go: " + posePath.peekLast());
-//                Force force = getForceFromPath();
-//                if (force != null) return force;
-//            }
-//        }
         return new Force(pose.getDirection(), 0);
     }
 
@@ -129,34 +87,6 @@ public class SniperAI extends AStarUsingEnemy {
             }
         }
         return null;
-    }
-
-    private Pose findPositionToAttack() {
-        Pose positionToAttack;
-        int angle = getAngle(closestPlayer, pose);
-        do {
-            positionToAttack = poseInDistance(closestPlayer,
-                    ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
-                    ThreadLocalRandom.current().nextInt(RANGE_TO_RUN_AWAY, RANGE_TO_RUN_AWAY + 20));
-            expandedRange += 5;
-        } while ((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
-                || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
-
-        expandedRange = 5;
-        return positionToAttack;
-    }
-
-    public void setTilePath(LinkedList<Pose> aStar) {
-//        try {
-//            for (Pose pose : aStar) {
-//                System.out.println(TileList.locationToTile(pose)[0] + " " + TileList.locationToTile(pose)[1]);
-//            }
-//        }catch (Exception e){
-//            System.out.println("AStar returned null");
-//        }
-
-        posePath = aStar;
-        AStartProcessing = false;
     }
 
 }

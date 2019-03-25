@@ -1,5 +1,11 @@
 package server.engine.ai.enemyAI;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import server.engine.ai.AIAction;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.enemy.Enemy;
@@ -9,12 +15,6 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.TileState;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
 public abstract class EnemyAI {
 
     Enemy enemy;
@@ -23,14 +23,14 @@ public abstract class EnemyAI {
     static long MEDIUM_DELAY = 500;
     static long LONG_DELAY = 1000;
     protected Pose pose;
+    private boolean isProcessing = false;
     //    double maxDistanceToMove;
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
-    Tile[][] tileMap;
+    static Tile[][] tileMap;
     //    protected int mapXDim;
 //    protected int mapYDim;
-    private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
     long beginAttackTime;
@@ -38,7 +38,6 @@ public abstract class EnemyAI {
 
     protected EnemyAI(long attackDelay) {
         this.attackDelay = attackDelay;
-        isProcessing = false;
         actionState = ActionList.NONE;
     }
 
@@ -77,10 +76,6 @@ public abstract class EnemyAI {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
     }
 
-    synchronized void setProcessing(boolean processing) {
-        isProcessing = processing;
-    }
-
     //Static for RandomPoseGenerator
     public static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
@@ -98,14 +93,11 @@ public abstract class EnemyAI {
         return tileNotSolid;
     }
 
-    public void setInfo(Enemy enemy, HashSet<Pose> playerPoses, Tile[][] tileMap) {
+    public void setInfo(Enemy enemy, HashSet<Pose> playerPoses) {
         this.enemy = enemy;
         this.pose = this.enemy.getPose();
 //        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
-        this.tileMap = transposeMatrix(tileMap);
-        int[] tile = {8,10};
-        tileNotSolid(tile,tileMap);
         //        this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
@@ -118,10 +110,6 @@ public abstract class EnemyAI {
                 temp[j][i] = m[i][j];
 
         return temp;
-    }
-
-    public boolean isProcessing() {
-        return isProcessing;
     }
 
     private Pose findClosestPlayer(HashSet<Pose> playerPoses) {
@@ -198,6 +186,19 @@ public abstract class EnemyAI {
         return enemy;
     }
 
+    public synchronized boolean isProcessing() {
+        return isProcessing;
+    }
+
+    public synchronized void setProcessing(boolean processing) {
+        isProcessing = processing;
+    }
+
+    public static void setTileMap(Tile[][] tm) {
+        tileMap = transposeMatrix(tm);
+        int[] tile = { 8, 10 };
+        tileNotSolid(tile, tileMap);
+    }
 
 //    protected abstract Pose generateNextPose();
 
