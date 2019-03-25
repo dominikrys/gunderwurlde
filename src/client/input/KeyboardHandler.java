@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import shared.Pose;
 import shared.lists.EntityList;
-import shared.lists.KeyActionList;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
@@ -20,14 +19,11 @@ import java.util.TimerTask;
 public class KeyboardHandler extends UserInteraction {
 	private int playerID;
     private GameHandler handler;
-    private Scene fscene;
-    private GameView gameView;
     private PlayerView playerView;
     private Image pImage;
     private Movement movement;
     private Reload reload;
     private DropItem dropItem;
-    private PickItem pickItem;
     private ChangeItem changeItem;
     private ArrayList<String> input = new ArrayList<String>();
     private boolean upPressed = false;
@@ -214,60 +210,12 @@ public class KeyboardHandler extends UserInteraction {
 		};
 		
 		timer.scheduleAtFixedRate(task, 0, 1);
-        
-		/*
-        this.t = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (upPressed || leftPressed || downPressed || rightPressed) {
-                	if((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
-                		movement.move("up");
-                	}
-                	else if((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
-                		movement.move("left");
-                	}
-                	else if((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
-                		movement.move("down");
-                	}
-                	else if((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
-                		movement.move("right");
-                	}
-                	else if(upPressed && leftPressed && !downPressed && !rightPressed) {
-                		movement.move("upLeft");
-                	}
-                	else if(upPressed && !leftPressed && !downPressed && rightPressed) {
-                		movement.move("upRight");
-                	}
-                	else if(!upPressed && leftPressed && downPressed && !rightPressed) {
-                		movement.move("downLeft");
-                	}
-                	else if(!upPressed && !leftPressed && downPressed && rightPressed) {
-                		movement.move("downRight");
-                	}
-                	else {
-                		// do nothing
-                	}
-                }
-                if(reloadPressed) {
-                    reload.reload();
-                }
-                if(dropPressed) {
-                    dropItem.drop();
-                }
-                if(interactPressed) {
-
-                }
-            }
-        };
-
-        this.t.start();
-        */
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
-        this.t.stop();
+        this.timer.cancel();
     }
 
     @Override

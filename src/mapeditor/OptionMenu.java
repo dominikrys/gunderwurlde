@@ -51,6 +51,7 @@ public class OptionMenu {
 		
 		// > > resolutions drop down menu
 		ComboBox<String> resolutions = new ComboBox<String>();
+		resolutions.getItems().add(800 + "x" + 600);
 		for (int[] res : Constants.SCREEN_RESOLUTIONS) {
             resolutions.getItems().add(res[0] + "x" + res[1]);
         }

@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,6 +62,8 @@ public class MapEditor {
 	private Image mapSnapshot;
 	private StackPane infoViewer;
 	private VBox info;
+	private Label mapNameLabel;
+	private Button mapNameButton;
 	//private HBox tileIDInfo;
 	//private Label tileIDLabel1;
 	//private Label tileIDLabel2;
@@ -98,7 +101,12 @@ public class MapEditor {
 	private ImageView paintTileImageView;
 	private Button paintChangeButton;
 	private CheckBox deleteCheckbox;
+	private HBox waveDoorHBox;
 	private Button waveButton;
+	private Button doorButton;
+	private HBox saveCompleteHBox;
+	private Button saveButton;
+	private Button completeButton;
 	private int mapWidth;
 	private int mapHeight;
 	private GraphicsContext mapGc;
@@ -125,6 +133,10 @@ public class MapEditor {
 		this.resWidth = resWidth;
 		this.resHeight = resHeight;
 		this.init();
+	}
+	
+	public String getMapName() {
+		return this.fileName;
 	}
 	
 	public Tile[][] getMapTiles() {
@@ -222,6 +234,23 @@ public class MapEditor {
 		tileIDLabel2 = new Label();
 		tileIDInfo.getChildren().add(tileIDLabel2);
 		*/
+		
+		// > > Map Name Label
+		mapNameLabel = new Label("Map Name: ");
+		info.getChildren().add(mapNameLabel);
+		if(fileName != null) {
+			mapNameLabel.setText("Map Name: " + fileName);
+		}
+		
+		// > > Map Name Button
+		mapNameButton = new Button("Set Name");
+		info.getChildren().add(mapNameButton);
+		mapNameButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				nameSetter();
+			}
+		});
 		
 		// > > Tile Image
 		tileImageView = new ImageView();
@@ -394,15 +423,55 @@ public class MapEditor {
 		paintVBox.getChildren().add(deleteCheckbox);
 		deleteCheckbox.setDisable(true);
 		
-		// > > > Wave Settings
+		// > > > Wave & Door HBox
+		waveDoorHBox = new HBox();
+		info.getChildren().add(waveDoorHBox);
+		waveDoorHBox.setAlignment(Pos.CENTER);
+		waveDoorHBox.setSpacing(10);
+		
+		// > > > > Wave Settings
 		waveButton = new Button("Set Waves");
-		info.getChildren().add(waveButton);
+		waveDoorHBox.getChildren().add(waveButton);
+		waveButton.setDisable(true);
 		waveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				waveSetter.show();
 			}
 		});
+		
+		// > > > > Door Settings
+		doorButton = new Button("Set Doors");
+		waveDoorHBox.getChildren().add(doorButton);
+		doorButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+			}
+		});
+		
+		// > > > Save & Complete HBox
+		saveCompleteHBox = new HBox();
+		info.getChildren().add(saveCompleteHBox);
+		saveCompleteHBox.setAlignment(Pos.CENTER);
+		saveCompleteHBox.setSpacing(10);
+		
+		// > > > > Save Button
+		saveButton = new Button("Save");
+		saveCompleteHBox.getChildren().add(saveButton);
+		saveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(fileName == null) {
+					nameSetter();
+				}
+				MapWriter.saveMap(mapEditor);
+			}
+		});
+		
+		// > > > > Complete Button
+		completeButton = new Button("Complete");
+		saveCompleteHBox.getChildren().add(completeButton);
 		
 		stage.show();
         
@@ -483,6 +552,8 @@ public class MapEditor {
 		setBlueSpawn.setDisable(false);
 		setYellowSpawn.setDisable(false);
 		setGreenSpawn.setDisable(false);
+		waveButton.setDisable(false);
+		doorButton.setDisable(false);
 		
 		selectTile(selectedX, selectedY);
 		infoViewer.toFront();
@@ -799,6 +870,26 @@ public class MapEditor {
 	protected void setPaintTile(Tile tile) {
 		paintTileImageView.setImage(tileSprite.get(tile.getType()));
 		paintTile = tile;
+	}
+	
+	private void nameSetter() {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Name the map");
+		dialog.setHeaderText("Enter a name for the map");
+		
+		Optional<String> name = dialog.showAndWait();
+		if(name.isPresent() && !name.get().equals("")) {
+			fileName = name.get();
+			mapNameLabel.setText("Map Name: " + fileName);
+			stage.setTitle(fileName);
+		}
+		else {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Error with map name");
+			alert.setContentText("Input name is empty");
+			alert.showAndWait();
+		}
 	}
 	
 }
