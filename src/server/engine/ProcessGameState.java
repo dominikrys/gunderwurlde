@@ -49,6 +49,7 @@ import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.EnemyView;
@@ -161,7 +162,7 @@ public class ProcessGameState extends Thread {
             }
 
             long timeDiff = MIN_TIME_DIFFERENCE - currentTimeDifference;
-            if (timeDiff > 5) {
+            if (timeDiff > 0) {
                 try {
                     Thread.sleep(timeDiff);
                 } catch (InterruptedException e1) {
@@ -291,7 +292,8 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.getShoot()) {
+                long useTime = currentPlayer.getLastUseTime();
+                if (request.getShoot() && useTime < lastProcessTime) {
                     if (currentItem.getItemType() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
@@ -302,10 +304,10 @@ public class ProcessGameState extends Thread {
                                 projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
                         }
-                    } else if (currentItem.getItemType() == ItemType.CONSUMEABLE) {
+                    } else if (currentItem.getItemType() == ItemType.CONSUMEABLE
+                            && (lastProcessTime - useTime) > Player.CONSUMABLE_COOLDOWN) {
                         Consumable currentConsumable = (Consumable) currentItem;
                         // TODO use enum to improve performance?
-                        // TODO Add consumable cooldown to player.
                         if (currentItem instanceof CreatesProjectiles) {
                             newProjectiles.addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam()));
                         } else if (currentItem instanceof HasEffect) {
@@ -317,10 +319,12 @@ public class ProcessGameState extends Thread {
                         }
 
                         if (currentConsumable.isRemoved()) {
-                            // TODO add cooldown to shoot request.
+                            currentPlayer.setUseTime(lastProcessTime + 150); // TODO better if this could be solved client-side
                             if (!currentPlayer.removeItem(currentPlayer.getCurrentItemIndex())) {
                                 LOGGER.warning("Player: " + playerID + "Failed to remove consumable.");
                             }
+                        } else {
+                            currentPlayer.setUseTime(lastProcessTime);
                         }
                     }
                 }
@@ -920,11 +924,11 @@ public class ProcessGameState extends Thread {
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
-            if (i instanceof Gun) {
+            if (i.getItemType() == ItemType.GUN) {
                 Gun g = (Gun) i;
-                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
+                playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
             } else {
-                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0, false, 0));
+                playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),

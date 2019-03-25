@@ -23,6 +23,7 @@ public class Player extends LivingEntity {
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
     public static final double DEFAULT_MASS = 2;
+    public static final double CONSUMABLE_COOLDOWN = 200;
 
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
@@ -43,6 +44,7 @@ public class Player extends LivingEntity {
     protected EnumMap<AmmoList, Integer> maxAmmo;
     protected int currentItem;
     protected int maxItems;
+    protected long lastUseTime;
 
     private boolean paused;
 
@@ -79,6 +81,14 @@ public class Player extends LivingEntity {
             return teamScore.get(team);
         else
             return 0;
+    }
+
+    public long getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setUseTime(long useTime) {
+        this.lastUseTime = useTime;
     }
 
     public int getMaxItems() {
