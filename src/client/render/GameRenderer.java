@@ -9,10 +9,13 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -249,8 +252,8 @@ public class GameRenderer implements Runnable {
         // Event handler for pause menu
         stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
 
-        // Set root to scene
-        stage.getScene().setRoot(root);
+        // Set root to scene - runLater for slower PCs that don't load the JavaFX thread fast enough
+        Platform.runLater(() -> stage.getScene().setRoot(root));
 
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
@@ -349,9 +352,8 @@ public class GameRenderer implements Runnable {
         }
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
-                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
+        hud.updateHUD(gameView, rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer());
     }
 
     /**

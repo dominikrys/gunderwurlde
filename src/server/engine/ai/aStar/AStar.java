@@ -308,13 +308,13 @@ public class AStar extends Thread {
             for (int j = leftNodes; j < leftNodes + 3; j++) {
                 try {
                     int[] tile = {i, j};
-//                    if(!EnemyAI.tileNotSolid(tile, tiles))
-//                        System.out.println("Tile:" + j + ", " + i + "is solid");
+//                    if(!EnemyAI.tileNotSolid(tileList, tiles))
+//                        System.out.println("TileList:" + j + ", " + i + "is solid");
                     if (EnemyAI.tileNotSolid(tile, tiles) && (!((i == nodeLoc.getKey()) && (j == nodeLoc.getValue())))) {
                         initNodes.add(new Node(new Pose(j, i), costToGo + COST_OF_TRAVEL, realDist[i][j]));
                     }
                 } catch (Exception e) {
-//                    System.out.println("Tile: " + j + "," + i + " is solid");
+//                    System.out.println("TileList: " + j + "," + i + " is solid");
                     // Will catch an exception if it tries to look for nodes that are outside the map bounds
                 }
             }

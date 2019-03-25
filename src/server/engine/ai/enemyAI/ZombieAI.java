@@ -8,6 +8,7 @@ import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Location;
 import shared.lists.ActionList;
+import shared.lists.Team;
 public class ZombieAI extends EnemyAI {
 
     private boolean turnLeft;
@@ -87,7 +88,7 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     protected Attack getAttackObj() {
-        return new AoeAttack(closestPlayer, 24, 1);
+        return new AoeAttack(closestPlayer, 24, 1, Team.ENEMY);
     }
     //    @Override
 //    protected Pose generateNextPose() {

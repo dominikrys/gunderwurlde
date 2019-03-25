@@ -5,6 +5,7 @@ import server.engine.state.physics.Force;
 import server.engine.state.physics.Physics;
 import shared.Location;
 import shared.lists.EntityList;
+import shared.lists.Team;
 
 //AOE - Area of Effect
 public class AoeAttack extends Entity implements Attack {
@@ -12,14 +13,20 @@ public class AoeAttack extends Entity implements Attack {
     private static final double FALL_OFF = 0.75;
 
     protected int damage;
+    protected Team team;
 
-    public AoeAttack(Location attackLocation, int attackSize, int damage) {
+    public AoeAttack(Location attackLocation, int attackSize, int damage, Team team) {
         super(attackLocation, attackSize, EntityList.DEFAULT);
         this.damage = damage;
+        this.team = team;
     }
 
     public int getDamage() {
         return damage;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     @Override
@@ -29,7 +36,7 @@ public class AoeAttack extends Entity implements Attack {
 
     @Override
     public Entity makeCopy() {
-        return new AoeAttack(pose, size, damage);
+        return new AoeAttack(pose, size, damage, team);
     }
 
     public Force getForce(Location location, Location backUp) {

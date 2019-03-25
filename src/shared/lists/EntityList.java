@@ -26,6 +26,7 @@ public enum EntityList {
     HEAVY_PISTOL("file:assets/img/entity/item/heavy_pistol.png", Constants.TILE_SIZE),
     BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
     ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
+    GRENADE("file:assets/img/entity/item/grenade.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
@@ -98,40 +99,48 @@ public enum EntityList {
     /**
      * Projectiles
      */
-    BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 4),
+    BASIC_BULLET("file:assets/img/entity/projectile/basic_bullet.png", 6),
     HEAVY_BULLET("file:assets/img/entity/projectile/heavy_bullet.png", 8),
     PLASMA_BULLET("file:assets/img/entity/projectile/plasma_bullet.png", 6),
-    FIRE_BULLET("file:assets/img/entity/projectile/fire_bullet.png", 4),
-    ICE_BULLET("file:assets/img/entity/projectile/ice_bullet.png", 4),
-    CRYSTAL_BULLET("file:assets/img/entity/projectile/crystal_bullet.png", 5),
-    BOUNCE_BULLET("file:assets/img/entity/projectile/bounce_bullet.png", 4),
+    FIRE_BULLET("file:assets/img/entity/projectile/fire_bullet.png", 6),
+    ICE_BULLET("file:assets/img/entity/projectile/ice_bullet.png", 6),
+    CRYSTAL_BULLET("file:assets/img/entity/projectile/crystal_bullet.png", 6),
+    BOUNCE_BULLET("file:assets/img/entity/projectile/bounce_bullet.png", 6),
     ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
-    PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 4),
-    STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 4),
+    PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
+    STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
     
 
     /**
      * Tiles
      */
+    DEFAULT("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
     GRASS_TILE("file:assets/img/tiles/grass.png", Constants.TILE_SIZE),
     WOOD_TILE("file:assets/img/tiles/wood.png", Constants.TILE_SIZE),
-    //TODO
-    RUINS_FLOOR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    RUINS_PATTERN("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    RUINS_WALL("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    RUINS_PILLAR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    RUINS_WATER("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    RUINS_DOOR("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
-    DEFAULT("file:assets/img/tiles/default.png", Constants.TILE_SIZE),
+    DOOR_TILE("file:assets/img/tiles/door.png", Constants.TILE_SIZE),
+    RUINS_DOOR("file:assets/img/tiles/ruins_door.png", Constants.TILE_SIZE),
+    RUINS_DOOR_OPEN("file:assets/img/tiles/ruins_door_open.png", Constants.TILE_SIZE),
+    RUINS_FLOOR("file:assets/img/tiles/ruins_floor.png", Constants.TILE_SIZE),
+    RUINS_ORNATE_BLOCK("file:assets/img/tiles/ruins_ornate_block.png", Constants.TILE_SIZE),
+    RUINS_SOLID_BLOCK_DARK("file:assets/img/tiles/ruins_solid_block_dark.png", Constants.TILE_SIZE),
+    RUINS_SOLID_BLOCK_LIGHT("file:assets/img/tiles/ruins_solid_block_light.png", Constants.TILE_SIZE),
+    RUINS_WALL_DARK("file:assets/img/tiles/ruins_wall_dark.png", Constants.TILE_SIZE),
+    RUINS_WALL_MID("file:assets/img/tiles/ruins_wall_mid.png", Constants.TILE_SIZE),
+    RUINS_WALL_LIGHT("file:assets/img/tiles/ruins_wall_light.png", Constants.TILE_SIZE),
+    WATER("file:assets/img/tiles/water.png", Constants.TILE_SIZE),
+    SAND("file:assets/img/tiles/sand.png", Constants.TILE_SIZE),
+    RED_GROUND("file:assets/img/tiles/red_ground.png", Constants.TILE_SIZE),
+    MARBLE_FLOOR("file:assets/img/tiles/marble_floor.png", Constants.TILE_SIZE),
+    DIRT("file:assets/img/tiles/dirt.png", Constants.TILE_SIZE),
 
     /**
      * Other renderable entities - some are items
      */
     AMMO_CLIP("file:assets/img/other/ammo_clip.png"),
-    ENERGY("file:assets/img/other/ammo_clip.png"), // TODO maybe an electric bolt or something?
-    MAGIC_ESSENCE("file:assets/img/other/ammo_clip.png"), // TODO a glowing orb or something?
-    HEAVY_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
-    ROCKET_AMMO("file:assets/img/other/ammo_clip.png"), // TODO
+    ENERGY("file:assets/img/other/energy.png"),
+    MAGIC_ESSENCE("file:assets/img/other/magic_essence.png"),
+    HEAVY_AMMO("file:assets/img/other/heavy_ammo_clip.png"),
+    ROCKET_AMMO("file:assets/img/other/rocket_ammo.png"),
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),
@@ -139,19 +148,12 @@ public enum EntityList {
     PAUSE_BG("file:assets/img/gui/pause_bg.png"),
 
     /**
-     * Smoke cloud animation
+     * Animations
      */
     SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
-
-    /**
-     * Blood explosion animation
-     */
     BLOOD_EXPLOSION("file:assets/img/misc_animations/blood_explosion.png"),
-
-    /**
-     * White smoke cloud animation
-     */
-    WHITE_SMOKE_CLOUD("file:assets/img/misc_animations/white_smoke_cloud.png");
+    WHITE_SMOKE_CLOUD("file:assets/img/misc_animations/white_smoke_cloud.png"),
+    EXPLOSION("file:assets/img/misc_animations/explosion.png");
 
     /**
      * Path to sprite

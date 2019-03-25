@@ -83,13 +83,13 @@ public class MapCanvas extends Canvas {
         int mapX = gameView.getXDim();
         int mapY = gameView.getYDim();
 
-        // Iterate through the map, rending each tile on canvas
+        // Iterate through the map, rending each tileList on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
-                // Get tile graphic
-                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
+                // Get tileList graphic
+                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileList().getEntityListName());
 
-                // Add tile to canvas
+                // Add tileList to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
                         Constants.TILE_SIZE);
             }
