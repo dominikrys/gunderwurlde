@@ -478,9 +478,11 @@ public class ProcessGameState extends Thread {
                     break;
                 case UPDATE:
                     Location oldLoc = currentEnemy.getLocation();
+                    int oldSize = currentEnemy.getSize();
                     currentEnemy = ai.getUpdatedEnemy();
                     Location newLoc = currentEnemy.getLocation();
-                    if (!newLoc.equals(oldLoc)) {
+                    int newSize = currentEnemy.getSize();
+                    if (!newLoc.equals(oldLoc) || newSize < oldSize) {
                         currentEnemy.setLocation(oldLoc);
                         LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
                         for (int[] enemyTileCords : enemyTilesOn) {
@@ -488,6 +490,11 @@ public class ProcessGameState extends Thread {
                         }
                         currentEnemy.setLocation(newLoc);
                         enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
+                        }
+                    } else if (newSize > oldSize) {
+                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
                         for (int[] enemyTileCords : enemyTilesOn) {
                             tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
                         }
@@ -965,7 +972,7 @@ public class ProcessGameState extends Thread {
         return tilesOn;
     }
 
-    private static LinkedHashSet<int[]> tilesOn(Laser l) {
+    private static LinkedHashSet<int[]> tilesOn(Laser l) { // TODO return tilesOn ordered from start to end
         Location start = l.getStart();
         Location end = l.getEnd();
         double size = l.getSize();
