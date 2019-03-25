@@ -1,4 +1,4 @@
-package server.engine.state.entity.projectile;
+package server.engine.state;
 
 import server.engine.state.effect.StatusEffect;
 
