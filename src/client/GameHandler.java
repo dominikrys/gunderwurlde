@@ -168,6 +168,8 @@ public class GameHandler extends Thread {
                         // create the server
                         server = new Server(map, playerName, team, numPlayers, true);
                         // start the server as it needs to listen to requests
+                        server.join();
+                        loadScreenController.update(server.getIPAddress(), server.getPort());
                         server.start();
                         serverStarted = true;
                         // Wait for TCPManager to be up and receiving

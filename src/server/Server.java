@@ -205,10 +205,6 @@ public class Server extends Thread implements HasEngine {
      * Check if the game is multiplayer and then create the sender and receiver for the server
      */
     public void run(){
-        System.out.println("Server Listen Address: " + listenAddress);
-        System.out.println("Server Listen Port: " + listenPort);
-        System.out.println("Server Sender Address: " + senderAddress);
-        System.out.println("Server Sender Port: " + sendPort);
         try {
             // Check if the game is going to be multiplayer
             if(multiplayer) {
@@ -381,6 +377,14 @@ public class Server extends Thread implements HasEngine {
 
     public boolean isReceiving() {
         return receiving;
+    }
+
+    public String getIPAddress(){
+        return senderAddress.toString();
+    }
+
+    public String getPort(){
+        return Integer.toString(sendPort);
     }
 
     public boolean isThreadsRunning(){
