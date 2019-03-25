@@ -139,6 +139,7 @@ public class ProcessGameState extends Thread {
         // Zones
         LinkedHashMap<Integer, Zone> inactiveZones = gameState.getCurrentMap().getZones();
         LinkedHashMap<Integer, Zone> activeZones = new LinkedHashMap<>();
+        boolean tileMapChanged = true;
 
         // pause tracking variables
         boolean paused = false;
@@ -432,8 +433,11 @@ public class ProcessGameState extends Thread {
                 double maxMovementForce = currentEnemy.getMovementForce();
                 EnemyAI ai = currentEnemy.getAI();
 
-                if (!ai.isProcessing())
-                    ai.setInfo(currentEnemy, playerPoses, tileMap);
+                if (!ai.isProcessing()) {
+                    ai.setInfo(currentEnemy, playerPoses);
+                    if (tileMapChanged)
+                        ai.setTileMap(tileMap);
+                }
 
                 // handle enemyAI action
                 AIAction enemyAction = ai.getAction();
@@ -491,6 +495,8 @@ public class ProcessGameState extends Thread {
                         currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                         currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
             }
+
+            tileMapChanged = false;
 
             // process and remove dead enemies
             for (Integer enemyID : enemiesToRemove) {
@@ -813,6 +819,7 @@ public class ProcessGameState extends Thread {
 
                 // process zone tile changes
                 for (Map.Entry<int[], Tile> tileChanged : z.getTileChanges().entrySet()) {
+                    tileMapChanged = true;
                     int[] cords = tileChanged.getKey();
                     Tile newTile = tileChanged.getValue();
                     tileMap[cords[0]][cords[1]] = newTile;
