@@ -2,6 +2,7 @@ package server.engine.ai.enemyAI;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.aStar.AStar;
+import server.engine.ai.newPoseGenerators.PoseAroundPlayerGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Gun;
@@ -21,7 +22,6 @@ public class SniperAI extends AStarUsingEnemy {
     private boolean inPositionToAttack = false;
     private boolean playerAiming = false;
     private LinkedList<Pose> posePath;
-    private boolean AStartProcessing = false;
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -86,10 +86,14 @@ public class SniperAI extends AStarUsingEnemy {
 //                System.out.println();
 //            }
         if (posePath == null) {
-            if (!AStartProcessing) {
-                Pose endPose = findPoseAroundPlayer(RANGE_TO_RUN_AWAY, true);
-                new AStar(this, 1, transposeMatrix(tileMap), pose, endPose).start();
-                AStartProcessing = true;
+            if (!getAStarProcessing()) {
+                if(poseToGo != null) {
+                    new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo).start();
+                    setAStarProcessing(true);
+                    poseToGo = null;
+                }else if (!isProcessing()){
+                    (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();
+                }
             }
         } else {
             Force angle = getForceFromPath();
@@ -125,19 +129,6 @@ public class SniperAI extends AStarUsingEnemy {
             }
         }
         return null;
-    }
-
-    public void setTilePath(LinkedList<Pose> aStar) {
-//        try {
-//            for (Pose pose : aStar) {
-//                System.out.println(TileList.locationToTile(pose)[0] + " " + TileList.locationToTile(pose)[1]);
-//            }
-//        }catch (Exception e){
-//            System.out.println("AStar returned null");
-//        }
-
-        posePath = aStar;
-        AStartProcessing = false;
     }
 
 }

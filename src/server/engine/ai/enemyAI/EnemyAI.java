@@ -24,6 +24,7 @@ public abstract class EnemyAI {
     static long MEDIUM_DELAY = 500;
     static long LONG_DELAY = 1000;
     protected Pose pose;
+    private boolean isProcessing = false;
     //    double maxDistanceToMove;
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
@@ -31,7 +32,6 @@ public abstract class EnemyAI {
     Tile[][] tileMap;
     //    protected int mapXDim;
 //    protected int mapYDim;
-    private boolean isProcessing;
     ActionList actionState;
     protected double maxMovementForce;
     long beginAttackTime;
@@ -39,7 +39,6 @@ public abstract class EnemyAI {
 
     protected EnemyAI(long attackDelay) {
         this.attackDelay = attackDelay;
-        isProcessing = false;
         actionState = ActionList.NONE;
     }
 
@@ -76,10 +75,6 @@ public abstract class EnemyAI {
 
     int getDistToPlayer(Pose player) {
         return (int) sqrt(pow(pose.getY() - player.getY(), 2) + pow(pose.getX() - player.getX(), 2));
-    }
-
-    synchronized void setProcessing(boolean processing) {
-        isProcessing = processing;
     }
 
     //Static for RandomPoseGenerator
@@ -119,10 +114,6 @@ public abstract class EnemyAI {
                 temp[j][i] = m[i][j];
 
         return temp;
-    }
-
-    public boolean isProcessing() {
-        return isProcessing;
     }
 
     private Pose findClosestPlayer(HashSet<Pose> playerPoses) {
@@ -199,29 +190,12 @@ public abstract class EnemyAI {
         return enemy;
     }
 
-    Pose findPoseAroundPlayer(int distanceFromPlayer, boolean pathUnobstructed) {
-        Pose positionToAttack;
-        int expandedRange = 5;
-        int angle = getAngle(closestPlayer, pose);
-        if(pathUnobstructed) {
-            do {
-                positionToAttack = poseInDistance(closestPlayer,
-                        ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
-                        ThreadLocalRandom.current().nextInt(
-                                distanceFromPlayer, distanceFromPlayer + expandedRange));
-                expandedRange += 5;
-            } while ((!pathUnobstructed(positionToAttack, closestPlayer, tileMap))
-                    || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
-        }else{
-            do {
-                positionToAttack = poseInDistance(closestPlayer,
-                        ThreadLocalRandom.current().nextInt(angle - expandedRange, angle + expandedRange),
-                        ThreadLocalRandom.current().nextInt(distanceFromPlayer, distanceFromPlayer + 20));
-                expandedRange += 5;
-            } while ((pathUnobstructed(positionToAttack, closestPlayer, tileMap))
-                    || (!tileNotSolid(Tile.locationToTile(positionToAttack), tileMap)));
-        }
-        return positionToAttack;
+    public synchronized boolean isProcessing() {
+        return isProcessing;
+    }
+
+    public synchronized void setProcessing(boolean processing) {
+        isProcessing = processing;
     }
 
 //    protected abstract Pose generateNextPose();
