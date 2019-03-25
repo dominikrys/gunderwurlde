@@ -419,6 +419,9 @@ public class ProcessGameState extends Thread {
                     playerPoses.add(currentPlayer.getPose());
             }
 
+            if (tileMapChanged)
+                EnemyAI.setTileMap(tileMap);
+
             for (Integer e : enemyIDs) {
                 Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
@@ -435,8 +438,6 @@ public class ProcessGameState extends Thread {
 
                 if (!ai.isProcessing()) {
                     ai.setInfo(currentEnemy, playerPoses);
-                    if (tileMapChanged)
-                        ai.setTileMap(tileMap);
                 }
 
                 // handle enemyAI action
@@ -475,7 +476,21 @@ public class ProcessGameState extends Thread {
                 case WAIT:
                     break;
                 case UPDATE:
+                    Location oldLoc = currentEnemy.getLocation();
                     currentEnemy = ai.getUpdatedEnemy();
+                    Location newLoc = currentEnemy.getLocation();
+                    if (!newLoc.equals(oldLoc)) {
+                        currentEnemy.setLocation(oldLoc);
+                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
+                        }
+                        currentEnemy.setLocation(newLoc);
+                        enemyTilesOn = tilesOn(currentEnemy);
+                        for (int[] enemyTileCords : enemyTilesOn) {
+                            tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
+                        }
+                    }
                     break;
                 default:
                     LOGGER.severe("AIAction " + enemyAction.toString() + " not known!");

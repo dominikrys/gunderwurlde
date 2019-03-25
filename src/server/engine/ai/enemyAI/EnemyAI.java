@@ -28,7 +28,7 @@ public abstract class EnemyAI {
 //    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
-    Tile[][] tileMap;
+    static Tile[][] tileMap;
     //    protected int mapXDim;
 //    protected int mapYDim;
     ActionList actionState;
@@ -194,8 +194,8 @@ public abstract class EnemyAI {
         isProcessing = processing;
     }
 
-    public void setTileMap(Tile[][] tileMap) {
-        this.tileMap = transposeMatrix(tileMap);
+    public static void setTileMap(Tile[][] tm) {
+        tileMap = transposeMatrix(tm);
         int[] tile = { 8, 10 };
         tileNotSolid(tile, tileMap);
     }
