@@ -8,7 +8,7 @@ import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
-import server.engine.state.item.weapon.gun.BuckshotShotgun;
+import server.engine.state.item.consumable.Grenade;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.PlasmaPistol;
@@ -23,6 +23,7 @@ public class Player extends LivingEntity {
     public static final int DEFAULT_ITEM_CAP = 3;
     public static final int DEFAULT_SIZE = EntityList.PLAYER.getSize() / 2;
     public static final double DEFAULT_MASS = 2;
+    public static final double CONSUMABLE_COOLDOWN = 200;
 
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
@@ -43,6 +44,7 @@ public class Player extends LivingEntity {
     protected EnumMap<AmmoList, Integer> maxAmmo;
     protected int currentItem;
     protected int maxItems;
+    protected long lastUseTime;
 
     private boolean paused;
 
@@ -51,7 +53,7 @@ public class Player extends LivingEntity {
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
         items.add(new PlasmaPistol()); // TODO remove testing only
-        items.add(new BuckshotShotgun()); // TODO remove testing only
+        items.add(new Grenade()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
@@ -63,6 +65,7 @@ public class Player extends LivingEntity {
         this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
         this.ammo.put(AmmoList.MAGIC_ESSENCE, 16); // TODO remove testing only
         this.ammo.put(AmmoList.HEAVY_AMMO, 40); // TODO remove testing only
+        this.ammo.put(AmmoList.ROCKET_AMMO, 4); // TODO remove testing only
         this.paused = false;
     }
 
@@ -78,6 +81,14 @@ public class Player extends LivingEntity {
             return teamScore.get(team);
         else
             return 0;
+    }
+
+    public long getLastUseTime() {
+        return lastUseTime;
+    }
+
+    public void setUseTime(long useTime) {
+        this.lastUseTime = useTime;
     }
 
     public int getMaxItems() {

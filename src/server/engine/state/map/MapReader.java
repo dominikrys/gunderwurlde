@@ -3,7 +3,6 @@ package server.engine.state.map;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.enemy.*;
 import server.engine.state.map.tile.Door;
-import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.*;
 
@@ -28,19 +27,19 @@ public class MapReader {
         int xDim = Integer.valueOf(dims.removeFirst());
         int yDim = Integer.valueOf(dims.removeFirst());
 
-        HashMap<Character, Tile> tiles = new HashMap<>();
+        HashMap<Character, server.engine.state.map.tile.Tile> tiles = new HashMap<>();
         String line = file.removeFirst();
         while (!line.isEmpty()) {
             LinkedList<String> tileComp = getComponents(line);
             char ID = tileComp.removeFirst().charAt(0);
-            TileType type = TileType.valueOf(tileComp.removeFirst());
+            TileList type = TileList.valueOf(tileComp.removeFirst());
             TileState state = TileState.valueOf(tileComp.removeFirst());
             double value = Double.valueOf(tileComp.removeFirst());
-            tiles.put(ID, new Tile(type, state, value));
+            tiles.put(ID, new server.engine.state.map.tile.Tile(type, state, value));
             line = file.removeFirst();
         }
 
-        Tile[][] tileMap = new Tile[xDim][yDim];
+        server.engine.state.map.tile.Tile[][] tileMap = new server.engine.state.map.tile.Tile[xDim][yDim];
         int y = 0;
         line = file.removeFirst();
         while (!line.isEmpty()) {
@@ -82,7 +81,7 @@ public class MapReader {
             line = file.removeFirst();
             while (!line.isEmpty()) {
                 LinkedList<String> doorParams = getComponents(line);
-                Tile tileToReturn = tiles.get(doorParams.removeFirst().charAt(0)).getCopy();
+                server.engine.state.map.tile.Tile tileToReturn = tiles.get(doorParams.removeFirst().charAt(0)).getCopy();
                 int[] tileCords = { Integer.valueOf(doorParams.removeFirst()), Integer.valueOf(doorParams.removeFirst()) };
                 doors.put(tileCords, new Door(tileToReturn, Integer.valueOf(doorParams.removeFirst())));
                 line = file.removeFirst();
@@ -127,8 +126,10 @@ public class MapReader {
             return new Boomer();
         case MACHINE_GUNNER:
             return new MachineGunner(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
-            case SNIPER:
+        case SNIPER:
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
+        case THEBOSS:
+                return new TheBoss(Long.valueOf(entityParams.removeFirst()));
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
@@ -136,7 +137,7 @@ public class MapReader {
     }
 
     private static Location compToLocation(LinkedList<String> components) {
-        return Tile.tileToLocation(Integer.valueOf(components.removeFirst()), Integer.valueOf(components.removeFirst()));
+        return server.engine.state.map.tile.Tile.tileToLocation(Integer.valueOf(components.removeFirst()), Integer.valueOf(components.removeFirst()));
     }
 
     private static LinkedList<String> getComponents(String line) {

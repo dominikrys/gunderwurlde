@@ -32,7 +32,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import shared.lists.EntityList;
 import shared.lists.TileState;
-import shared.lists.TileType;
 
 public class WaveSetter {
 	

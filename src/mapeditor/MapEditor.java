@@ -39,11 +39,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
-import shared.lists.EntityList;
 import shared.lists.MapEditorAssetList;
 import shared.lists.Team;
 import shared.lists.TileState;
-import shared.lists.TileType;
+import shared.lists.TileList;
 
 public class MapEditor {
 	
@@ -112,7 +111,7 @@ public class MapEditor {
 	private GraphicsContext mapGc;
 	private Tile[][] mapTiles;
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
-	private HashMap<TileType, Image> tileSprite;
+	private HashMap<TileList, Image> tileSprite;
 	private boolean keysActivated;
 	private int selectedX;
 	private int selectedY;
@@ -143,7 +142,7 @@ public class MapEditor {
 		return this.mapTiles;
 	}
 	
-	public HashMap<TileType, Image> getTileSprite() {
+	public HashMap<TileList, Image> getTileSprite() {
 		return this.tileSprite;
 	}
 	
@@ -646,8 +645,8 @@ public class MapEditor {
 	
 	// Load tile sprites
 	private void loadTileSprite() {
-		tileSprite = new HashMap<TileType, Image>();
-		EnumSet.allOf(TileType.class).forEach(tileTypes -> tileSprite.put(tileTypes, new Image(tileTypes.getEntityListName().getPath())));
+		tileSprite = new HashMap<TileList, Image>();
+		EnumSet.allOf(TileList.class).forEach(tileList -> tileSprite.put(tileList, new Image(tileList.getEntityListName().getPath())));
 	}
 	
 	// Tile selection

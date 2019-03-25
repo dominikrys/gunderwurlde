@@ -1,5 +1,6 @@
 package client.input;
 
+import client.Client;
 import client.GameHandler;
 import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
@@ -8,11 +9,11 @@ import java.util.LinkedHashSet;
 
 public class PickItem extends Action {
 
-    private GameHandler handler;
+    private Client handler;
     private PlayerView playerView;
     private LinkedHashSet<ItemDropView> itemDropView;
 
-    public PickItem(GameHandler handler, PlayerView playerView, LinkedHashSet<ItemDropView> itemDropView) {
+    public PickItem(Client handler, PlayerView playerView, LinkedHashSet<ItemDropView> itemDropView) {
         super(handler, playerView);
         this.handler = handler;
         this.playerView = playerView;

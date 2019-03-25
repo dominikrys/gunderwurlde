@@ -25,9 +25,15 @@ import shared.Constants;
 import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+import shared.lists.ItemType;
 import shared.lists.Team;
+import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
+
+import java.nio.file.StandardWatchEventKinds;
+import java.util.Stack;
 
 /**
  * HUD class. Contains the HUD for the game
@@ -175,17 +181,14 @@ public class HUD extends BorderPane {
 
     /**
      * Update HUD with new data
-     *
-     * @param currentPlayer          PlayerView for current player
+     * @param gameView GameView object
      * @param rendererResourceLoader Resources for renderer
      * @param fontManaspace28        Font of size 28
      * @param fontManaspace18        Font of size 18
-     * @param playerPose             Pose of player for whom the HUD is
-     * @param mapWidth               Width of the map, in pixels
-     * @param mapHeight              Height of the map, in pixels
+     * @param currentPlayer          PlayerView for current player
      */
-    public void updateHUD(PlayerView currentPlayer, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18,
-                          Pose playerPose, int mapWidth, int mapHeight) {
+    public void updateHUD(GameView gameView, RendererResourceLoader rendererResourceLoader, Font fontManaspace28, Font fontManaspace18,
+                          PlayerView currentPlayer) {
         // Update score
         playerScoreNumber.setText(Integer.toString(currentPlayer.getScore()));
 
@@ -268,26 +271,29 @@ public class HUD extends BorderPane {
         HBox currentGunInfo = new HBox();
 
         // Add ammo amount to hud if the item has ammo
-        if (currentItem.getAmmoType() != AmmoList.NONE) {
-            // Make label for current ammo in item
-            Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
-            ammoInGun.setFont(fontManaspace28);
-            ammoInGun.setTextFill(Color.BLACK);
-            // Make label for total ammo in clip
-            Label totalAmmoInClip = new Label("/" + currentItem.getClipSize());
-            totalAmmoInClip.setFont(fontManaspace18);
-            totalAmmoInClip.setTextFill(Color.BLACK);
+        if (currentItem.getItemType() == ItemType.GUN) {
+            GunView currentGun = (GunView) currentItem;
+            if (currentGun.getAmmoType() != AmmoList.NONE) {
+                // Make label for current ammo in item
+                Label ammoInGun = new Label(Integer.toString(currentGun.getAmmoInClip()),
+                        new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
+                ammoInGun.setFont(fontManaspace28);
+                ammoInGun.setTextFill(Color.BLACK);
+                // Make label for total ammo in clip
+                Label totalAmmoInClip = new Label("/" + currentGun.getClipSize());
+                totalAmmoInClip.setFont(fontManaspace18);
+                totalAmmoInClip.setTextFill(Color.BLACK);
 
-            //Make label for total amount of ammo the current item uses
-            Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentItem.getAmmoType(), 0)));
-            totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
+                //Make label for total amount of ammo the current item uses
+                Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentGun.getAmmoType(), 0)));
+                totalAmmoForCurrentItem.setFont(fontManaspace28);
+                totalAmmoForCurrentItem.setTextFill(Color.BLACK);
 
-            // Add info on current gun to the right element
-            currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
-            // Add the total amount of ammo the current gun uses under the gun info
-            ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
+                // Add info on current gun to the right element
+                currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
+                // Add the total amount of ammo the current gun uses under the gun info
+                ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
+            }
         } else {
             // Make label for infinite use if it's not a weapon
             Label currentAmmo = new Label("∞");
@@ -299,6 +305,17 @@ public class HUD extends BorderPane {
             ammoBox.getChildren().add(currentGunInfo);
         }
 
+        // Update minimap
+        updateMiniMap(gameView, currentPlayer);
+    }
+
+    /**
+     * Create minimap
+     * @param gameView GameView object representing the current state of the game
+     * @param currentPlayer PlayerView for who the hud is
+     * @return MiniMap as stackpane
+     */
+    private void updateMiniMap(GameView gameView, PlayerView currentPlayer) {
         // Make indicator for player location on minimap
         int playerRectangleSize = 4;
         Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
@@ -306,12 +323,12 @@ public class HUD extends BorderPane {
 
         // Set correct position of player location on minimap
         AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
-        AnchorPane.setLeftAnchor(playerRectangle, (playerPose.getX() + Constants.TILE_SIZE / 2) *
-                (miniMapRectangle.getWidth() / mapWidth) - playerRectangleSize / 2);
-        AnchorPane.setTopAnchor(playerRectangle, (playerPose.getY() + Constants.TILE_SIZE / 2) *
-                (miniMapRectangle.getHeight() / mapHeight) - playerRectangleSize / 2);
+        AnchorPane.setLeftAnchor(playerRectangle, (currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
+                (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
+        AnchorPane.setTopAnchor(playerRectangle, (currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
+                (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
 
-        // Update pane
+        // Add all elements to the minimap and return
         miniMapPane.getChildren().clear();
         miniMapPane.getChildren().addAll(miniMapRectangle, playerRectanglePane);
         miniMapPane.setAlignment(Pos.TOP_RIGHT);

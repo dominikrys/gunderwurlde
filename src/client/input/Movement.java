@@ -1,6 +1,6 @@
 package client.input;
 
-import client.GameHandler;
+import client.Client;
 import client.Settings;
 import javafx.scene.image.Image;
 import shared.Pose;
@@ -12,18 +12,18 @@ import java.util.LinkedHashSet;
 
 public class Movement extends Action{
 	
-	private GameHandler handler;
+	private Client handler;
 	private PlayerView playerView;
 	private Settings settings;
-	private Collision collision;
+	//private Collision collision;
 	//private PickItem pickItem;
 
-	public Movement(GameHandler handler, PlayerView playerView, Image pImage, TileView[][] tileMap, Settings settings, LinkedHashSet<ItemDropView> itemDropView) {
+	public Movement(Client handler, PlayerView playerView, Image pImage, TileView[][] tileMap, Settings settings, LinkedHashSet<ItemDropView> itemDropView) {
 		super(handler, playerView);
 		this.handler = handler;
 		this.playerView = playerView;
 		this.settings = settings;
-		this.collision = new Collision(tileMap, pImage);
+		//this.collision = new Collision(tileMap, pImage);
 		//this.pickItem = new PickItem(handler, playerView, itemDropView);
 	}
 	

@@ -2,14 +2,17 @@ package server.engine.state.entity.projectile;
 
 import java.util.LinkedList;
 
+import server.engine.state.ContainsAttack;
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.attack.Attack;
+import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
-public class CrystalBullet extends Projectile {
+public class CrystalBullet extends Projectile implements ContainsAttack {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
     public static final int DEFAULT_SIZE = EntityList.CRYSTAL_BULLET.getSize() / 2;
@@ -56,7 +59,12 @@ public class CrystalBullet extends Projectile {
         super.setLocation(location);
     }
 
-    public LinkedList<Projectile> getSplitProjectiles() {
+    @Override
+    public Attack getAttack() {
+        return new ProjectileAttack(getSplitProjectiles());
+    }
+
+    private LinkedList<Projectile> getSplitProjectiles() {
         LinkedList<Projectile> newProjectiles = new LinkedList<>();
 
         if (numberOfSplits > 0 && ticksPassed > 2) {

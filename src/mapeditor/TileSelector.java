@@ -20,15 +20,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
 import shared.lists.TileState;
-import shared.lists.TileType;
+import shared.lists.TileList;
 
 public class TileSelector {
 	
 	private MapEditor mapEditor;
 	private int tileX;
 	private int tileY;
-	private HashMap<TileType, Image> tileSprite;
-	private HashMap<TileType, Tile> tileSettings;
+	private HashMap<TileList, Image> tileSprite;
+	private HashMap<TileList, Tile> tileSettings;
 	private Stage stage;
 	private StackPane root;
 	private Scene scene;
@@ -189,7 +189,7 @@ public class TileSelector {
 			saveButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
-					for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
+					for(Map.Entry<TileList, Tile> entry : tileSettings.entrySet()) {
 						if(entry.getKey().toString().equals(tileMenu.getValue())) {
 							mapEditor.drawTile(tileX, tileY, entry.getValue());
 						}
@@ -219,7 +219,7 @@ public class TileSelector {
 			paintSelectButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
-					for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
+					for(Map.Entry<TileList, Tile> entry : tileSettings.entrySet()) {
 						if(entry.getKey().toString().equals(tileMenu.getValue())) {
 							mapEditor.setPaintTile(entry.getValue());
 						}
@@ -255,7 +255,7 @@ public class TileSelector {
 	
 	// Display info of selected tile
 	private void changeTileSelection() {
-		for(Map.Entry<TileType, Tile> entry : tileSettings.entrySet()) {
+		for(Map.Entry<TileList, Tile> entry : tileSettings.entrySet()) {
 			if(entry.getKey().toString().equals(tileMenu.getValue())) {
 				tileImageView.setImage(tileSprite.get(entry.getKey()));
 				tileTypeLabel2.setText(entry.getKey().toString());
@@ -268,20 +268,15 @@ public class TileSelector {
 	
 	// Get default settings for tiles
 	private void getTileSettings() {
-		tileSettings = new HashMap<TileType, Tile>();
-		EnumSet.allOf(TileType.class).forEach(tileType -> {
-			switch(tileType) {
-				case WOOD:
-					tileSettings.put(tileType, new Tile(tileType, TileState.SOLID, 0.7));
-					break;
-				case GRASS:
-					tileSettings.put(tileType, new Tile(tileType, TileState.PASSABLE, 0.3));
-					break;
-				case DOOR:
-					tileSettings.put(tileType, new Tile(tileType, TileState.SOLID, 0.9));
-					break;
+		tileSettings = new HashMap<TileList, Tile>();
+		EnumSet.allOf(TileList.class).forEach(tileList -> {
+			if(tileList.getTileState() == TileState.SOLID) {
+				tileSettings.put(tileList, new Tile(tileList, tileList.getTileState(), tileList.getBounceCoefficient()));
 			}
-			tileMenu.getItems().add(tileType.toString());
+			else {
+				tileSettings.put(tileList, new Tile(tileList, tileList.getTileState(), tileList.getFriction()));
+			}
+			tileMenu.getItems().add(tileList.toString());
 		});
 	}
 }

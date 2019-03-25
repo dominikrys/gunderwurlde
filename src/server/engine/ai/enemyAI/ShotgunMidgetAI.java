@@ -33,6 +33,6 @@ public class ShotgunMidgetAI extends ZombieAI{
     @Override
     protected Attack getAttackObj() {
         int attackAngle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(shotgun.getShotProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+        return new ProjectileAttack(shotgun.getProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
     }
 }

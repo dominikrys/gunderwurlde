@@ -12,7 +12,9 @@ import java.util.logging.Logger;
 
 import server.engine.ai.AIAction;
 import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.state.ContainsAttack;
 import server.engine.state.GameState;
+import server.engine.state.HasEffect;
 import server.engine.state.entity.Entity;
 import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
@@ -21,10 +23,10 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.player.Player;
-import server.engine.state.entity.projectile.CrystalBullet;
-import server.engine.state.entity.projectile.HasEffect;
 import server.engine.state.entity.projectile.Projectile;
+import server.engine.state.item.CreatesProjectiles;
 import server.engine.state.item.Item;
+import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.map.GameMap;
@@ -39,7 +41,6 @@ import shared.Location;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
-import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 import shared.lists.ItemType;
 import shared.lists.MapList;
@@ -48,6 +49,7 @@ import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.EnemyView;
@@ -73,12 +75,19 @@ public class ProcessGameState extends Thread {
     private ClientRequests clientRequests;
     private boolean handlerClosing;
 
-    public ProcessGameState(HasEngine handler, MapList mapName, String hostName, Team hostTeam) {
+
+    public ProcessGameState(HasEngine handler, MapList mapName, LinkedHashMap<String, Team> playersToAdd) {
         this.handler = handler;
         LinkedHashMap<Integer, LivingEntity> players = new LinkedHashMap<>();
-        Player hostPlayer = new Player(hostTeam, hostName);
-        players.put(hostPlayer.getID(), hostPlayer);
+        for (Map.Entry<String, Team> player : playersToAdd.entrySet()) {
+            Player playerToAdd = new Player(player.getValue(), player.getKey());
+            players.put(playerToAdd.getID(), playerToAdd);
+            System.out.println(player.getValue());
+        }
+
+
         this.gameState = new GameState(MapReader.readMap(mapName), players);
+
         this.handlerClosing = false;
 
         // setup GameView
@@ -95,7 +104,10 @@ public class ProcessGameState extends Thread {
         }
 
         LinkedHashSet<PlayerView> playerViews = new LinkedHashSet<>();
-        playerViews.add(toPlayerView(hostPlayer));
+        for (Map.Entry<Integer, LivingEntity> player : players.entrySet()) {
+            Player playerToView = (Player) player.getValue();
+            playerViews.add(toPlayerView(playerToView));
+        }
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
@@ -109,10 +121,6 @@ public class ProcessGameState extends Thread {
         LOGGER.info("Stopping engine.");
         this.handlerClosing = true;
         this.interrupt();
-    }
-
-    public void addPlayer(String playerName, Team team) { // TODO remove if not used
-        gameState.addPlayer(new Player(team, playerName));
     }
 
     @Override
@@ -284,16 +292,39 @@ public class ProcessGameState extends Thread {
                     }
                 }
 
-                if (request.getShoot()) {
+                long useTime = currentPlayer.getLastUseTime();
+                if (request.getShoot() && useTime < lastProcessTime) {
                     if (currentItem.getItemType() == ItemType.GUN) {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             currentPlayer.setCurrentAction(ActionList.ATTACKING);
-                            LinkedList<Projectile> shotProjectiles = currentGun.getShotProjectiles(playerPose, currentPlayer.getTeam());
+                            LinkedList<Projectile> shotProjectiles = currentGun.getProjectiles(playerPose, currentPlayer.getTeam());
                             for (Projectile p : shotProjectiles) {
                                 newProjectiles.add(p);
                                 projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
+                        }
+                    } else if (currentItem.getItemType() == ItemType.CONSUMEABLE
+                            && (lastProcessTime - useTime) > Player.CONSUMABLE_COOLDOWN) {
+                        Consumable currentConsumable = (Consumable) currentItem;
+                        // TODO use enum to improve performance?
+                        if (currentItem instanceof CreatesProjectiles) {
+                            newProjectiles.addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam()));
+                        } else if (currentItem instanceof HasEffect) {
+                            // TODO
+                        } else if (currentItem instanceof ContainsAttack) {
+                            // TODO
+                        } else {
+                            LOGGER.warning("Unknown consumable used: " + currentItem.getItemListName().toString());
+                        }
+
+                        if (currentConsumable.isRemoved()) {
+                            currentPlayer.setUseTime(lastProcessTime + 150); // TODO better if this could be solved client-side
+                            if (!currentPlayer.removeItem(currentPlayer.getCurrentItemIndex())) {
+                                LOGGER.warning("Player: " + playerID + "Failed to remove consumable.");
+                            }
+                        } else {
+                            currentPlayer.setUseTime(lastProcessTime);
                         }
                     }
                 }
@@ -416,27 +447,7 @@ public class ProcessGameState extends Thread {
                     for (Attack a : attacks) {
                         switch (a.getAttackType()) {
                         case AOE:
-                            AoeAttack aoeAttack = (AoeAttack) a;
-                            LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
-                            LinkedHashSet<Integer> affectedPlayers = new LinkedHashSet<>();
-
-                            for (int[] tileCords : tilesOn) {
-                                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                                LinkedHashSet<Integer> playersOnTile = tileOn.getPlayersOnTile();
-
-                                for (Integer playerID : playersOnTile) {
-                                    if (affectedPlayers.contains(playerID))
-                                        continue;
-                                    Player playerBeingChecked = (Player) livingEntities.get(playerID);
-                                    if (haveCollided(aoeAttack, playerBeingChecked)) {
-                                        affectedPlayers.add(playerID);
-                                        playerBeingChecked.damage(aoeAttack.getDamage());
-                                        playerBeingChecked.setTakenDamage(true);
-                                        playerBeingChecked.addNewForce(aoeAttack.getForce(playerBeingChecked.getPose(), currentEnemy.getLocation()));
-                                        livingEntities.put(playerID, playerBeingChecked);
-                                    }
-                                }
-                            }
+                            livingEntities = applyAoeAttack(tileMap, livingEntities, currentEnemy.getLocation(), (AoeAttack) a);
                             break;
                         case PROJECTILE:
                             ProjectileAttack projectileAttack = (ProjectileAttack) a;
@@ -444,6 +455,9 @@ public class ProcessGameState extends Thread {
                                 newProjectiles.add(p);
                                 projectilesView.add(new ProjectileView(p.getPose(), 1, p.getEntityListName(), p.isCloaked(), p.getStatus()));
                             }
+                            break;
+                        default:
+                            LOGGER.warning("Unkown attack: " + a.getAttackType().toString() + ". from enemy: " + currentEnemy.getID());
                             break;
                         }
                     }
@@ -508,75 +522,93 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
 
             for (Projectile p : projectiles) {
-                boolean removed = false;
                 Projectile currentProjectile = p;
-                double distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
+                boolean removed = currentProjectile.isRemoved();
+                
+                if (!removed) {
+                    double distanceMoved = getDistanceMoved(currentTimeDifference, currentProjectile.getSpeed());
 
-                if (currentProjectile.maxRangeReached(distanceMoved)) { // check if max range
-                    removed = true;
-                } else {
-                    // move the projectile
-                    Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
-                            distanceMoved);
-                    currentProjectile.setLocation(newLocation);
-                    LinkedHashSet<int[]> tilesOn = tilesOn(currentProjectile);
-                    for (int[] tileCords : tilesOn) {
-                        Tile tileOn = null;
-                        try {
-                            tileOn = tileMap[tileCords[0]][tileCords[1]];
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            removed = true;
-                            LOGGER.warning("Projectile went out of bounds. Is the map complete?");
-                            break;
-                        }
-
-                        // remove if projectile hit solid tile
-                        if (tileOn.getState() == TileState.SOLID) {
-                            removed = currentProjectile.isRemoved(tileOn, Tile.tileToLocation(tileCords[0], tileCords[1]));
-                            tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
-                            break;
-                        }
-                    }
-
-                    // check if projectile collides with a living entity
-                    if (!removed) {
+                    if (currentProjectile.maxRangeReached(distanceMoved)) { // check if max range
+                        removed = true;
+                    } else {
+                        // move the projectile
+                        Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
+                                distanceMoved);
+                        currentProjectile.setLocation(newLocation);
+                        LinkedHashSet<int[]> tilesOn = tilesOn(currentProjectile);
                         for (int[] tileCords : tilesOn) {
-                            Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                            LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
-
-                            for (Integer entityID : entitiesOnTile) {
-                                LivingEntity entityBeingChecked = livingEntities.get(entityID);
-
-                                if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
-                                    entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
-                                    entityBeingChecked.setTakenDamage(true);
-
-                                    if (currentProjectile instanceof HasEffect) {
-                                        if (entityBeingChecked.hasEffect())
-                                            entityBeingChecked = (Enemy) entityBeingChecked.getEffect().clearEffect(entityBeingChecked);
-                                        entityBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
-                                    }
-                                    removed = true;
-
-                                    if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
-                                        Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
-                                    }
-                                    livingEntities.put(entityID, entityBeingChecked);
-                                    break; // bullet was removed no need to check other enemies
-                                }
+                            Tile tileOn = null;
+                            try {
+                                tileOn = tileMap[tileCords[0]][tileCords[1]];
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                removed = true;
+                                LOGGER.warning("Projectile went out of bounds. Is the map complete?");
+                                break;
                             }
 
-                            if (removed)
-                                break; // Projectile is already gone.
+                            // remove if projectile hit solid tile
+                            if (tileOn.getState() == TileState.SOLID) {
+                                removed = currentProjectile.isRemoved(tileOn, Tile.tileToLocation(tileCords[0], tileCords[1]));
+                                tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
+                                break;
+                            }
+                        }
+
+                        // check if projectile collides with a living entity
+                        if (!removed) {
+                            for (int[] tileCords : tilesOn) {
+                                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
+                                LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
+                                for (Integer entityID : entitiesOnTile) {
+                                    LivingEntity entityBeingChecked = livingEntities.get(entityID);
+
+                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(currentProjectile, entityBeingChecked)) {
+                                        entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
+                                        entityBeingChecked.setTakenDamage(true);
+
+                                        if (currentProjectile instanceof HasEffect) {
+                                            if (entityBeingChecked.hasEffect())
+                                                entityBeingChecked = entityBeingChecked.getEffect().clearEffect(entityBeingChecked);
+                                            entityBeingChecked.addEffect(((HasEffect) currentProjectile).getEffect());
+                                        }
+                                        removed = currentProjectile.isRemoved(entityBeingChecked);
+
+                                        if (entityBeingChecked.damage(currentProjectile.getDamage()) && entityBeingChecked instanceof Enemy) {
+                                            Player.changeScore(currentProjectile.getTeam(), ((Enemy) entityBeingChecked).getScoreOnKill());
+                                        }
+                                        livingEntities.put(entityID, entityBeingChecked);
+                                        if (removed)
+                                            break; // Projectile is already gone.
+                                    }
+                                }
+
+                                if (removed)
+                                    break; // Projectile is already gone.
+                            }
                         }
                     }
-
                 }
 
                 // process projectile removal
                 if (removed) {
-                    if (currentProjectile.getEntityListName() == EntityList.CRYSTAL_BULLET) {
-                        newProjectiles.addAll(((CrystalBullet) currentProjectile).getSplitProjectiles());
+                    if (currentProjectile instanceof ContainsAttack) {
+                        Attack attack = ((ContainsAttack) currentProjectile).getAttack();
+                        switch (attack.getAttackType()) {
+                        case AOE:
+                            livingEntities = applyAoeAttack(tileMap, livingEntities, currentProjectile.getLocation(), (AoeAttack) attack);
+                            break;
+                        case PROJECTILE:
+                            ProjectileAttack projectileAttack = (ProjectileAttack) attack;
+                            for (Projectile p2 : projectileAttack.getProjectiles()) {
+                                newProjectiles.add(p2);
+                                projectilesView.add(new ProjectileView(p2.getPose(), 1, p2.getEntityListName(), p2.isCloaked(), p2.getStatus()));
+                            }
+                            break;
+                        default:
+                            LOGGER.warning("Unkown attack: " + attack.getAttackType().toString() + ". from projectile: "
+                                    + currentProjectile.getEntityListName().toString());
+                            break;
+                        }
                     }
                 } else {
                     newProjectiles.add(currentProjectile);
@@ -869,7 +901,7 @@ public class ProcessGameState extends Thread {
         return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
     }
 
-    private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map
+    private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map?
         Location loc = e.getLocation();
         int radius = e.getSize();
         double x = loc.getX();
@@ -892,15 +924,48 @@ public class ProcessGameState extends Thread {
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
-            if (i instanceof Gun) {
+            if (i.getItemType() == ItemType.GUN) {
                 Gun g = (Gun) i;
-                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
+                playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
             } else {
-                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0, false, 0));
+                playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
                 p.getAmmoList(), p.getID(), p.getTeam(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(), p.isMoving(), p.isPaused());
+    }
+
+    private static LinkedHashMap<Integer, LivingEntity> applyAoeAttack(Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities, Location source,
+            AoeAttack aoeAttack) {
+        LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
+        LinkedHashSet<Integer> affectedEntities = new LinkedHashSet<>();
+
+        for (int[] tileCords : tilesOn) {
+            Tile tileOn;
+
+            // easy way to handle attack clipping out of the map.
+            try {
+                tileOn = tileMap[tileCords[0]][tileCords[1]];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                continue;
+            }
+
+            LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
+
+            for (Integer entitiyID : entitiesOnTile) {
+                if (affectedEntities.contains(entitiyID))
+                    continue;
+                LivingEntity entitiyBeingChecked = livingEntities.get(entitiyID);
+                if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && haveCollided(aoeAttack, entitiyBeingChecked)) {
+                    affectedEntities.add(entitiyID);
+                    entitiyBeingChecked.damage(aoeAttack.getDamage());
+                    entitiyBeingChecked.setTakenDamage(true);
+                    entitiyBeingChecked.addNewForce(aoeAttack.getForce(entitiyBeingChecked.getPose(), source));
+                    livingEntities.put(entitiyID, entitiyBeingChecked);
+                }
+            }
+        }
+        return livingEntities;
     }
 
     private static int[] getMostSignificatTile(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {

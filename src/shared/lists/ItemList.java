@@ -33,7 +33,10 @@ public enum ItemList {
     
     //Health
     HEART_FULL(EntityList.HEART_FULL, null),
-    HEART_HALF(EntityList.HEART_HALF, null);
+    HEART_HALF(EntityList.HEART_HALF, null),
+
+    // Consumables
+    GRENADE(EntityList.GRENADE, null);
 
     private String spritePath;
     private EntityList entityListName;

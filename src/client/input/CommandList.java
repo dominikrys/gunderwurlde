@@ -6,5 +6,6 @@ public enum CommandList {
 	DROPITEM,
 	MOVEMENT,
 	RELOAD,
-	TURN;
+	TURN,
+	CONSUMABLE;
 }

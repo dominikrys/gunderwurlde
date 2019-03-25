@@ -1,6 +1,7 @@
 package server.engine.state.entity.projectile;
 
 import server.engine.state.entity.Entity;
+import server.engine.state.entity.LivingEntity;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Location;
@@ -9,7 +10,7 @@ import shared.lists.EntityList;
 import shared.lists.Team;
 
 public abstract class Projectile extends Entity {
-    private static final int FORCE_PER_DMG = 1000;
+    private static final int FORCE_PER_DMG = 300;
 
     protected int speed; // max ~1800
     protected int damage;
@@ -19,7 +20,7 @@ public abstract class Projectile extends Entity {
     protected Team team;
 
     Projectile(int speed, int damage, EntityList entityListName, int size, int max_range, Pose pose, Team team) {
-        super(pose, size, entityListName);
+        super(pose, size + 1, entityListName);
         this.speed = speed;
         this.damage = damage;
         this.max_range = max_range;
@@ -80,7 +81,15 @@ public abstract class Projectile extends Entity {
         return new Force(pose.getDirection(), Math.pow(damage, 1.2) * FORCE_PER_DMG);
     }
 
+    public boolean isRemoved() {
+        return false;
+    }
+
     public boolean isRemoved(Tile tile, Location tileLocation) {
+        return true;
+    }
+
+    public boolean isRemoved(LivingEntity entity) {
         return true;
     }
 

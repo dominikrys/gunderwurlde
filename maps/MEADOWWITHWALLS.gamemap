@@ -12,20 +12,20 @@ W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G W W W W W W W W W W W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G W G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G W G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G W W W W W W W W W W W G G G G G G G G G G G G W
+W G G G G G G W W W G G G G G G G G G G G G W W W G G G G G G W
+W G G G G G W W G G G G G G G G G G G G G G G G W W G G G G G W
+W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
+W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
+W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
+W G G G G G W W G G G G G G G G G G G G G G G G W W G G G G G W
+W G G G G G G W W W G G G G G G G G G G G G W W W G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
@@ -64,7 +64,7 @@ MIDGET 1 2000
 
 #Rounds wave per line
 #Round1
-SNIPER 300
+THEBOSS 1000
 0 1000 1 1
 
 

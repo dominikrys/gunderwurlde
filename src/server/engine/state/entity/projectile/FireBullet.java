@@ -1,5 +1,6 @@
 package server.engine.state.entity.projectile;
 
+import server.engine.state.HasEffect;
 import server.engine.state.effect.FireEffect;
 import server.engine.state.effect.StatusEffect;
 import server.engine.state.entity.Entity;

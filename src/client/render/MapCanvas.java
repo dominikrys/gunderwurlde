@@ -14,7 +14,9 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+import shared.lists.ItemType;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.entity.*;
 
@@ -83,13 +85,13 @@ public class MapCanvas extends Canvas {
         int mapX = gameView.getXDim();
         int mapY = gameView.getYDim();
 
-        // Iterate through the map, rending each tile on canvas
+        // Iterate through the map, rending each tileList on canvas
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
-                // Get tile graphic
-                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileType().getEntityListName());
+                // Get tileList graphic
+                Image tileImage = rendererResourceLoader.getSprite(gameView.getTileMap()[x][y].getTileList().getEntityListName());
 
-                // Add tile to canvas
+                // Add tileList to canvas
                 mapGC.drawImage(tileImage, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE, Constants.TILE_SIZE,
                         Constants.TILE_SIZE);
             }
@@ -276,7 +278,7 @@ public class MapCanvas extends Canvas {
                 // Add animation to animationhashmap
                 playersOnMapAnimations.put(currentPlayer.getID(), new AnimatedSprite(
                         rendererResourceLoader.getSprite(entityToRender), 32, 45,
-                        5, currentPlayer.getCurrentItem().getReloadTime() / 5,
+                        5, ((GunView) currentPlayer.getCurrentItem()).getReloadTime() / 5,
                         0, AnimationType.RELOAD));
             }
         }
@@ -309,7 +311,7 @@ public class MapCanvas extends Canvas {
             boolean hasGun = false;
 
             for (ItemView iv : currentPlayer.getItems()) {
-                if (iv.getAmmoType() != AmmoList.NONE) {
+                if (iv.getItemType() == ItemType.GUN) {
                     hasGun = true;
                     break;
                 }

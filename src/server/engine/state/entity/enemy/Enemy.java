@@ -29,7 +29,7 @@ public abstract class Enemy extends LivingEntity {
     public EnemyAI getAI() {
         return ai;
     }
-    
+
     public void setAI(EnemyAI ai) {
         this.ai = ai;
     }
@@ -61,3 +61,4 @@ public abstract class Enemy extends LivingEntity {
     }
 
 }
+

@@ -7,7 +7,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import shared.Constants;
+import shared.lists.ItemType;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.entity.PlayerView;
 
 public class MouseHandler extends UserInteraction {
@@ -154,10 +156,10 @@ public class MouseHandler extends UserInteraction {
 			public void handle(long now) {
 				
 				if(hold == true) {
-					if(playerView.getCurrentItem().isAutoFire()) {
+					//if(playerView.getCurrentItem().isAutoFire()) {
 						distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
 						attack.attack(distance);
-					}
+					//}
 				}
 			}
 		};

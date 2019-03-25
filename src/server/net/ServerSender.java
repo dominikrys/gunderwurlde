@@ -1,75 +1,126 @@
 package server.net;
 
 import shared.view.GameView;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.*;
-import java.util.Enumeration;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
+import client.net.Addressing;
 
-
+/**
+ * Thread to handle sending of GameViews to the clients
+ */
 public class ServerSender extends Thread {
-    MulticastSocket senderSocket;
-    InetAddress senderAddress;
-    Boolean running;
-    DatagramPacket packet;
-    int port;
-    byte[] buffer;
 
-    public ServerSender(InetAddress address, MulticastSocket socket, int port) throws SocketException {
-        this.senderAddress = address;
-        this.senderSocket = socket;
+    /**
+     * Socket to send GameViews to the client
+     */
+    private MulticastSocket sendSocket;
+
+    /**
+     * Address the server will send GameViews to
+     */
+    private InetAddress sendAddress;
+
+    /**
+     * boolean to tell the thread to keep running
+     */
+    private Boolean running;
+
+    /**
+     * packet used to receive and send information when joining game
+     */
+    private DatagramPacket packet;
+
+    /**
+     * port the server will send gameViews across
+     */
+    private int port;
+
+    /**
+     * byte array to hold the GameView to be sent to clients
+     */
+    private byte[] buffer;
+
+    /**
+     * integar value used to know when the buffer size for the client must increase
+     */
+    private int maxBufferSize;
+
+    /**
+     * Constructor
+     * @param address Address to send the GameViews to
+     * @param socket Socket used to send the GameViews to the clients
+     * @param port Port used to Send the Gameviews to the clients on
+     */
+    public ServerSender(InetAddress address, MulticastSocket socket, int port) {
+        this.sendAddress = address;
+        this.sendSocket = socket;
         this.port = port;
         running = true;
-        senderSocket.setInterface(findInetAddress());
         this.start();
     }
 
+    /**
+     * Method to get if the thread is still running
+     * @return if the thread is still running
+     */
     public boolean getRunning() {
         return running;
     }
 
-    public void stopRunning() {
+    /**
+     * Ends the thread by setting running to false
+     */
+    public void close() {
         this.running = false;
     }
 
+    /**
+     * run method that keeps the thread alive
+     */
     public void run() {
         while (running) {
             Thread.yield();
-
         }
-        System.out.println("Ending server sender");
+        System.out.println("Closing serversender");
     }
 
-    // sends a confirmation back to the client that the message has been received
-    // in future will be used to send the continuous game state to the user/users
+    /**
+     * Method to send the GameView to the clients
+     * @param view The GameView to be sent to the clients
+     */
     public void send(GameView view) {
-        // System.out.println("Server received new GameView");
         try {
-            // Turn the received GameView into a byte array
-            // Output Stream for the byteArray. Will grow as data is added
-            // Allows the object to be written to a byte array
+            // byte array stream to turn the objects to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             // Output stream that will hold the object
-            ObjectOutputStream out = null;
+            ObjectOutputStream out = new ObjectOutputStream(bos);
             try {
-                // OOutputStream to read the GameView into the byteArray
-                out = new ObjectOutputStream(bos);
-                // Writes the view object into the BAOutputStream
+                // Writes the view object into the byte
                 out.writeObject(view);
-                //flushes anything in the OOutputStream
                 out.flush();
-                // Writes the info in the BOutputStream to a byte array to be transmitted
+                int buffersize = bos.toByteArray().length;
+                // check if the buffersize needs to be increased for the client
+                if(buffersize > maxBufferSize){
+                    buffer = ByteBuffer.allocate(8).putInt(1).putInt(buffersize).array();
+                    maxBufferSize = buffersize;
+                    packet = new DatagramPacket(buffer, buffer.length, sendAddress, port);
+                    sendSocket.send(packet);
+                }
+                // set the buffer to the new view
                 buffer = bos.toByteArray();
-                // System.out.println("Size of packet to be sent " + buffer.length);
-                packet = new DatagramPacket(buffer, buffer.length, senderAddress, port);
-                senderSocket.send(packet);
-                // System.out.println("Packet sent from serversender");
-
+                // Create a packet and send it to the clients
+                packet = new DatagramPacket(buffer, buffer.length, sendAddress, port);
+                sendSocket.send(packet);
             } finally {
                 try {
                     bos.close();
+                    out.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -82,27 +133,6 @@ public class ServerSender extends Thread {
             e.printStackTrace();
         }
     }
-
-    private InetAddress findInetAddress() {
-        InetAddress addr = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            //while (interfaces.hasMoreElements()) {
-            NetworkInterface iface = null;
-            if (interfaces.hasMoreElements()) {
-                iface = interfaces.nextElement();
-            }
-
-            if (!iface.isLoopback() || iface.isUp()) {
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    addr = addresses.nextElement();
-                }
-            }
-        } catch (SocketException e) {
-
-        }
-        return addr;
-    }
 }
+
 

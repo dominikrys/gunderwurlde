@@ -1,14 +1,15 @@
 package client.input;
 
+import client.Client;
 import client.GameHandler;
 import shared.view.entity.PlayerView;
 
 public class DropItem extends Action{
 	
-	private GameHandler handler;
+	private Client handler;
 	private PlayerView playerView;
 
-	public DropItem(GameHandler handler, PlayerView playerView) {
+	public DropItem(Client handler, PlayerView playerView) {
 		super(handler, playerView);
 		this.handler = handler;
 		this.playerView = playerView;

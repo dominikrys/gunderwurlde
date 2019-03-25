@@ -1,5 +1,6 @@
 package client.render;
 
+import client.Client;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PlayMenuController;
@@ -8,10 +9,13 @@ import client.input.KeyboardHandler;
 import client.input.MouseHandler;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -135,12 +139,15 @@ public class GameRenderer implements Runnable {
      * @param playerID        ID of player for whom this renderer is for
      * @param settings        Settings object
      */
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings) {
+
+    private Client handler;
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.settings = settings;
+        this.handler = handler;
 
         // Set paused to false
         paused = false;
@@ -245,8 +252,8 @@ public class GameRenderer implements Runnable {
         // Event handler for pause menu
         stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
 
-        // Set root to scene
-        stage.getScene().setRoot(root);
+        // Set root to scene - runLater for slower PCs that don't load the JavaFX thread fast enough
+        Platform.runLater(() -> stage.getScene().setRoot(root));
 
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
@@ -345,9 +352,8 @@ public class GameRenderer implements Runnable {
         }
 
         // Update HUD
-        hud.updateHUD(getCurrentPlayer(), rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
-                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer().getPose(),
-                gameView.getXDim() * Constants.TILE_SIZE, gameView.getYDim() * Constants.TILE_SIZE);
+        hud.updateHUD(gameView, rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
+                rendererResourceLoader.getFontManaspace18(), getCurrentPlayer());
     }
 
     /**
@@ -457,6 +463,9 @@ public class GameRenderer implements Runnable {
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
                             // Set pause to false and stop rendering
                             paused = false;
+                            getKeyboardHandler().deactivate();
+                            getMouseHandler().deactivate();
+                            handler.close();
                             stop();
 
                             // Go back to play menu with all player info still there
@@ -512,6 +521,7 @@ public class GameRenderer implements Runnable {
      *
      * @return Keyboard handler
      */
+
     public KeyboardHandler getKeyboardHandler() {
         return this.kbHandler;
     }

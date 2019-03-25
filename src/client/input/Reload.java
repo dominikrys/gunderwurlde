@@ -1,16 +1,18 @@
 package client.input;
 
-import client.GameHandler;
+import client.Client;
 import shared.lists.AmmoList;
+import shared.lists.ItemType;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
 public class Reload extends Action {
 
-    private GameHandler handler;
+    private Client handler;
     private PlayerView playerView;
 
-    public Reload(GameHandler handler, PlayerView playerView) {
+    public Reload(Client handler, PlayerView playerView) {
         super(handler, playerView);
         this.handler = handler;
         this.playerView = playerView;
@@ -18,11 +20,12 @@ public class Reload extends Action {
 
     public void reload() {
         ItemView itemView = playerView.getCurrentItem();
-        gunReload(itemView, itemView.getAmmoType());
+        if (itemView.getItemType() == ItemType.GUN)
+            gunReload((GunView) itemView, ((GunView) itemView).getAmmoType());
     }
 
-    public void gunReload(ItemView itemView, AmmoList ammo) {
-        if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().get(ammo) > 0) {
+    public void gunReload(GunView itemView, AmmoList ammo) {
+        if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().getOrDefault(ammo, 0) > 0) {
             // TODO: send reload request
             handler.send(CommandList.RELOAD);
         } else {
