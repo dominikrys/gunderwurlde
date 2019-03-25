@@ -25,8 +25,10 @@ import shared.Constants;
 import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
+import shared.lists.ItemType;
 import shared.lists.Team;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.entity.PlayerView;
 
@@ -269,26 +271,29 @@ public class HUD extends BorderPane {
         HBox currentGunInfo = new HBox();
 
         // Add ammo amount to hud if the item has ammo
-        if (currentItem.getAmmoType() != AmmoList.NONE) {
-            // Make label for current ammo in item
-            Label ammoInGun = new Label(Integer.toString(currentItem.getAmmoInClip()),
-                    new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
-            ammoInGun.setFont(fontManaspace28);
-            ammoInGun.setTextFill(Color.BLACK);
-            // Make label for total ammo in clip
-            Label totalAmmoInClip = new Label("/" + currentItem.getClipSize());
-            totalAmmoInClip.setFont(fontManaspace18);
-            totalAmmoInClip.setTextFill(Color.BLACK);
+        if (currentItem.getItemType() == ItemType.GUN) {
+            GunView currentGun = (GunView) currentItem;
+            if (currentGun.getAmmoType() != AmmoList.NONE) {
+                // Make label for current ammo in item
+                Label ammoInGun = new Label(Integer.toString(currentGun.getAmmoInClip()),
+                        new ImageView(rendererResourceLoader.getSprite(EntityList.AMMO_CLIP)));
+                ammoInGun.setFont(fontManaspace28);
+                ammoInGun.setTextFill(Color.BLACK);
+                // Make label for total ammo in clip
+                Label totalAmmoInClip = new Label("/" + currentGun.getClipSize());
+                totalAmmoInClip.setFont(fontManaspace18);
+                totalAmmoInClip.setTextFill(Color.BLACK);
 
-            //Make label for total amount of ammo the current item uses
-            Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentItem.getAmmoType(), 0)));
-            totalAmmoForCurrentItem.setFont(fontManaspace28);
-            totalAmmoForCurrentItem.setTextFill(Color.BLACK);
+                //Make label for total amount of ammo the current item uses
+                Label totalAmmoForCurrentItem = new Label(Integer.toString(currentPlayer.getAmmo().getOrDefault(currentGun.getAmmoType(), 0)));
+                totalAmmoForCurrentItem.setFont(fontManaspace28);
+                totalAmmoForCurrentItem.setTextFill(Color.BLACK);
 
-            // Add info on current gun to the right element
-            currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
-            // Add the total amount of ammo the current gun uses under the gun info
-            ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
+                // Add info on current gun to the right element
+                currentGunInfo.getChildren().addAll(ammoInGun, totalAmmoInClip);
+                // Add the total amount of ammo the current gun uses under the gun info
+                ammoBox.getChildren().addAll(currentGunInfo, totalAmmoForCurrentItem);
+            }
         } else {
             // Make label for infinite use if it's not a weapon
             Label currentAmmo = new Label("∞");

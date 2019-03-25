@@ -49,6 +49,7 @@ import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
 import shared.view.GameView;
+import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.EnemyView;
@@ -923,11 +924,11 @@ public class ProcessGameState extends Thread {
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
-            if (i instanceof Gun) {
+            if (i.getItemType() == ItemType.GUN) {
                 Gun g = (Gun) i;
-                playerItems.add(new ItemView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
+                playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
             } else {
-                playerItems.add(new ItemView(i.getItemListName(), AmmoList.NONE, 0, 0, false, 0));
+                playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));
             }
         }
         return new PlayerView(p.getPose(), p.getSize(), p.getHealth(), p.getMaxHealth(), playerItems, p.getCurrentItemIndex(), p.getScore(), p.getName(),
