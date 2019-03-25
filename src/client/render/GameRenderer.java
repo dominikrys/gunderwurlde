@@ -252,10 +252,8 @@ public class GameRenderer implements Runnable {
         // Event handler for pause menu
         stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this::handleRendererInput);
 
-        // Set root to scene
-        Platform.runLater(() -> {
-            stage.getScene().setRoot(root);
-        });
+        // Set root to scene - runLater for slower PCs that don't load the JavaFX thread fast enough
+        Platform.runLater(() -> stage.getScene().setRoot(root));
 
         // Initialise input handler methods
         kbHandler.setGameView(inputGameView);
