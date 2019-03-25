@@ -218,7 +218,8 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
+        mapCanvas = new MapCanvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
