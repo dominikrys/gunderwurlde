@@ -152,7 +152,7 @@ public abstract class Entity {
         Location start = l.getStart();
         Location end = l.getEnd();
         double size = l.getSize();
-        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double m = (end.getY() - start.getY()) / (end.getX() - start.getX());
         double c = start.getY() - (m * start.getX());
 
         double yDist = (((eX * m) + c) - eY) / 2;
