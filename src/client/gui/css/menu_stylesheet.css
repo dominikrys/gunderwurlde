@@ -201,3 +201,11 @@
 .helpText {
     -fx-font-size: 20px;
 }
+
+.highScoreSubheading {
+    -fx-font-size: 34px;
+}
+
+.highScoreEntry {
+    -fx-font-size: 20px;
+}
