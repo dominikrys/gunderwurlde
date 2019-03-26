@@ -75,19 +75,8 @@ public class Settings implements Serializable {
      * Constructor
      */
     public Settings() {
-        // Initialise sound settings
-        soundVolume = 70;
-        musicVolume = 70;
-        soundMute = false;
-        musicMute = false;
-
-        // Initialise screen settings
-        fullScreen = false;
-        screenWidth = 1280;
-        screenHeight = 720;
-
-        // Initialise controls settings
-        mapDefaultKeys();
+        // Set up settings exclusing high scores
+        initialiseSettings();
 
         // Initialise high score hashmaps
         singlePlayerHighScores = new HashMap<>();
@@ -138,6 +127,26 @@ public class Settings implements Serializable {
         keyMapping.put(KeyAction.ITEM3, "DIGIT3");
         keyMapping.put(KeyAction.ESC, "ESCAPE");
     }
+
+    /**
+     * Method for resetting settings to default values
+     */
+    public void initialiseSettings() {
+        // Initialise sound settings
+        soundVolume = 70;
+        musicVolume = 70;
+        soundMute = false;
+        musicMute = false;
+
+        // Initialise screen settings
+        fullScreen = false;
+        screenWidth = 1280;
+        screenHeight = 720;
+
+        // Initialise controls settings
+        mapDefaultKeys();
+    }
+
 
     /**
      * Get sound volume
@@ -327,6 +336,9 @@ public class Settings implements Serializable {
                 ObjectOutput output = new ObjectOutputStream(buffer)
         ) {
             output.writeObject(this);
+
+            // Notify user
+            System.out.println("Settings saves to disk.");
         } catch (IOException e) {
             System.out.println("Can't write settings to disk:" + e.getMessage());
         }
