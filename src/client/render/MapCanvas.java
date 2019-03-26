@@ -524,7 +524,7 @@ public class MapCanvas extends Canvas {
     private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, int enemySize) {
         // Variables for calculations
         int healthBarHeight = 5;
-        int verticalOffset = 15;
+        int verticalOffset = 16;
         double healthLeftPercentage = (double) currentHealth / (double) maxHealth;
 
         // Render current health portion
@@ -535,7 +535,7 @@ public class MapCanvas extends Canvas {
         // Render lost health portion
         mapGC.setFill(Color.RED);
         mapGC.fillRect(pose.getX() + enemySize * healthLeftPercentage, pose.getY() - verticalOffset,
-                Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
+                enemySize * (1 - healthLeftPercentage), healthBarHeight);
     }
 
     /**
