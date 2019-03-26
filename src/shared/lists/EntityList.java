@@ -113,7 +113,6 @@ public enum EntityList {
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
 
-
     /**
      * Tiles
      */
