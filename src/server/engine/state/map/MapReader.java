@@ -158,7 +158,14 @@ public class MapReader {
         case RUNNER:
             return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
         case SOLDIER:
-            return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 3) {
+                return new SoldierZombie(
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new SoldierZombie(250, 4, 150);
+            }
         case MIDGET:
             if(entityParams.size() == 3) {
                 return new ShotgunMidget(

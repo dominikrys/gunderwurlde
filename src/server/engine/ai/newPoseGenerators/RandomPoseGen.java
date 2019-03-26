@@ -1,6 +1,7 @@
 package server.engine.ai.newPoseGenerators;
 
 import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.PoseGeneratorUsingEnemy;
 import server.engine.ai.enemyAI.SoldierZombieAI;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
@@ -10,12 +11,15 @@ import java.util.Random;
 import static server.engine.ai.enemyAI.EnemyAI.poseInDistance;
 
 public class RandomPoseGen extends Thread {
-    private SoldierZombieAI ai;
-    private Pose startingPose;
+    private final PoseGeneratorUsingEnemy AI;
+    private final Pose STARTING_POSE;
+    private final int DISTANCE;
 
-    public RandomPoseGen(SoldierZombieAI ai, Pose startingPose){
-        this.ai = ai;
-        this.startingPose = startingPose;
+
+    public RandomPoseGen(PoseGeneratorUsingEnemy ai, Pose startingPose, int distance){
+        this.AI = ai;
+        this.STARTING_POSE = startingPose;
+        this.DISTANCE = distance;
     }
 
     @Override
@@ -24,9 +28,9 @@ public class RandomPoseGen extends Thread {
         Random rand = new Random();
         do{
             //Go in any direction between 40 and 150 poses
-            pose = poseInDistance(startingPose, rand.nextInt(360), rand.nextInt(150) + 40);
-        }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), ai.getTileMap()));
+            pose = poseInDistance(STARTING_POSE, rand.nextInt(360), (int) (rand.nextInt(DISTANCE) + DISTANCE * 0.5));
+        }while(!EnemyAI.tileNotSolid(Tile.locationToTile(pose), AI.getTileMap()));
 
-        ai.setPoseToGo(pose);
+        AI.setPoseToGo(pose);
     }
 }
