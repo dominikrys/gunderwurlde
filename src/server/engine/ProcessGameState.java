@@ -29,6 +29,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
@@ -302,10 +303,14 @@ public class ProcessGameState extends Thread {
                         Gun currentGun = (Gun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             currentPlayer.setCurrentAction(ActionList.ATTACKING);
-                            LinkedList<Projectile> shotProjectiles = currentGun.getProjectiles(playerPose, currentPlayer.getTeam());
-                            for (Projectile p : shotProjectiles) {
-                                newProjectiles.add(p);
-                                projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                            if (currentGun instanceof ProjectileGun) {
+                                LinkedList<Projectile> shotProjectiles = ((ProjectileGun) currentGun).getProjectiles(playerPose, currentPlayer.getTeam());
+                                for (Projectile p : shotProjectiles) {
+                                    newProjectiles.add(p);
+                                    projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
+                                }
+                            } else {
+                                // TODO add lasers from laser gun
                             }
                         }
                     } else if (currentItem.getItemType() == ItemType.CONSUMEABLE

@@ -5,7 +5,7 @@ import server.engine.state.entity.projectile.SmallBullet;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
-public class MachineGun extends Gun {
+public class MachineGun extends ProjectileGun {
     public static final ItemList NAME = ItemList.MACHINE_GUN;
     public static final int DEFAULT_CLIP_SIZE = 60;
     public static final int DEFAULT_RELOAD_TIME = 5000;

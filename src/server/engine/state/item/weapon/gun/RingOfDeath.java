@@ -5,7 +5,7 @@ import server.engine.state.entity.projectile.SmallBullet;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
-public class RingOfDeath extends Gun {
+public class RingOfDeath extends ProjectileGun {
     public static final ItemList NAME = ItemList.RING_OF_DEATH;
     public static final int DEFAULT_CLIP_SIZE = 666;
     public static final int DEFAULT_RELOAD_TIME = 6000;

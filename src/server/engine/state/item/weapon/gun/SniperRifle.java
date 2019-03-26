@@ -7,7 +7,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.ItemList;
 
-public class SniperRifle extends Gun {
+public class SniperRifle extends ProjectileGun {
 
     public static final ItemList NAME = ItemList.SNIPER_RIFLE;
     public static final int DEFAULT_CLIP_SIZE = 6;

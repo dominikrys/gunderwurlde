@@ -1,20 +1,11 @@
 package server.engine.state.item.weapon.gun;
 
-import java.util.LinkedList;
-import java.util.Random;
-
-import server.engine.state.entity.projectile.Projectile;
-import server.engine.state.item.CreatesProjectiles;
 import server.engine.state.item.Limited;
 import server.engine.state.item.weapon.Weapon;
-import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
-import shared.lists.Team;
 
-public abstract class Gun extends Weapon implements Limited, CreatesProjectiles {
-
-    private static Random random = new Random();
+public abstract class Gun extends Weapon implements Limited {
 
     protected int clipSize;
     protected int ammoInClip;
@@ -23,28 +14,25 @@ public abstract class Gun extends Weapon implements Limited, CreatesProjectiles 
     protected boolean reloading;
     protected int ammoPerShot;
     protected int spread;
-    protected Projectile projectile;
     protected AmmoList ammoType;
     protected ItemList gunName;
     protected int shootCoolDown; //effectively fire rate
     protected long lastShootTime;
-    protected int projectilesPerShot;
+    protected int outputPerShot;
     protected int accuracy;
 
-    Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, Projectile projectile,
-            AmmoList ammoType, int spread, int coolDown, int projectilesPerShot, int accuracy) {
+    Gun(ItemList gunName, int clipSize, int reloadTime, int ammoPerShot, AmmoList ammoType, int spread, int coolDown, int outputPerShot, int accuracy) {
         super(gunName);
         this.gunName = gunName;
         this.clipSize = clipSize;
         this.ammoInClip = clipSize;
         this.reloadTime = reloadTime;
         this.ammoPerShot = ammoPerShot;
-        this.projectile = projectile;
         this.ammoType = ammoType;
         this.shootCoolDown = coolDown;
         this.lastShootTime = 0;
         this.spread = spread;
-        this.projectilesPerShot = projectilesPerShot;
+        this.outputPerShot = outputPerShot;
         this.accuracy = accuracy;
     }
 
@@ -72,14 +60,14 @@ public abstract class Gun extends Weapon implements Limited, CreatesProjectiles 
         this.spread = spread;
     }
 
-    public int getProjectilesPerShot() {
-        return projectilesPerShot;
+    public int getOutputPerShot() {
+        return outputPerShot;
     }
 
-    public void setProjectilesPerShot(int amount) {
+    public void setOutputPerShot(int amount) {
         if (amount < 0)
             amount = 0;
-        this.projectilesPerShot = amount;
+        this.outputPerShot = amount;
     }
 
     public ItemList getGunName() {
@@ -100,14 +88,6 @@ public abstract class Gun extends Weapon implements Limited, CreatesProjectiles 
 
     public int getClipSize() {
         return clipSize;
-    }
-
-    public Projectile getProjectile() {
-        return projectile;
-    }
-
-    public void setProjectile(Projectile projectile) {
-        this.projectile = projectile;
     }
 
     public boolean isReloading() {
@@ -183,32 +163,5 @@ public abstract class Gun extends Weapon implements Limited, CreatesProjectiles 
 
     public void cancelReload() {
         this.reloading = false;
-    }
-
-    @Override
-    public LinkedList<Projectile> getProjectiles(Pose gunPose, Team team) {
-        LinkedList<Projectile> shotProjectiles = new LinkedList<>();
-
-        int bulletSpacing = 0;
-        if (projectilesPerShot > 1)
-            bulletSpacing = (2 * spread) / (projectilesPerShot - 1);
-
-        LinkedList<Pose> bulletPoses = new LinkedList<>();
-
-        int nextDirection = gunPose.getDirection() - spread;
-        for (int i = 0; i < projectilesPerShot; i++) {
-            int direction = nextDirection;
-            if (accuracy != 0)
-                direction += (random.nextInt(accuracy) - (accuracy / 2));
-            bulletPoses.add(new Pose(gunPose, direction));
-            nextDirection += bulletSpacing;
-        }
-
-        for (Pose p : bulletPoses) {
-            Projectile proj = projectile.createFor(p, team);
-            shotProjectiles.add(proj);
-        }
-
-        return shotProjectiles;
     }
 }
