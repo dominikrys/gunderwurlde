@@ -80,8 +80,8 @@ public abstract class EnemyAI {
     //Static for RandomPoseGenerator
     public static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
-        int mapXDim = tileMap.length;
-        int mapYDim = tileMap[0].length;
+//        int mapXDim = tileMap.length;
+//        int mapYDim = tileMap[0].length;
 
         try {
             tileNotSolid = (tileMap[tile[1]][tile[0]].getState() != TileState.SOLID);
