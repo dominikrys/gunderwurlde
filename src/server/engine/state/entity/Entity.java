@@ -1,5 +1,8 @@
 package server.engine.state.entity;
 
+import java.util.LinkedHashSet;
+
+import server.engine.state.laser.Laser;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
@@ -35,6 +38,62 @@ public abstract class Entity {
     }
 
     public abstract Entity makeCopy();
+
+    public LinkedHashSet<int[]> getTilesOn() {
+        Location loc = this.getLocation();
+        int radius = size;
+        double x = loc.getX();
+        double y = loc.getY();
+
+        int[] maxLoc = Tile.locationToTile(new Location(x + radius, y + radius));
+        int[] minLoc = Tile.locationToTile(new Location(x - radius, y - radius));
+
+        LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
+
+        for (int t_x = minLoc[0]; t_x <= maxLoc[0]; t_x++) {
+            for (int t_y = minLoc[1]; t_y <= maxLoc[1]; t_y++) {
+                tilesOn.add(new int[] { t_x, t_y });
+            }
+        }
+
+        return tilesOn;
+    }
+
+    public boolean haveCollided(Entity e2) {
+        Location e1_loc = this.getLocation();
+        int e1_radius = this.size;
+        double e1_x = e1_loc.getX();
+        double e1_y = e1_loc.getY();
+
+        Location e2_loc = e2.getLocation();
+        int e2_radius = e2.getSize();
+        double e2_x = e2_loc.getX();
+        double e2_y = e2_loc.getY();
+
+        double dist_between_squared = Math.pow(Math.abs(e1_x - e2_x), 2) + Math.pow(Math.abs(e1_y - e2_y), 2);
+
+        return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
+    }
+
+    public boolean haveCollided(Laser l) {
+        Location eLoc = this.getLocation();
+        int eRadius = this.size;
+        double eX = eLoc.getX();
+        double eY = eLoc.getY();
+
+        Location start = l.getStart();
+        Location end = l.getEnd();
+        double size = l.getSize();
+        double m = l.getLength() / Math.abs(end.getX() - start.getX());
+        double c = start.getY() - (m * start.getX());
+
+        double yDist = (((eX * m) + c) - eY) / 2;
+        double xDist = (((eY - c) / m) - eX) / 2;
+
+        double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
+
+        return (eRadius >= laserDist);
+    }
 
     public int getZoneID() {
         return zoneID;

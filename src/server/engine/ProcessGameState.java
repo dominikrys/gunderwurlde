@@ -247,7 +247,7 @@ public class ProcessGameState extends Thread {
                 // check if player is dead and process
                 if (currentPlayer.getHealth() <= 0) {
                     LOGGER.info("Player: " + playerID + " has died.");
-                    LinkedHashSet<int[]> playerTilesOn = tilesOn(currentPlayer);
+                    LinkedHashSet<int[]> playerTilesOn = currentPlayer.getTilesOn();
                     for (int[] playerTileCords : playerTilesOn) {
                         tileMap[playerTileCords[0]][playerTileCords[1]].removePlayer(playerID);
                     }
@@ -259,7 +259,7 @@ public class ProcessGameState extends Thread {
                         itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
                                 newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
 
-                        LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
+                        LinkedHashSet<int[]> itemTilesOn = newDrop.getTilesOn();
                         for (int[] itemTileCords : itemTilesOn) {
                             tileMap[itemTileCords[0]][itemTileCords[1]].addItemDrop(newDrop.getID());
                         }
@@ -341,7 +341,7 @@ public class ProcessGameState extends Thread {
                         // TODO turn into projectile if melee weapon
                         items.put(itemDropped.getID(), itemDropped);
 
-                        LinkedHashSet<int[]> tilesOn = tilesOn(itemDropped);
+                        LinkedHashSet<int[]> tilesOn = itemDropped.getTilesOn();
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addItemDrop(itemDropped.getID());
                         }
@@ -388,7 +388,7 @@ public class ProcessGameState extends Thread {
             // process item drops
             LinkedList<Integer> itemsToRemove = new LinkedList<>();
             for (ItemDrop i : items.values()) {
-                LinkedHashSet<int[]> tilesOn = tilesOn(i);
+                LinkedHashSet<int[]> tilesOn = i.getTilesOn();
                 for (int[] tileCords : tilesOn) {
                     tileMap[tileCords[0]][tileCords[1]].removeItemDrop(i.getID());
                 }
@@ -398,7 +398,7 @@ public class ProcessGameState extends Thread {
                     itemsToRemove.add(i.getID());
                 } else {
                     i = (ItemDrop) doPhysics(i, tileMap, currentTimeDifference);
-                    tilesOn = tilesOn(i);
+                    tilesOn = i.getTilesOn();
                     for (int[] tileCords : tilesOn) {
                         tileMap[tileCords[0]][tileCords[1]].addItemDrop(i.getID());
                     }
@@ -484,17 +484,17 @@ public class ProcessGameState extends Thread {
                     int newSize = currentEnemy.getSize();
                     if (!newLoc.equals(oldLoc) || newSize < oldSize) {
                         currentEnemy.setLocation(oldLoc);
-                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        LinkedHashSet<int[]> enemyTilesOn = currentEnemy.getTilesOn();
                         for (int[] enemyTileCords : enemyTilesOn) {
                             tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
                         }
                         currentEnemy.setLocation(newLoc);
-                        enemyTilesOn = tilesOn(currentEnemy);
+                        enemyTilesOn = currentEnemy.getTilesOn();
                         for (int[] enemyTileCords : enemyTilesOn) {
                             tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
                         }
                     } else if (newSize > oldSize) {
-                        LinkedHashSet<int[]> enemyTilesOn = tilesOn(currentEnemy);
+                        LinkedHashSet<int[]> enemyTilesOn = currentEnemy.getTilesOn();
                         for (int[] enemyTileCords : enemyTilesOn) {
                             tileMap[enemyTileCords[0]][enemyTileCords[1]].addEnemy(enemyID);
                         }
@@ -524,7 +524,7 @@ public class ProcessGameState extends Thread {
             // process and remove dead enemies
             for (Integer enemyID : enemiesToRemove) {
                 LivingEntity enemyToRemove = livingEntities.get(enemyID);
-                LinkedHashSet<int[]> enemyTilesOn = tilesOn(enemyToRemove);
+                LinkedHashSet<int[]> enemyTilesOn = enemyToRemove.getTilesOn();
                 for (int[] enemyTileCords : enemyTilesOn) {
                     tileMap[enemyTileCords[0]][enemyTileCords[1]].removeEnemy(enemyID);
                 }
@@ -536,7 +536,7 @@ public class ProcessGameState extends Thread {
                     itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
                             newDrop.getStatus(), (int) ItemDrop.DECAY_LENGTH));
 
-                    LinkedHashSet<int[]> itemTilesOn = tilesOn(newDrop);
+                    LinkedHashSet<int[]> itemTilesOn = newDrop.getTilesOn();
                     for (int[] itemTileCords : itemTilesOn) {
                         tileMap[itemTileCords[0]][itemTileCords[1]].addItemDrop(newDrop.getID());
                     }
@@ -565,7 +565,7 @@ public class ProcessGameState extends Thread {
                                 distanceMoved);
                         Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0);
                         currentProjectile.setLocation(newLocation);
-                        LinkedHashSet<int[]> tilesOn = tilesOn(projectileCoverage);
+                        LinkedHashSet<int[]> tilesOn = projectileCoverage.getTilesOn();
                         for (int[] tileCords : tilesOn) {
                             Tile tileOn = null;
                             try {
@@ -592,7 +592,7 @@ public class ProcessGameState extends Thread {
                                 for (Integer entityID : entitiesOnTile) {
                                     LivingEntity entityBeingChecked = livingEntities.get(entityID);
 
-                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && haveCollided(entityBeingChecked, projectileCoverage)) {
+                                    if (currentProjectile.getTeam() != entityBeingChecked.getTeam() && entityBeingChecked.haveCollided(projectileCoverage)) {
                                         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
                                         entityBeingChecked.setTakenDamage(true);
 
@@ -650,7 +650,7 @@ public class ProcessGameState extends Thread {
             // physics processing
             for (LivingEntity e : livingEntities.values()) {
                 LivingEntity currentEntity = e;
-                LinkedHashSet<int[]> tilesOn = tilesOn(currentEntity);
+                LinkedHashSet<int[]> tilesOn = currentEntity.getTilesOn();
                 int entityID = currentEntity.getID();
 
                 if (currentEntity instanceof Player) {
@@ -665,7 +665,7 @@ public class ProcessGameState extends Thread {
 
                 currentEntity = (LivingEntity) doPhysics(currentEntity, tileMap, currentTimeDifference);
 
-                tilesOn = tilesOn(currentEntity);
+                tilesOn = currentEntity.getTilesOn();
                 LinkedHashSet<Integer> entitiesOnTile = new LinkedHashSet<>();
 
                 for (int[] tileCords : tilesOn) {
@@ -678,7 +678,7 @@ public class ProcessGameState extends Thread {
 
                 for (int entityCheckedID : entitiesOnTile) {
                     LivingEntity entityBeingChecked = livingEntities.get(entityCheckedID);
-                    if (entityID != entityCheckedID && haveCollided(currentEntity, entityBeingChecked)) {
+                    if (entityID != entityCheckedID && currentEntity.haveCollided(entityBeingChecked)) {
                         double dist = getDistSqrd(currentEntity.getLocation(), entityBeingChecked.getLocation());
                         if (dist < closestThing) {
                             closestThing = dist;
@@ -689,7 +689,7 @@ public class ProcessGameState extends Thread {
 
                 if (closestID != -1) {
                     LivingEntity e2 = livingEntities.get(closestID);
-                    tilesOn = tilesOn(e2);
+                    tilesOn = e2.getTilesOn();
                     if (e2 instanceof Player) {
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].removePlayer(closestID);
@@ -704,7 +704,7 @@ public class ProcessGameState extends Thread {
                     currentEntity = (LivingEntity) result[0];
                     e2 = (LivingEntity) result[1];
 
-                    tilesOn = tilesOn(e2);
+                    tilesOn = e2.getTilesOn();
                     if (e2 instanceof Player) {
                         for (int[] tileCords : tilesOn) {
                             tileMap[tileCords[0]][tileCords[1]].addPlayer(closestID);
@@ -718,7 +718,7 @@ public class ProcessGameState extends Thread {
                     livingEntities.put(closestID, e2);
                 }
 
-                tilesOn = tilesOn(currentEntity);
+                tilesOn = currentEntity.getTilesOn();
                 if (currentEntity instanceof Player) {
                     for (int[] tileCords : tilesOn) {
                         tileMap[tileCords[0]][tileCords[1]].addPlayer(entityID);
@@ -735,7 +735,7 @@ public class ProcessGameState extends Thread {
             // check if player picked up or activated anything
             for (Integer p : playerIDs) {
                 Player currentPlayer = (Player) livingEntities.get(p);
-                LinkedHashSet<int[]> tilesOn = tilesOn(currentPlayer);
+                LinkedHashSet<int[]> tilesOn = currentPlayer.getTilesOn();
                 int playerID = currentPlayer.getID();
 
                 // check for triggers
@@ -762,7 +762,7 @@ public class ProcessGameState extends Thread {
                     for (Integer itemDropID : itemsOnTile) {
                         ItemDrop currentItemDrop = items.get(itemDropID);
 
-                        if (haveCollided(currentPlayer, currentItemDrop)) {
+                        if (currentPlayer.haveCollided(currentItemDrop)) {
                             int dropQuantity = currentItemDrop.getQuantity();
                             ArrayList<Item> playerItems = currentPlayer.getItems();
 
@@ -817,7 +817,7 @@ public class ProcessGameState extends Thread {
                     // remove empty itemdrops
                     for (Integer dropID : dropsToRemove) {
                         ItemDrop dropToRemove = items.get(dropID);
-                        LinkedHashSet<int[]> itemTilesOn = tilesOn(dropToRemove);
+                        LinkedHashSet<int[]> itemTilesOn = dropToRemove.getTilesOn();
                         for (int[] itemTileCords : itemTilesOn) {
                             tileMap[itemTileCords[0]][itemTileCords[1]].removeItemDrop(dropID);
                         }
@@ -916,113 +916,6 @@ public class ProcessGameState extends Thread {
         return distMoved;
     }
 
-    private static boolean haveCollided(Entity e1, Entity e2) {
-        Location e1_loc = e1.getLocation();
-        int e1_radius = e1.getSize();
-        double e1_x = e1_loc.getX();
-        double e1_y = e1_loc.getY();
-
-        Location e2_loc = e2.getLocation();
-        int e2_radius = e2.getSize();
-        double e2_x = e2_loc.getX();
-        double e2_y = e2_loc.getY();
-
-        double dist_between_squared = Math.pow(Math.abs(e1_x - e2_x), 2) + Math.pow(Math.abs(e1_y - e2_y), 2);
-
-        return (dist_between_squared <= Math.pow(e1_radius + e2_radius, 2));
-    }
-
-    private static boolean haveCollided(Entity e, Laser l) {
-        Location eLoc = e.getLocation();
-        int eRadius = e.getSize();
-        double eX = eLoc.getX();
-        double eY = eLoc.getY();
-
-        Location start = l.getStart();
-        Location end = l.getEnd();
-        double size = l.getSize();
-        double m = l.getLength() / Math.abs(end.getX() - start.getX());
-        double c = start.getY() - (m * start.getX());
-
-        double yDist = (((eX * m) + c) - eY) / 2;
-        double xDist = (((eY - c) / m) - eX) / 2;
-
-        double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
-
-        return (eRadius >= laserDist);
-    }
-
-    private static LinkedHashSet<int[]> tilesOn(Entity e) { // TODO prevent tilesOn out of the map?
-        Location loc = e.getLocation();
-        int radius = e.getSize();
-        double x = loc.getX();
-        double y = loc.getY();
-
-        int[] maxLoc = Tile.locationToTile(new Location(x + radius, y + radius));
-        int[] minLoc = Tile.locationToTile(new Location(x - radius, y - radius));
-
-        LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
-
-        for (int t_x = minLoc[0]; t_x <= maxLoc[0]; t_x++) {
-            for (int t_y = minLoc[1]; t_y <= maxLoc[1]; t_y++) {
-                tilesOn.add(new int[] { t_x, t_y });
-            }
-        }
-
-        return tilesOn;
-    }
-
-    private static LinkedHashSet<int[]> tilesOn(Laser l) { // TODO return tilesOn ordered from start to end
-        Location start = l.getStart();
-        Location end = l.getEnd();
-        double size = l.getSize();
-        double m = l.getLength() / Math.abs(end.getX() - start.getX());
-        double c = start.getY() - (m * start.getX());
-        double maxX = start.getX();
-        double maxY = start.getY();
-        double minX = end.getX();
-        double minY = end.getY();
-
-        if (minX > maxX) {
-            maxX = minX;
-            minX = start.getX();
-        }
-
-        if (minY > maxY) {
-            maxY = minY;
-            minY = start.getY();
-        }
-
-        maxX += size;
-        maxY += size;
-        minX -= size;
-        minY -= size;
-
-        int[] max_loc = Tile.locationToTile(new Location(maxX, maxY));
-        int[] min_loc = Tile.locationToTile(new Location(minX, minY));
-
-        LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
-        double offSet = (Tile.TILE_SIZE / 2) + size;
-        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
-            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
-                Location tileLoc = Tile.tileToLocation(t_x, t_y);
-                minX = tileLoc.getX() - offSet;
-                maxX = tileLoc.getX() + offSet;
-                minY = tileLoc.getY() - offSet;
-                maxY = tileLoc.getY() + offSet;
-                double y1 = (minX * m) + c;
-                double y2 = (maxX * m) + c;
-                double x1 = (minY - c) / m;
-                double x2 = (maxY - c) / m;
-
-                if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY) || (x1 <= maxX && x1 >= minX) || (x2 <= maxX && x2 >= minX))
-                    tilesOn.add(new int[] { t_x, t_y });
-            }
-        }
-
-        return tilesOn;
-    }
-
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
@@ -1039,7 +932,7 @@ public class ProcessGameState extends Thread {
 
     private static LinkedHashMap<Integer, LivingEntity> applyAoeAttack(Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities, Location source,
             AoeAttack aoeAttack) {
-        LinkedHashSet<int[]> tilesOn = tilesOn(aoeAttack);
+        LinkedHashSet<int[]> tilesOn = aoeAttack.getTilesOn();
         LinkedHashSet<Integer> affectedEntities = new LinkedHashSet<>();
 
         for (int[] tileCords : tilesOn) {
@@ -1058,7 +951,7 @@ public class ProcessGameState extends Thread {
                 if (affectedEntities.contains(entitiyID))
                     continue;
                 LivingEntity entitiyBeingChecked = livingEntities.get(entitiyID);
-                if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && haveCollided(aoeAttack, entitiyBeingChecked)) {
+                if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && aoeAttack.haveCollided(entitiyBeingChecked)) {
                     affectedEntities.add(entitiyID);
                     entitiyBeingChecked.damage(aoeAttack.getDamage());
                     entitiyBeingChecked.setTakenDamage(true);
@@ -1098,7 +991,7 @@ public class ProcessGameState extends Thread {
             return e;
 
         double mass = e.getMass();
-        LinkedHashSet<int[]> tilesOn = tilesOn((Entity) e);
+        LinkedHashSet<int[]> tilesOn = ((Entity) e).getTilesOn();
 
         double frictionCoefficient = 0;
         double density = 0;
@@ -1142,7 +1035,7 @@ public class ProcessGameState extends Thread {
         e.setLocation(newLocation);
 
         // tile collisions
-        tilesOn = tilesOn((Entity) e);
+        tilesOn = ((Entity) e).getTilesOn();
         int[] mostSigTileCords = getMostSignificatTile(newLocation, tilesOn, tileMap);
         if (mostSigTileCords[0] != -1) {
             // TODO add hit sound to tile if velocity is high
