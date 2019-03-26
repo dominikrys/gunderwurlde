@@ -329,15 +329,46 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
-        // Check if end of game and if so, display end message
+        // Check if end of game
         if (gameView.getWinningTeam() != null) {
-            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
-                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+            // Call gameWon to handle end of game screen and score saving
+            gameWon();
         }
 
         // Update HUD
         hud.updateHUD(gameView, rendererResourceLoader, rendererResourceLoader.getFontManaspace28(),
                 rendererResourceLoader.getFontManaspace18(), getCurrentPlayer());
+    }
+
+    /**
+     * Method for performing necessary actions when the game is won
+     */
+    private void gameWon() {
+        // Display end of game message in the HUD
+        hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+
+        // Calculate the score for the team and get a list of team members
+        int teamHighScore = 0;
+        StringBuilder teamMembers = new StringBuilder();
+
+        for (PlayerView player : gameView.getPlayers()) {
+            if (player.getTeam() == gameView.getWinningTeam()) {
+                // If first team member, start off the string with their name
+                if (teamHighScore == 0) {
+                    teamMembers = new StringBuilder(gameView.getWinningTeam().toString() + ": " + player.getName());
+                } else {
+                    teamMembers.append(", ").append(player.getTeam());
+                }
+
+                // Add score to total
+                teamHighScore += player.getScore();
+            }
+        }
+
+        // Add score to high scores
+        settings.addMultiPlayerHighScore(teamMembers.toString(), teamHighScore);
+        settings.saveToDisk();
     }
 
     /**
@@ -361,6 +392,7 @@ public class GameRenderer implements Runnable {
                 })
                 ).start();
 
+                // Set their spectator mode to true
                 spectator = true;
             }
         } else {
