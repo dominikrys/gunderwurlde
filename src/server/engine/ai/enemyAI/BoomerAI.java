@@ -8,9 +8,8 @@ import shared.lists.Team;
 public class BoomerAI extends ZombieAI {
 
     public BoomerAI(){
-        super(Constants.TILE_SIZE * 2);
+        super(Constants.TILE_SIZE * 2, LONG_DELAY);
         randomizePath = false;
-        attackDelay = LONG_DELAY;
     }
 
     @Override

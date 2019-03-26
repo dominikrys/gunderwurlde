@@ -196,8 +196,6 @@ public abstract class EnemyAI {
 
     public static void setTileMap(Tile[][] tm) {
         tileMap = transposeMatrix(tm);
-        int[] tile = { 8, 10 };
-        tileNotSolid(tile, tileMap);
     }
 
 //    protected abstract Pose generateNextPose();
