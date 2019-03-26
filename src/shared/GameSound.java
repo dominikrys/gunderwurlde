@@ -225,7 +225,6 @@ public class GameSound {
 						case PLASMA_PISTOL:
 							audio = loadedGameSounds.get(SoundList.LASER3);
 							this.timer.schedule(checkReplay, PlasmaPistol.DEFAULT_COOL_DOWN);
-							this.playShellsFall(0);
 							break;
 						case MACHINE_GUN:
 							audio = loadedGameSounds.get(SoundList.MACHINE_GUN);
