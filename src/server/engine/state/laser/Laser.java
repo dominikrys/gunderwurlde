@@ -26,20 +26,46 @@ public class Laser extends Line {
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage) {
         int chunkLength = 100;
         boolean endPointFound = false;
-        Location endPoint = start;
+        double offSet = (Tile.TILE_SIZE / 2) + (size / 2);
+        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0);
+        Location endPoint = testLaser.getEnd();
+        double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
+        double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
 
         while (!endPointFound) {
-            Laser testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0);
-            endPoint = testLaser.getEnd();
             LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
 
             for (int[] tileOn : tilesOn) {
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
-                    // TODO find precise collision point and set as end
+                    Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
+                    double minX = tileLoc.getX() - offSet;
+                    double maxX = tileLoc.getX() + offSet;
+                    double minY = tileLoc.getY() - offSet;
+                    double maxY = tileLoc.getY() + offSet;
+                    double y1 = (minX * m) + c;
+                    double y2 = (maxX * m) + c;
+                    double x1 = (minY - c) / m;
+                    double x2 = (maxY - c) / m;
+
+                    if (y1 <= maxY && y1 >= minY) {
+                        endPoint = new Location(minX, y1);
+                    } else if (y2 <= maxY && y2 >= minY) {
+                        endPoint = new Location(maxX, y2);
+                    } else if (x1 <= maxX && x1 >= minX) {
+                        endPoint = new Location(x1, minY);
+                    } else {
+                        endPoint = new Location(x2, maxY);
+                    }
+
                     endPointFound = true;
                     break;
                 }
+            }
+
+            if (!endPointFound) {
+                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0);
+                endPoint = testLaser.getEnd();
             }
         }
 
