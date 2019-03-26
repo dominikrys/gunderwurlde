@@ -36,22 +36,26 @@ public class Laser extends Line {
         this.damage = damage;
     }
 
-    public LinkedHashSet<int[]> getTilesOn() { // TODO return tilesOn ordered from start to end
+    public LinkedHashSet<int[]> getTilesOn() {
         double m = length / Math.abs(end.getX() - start.getX());
         double c = start.getY() - (m * start.getX());
         double maxX = start.getX();
         double maxY = start.getY();
         double minX = end.getX();
         double minY = end.getY();
+        boolean startMaxX = true;
+        boolean startMaxY = true;
 
         if (minX > maxX) {
             maxX = minX;
             minX = start.getX();
+            startMaxX = false;
         }
 
         if (minY > maxY) {
             maxY = minY;
             minY = start.getY();
+            startMaxY = false;
         }
 
         maxX += size;
@@ -62,10 +66,37 @@ public class Laser extends Line {
         int[] max_loc = Tile.locationToTile(new Location(maxX, maxY));
         int[] min_loc = Tile.locationToTile(new Location(minX, minY));
 
+        int startX;
+        int endX;
+        int cX;
+        int startY;
+        int endY;
+        int cY;
+
+        if (startMaxX) {
+            startX = max_loc[0];
+            endX = min_loc[0] - 1;
+            cX = -1;
+        } else {
+            startX = min_loc[0];
+            endX = max_loc[0] + 1;
+            cX = 1;
+        }
+
+        if (startMaxY) {
+            startY = max_loc[1];
+            endY = min_loc[1] - 1;
+            cY = -1;
+        } else {
+            startY = min_loc[1];
+            endY = max_loc[1] + 1;
+            cY = 1;
+        }
+
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
         double offSet = (Tile.TILE_SIZE / 2) + size;
-        for (int t_x = min_loc[0]; t_x <= max_loc[0]; t_x++) {
-            for (int t_y = min_loc[1]; t_y <= max_loc[1]; t_y++) {
+        for (int t_x = startX; t_x != endX; t_x += cX) {
+            for (int t_y = startY; t_y != endY; t_y += cY) {
                 Location tileLoc = Tile.tileToLocation(t_x, t_y);
                 minX = tileLoc.getX() - offSet;
                 maxX = tileLoc.getX() + offSet;
