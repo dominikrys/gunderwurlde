@@ -26,7 +26,7 @@ public class Sniper extends Zombie {
     private final int RANGE_TO_RUN_WAY;
 
     public Sniper(int rangeToRunAway) {
-        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SniperAI(rangeToRunAway),
+        super(EntityList.SNIPER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new SniperAI(rangeToRunAway),
                 DEFAULT_MASS);
 
         this.RANGE_TO_RUN_WAY = rangeToRunAway;

@@ -189,7 +189,7 @@ public class MapReader {
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()));
             }else{
-                return new MachineGunner(60, 100, 1);
+                return new MachineGunner(60, 50, 1);
             }
         case SNIPER:
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
