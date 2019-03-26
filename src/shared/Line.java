@@ -30,6 +30,13 @@ public class Line {
         this.end = new Location(start.getX() + xComp, start.getY() + yComp);
     }
 
+    protected Line(Line l) {
+        this.start = l.start;
+        this.end = l.end;
+        this.direction = l.direction;
+        this.length = l.length;
+    }
+
     public Location getStart() {
         return start;
     }

@@ -6,6 +6,7 @@ import server.engine.state.map.tile.Tile;
 import shared.Line;
 import shared.Location;
 import shared.Pose;
+import shared.lists.TileState;
 
 public class Laser extends Line {
     protected double size;
@@ -16,8 +17,33 @@ public class Laser extends Line {
         this.size = size;
     }
 
-    public static Laser DrawLaser(Pose start, Tile[][] tileMap) {
-        return null; // TODO
+    public Laser(Line line, double size, int damage) {
+        super(line);
+        this.size = size;
+        this.damage = damage;
+    }
+
+    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage) {
+        int chunkLength = 100;
+        boolean endPointFound = false;
+        Location endPoint = start;
+
+        while (!endPointFound) {
+            Laser testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0);
+            endPoint = testLaser.getEnd();
+            LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
+
+            for (int[] tileOn : tilesOn) {
+                Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
+                if (tileBeingChecked.getState() == TileState.SOLID) {
+                    // TODO find precise collision point and set as end
+                    endPointFound = true;
+                    break;
+                }
+            }
+        }
+
+        return new Laser(start, endPoint, size, damage);
     }
 
     public double getSize() {
