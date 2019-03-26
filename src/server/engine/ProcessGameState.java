@@ -221,9 +221,11 @@ public class ProcessGameState extends Thread {
 
                 // pause checking
                 if (request.getPause() && !currentPlayer.isPaused()) {
+                    System.out.println("player: " + currentPlayer.getName()  + "being paused");
                     numPaused++;
                     currentPlayer.setPaused(true);
                 } else if (request.getResume() && currentPlayer.isPaused()) {
+                    System.out.println("player: " + currentPlayer.getName()  + "resuming");
                     numPaused--;
                     currentPlayer.setPaused(false);
                 }
@@ -382,8 +384,9 @@ public class ProcessGameState extends Thread {
             }
 
             // prevent any processing if paused
-            if (paused)
+            if (paused) {
                 continue;
+            }
 
             // process item drops
             LinkedList<Integer> itemsToRemove = new LinkedList<>();

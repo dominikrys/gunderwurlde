@@ -73,9 +73,9 @@ public class KeyboardHandler extends UserInteraction {
     private boolean reloadPressed = false;
     private boolean dropPressed = false;
     private boolean interactPressed = false;
-    private boolean pause = false;
+    private boolean pausePressed = false;
     private boolean currentlyPaused = false;
-    private boolean resume = false;
+    private boolean resumePressed = false;
     
     /**
      * Timer that loops, checks for requests and sends them
@@ -176,11 +176,11 @@ public class KeyboardHandler extends UserInteraction {
                     }
                     if (settings.getKey(KeyAction.ESC).equals(pressed)) {
                         if(currentlyPaused){
-                            resume = true;
+                            resumePressed = true;
                             currentlyPaused = false;
                         }
                         else {
-                            pause = true;
+                            pausePressed = true;
                             currentlyPaused = true;
                         }
                     }
@@ -215,11 +215,11 @@ public class KeyboardHandler extends UserInteraction {
                     interactPressed = false;
                 }
                 if(settings.getKey(KeyAction.ESC).equals(released)){
-                    if(pause) {
-                        pause = false;
+                    if(currentlyPaused) {
+                        pausePressed = false;
                     }
                     else{
-                        resume = false;
+                        resumePressed = false;
                     }
                 }
             }
@@ -285,13 +285,11 @@ public class KeyboardHandler extends UserInteraction {
                 if (reloadPressed) {
                     reload.reload();
                 }
-                if(pause){
+                if(pausePressed){
                     pauseGame.pause();
-
                 }
-                if(resume){
+                if(resumePressed){
                     pauseGame.resume();
-
                 }
                 if (dropPressed && !dropCoolDown) {
                     dropItem.drop();

@@ -95,6 +95,7 @@ public class ServerReceiver extends Thread {
                 ObjectInputStream ins = new ObjectInputStream(bis);
                 try {
                     Integer[] received =  (Integer[]) ins.readObject();
+                    System.out.println();
                     // Based on the request perform the specified action
                     switch(received[0]) {
                         case 0 : // ATTACK
@@ -114,6 +115,7 @@ public class ServerReceiver extends Thread {
                             break;
                         case 5 : // TURN
                             handler.getClientRequests().playerRequestFacing(playerID, received[1]);
+                            break;
                         case 7 : // Pause
                             handler.getClientRequests().playerRequestPause(playerID);
                             break;

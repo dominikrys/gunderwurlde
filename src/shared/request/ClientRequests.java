@@ -105,6 +105,7 @@ public class ClientRequests {
     public boolean playerRequestPause(int playerID) {
         if(playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).requestPause();
+            System.out.println("PLAYER HAS REQUESTED PAUSE");
             return true;
         } else
             return false;
