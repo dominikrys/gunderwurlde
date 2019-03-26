@@ -135,6 +135,7 @@ public enum EntityList {
     RED_GROUND("file:assets/img/tiles/red_ground.png", Constants.TILE_SIZE),
     MARBLE_FLOOR("file:assets/img/tiles/marble_floor.png", Constants.TILE_SIZE),
     DIRT("file:assets/img/tiles/dirt.png", Constants.TILE_SIZE),
+    VOID("file:assets/img/tiles/void.png", Constants.TILE_SIZE),
 
     /**
      * Other renderable entities - some are items

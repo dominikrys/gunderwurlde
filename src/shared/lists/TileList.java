@@ -23,7 +23,8 @@ public enum TileList implements Serializable{
     RED_GROUND(EntityList.RED_GROUND, TileState.PASSABLE, 0.5),
     MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.5),
     DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5),
-    WATER(EntityList.WATER, TileState.PASSABLE, 0.8);
+    WATER(EntityList.WATER, TileState.PASSABLE, 0.8),
+	VOID(EntityList.VOID, TileState.SOLID, 0);
 	
 	private static final long serialVersionUID = 1L;
 

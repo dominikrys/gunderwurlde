@@ -637,7 +637,9 @@ public class WaveSetter {
 						roundComboBox.getSelectionModel().selectNext();
 						for(Map.Entry<EntityList, ImageView> entry : enemySprite.entrySet()) {
 							WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
-							setEnemyInfo(entry.getKey(), wave.getStartTime(), wave.getSpawnInterval(), wave.getAmountPerSpawn(), wave.getTotal(), wave.isReady());
+							if(wave != null) {
+								setEnemyInfo(entry.getKey(), wave.getStartTime(), wave.getSpawnInterval(), wave.getAmountPerSpawn(), wave.getTotal(), wave.isReady());
+							}
 						}
 					}
 				}

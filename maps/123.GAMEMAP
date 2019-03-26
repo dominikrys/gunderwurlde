@@ -1,21 +1,90 @@
 # 123
 #Dimensions X,Y:
 10 10
-#Tiles#TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
+#Tiles
+#TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
 A GRASS PASSABLE 0.5
-A WOOD SOLID 0.7
-A DOOR SOLID 0.9
-A RUINS_FLOOR PASSABLE 0.5
-A RUINS_DOOR SOLID 0.5
-A RUINS_DOOR_OPEN PASSABLE 0.5
-A RUINS_ORNATE_BLOCK SOLID 0.5
-A RUINS_SOLID_BLOCK_DARK SOLID 0.5
-A RUINS_SOLID_BLOCK_LIGHT SOLID 0.5
-A RUINS_WALL_DARK SOLID 0.5
-A RUINS_WALL_MID SOLID 0.5
-A RUINS_WALL_LIGHT SOLID 0.5
-A SAND PASSABLE 0.9
-A RED_GROUND PASSABLE 0.5
-A MARBLE_FLOOR PASSABLE 0.5
-A DIRT PASSABLE 0.5
-A WATER PASSABLE 0.8
+B WOOD SOLID 0.7
+C DOOR SOLID 0.9
+D RUINS_FLOOR PASSABLE 0.5
+E RUINS_DOOR SOLID 0.5
+F RUINS_DOOR_OPEN PASSABLE 0.5
+G RUINS_ORNATE_BLOCK SOLID 0.5
+H RUINS_SOLID_BLOCK_DARK SOLID 0.5
+I RUINS_SOLID_BLOCK_LIGHT SOLID 0.5
+J RUINS_WALL_DARK SOLID 0.5
+K RUINS_WALL_MID SOLID 0.5
+L RUINS_WALL_LIGHT SOLID 0.5
+M SAND PASSABLE 0.9
+N RED_GROUND PASSABLE 0.5
+O MARBLE_FLOOR PASSABLE 0.5
+P DIRT PASSABLE 0.5
+Q WATER PASSABLE 0.8
+R VOID SOLID 0.0
+
+#Tile Map
+A A A A A A A A A R
+A E A A A A A C A R
+A A A A A A A A A R
+A A A A A A A A A R
+A A A A A A A A A R
+A A A A A A A C A R
+A A A A A A A A A R
+A A A A A R R R R R
+A A A A A R R R R R
+R R R R R R R R R R
+
+#Team Spawns
+RED 0 0
+BLUE 8 0
+GREEN 0 8
+YELLOW 4 8
+
+#Zones
+#Zone1
+#EnemySpawns
+0 0
+8 0
+
+#Triggers
+1 0
+7 0
+
+#Optional Doors (Tile to return) (Location params) (Kills Required)
+O 7 5 5
+A 7 1 10
+
+#Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
+#Round1
+ZOMBIE
+1000 1000 1 5
+
+#Round2
+SNIPER
+5000 1000 1 1
+
+RUNNER
+1000 1000 2 10
+
+
+#Zone2
+#EnemySpawns
+0 8
+4 8
+
+#Triggers
+0 7
+4 7
+
+#Optional Doors (Tile to return) (Location params) (Kills Required)
+D 1 1 20
+
+#Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
+#Round1
+MACHINE_GUNNER
+1000 1000 1 3
+
+ZOMBIE
+0 0 0 0
+
+

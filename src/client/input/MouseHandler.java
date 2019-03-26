@@ -169,27 +169,23 @@ public class MouseHandler extends UserInteraction {
         super.setScene(scene);
 
         scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-        	if(activated) {
-        		mouseMovement(e);
-        	}
+			mouseMovement(e);
 		});
 		
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			if(activated) {
-				if(e.isPrimaryButtonDown()) {
-					mouseMovement(e);
-					distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
-					attack.attack(distance);
-					this.hold = true;
-				}
-				else {
-					mouseMovement(e);
-				}
+			if(e.isPrimaryButtonDown()) {
+				mouseMovement(e);
+				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+				attack.attack(distance);
+				this.hold = true;
+			}
+			else {
+				mouseMovement(e);
 			}
 		});
 		
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-			if(e.isPrimaryButtonDown() && activated) {
+			if(e.isPrimaryButtonDown()) {
 				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
 				attack.attack(distance);
 				this.hold = true;
@@ -197,7 +193,7 @@ public class MouseHandler extends UserInteraction {
 		});
 		
 		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-			if(e.getButton().toString().equals("PRIMARY") && activated) {
+			if(e.getButton().toString().equals("PRIMARY")) {
 				this.hold = false;
 			}
 		});
@@ -205,13 +201,11 @@ public class MouseHandler extends UserInteraction {
 		scene.setOnScroll(new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
-				if(activated) {
-					if(event.getDeltaY() > 0) {
-						changeItem.previousItem();
-					}
-					else if(event.getDeltaY() < 0) {
-						changeItem.nextItem();
-					}
+				if(event.getDeltaY() > 0) {
+					changeItem.previousItem();
+				}
+				else if(event.getDeltaY() < 0) {
+					changeItem.nextItem();
 				}
 			}
 		});

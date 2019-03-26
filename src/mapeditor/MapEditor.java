@@ -499,7 +499,15 @@ public class MapEditor {
 				if(mapName == null) {
 					nameSetter();
 				}
-				MapWriter.completeMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap(), doors));
+				if(teamSpawns.size() == 4) {
+					MapWriter.completeMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap(), doors));
+				}
+				else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("You must set all team spawns first");
+					alert.showAndWait();
+				}
 			}
 		});
 		
@@ -536,9 +544,9 @@ public class MapEditor {
 		else {
 			Tile[][] oldMapTiles = mapTiles;
 			mapTiles = new Tile[mapWidth][mapHeight];
-			for(int i = 0 ; i < mapTiles.length - 1 ; i++) {
-				for(int j = 0 ; j < mapTiles[0].length - 1 ; j++) {
-					if(i < oldMapTiles.length - 1 && j < oldMapTiles.length - 1) {
+			for(int i = 0 ; i < mapTiles.length ; i++) {
+				for(int j = 0 ; j < mapTiles[0].length ; j++) {
+					if(i < oldMapTiles.length && j < oldMapTiles.length) {
 						mapTiles[i][j] = oldMapTiles[i][j];
 						if(mapTiles[i][j] != null) {
 							mapGc.drawImage(tileSprite.get(mapTiles[i][j].getType()), i*Constants.TILE_SIZE, j*Constants.TILE_SIZE);
