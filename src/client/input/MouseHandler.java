@@ -1,14 +1,17 @@
 package client.input;
 
+import client.Client;
+import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import shared.Constants;
+import shared.lists.ItemType;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
+import shared.view.GunView;
 
 /**
  * MouseHandler class. This is the class for mouse inputs.
@@ -25,7 +28,6 @@ public class MouseHandler extends UserInteraction {
 	/**
      * Map canvas for location calculation
      */
-    private Canvas mapCanvas;
     
     /**
      * PlayerView that contains player info
@@ -41,6 +43,10 @@ public class MouseHandler extends UserInteraction {
      * ChangeItem class for changing items
      */
     private ChangeItem changeItem;
+    
+    private Canvas mapCanvas;
+    
+    private Settings settings;
     
     /**
      * Mouse cursor X coordinate on screen
@@ -102,11 +108,21 @@ public class MouseHandler extends UserInteraction {
      *
      * @param playerID Player ID
      */
-    public MouseHandler(int playerID) {
+    public MouseHandler(int playerID, Settings settings) {
         super();
+        this.settings = settings;
         this.t = null;
         this.playerID = playerID;
         this.hold = false;
+    }
+    
+    /**
+     * Setter for client handler
+     *
+     * @param handler Client handler
+     */
+    public void setGameHandler(Client handler) {
+        this.handler = handler;
     }
 
     /**
@@ -138,8 +154,12 @@ public class MouseHandler extends UserInteraction {
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
-        playerX = mapCanvas.getTranslateX() + playerView.getPose().getX() + Constants.TILE_SIZE / 2;
-        playerY = mapCanvas.getTranslateY() + playerView.getPose().getY() + Constants.TILE_SIZE / 2;
+        playerX = (double) settings.getScreenWidth() / 2;
+        playerY = (double) settings.getScreenHeight() / 2;
+        // System.out.println("mouseX: " + mouseX);
+        // System.out.println("mouseY: " + mouseY);
+        // System.out.println("playerX: " + playerX);
+        // System.out.println("playerY: " + playerY);
 
         toRotate = Math.toDegrees(Math.atan((mouseX - playerX) / (mouseY - playerY)));
         int quarter = quarter(playerX, playerY, mouseX, mouseY);
@@ -247,18 +267,16 @@ public class MouseHandler extends UserInteraction {
     public void activate() {
         super.activate();
         this.t = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				
-				if(hold == true) {
-					//if(playerView.getCurrentItem().isAutoFire()) {
-						distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
-						attack.attack(distance);
-					//}
-				}
-			}
-		};
-		this.t.start();
+            @Override
+            public void handle(long now) {
+                if (hold == true) {
+                    if (playerView.getCurrentItem().getItemType() == ItemType.GUN && ((GunView) playerView.getCurrentItem()).isAutoFire()) {
+                        attack.attack(distance);
+                    }
+                }
+            }
+        };
+        this.t.start();
     }
 
     /**

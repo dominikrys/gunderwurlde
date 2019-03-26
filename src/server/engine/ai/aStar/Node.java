@@ -12,7 +12,7 @@ public class Node implements Comparable<Node> {
     private double sum = 0;
 
     public Node(Pair<Integer, Integer> tile){
-        this.pose = new Pose(tile.getValue(), tile.getKey());
+        this.pose = new Pose(tile.getKey(), tile.getValue());
     }
 
     public Node(double x, double y){
@@ -52,7 +52,7 @@ public class Node implements Comparable<Node> {
     }
 
     public Pair<Integer, Integer> getCoordinates() {
-        return new Pair<>((int)pose.getY(), (int)pose.getX());
+        return new Pair<>((int)pose.getX(), (int)pose.getY());
     }
 
     public double getCostToGo() {

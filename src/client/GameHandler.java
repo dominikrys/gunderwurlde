@@ -128,7 +128,7 @@ public class GameHandler extends Thread {
         this.team = team;
         this.numPlayers = Integer.parseInt(numOfPlayers);
         String[] split = ipValue.split("\\.");
-        this.address = split[3];
+        this.address = split[3]; // TODO: in case this is now size of 3, causes issues. limit here or in map selection.
         this.port = Integer.parseInt(portValue);
     }
 
@@ -147,7 +147,7 @@ public class GameHandler extends Thread {
                         // Create the server
                         server = new Server(map, playerName, team, 1, false);
                         // create the client
-                        client = new Client(stage, this, settings, 0);
+                        client = new Client(stage, this, settings, 0, connectionType);
                         // start client threads ready to receive and send
                         client.start();
                         // wait for threads to be setup completely
@@ -176,7 +176,7 @@ public class GameHandler extends Thread {
                         }
                         System.out.println("Server setup and waiting");
                         // create the client
-                        client = new Client(stage, this, settings, 0);
+                        client = new Client(stage, this, settings, 0, connectionType);
                         // setup clients threads
                         client.start();
                         System.out.println("Client started");
@@ -198,7 +198,7 @@ public class GameHandler extends Thread {
                         // if joining server must already be started
                         serverStarted = true;
                         // create a client
-                        client = new Client(stage, this, settings, address, port, playerName, team);
+                        client = new Client(stage, this, settings, address, port, playerName, team, connectionType);
                         // Wait for the client to fully join the game
                         System.out.println("client joined");
                         client.join();

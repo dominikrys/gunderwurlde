@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Client;
+import client.ConnectionType;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PauseMenuController;
@@ -35,99 +36,89 @@ import shared.view.entity.PlayerView;
  */
 public class GameRenderer implements Runnable {
     /**
+     * Ratio for how sensitive the map is to mouse movements
+     */
+    double cameraMouseSensitivity;
+    /**
      * RendererResourceLoader - Contains resources used by the renderer
      */
     private RendererResourceLoader rendererResourceLoader;
-
     /**
      * Canvas for the map - this contains the game
      */
     private MapCanvas mapCanvas;
-
     /**
      * The hud object
      */
     private HUD hud;
-
     /**
      * Pane for cursor - necessary as custom cursor used
      */
     private AnchorPane cursorPane;
-
     /**
      * Custom cursor image
      */
     private ImageView cursorImage;
-
     /**
      * X coordinate of mouse
      */
     private double mouseX;
-
     /**
      * Y coordinate of mouse
      */
     private double mouseY;
-
     /**
      * ID of the player that this GameRenderer is for
      */
     private int playerID;
-
     /**
      * The current gamestate
      */
     private GameView gameView;
-
     /**
      * Stage to display renderer on
      */
     private Stage stage;
-
     /**
      * Whether the game is paused or not
      */
     private boolean paused;
-
     /**
      * VBox containing the pause overlay
      */
     private VBox pausedOverlay;
-
     /**
      * KeyboardHandler
      */
-    private KeyboardHandler kbHandler; //TODO: move this out of renderer
-
+    private KeyboardHandler kbHandler; //TODO: input should be out of renderer, move this out
     /**
      * Mouse handler
      */
-    private MouseHandler mHandler; // todo: move this out of renderer
-
+    private MouseHandler mHandler; //TODO: input should be out of renderer, move this out
     /**
      * Settings object
      */
     private Settings settings;
-
     /**
      * SoundView object to be passed to the sound manager
      */
     private SoundView soundView;
-
     /**
      * Running boolean
      */
     private boolean running;
-
     /**
      * Boolean for spectator mode
      */
     private boolean spectator;
-
     /**
      * Controller for the pause menu
      */
     private PauseMenuController pauseMenuController;
+    /**
+     * ConnectionType for whether single player or not
+     */
+    private ConnectionType connectionType;
 
     /**
      * Constructor
@@ -140,13 +131,15 @@ public class GameRenderer implements Runnable {
 
     private Client handler;
 
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler,
+                        ConnectionType connectionType) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.settings = settings;
         this.handler = handler;
+        this.connectionType = connectionType;
 
         // Set paused to false
         paused = false;
@@ -168,13 +161,16 @@ public class GameRenderer implements Runnable {
         // Set spectator mode to false
         spectator = false;
 
+        // Set mouse sensitivity for camera
+        cameraMouseSensitivity = 0.25;
+
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
         mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
-        mHandler = new MouseHandler(this.playerID);
+        mHandler = new MouseHandler(this.playerID, settings);
 
         // Initialise soundview
         soundView = new SoundView(this.playerID, initialGameView, settings);
@@ -333,7 +329,7 @@ public class GameRenderer implements Runnable {
      */
     private void renderGameView() {
         // Check if should be in spectator mode or not
-        checkSpectator();
+        checkDead();
 
         // Render map
         mapCanvas.renderMap(gameView, rendererResourceLoader);
@@ -341,10 +337,10 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
-        // Check if end of game and if so, display end message
+        // Check if end of game
         if (gameView.getWinningTeam() != null) {
-            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
-                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+            // Call gameWon to handle end of game screen and score saving
+            gameWon();
         }
 
         // Update HUD
@@ -353,9 +349,40 @@ public class GameRenderer implements Runnable {
     }
 
     /**
-     * Check if the player should be in spectator mode or not and set up appropriate code
+     * Method for performing necessary actions when the game is won
      */
-    private void checkSpectator() {
+    private void gameWon() {
+        // Display end of game message in the HUD
+        hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+
+        // Calculate the score for the team and get a list of team members
+        int teamHighScore = 0;
+        StringBuilder teamMembers = new StringBuilder();
+
+        for (PlayerView player : gameView.getPlayers()) {
+            if (player.getTeam() == gameView.getWinningTeam()) {
+                // If first team member, start off the string with their name
+                if (teamHighScore == 0) {
+                    teamMembers = new StringBuilder(gameView.getWinningTeam().toString() + ": " + player.getName());
+                } else {
+                    teamMembers.append(", ").append(player.getTeam());
+                }
+
+                // Add score to total
+                teamHighScore += player.getScore();
+            }
+        }
+
+        // Add score to high scores
+        settings.addMultiPlayerHighScore(teamMembers.toString(), teamHighScore);
+        settings.saveToDisk();
+    }
+
+    /**
+     * Check if the player should be in spectator mode after death or not and set up appropriate code
+     */
+    private void checkDead() {
         // Check if player has died, in which case give them a free camera
         if (getCurrentPlayer().getStatus() == EntityStatus.DEAD) {
             if (!spectator) {
@@ -373,7 +400,15 @@ public class GameRenderer implements Runnable {
                 })
                 ).start();
 
+                // Set their spectator mode to true
                 spectator = true;
+
+                // Check if single player
+                if (connectionType == ConnectionType.SINGLE_PLAYER) {
+                    // Add high score and save
+                    settings.addSinglePlayerHighScore(getCurrentPlayer().getName(), getCurrentPlayer().getScore());
+                    settings.saveToDisk();
+                }
             }
         } else {
             // Check if coming back from spectator mode
@@ -395,6 +430,7 @@ public class GameRenderer implements Runnable {
      * @param e Key event
      */
     private void handleSpectatorCamera(KeyEvent e) {
+        // TODO: make this smoother/generally handle this better
         if (e.getCode().toString().equals(settings.getKey(KeyAction.UP))) {
             mapCanvas.setTranslateY(mapCanvas.getTranslateY() + 10);
         }
@@ -418,15 +454,12 @@ public class GameRenderer implements Runnable {
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
-        // Ratio for how sensitive the map is to mouse movements
-        double cameraMouseSensitivity = 0.25;
-
         // Adjust map horizontally
-        mapCanvas.setTranslateX((double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+        mapCanvas.setTranslateX((double) (gameView.getXDim() * Constants.TILE_SIZE) / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
                 + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
 
         // Adjust map vertically
-        mapCanvas.setTranslateY((double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+        mapCanvas.setTranslateY((double) (gameView.getYDim() * Constants.TILE_SIZE) / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
                 + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
     }
 
@@ -467,7 +500,7 @@ public class GameRenderer implements Runnable {
                             (new MainMenuController(stage, settings)).show();
                         }
 
-                        //TODO: remove this, doesn't work otherwise for some reason
+                        //TODO: remove this, currently doesn't work otherwise since in big animationTimer
                         try {
                             Thread.sleep(1);
                         } catch (InterruptedException ex) {

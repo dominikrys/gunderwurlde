@@ -122,8 +122,7 @@ public class KeyboardHandler extends UserInteraction {
      *
      * @param handler Client handler
      */
-    @Override
-    public void setClientHandler(Client handler) {
+    public void setGameHandler(Client handler) {
         this.handler = handler;
     }
 

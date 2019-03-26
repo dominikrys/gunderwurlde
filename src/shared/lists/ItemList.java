@@ -30,7 +30,7 @@ public enum ItemList {
     MAGIC_ESSENCE(EntityList.MAGIC_ESSENCE, AmmoList.MAGIC_ESSENCE),
     HEAVY_AMMO(EntityList.HEAVY_AMMO, AmmoList.HEAVY_AMMO),
     ROCKET_AMMO(EntityList.ROCKET_AMMO, AmmoList.ROCKET_AMMO),
-    
+
     //Health
     HEART_FULL(EntityList.HEART_FULL, null),
     HEART_HALF(EntityList.HEART_HALF, null),

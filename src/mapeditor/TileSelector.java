@@ -285,12 +285,7 @@ public class TileSelector {
 	private void getTileSettings() {
 		tileSettings = new HashMap<TileList, Tile>();
 		EnumSet.allOf(TileList.class).forEach(tileList -> {
-			if(tileList.getTileState() == TileState.SOLID) {
-				tileSettings.put(tileList, new Tile(tileList, tileList.getTileState(), tileList.getBounceCoefficient()));
-			}
-			else {
-				tileSettings.put(tileList, new Tile(tileList, tileList.getTileState(), tileList.getFriction()));
-			}
+			tileSettings.put(tileList, new Tile(tileList, tileList.getTileState(), tileList.getFriction(), tileList.getBounceCoefficient(), tileList.getDensity()));
 			tileMenu.getItems().add(tileList.toString());
 		});
 	}

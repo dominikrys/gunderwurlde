@@ -7,23 +7,21 @@ import java.io.Serializable;
  */
 public enum TileList implements Serializable{
     // Meadow Tiles
-    GRASS(EntityList.GRASS_TILE, TileState.PASSABLE, 0.5),
+    GRASS(EntityList.GRASS_TILE, TileState.PASSABLE, 0.5, 200),
     WOOD(EntityList.WOOD_TILE, TileState.SOLID, 0.7),
     DOOR(EntityList.DOOR_TILE, TileState.SOLID, 0.9),
-    RUINS_FLOOR(EntityList.RUINS_FLOOR, TileState.PASSABLE, 0.5),
-    RUINS_DOOR(EntityList.RUINS_DOOR, TileState.SOLID, 0.5),
-    RUINS_DOOR_OPEN(EntityList.RUINS_DOOR_OPEN, TileState.PASSABLE, 0.5),
+    RUINS_FLOOR(EntityList.RUINS_FLOOR, TileState.PASSABLE, 0.5, 200),
     RUINS_ORNATE_BLOCK(EntityList.RUINS_ORNATE_BLOCK, TileState.SOLID, 0.5),
     RUINS_SOLID_BLOCK_DARK(EntityList.RUINS_SOLID_BLOCK_DARK, TileState.SOLID, 0.5),
     RUINS_SOLID_BLOCK_LIGHT(EntityList.RUINS_SOLID_BLOCK_LIGHT, TileState.SOLID, 0.5),
     RUINS_WALL_DARK(EntityList.RUINS_WALL_DARK, TileState.SOLID, 0.5),
     RUINS_WALL_MID(EntityList.RUINS_WALL_MID, TileState.SOLID, 0.5),
     RUINS_WALL_LIGHT(EntityList.RUINS_WALL_LIGHT, TileState.SOLID, 0.5),
-    SAND(EntityList.SAND, TileState.PASSABLE, 0.9),
-    RED_GROUND(EntityList.RED_GROUND, TileState.PASSABLE, 0.5),
-    MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.5),
-    DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5),
-    WATER(EntityList.WATER, TileState.PASSABLE, 0.8),
+    SAND(EntityList.SAND, TileState.PASSABLE, 0.51, 200),
+    RED_GROUND(EntityList.RED_GROUND, TileState.PASSABLE, 0.5, 200),
+    MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.49, 200),
+    DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5, 200),
+    WATER(EntityList.WATER, TileState.PASSABLE, 0.49, 4000),
 	VOID(EntityList.VOID, TileState.SOLID, 0);
 	
 	private static final long serialVersionUID = 1L;
@@ -48,6 +46,11 @@ public enum TileList implements Serializable{
      */
     double bounceCoefficient;
 
+    /*
+     * Density of the tileList
+     */
+    double density;
+
     /**
      * Constructor
      *
@@ -56,11 +59,12 @@ public enum TileList implements Serializable{
      * @param friction          Friction coefficient of tileList
      * @param bounceCoefficient Bounce coefficient of tileList
      */
-    TileList(EntityList entityListName, TileState tilestate, double friction, double bounceCoefficient) {
+    TileList(EntityList entityListName, TileState tilestate, double bounceCoefficient) {
         this.entityListName = entityListName;
         this.tileState = tilestate;
-        this.friction = friction;
         this.bounceCoefficient = bounceCoefficient;
+        this.friction = 0;
+        this.density = 0;
     }
 
     /**
@@ -70,8 +74,12 @@ public enum TileList implements Serializable{
      * @param tilestate      State of the tileList
      * @param friction       Friction coefficient of tileList
      */
-    TileList(EntityList entityListName, TileState tilestate, double friction) {
-        this(entityListName, tilestate, friction, friction);
+    TileList(EntityList entityListName, TileState tilestate, double friction, double density) {
+        this.entityListName = entityListName;
+        this.tileState = tilestate;
+        this.bounceCoefficient = 0;
+        this.friction = friction;
+        this.density = density;
     }
 
     /**
@@ -93,7 +101,7 @@ public enum TileList implements Serializable{
     }
 
     /**
-     * Get friciton coefficient of this stile
+     * Get friciton coefficient of this tile
      *
      * @return Friction coefficient of tileList
      */
@@ -108,5 +116,14 @@ public enum TileList implements Serializable{
      */
     public double getBounceCoefficient() {
         return bounceCoefficient;
+    }
+
+    /*
+     * Get density of this tile
+     * 
+     * @return Density
+     */
+    public double getDensity() {
+        return density;
     }
 }

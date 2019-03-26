@@ -62,6 +62,16 @@ public class Settings implements Serializable {
     private HashMap<KeyAction, String> keyMapping;
 
     /**
+     * HashMap holding single player high scores. Key is the player name and the value is the score
+     */
+    private HashMap<String, Integer> singlePlayerHighScores;
+
+    /**
+     * HashMap holding multiplayer high scores. Key is the player name and the value is the score
+     */
+    private HashMap<String, Integer> multiPlayerHighScores;
+
+    /**
      * Constructor
      */
     public Settings() {
@@ -78,6 +88,10 @@ public class Settings implements Serializable {
 
         // Initialise controls settings
         mapDefaultKeys();
+
+        // Initialise high score hashmaps
+        singlePlayerHighScores = new HashMap<>();
+        multiPlayerHighScores = new HashMap<>();
     }
 
     /**
@@ -86,8 +100,11 @@ public class Settings implements Serializable {
      * @return Loaded settings
      */
     public static Settings loadSettingsFromFile() {
-        Settings settings = null;
+        // Create settings object to return
+        Settings settings;
+
         try (
+                // Try to load a serialised settings file
                 InputStream file = new FileInputStream("settings.ser");
                 InputStream buffer = new BufferedInputStream(file);
                 ObjectInput input = new ObjectInputStream(buffer)
@@ -313,6 +330,52 @@ public class Settings implements Serializable {
         } catch (IOException e) {
             System.out.println("Can't write settings to disk:" + e.getMessage());
         }
+    }
+
+    /**
+     * Get all single player high scores
+     *
+     * @return HashMap of single player high scores
+     */
+    public HashMap<String, Integer> getSinglePlayerHighScores() {
+        return singlePlayerHighScores;
+    }
+
+    /**
+     * Get all multiplayer high scores
+     *
+     * @return HashMap of multiplayer high scores
+     */
+    public HashMap<String, Integer> getMultiPlayerHighScores() {
+        return multiPlayerHighScores;
+    }
+
+    /**
+     * Remove all stores high scores
+     */
+    public void resetHighScores() {
+        singlePlayerHighScores = new HashMap<>();
+        multiPlayerHighScores = new HashMap<>();
+    }
+
+    /**
+     * Add high score for multi player
+     *
+     * @param playerName Name of player for who the high score to add
+     * @param score      Score to save
+     */
+    public void addMultiPlayerHighScore(String playerName, int score) {
+        multiPlayerHighScores.put(playerName, score);
+    }
+
+    /**
+     * Add high score for single player
+     *
+     * @param playerName Name of player for who the high score to add
+     * @param score      Score to save
+     */
+    public void addSinglePlayerHighScore(String playerName, int score) {
+        singlePlayerHighScores.put(playerName, score);
     }
 }
 

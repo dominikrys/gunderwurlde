@@ -87,14 +87,7 @@ public class MapWriter {
 				char letter = Character.valueOf((char) asciiCode);
 				tileLetter.put(tileList, letter);
 				try {
-					double coefficient;
-					if(tileList.getTileState() == TileState.SOLID) {
-						coefficient = tileList.getBounceCoefficient();
-					}
-					else {
-						coefficient = tileList.getFriction();
-					}
-					bw.write(letter + " " + tileList.toString() + " " + tileList.getTileState() + " " + coefficient + "\n");
+					bw.write(letter + " " + tileList.toString() + "\n");
 					asciiCode++;
 				} catch (IOException e) {
 					e.printStackTrace();

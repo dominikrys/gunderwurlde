@@ -616,7 +616,7 @@ public class MapEditor {
 			params.setFill(Color.TRANSPARENT);
 			mapSnapshot = mapCanvas.snapshot(params, null);
 			mapTiles[tileX][tileY] = tile;
-			if(tile.getType() == TileList.DOOR || tile.getType() == TileList.RUINS_DOOR) {
+			if(tile.getType() == TileList.DOOR) {
 				doors.put(Arrays.toString(new int[] {tileX, tileY}), tile.getType());
 			}
 			if(!paintCheckbox.isSelected()) {

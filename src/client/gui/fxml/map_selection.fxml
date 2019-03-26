@@ -48,7 +48,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="map2Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Placeholder" GridPane.columnIndex="1">
+            <Button fx:id="map2Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Ruins" GridPane.columnIndex="1">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />
@@ -61,7 +61,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="map3Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map3ButtonPress" text="Placeholder" GridPane.columnIndex="2">
+            <Button fx:id="map3Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map3ButtonPress" text="Big Map" GridPane.columnIndex="2">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />

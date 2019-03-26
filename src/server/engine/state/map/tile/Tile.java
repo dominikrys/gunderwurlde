@@ -1,5 +1,7 @@
 package server.engine.state.map.tile;
 
+import java.util.LinkedHashSet;
+
 import shared.Constants;
 import shared.Location;
 import shared.lists.TileList;
@@ -26,8 +28,9 @@ public class Tile implements Serializable {
     protected LinkedHashSet<Integer> zoneTriggers;
     protected double frictionCoefficient;
     protected double bounceCoefficient;
+    protected double density;
 
-    public Tile(TileList tileList, TileState tileState, double value) {
+    public Tile(TileList tileList, TileState tileState, double frictionCoefficient, double bounceCoefficient, double density) {
         this.tileList = tileList;
         this.tileState = tileState;
         this.itemDropsOnTile = new LinkedHashSet<>();
@@ -35,13 +38,9 @@ public class Tile implements Serializable {
         this.playersOnTile = new LinkedHashSet<>();
         this.entitiesOnTile = new LinkedHashSet<>();
         this.zoneTriggers = new LinkedHashSet<>();
-        if (tileState == TileState.SOLID) {
-            this.bounceCoefficient = value;
-            this.frictionCoefficient = 0;
-        } else {
-            this.frictionCoefficient = value;
-            this.bounceCoefficient = 0;
-        }
+        this.bounceCoefficient = bounceCoefficient;
+        this.frictionCoefficient = frictionCoefficient;
+        this.density = density;
     }
 
     public void addTrigger(int zoneID) {
@@ -150,7 +149,7 @@ public class Tile implements Serializable {
     }
 
     public Tile getCopy() {
-        return new Tile(this.tileList, this.tileState, this.bounceCoefficient + this.frictionCoefficient);
+        return new Tile(this.tileList, this.tileState, this.frictionCoefficient, this.bounceCoefficient, this.density);
     }
 
     public double getDensity() {

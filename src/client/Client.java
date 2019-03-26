@@ -143,7 +143,9 @@ public class Client extends Thread {
      */
     private ClientReceiver receiver;
 
-    // TODO still dont really know what this is
+    /**
+     * Stage to render to
+     */
     private Stage stage;
 
     /**
@@ -166,6 +168,10 @@ public class Client extends Thread {
      */
     private int playerID;
 
+    /**
+     * Connection type
+     */
+private ConnectionType connectionType;
 
     /**
      * Constructor for single player or multiplayer host
@@ -173,8 +179,9 @@ public class Client extends Thread {
      * @param handler object that created this client. Used to end the threads on close
      * @param settings object to hold previously saved settings e.g. sound settings
      * @param playerID The identification value for a player
+     * @param connectionType Connection type
      */
-    public Client(Stage stage, GameHandler handler, Settings settings, int playerID) {
+    public Client(Stage stage, GameHandler handler, Settings settings, int playerID, ConnectionType connectionType) {
        try {
            // Assign the value for the ports and update the next available port
            this.listenPort = lowestAvailablePort;
@@ -188,6 +195,7 @@ public class Client extends Thread {
            this.handler = handler;
            this.settings = settings;
            this.playerID = playerID;
+           this.connectionType = connectionType;
            firstView = true;
        } catch (UnknownHostException e) {
            e.printStackTrace();
@@ -203,8 +211,10 @@ public class Client extends Thread {
      * @param portValue The port the server is sending across
      * @param playerName The name of the player playing the game
      * @param team The team of the player playing the game
+     * @param connectionType Connection ype
      */
-    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName, Team team) {
+    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName,
+                  Team team, ConnectionType connectionType) {
         try {
             // Assign the player name and player value
             this.playerName = playerName;
@@ -218,6 +228,7 @@ public class Client extends Thread {
             this.handler = handler;
             this.settings = settings;
             firstView = true;
+            this.connectionType = connectionType;
             joinGame();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -257,9 +268,9 @@ public class Client extends Thread {
         // if this is the first GameView then create a renderer
         if (firstView) {
             firstView = false;
-            renderer = new GameRenderer(stage, this.view, playerID, settings, this);
-            renderer.getKeyboardHandler().setClientHandler(this);
-            renderer.getMouseHandler().setClientHandler(this);
+            renderer = new GameRenderer(stage, this.view, playerID, settings, this, connectionType);
+            renderer.getKeyboardHandler().setGameHandler(this);
+            renderer.getMouseHandler().setGameHandler(this);
             renderer.run();
         }
         //else just update the GameView
