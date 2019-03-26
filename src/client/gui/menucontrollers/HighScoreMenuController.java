@@ -63,29 +63,6 @@ public class HighScoreMenuController extends VBox implements MenuController {
             throw new RuntimeException(exception);
         }
 
-        settings.addSinglePlayerHighScore("a", 76346);
-        settings.addSinglePlayerHighScore("b", 566);
-        settings.addSinglePlayerHighScore("c", 43442);
-        settings.addSinglePlayerHighScore("d", 434);
-        settings.addSinglePlayerHighScore("asdfghjklp", 1);
-        settings.addSinglePlayerHighScore("1234567890", 9051312);
-        settings.addSinglePlayerHighScore("23121", 444434);
-        settings.addSinglePlayerHighScore("133gg", 3);
-        settings.addSinglePlayerHighScore("fsefsf", 901672);
-        settings.addSinglePlayerHighScore("ef33f", 9166312);
-        settings.addSinglePlayerHighScore("3425", 903215312);
-        settings.addMultiPlayerHighScore("BLUE: 1234567890, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 1234567567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 123456789234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLU234567890, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 127890, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BL 1234567890, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 123456890, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 1234567234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 1234567, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 12345, 1234567899", 123123123);
-        settings.addMultiPlayerHighScore("BLUE: 1234567234567899", 123123123);
-
         // Set style sheet to stage to allow styling of labels
         stage.getScene().getStylesheets().add("file:src/client/gui/css/menu_stylesheet.css");
 
@@ -96,7 +73,8 @@ public class HighScoreMenuController extends VBox implements MenuController {
 
     /**
      * Populate grid pane with scores hashmap in descending order
-     * @param scores HashMap containing player namees as keys and scores as values
+     *
+     * @param scores        HashMap containing player namees as keys and scores as values
      * @param inputGridPane Input gridpane to populate
      * @return Populated GridPane
      */
