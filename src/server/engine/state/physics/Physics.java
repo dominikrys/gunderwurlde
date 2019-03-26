@@ -140,7 +140,7 @@ public class Physics {
         return new Impulse(direction, force * normaliseTime(time));
     }
 
-    static double[] getComponents(int direction, double value) {
+    static double[] getComponents(int direction, double value) { // TODO use Line instead?
         double directionInRadians = Math.toRadians(direction);
         double[] components = { (double) value * Math.cos(directionInRadians), (double) value * Math.sin(directionInRadians) };
         return components;

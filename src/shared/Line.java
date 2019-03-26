@@ -20,6 +20,16 @@ public class Line {
             direction += 360;
     }
 
+    public Line(Location start, int direction, double length) {
+        this.start = start;
+        this.direction = direction;
+        this.length = length;
+        double directionInRadians = Math.toRadians(direction);
+        double xComp = length * Math.cos(directionInRadians);
+        double yComp = length * Math.sin(directionInRadians);
+        this.end = new Location(start.getX() + xComp, start.getY() + yComp);
+    }
+
     public Location getStart() {
         return start;
     }
