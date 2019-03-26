@@ -60,17 +60,17 @@ public class HighScoreMenuController extends VBox implements MenuController {
             throw new RuntimeException(exception);
         }
 
-        settings.addSinglePlayerHighScore("aaaaaaaaaa", 76346);
-        settings.addSinglePlayerHighScore("aaaaaaaa", 5);
-        settings.addSinglePlayerHighScore("aaaaaaa", 2);
-        settings.addSinglePlayerHighScore("aaaaaaaaaa", 4);
-        settings.addSinglePlayerHighScore("aaaaaaa", 1);
-        settings.addSinglePlayerHighScore("aaaaaaaaaa", 90321312);
-        settings.addSinglePlayerHighScore("aaaaaa", 4);
-        settings.addSinglePlayerHighScore("aaaaaaaaaa", 3);
-        settings.addSinglePlayerHighScore("aaaaaaaaa", 901634632);
-        settings.addSinglePlayerHighScore("aaaaaaaaaa", 9166312);
-        settings.addSinglePlayerHighScore("aaaaaaa", 903215312);
+        settings.addSinglePlayerHighScore("a", 76346);
+        settings.addSinglePlayerHighScore("b", 566);
+        settings.addSinglePlayerHighScore("c", 43442);
+        settings.addSinglePlayerHighScore("d", 434);
+        settings.addSinglePlayerHighScore("asdfghjklp", 1);
+        settings.addSinglePlayerHighScore("1234567890", 9051312);
+        settings.addSinglePlayerHighScore("23121", 444434);
+        settings.addSinglePlayerHighScore("133gg", 3);
+        settings.addSinglePlayerHighScore("fsefsf", 901672);
+        settings.addSinglePlayerHighScore("ef33f", 9166312);
+        settings.addSinglePlayerHighScore("3425", 903215312);
 
         // Populate high scores
         HashMap<String, Integer> singlePlayerScores = settings.getSinglePlayerHighScores();
