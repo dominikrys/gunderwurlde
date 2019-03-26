@@ -44,39 +44,39 @@ public class Laser extends Line {
     }
 
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
-        System.out.println("dmg: " + templateLaser.damage);
-        int chunkLength = 100;
+        int chunkLength = 200;
         boolean endPointFound = false;
         double offSet = Tile.TILE_SIZE + (templateLaser.size / 2);
         Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
         Location endPoint = testLaser.getEnd();
-        double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
+        double m = (testLaser.getEnd().getY() - testLaser.getStart().getY()) / (testLaser.getEnd().getX() - testLaser.getStart().getX());
         double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
 
         while (!endPointFound) {
             LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
 
             for (int[] tileOn : tilesOn) {
-                System.out.println("tile " + tileOn[0] + " " + tileOn[1]);
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
                     Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
-                    // TODO make precise again.
-                    /*double minX = tileLoc.getX() - offSet;
+                    double minX = tileLoc.getX() - offSet;
                     double maxX = tileLoc.getX() + offSet;
                     double minY = tileLoc.getY() - offSet;
                     double maxY = tileLoc.getY() + offSet;
                     double y1 = (minX * m) + c;
                     double y2 = (maxX * m) + c;
                     double x1 = (minY - c) / m;
-                    double x2 = (maxY - c) / m;*/
+                    double x2 = (maxY - c) / m;
 
-                    /*
-                     * if (y1 <= maxY && y1 >= minY) { endPoint = new Location(minX, y1); } else if
-                     * (y2 <= maxY && y2 >= minY) { endPoint = new Location(maxX, y2); } else if (x1
-                     * <= maxX && x1 >= minX) { endPoint = new Location(x1, minY); } else { endPoint
-                     * = new Location(x2, maxY); }
-                     */
+                    if (y1 <= maxY && y1 >= minY) {
+                        endPoint = new Location(minX, y1);
+                    } else if (y2 <= maxY && y2 >= minY) {
+                        endPoint = new Location(maxX, y2);
+                    } else if (x1 <= maxX && x1 >= minX) {
+                        endPoint = new Location(x1, minY);
+                    } else {
+                        endPoint = new Location(x2, maxY);
+                    }
 
                     endPoint = tileLoc;
 
@@ -91,9 +91,9 @@ public class Laser extends Line {
             }
         }
 
-        System.out.println("laser made.");
+        /*System.out.println("laser made.");
         System.out.println("start: " + start.getX() + " " + start.getY() + " " + start.getDirection());
-        System.out.println("end: " + endPoint.getX() + " " + endPoint.getY());
+        System.out.println("end: " + endPoint.getX() + " " + endPoint.getY());*/
 
         return new Laser(start, endPoint, templateLaser.size, templateLaser.damage, templateLaser.duration, team);
     }
@@ -140,7 +140,7 @@ public class Laser extends Line {
     }
 
     public LinkedHashSet<int[]> getTilesOn() {
-        double m = length / Math.abs(end.getX() - start.getX());
+        double m = (end.getY() - start.getY()) / (end.getX() - start.getX());
         double c = start.getY() - (m * start.getX());
         double maxX = start.getX();
         double maxY = start.getY();
@@ -197,18 +197,22 @@ public class Laser extends Line {
         }
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
-        double offSet = Tile.TILE_SIZE + size;
+
         for (int t_x = startX; t_x != endX; t_x += cX) {
             for (int t_y = startY; t_y != endY; t_y += cY) {
                 Location tileLoc = Tile.tileToLocation(t_x, t_y);
-                minX = tileLoc.getX() - offSet;
-                maxX = tileLoc.getX() + offSet;
-                minY = tileLoc.getY() - offSet;
-                maxY = tileLoc.getY() + offSet;
+                minX = tileLoc.getX() - Tile.TILE_SIZE;
+                maxX = tileLoc.getX() + Tile.TILE_SIZE;
+                minY = tileLoc.getY() - Tile.TILE_SIZE;
+                maxY = tileLoc.getY() + Tile.TILE_SIZE;
                 double y1 = (minX * m) + c;
                 double y2 = (maxX * m) + c;
                 double x1 = (minY - c) / m;
                 double x2 = (maxY - c) / m;
+                minX -= size;
+                maxX += size;
+                minY -= size;
+                maxY += size;
 
                 if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY) || (x1 <= maxX && x1 >= minX) || (x2 <= maxX && x2 >= minX))
                     tilesOn.add(new int[] { t_x, t_y });

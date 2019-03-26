@@ -670,7 +670,6 @@ public class ProcessGameState extends Thread {
                         for (Integer entityID : entitiesOnTile) {
                             LivingEntity entityBeingChecked = livingEntities.get(entityID);
                             if (l.getTeam() != entityBeingChecked.getTeam() && l.canDamage(entityID) && entityBeingChecked.haveCollided(l)) {
-                                System.out.println("Laser damaging enemy with: " + l.getDamage());
                                 entityBeingChecked.damage(l.getDamage());
                                 l.Damaged(entityID);
                                 // TODO add force from laser
