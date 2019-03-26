@@ -1,12 +1,12 @@
 package client.input;
 
+import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import shared.Constants;
 import shared.lists.ItemType;
 import shared.view.GameView;
 import shared.view.GunView;
@@ -14,13 +14,14 @@ import shared.view.entity.PlayerView;
 
 public class MouseHandler extends UserInteraction {
 
-	private int playerID;
+    private int playerID;
     private Scene scene;
     private Canvas mapCanvas;
     private GameView gameView;
     private PlayerView playerView;
     private Attack attack;
     private ChangeItem changeItem;
+    private Settings settings;
     private double mouseX;
     private double mouseY;
     private double playerX;
@@ -32,8 +33,9 @@ public class MouseHandler extends UserInteraction {
     private boolean activated;
     private boolean hold;
 
-    public MouseHandler(int playerID) {
+    public MouseHandler(int playerID, Settings settings) {
         super();
+        this.settings = settings;
         this.t = null;
         this.playerID = playerID;
         this.hold = false;
@@ -54,8 +56,8 @@ public class MouseHandler extends UserInteraction {
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
-        playerX = mapCanvas.getTranslateX() + playerView.getPose().getX() + Constants.TILE_SIZE / 2;
-        playerY = mapCanvas.getTranslateY() + playerView.getPose().getY() + Constants.TILE_SIZE / 2;
+        playerX = (double) settings.getScreenWidth() / 2;
+        playerY = (double) settings.getScreenHeight() / 2;
         // System.out.println("mouseX: " + mouseX);
         // System.out.println("mouseY: " + mouseY);
         // System.out.println("playerX: " + playerX);
@@ -87,46 +89,44 @@ public class MouseHandler extends UserInteraction {
         super.setScene(scene);
 
         scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-			mouseMovement(e);
-		});
-		
-		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			if(e.isPrimaryButtonDown()) {
-				mouseMovement(e);
-				attack.attack();
-				this.hold = true;
-			}
-			else {
-				mouseMovement(e);
-			}
-		});
-		
-		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-			if(e.isPrimaryButtonDown()) {
-				attack.attack();
-				this.hold = true;
-			}
-		});
-		
-		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-			if(e.getButton().toString().equals("PRIMARY")) {
-				this.hold = false;
-			}
-		});
-		
-		scene.setOnScroll(new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if(event.getDeltaY() > 0) {
-					changeItem.previousItem();
-				}
-				else if(event.getDeltaY() < 0) {
-					changeItem.nextItem();
-				}
-				//System.out.println(playerView.getCurrentItemIndex());
-				// TODO: send changes(item change) to server
-			}
-		});
+            mouseMovement(e);
+        });
+
+        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+            if (e.isPrimaryButtonDown()) {
+                mouseMovement(e);
+                attack.attack();
+                this.hold = true;
+            } else {
+                mouseMovement(e);
+            }
+        });
+
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.isPrimaryButtonDown()) {
+                attack.attack();
+                this.hold = true;
+            }
+        });
+
+        scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+            if (e.getButton().toString().equals("PRIMARY")) {
+                this.hold = false;
+            }
+        });
+
+        scene.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaY() > 0) {
+                    changeItem.previousItem();
+                } else if (event.getDeltaY() < 0) {
+                    changeItem.nextItem();
+                }
+                //System.out.println(playerView.getCurrentItemIndex());
+                // TODO: send changes(item change) to server
+            }
+        });
     }
 
     public void setCanvas(Canvas mapCanvas) {
@@ -151,16 +151,16 @@ public class MouseHandler extends UserInteraction {
     public void activate() {
         super.activate();
         this.t = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				if(hold == true) {
-					if(playerView.getCurrentItem().getItemType() == ItemType.GUN && ((GunView)playerView.getCurrentItem()).isAutoFire()) {
-						attack.attack();
-					}
-				}
-			}
-		};
-		this.t.start();
+            @Override
+            public void handle(long now) {
+                if (hold == true) {
+                    if (playerView.getCurrentItem().getItemType() == ItemType.GUN && ((GunView) playerView.getCurrentItem()).isAutoFire()) {
+                        attack.attack();
+                    }
+                }
+            }
+        };
+        this.t.start();
     }
 
     @Override
