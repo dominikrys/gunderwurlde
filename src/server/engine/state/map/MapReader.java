@@ -34,7 +34,7 @@ import shared.lists.TileState;
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 
-    // test read
+    // test read todo: remove this
     public static void main(String[] args) {
         readMap(MapList.MEADOW);
     }
