@@ -34,7 +34,7 @@ import shared.lists.TileState;
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 
-    // test read
+    // test read todo: remove this
     public static void main(String[] args) {
         readMap(MapList.MEADOW);
     }
@@ -53,15 +53,28 @@ public class MapReader {
             char ID = tileComp.removeFirst().charAt(0);
             TileList type = TileList.valueOf(tileComp.removeFirst());
             TileState state;
-            double value;
+            double friction;
+            double bounce;
+            double density;
+
             if (tileComp.isEmpty()) {
                 state = type.getTileState();
-                value = type.getFriction();
+                friction = type.getFriction();
+                bounce = type.getBounceCoefficient();
+                density = type.getDensity();
             } else {
                 state = TileState.valueOf(tileComp.removeFirst());
-                value = Double.valueOf(tileComp.removeFirst());
+                if (state == TileState.SOLID) {
+                    bounce = Double.valueOf(tileComp.removeFirst());
+                    friction = 0;
+                    density = 0;
+                } else {
+                    bounce = 0;
+                    friction = Double.valueOf(tileComp.removeFirst());
+                    density = Double.valueOf(tileComp.removeFirst());
+                }
             }
-            tiles.put(ID, new Tile(type, state, value));
+            tiles.put(ID, new Tile(type, state, friction, bounce, density));
             line = file.removeFirst();
         }
 

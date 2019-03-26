@@ -1,95 +1,62 @@
-# Meadow map
+# BIGTESTMAP
 #Dimensions X,Y:
-70 46
+30 30
 #Tiles
 #TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
-W WOOD SOLID 0.7
-G GRASS PASSABLE 0.5
-D DOOR SOLID 0.9
+A GRASS
+B WOOD
+C DOOR
+D RUINS_FLOOR
+E RUINS_ORNATE_BLOCK
+F RUINS_SOLID_BLOCK_DARK
+G RUINS_SOLID_BLOCK_LIGHT
+H RUINS_WALL_DARK
+I RUINS_WALL_MID
+J RUINS_WALL_LIGHT
+K SAND
+L RED_GROUND
+M MARBLE_FLOOR
+N DIRT
+O WATER
+P VOID
 
 #Tile Map
-W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
-W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
+B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
+B O O O O O O O O O O O O O J J J J J J J D D D D D D D D B
+B O O O O O O O O O O O O O K K K K K K J D A A E E F D D B
+B O O O A A A A O O O A O O K K K K K K J A A A D D F D D B
+B O O A K A A A A A A A K K K K K K K K J A D D D D D D D B
+B O A K K K K K K K K K K K J J J J J J J A A D D D D D D B
+B A A A K K K K K K K K K K J A A A A A A A A D D D D D D B
+B A A A A A A K K K K K K K J A A A A A A A A H H H H H H B
+B A A A A A A A A K K K K A J A A A A A A A H A A O D D H B
+B J J J J J C C J J J J J J J A A A A A A H A A A O O D H B
+B A A A A A A A A A A A A A A A A A A A A H A A A O O O H B
+B A A A A A A A A A A A A A A A A A A A A C A A A A O O H B
+B A A A A A A A A A A A A A A A A A A A A C A A A A A O H B
+B A A A A A A A A A A A A A A A A A A A A H N N N A A A H B
+B A A A A A A A A A A A A A A A A A A A A H N A N N A A H B
+B A A A A A A A A A A A A A A A A A A A A A H H H H H H H B
+B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
+B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
+B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
+B A A A A A A A A A A A A A A A A N N N N A K K A A A A A B
+B A A A A A A A A A A A A A A A K O O O O O A K A A A A A B
+B I I I C C I I I A A A A A A K K O O O O O O K K K A A A B
+B I L L L L L L I A A A A A A K N O O O O O O O K A A A A B
+B I L L L L L L I A A A A A A A N O O O O O O O A A A A A B
+B I L L L L L L I A A A A A A A A K O O O O O A N A A A A B
+B I L L L L L L I A A A A A A A A K K A N N N N N A A A A B
+B I L L L L L L I A A A A A A A A A K K A A A A A A A A A B
+B I L L L L L L I A A A A A A A A A A K K K A A A A A A A B
+B I I I I I I I I A A A A A A A A A A K K K K A A A A A A B
+B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
 
 #Team Spawns
-RED 1 1
-BLUE 30 1
-GREEN 3 10
-YELLOW 27 10
+RED 19 2
+BLUE 23 8
+GREEN 2 22
+YELLOW 28 28
 
-#Zones TODO add doors
-#Zone1
-#EnemySpawns
-10 10
-
-#Triggers
-27 10
-
-#Optional Doors (Tile to return) (Location params) (Kills Required)
-G 1 2 5
-
-#Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
-#Round1
-ZOMBIE
-0 1000 1 1
-
-
-#Zone2
-#EnemySpawns
-10 10
-
-#Triggers
-3 10
-
-
-#Rounds wave per line
-#Round1
-ZOMBIE
-0 1000 1 1
-
-
+#Zones
 

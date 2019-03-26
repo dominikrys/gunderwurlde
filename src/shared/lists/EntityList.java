@@ -121,8 +121,6 @@ public enum EntityList {
     GRASS_TILE("file:assets/img/tiles/grass.png", Constants.TILE_SIZE),
     WOOD_TILE("file:assets/img/tiles/wood.png", Constants.TILE_SIZE),
     DOOR_TILE("file:assets/img/tiles/door.png", Constants.TILE_SIZE),
-    RUINS_DOOR("file:assets/img/tiles/ruins_door.png", Constants.TILE_SIZE),
-    RUINS_DOOR_OPEN("file:assets/img/tiles/ruins_door_open.png", Constants.TILE_SIZE),
     RUINS_FLOOR("file:assets/img/tiles/ruins_floor.png", Constants.TILE_SIZE),
     RUINS_ORNATE_BLOCK("file:assets/img/tiles/ruins_ornate_block.png", Constants.TILE_SIZE),
     RUINS_SOLID_BLOCK_DARK("file:assets/img/tiles/ruins_solid_block_dark.png", Constants.TILE_SIZE),
@@ -135,6 +133,7 @@ public enum EntityList {
     RED_GROUND("file:assets/img/tiles/red_ground.png", Constants.TILE_SIZE),
     MARBLE_FLOOR("file:assets/img/tiles/marble_floor.png", Constants.TILE_SIZE),
     DIRT("file:assets/img/tiles/dirt.png", Constants.TILE_SIZE),
+    VOID("file:assets/img/tiles/void.png", Constants.TILE_SIZE),
 
     /**
      * Other renderable entities - some are items

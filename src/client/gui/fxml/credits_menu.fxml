@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<fx:root alignment="CENTER" style="-fx-spacing: 20px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/">
    <children>
       <Label text="Credits">
          <font>
@@ -26,11 +26,11 @@
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="300.0" prefWidth="300.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label styleClass="manaspaceFontWhite" text="Richard Miller">

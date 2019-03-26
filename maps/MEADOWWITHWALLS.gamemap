@@ -3,9 +3,9 @@
 32 22
 #Tiles
 #TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
-W WOOD SOLID 0.7
-G GRASS PASSABLE 0.5
-D DOOR SOLID 0.9
+W WOOD
+G GRASS
+D DOOR
 
 #Tile Map
 W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W
@@ -56,7 +56,7 @@ MIDGET 1 2000
 
 #Zone2
 #EnemySpawns
-10 10
+9 10
 
 #Triggers
 6 10

@@ -7,6 +7,7 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.SniperRifle;
+import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
@@ -62,9 +63,8 @@ public class SniperAI extends AStarUsingEnemy {
         if (posePath == null) {
             if (!getAStarProcessing()) {
                 if(poseToGo != null) {
-                    AStar star = new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo);
-                    star.setName("AStarThread");
-                    star.start();
+//                    Pose posetogoo = new Pose(Tile.tileToLocation(30, 2));
+                    new AStar(this, 1, tileMap, pose, poseToGo).start();
                     poseToGo = null;
                 }else if (!isProcessing()){
                     (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();

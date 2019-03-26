@@ -46,6 +46,9 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     private Button highScoreButton;
 
+    @FXML
+    private Button mapEditorButton;
+
     /**
      * Constructor
      *
@@ -149,11 +152,21 @@ public class MainMenuController extends VBox implements MenuController {
      */
     @FXML
     void quitButtonPress(ActionEvent event) {
-
         System.out.println("\n\n Threads alive when quit button is pressed in main menu \n\n");
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         for(Thread t : threadSet){
             System.out.println(t.getName() + " is still alive");
         }
+        stage.close();
+    }
+
+    /**
+     * Go into map editor
+     *
+     * @param event Map editor button press
+     */
+    @FXML
+    void mapEditorButtonPress(ActionEvent event) {
+
     }
 }
