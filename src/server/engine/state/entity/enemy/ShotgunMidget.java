@@ -16,7 +16,7 @@ public class ShotgunMidget extends Zombie {
     public static final double DEFAULT_MASS = 1;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
-    private int knockbackAmount;
+    private final int KNOCKBACK_AMOUNT;
 
     static {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 2, 1));
@@ -29,13 +29,13 @@ public class ShotgunMidget extends Zombie {
                 new ShotgunMidgetAI(knockbackAmount),
                 DEFAULT_MASS);
 
-        this.knockbackAmount = knockbackAmount;
+        this.KNOCKBACK_AMOUNT = knockbackAmount;
     }
 
 
     @Override
     EnemyAI getNewAI() {
-        return new ShotgunMidgetAI(knockbackAmount);
+        return new ShotgunMidgetAI(KNOCKBACK_AMOUNT);
     }
 
 }

@@ -16,11 +16,11 @@ W G G G G G G W W W G G G G G G G G G G G G W W W G G G G G G W
 W G G G G G W W G G G G G G G G G G G G G G G G W W G G G G G W
 W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
 W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
-W G G G G G G G G G W G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G W G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G W G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G W G G G G G G G G G G G G G G G G G G G G W
-W G G G G G G G G G W G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
+W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G G G G G G G G G G G G G G G G G G G G G G G G G G W
 W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
 W G G G G G W G G G G G G G G G G G G G G G G G G W G G G G G W
@@ -56,7 +56,7 @@ MIDGET 1 2000
 
 #Zone2
 #EnemySpawns
-9 10
+15 10
 
 #Triggers
 6 10
@@ -64,7 +64,7 @@ MIDGET 1 2000
 
 #Rounds wave per line
 #Round1
-SNIPER 400
+MIDGET 2 1000
 0 1000 1 1
 
 

@@ -90,15 +90,4 @@ public class ZombieAI extends EnemyAI {
     protected Attack getAttackObj() {
         return new AoeAttack(closestPlayer, 24, 1, Team.ENEMY);
     }
-    //    @Override
-//    protected Pose generateNextPose() {
-//        pose = checkIfInSpawn();
-//
-//        if (outOfSpawn) {
-//            double angle = getAngle(pose, closestPlayer);
-//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-//        }
-//
-//        return pose;
-//    }
 }
