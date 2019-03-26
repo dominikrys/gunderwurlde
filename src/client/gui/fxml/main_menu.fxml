@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<fx:root alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/">
    <children>
       <Label id="title" alignment="CENTER" text="Gunderwurlde" textAlignment="CENTER">
          <font>
@@ -52,6 +52,15 @@
          </styleClass>
       </Button>
       <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonPress" text="Help">
+         <font>
+            <Font name="Manaspace" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="menuButton" />
+         </styleClass>
+      </Button>
+      <Button fx:id="mapEditorButton" mnemonicParsing="false" onAction="#mapEditorButtonPress" text="Map Editor">
          <font>
             <Font name="Manaspace" size="22.0" />
          </font>
