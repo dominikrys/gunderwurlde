@@ -1,5 +1,7 @@
 package mapeditor;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -46,10 +48,11 @@ import shared.lists.TileList;
 
 public class MapEditor {
 	
+	private File saveFile;
 	private int resWidth;
 	private int resHeight;
 	private MapEditor mapEditor = this;
-	private String fileName;
+	private String mapName;
 	private Stage stage;
 	private StackPane root;
 	private Scene scene;
@@ -113,8 +116,8 @@ public class MapEditor {
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
 	private HashMap<TileList, Image> tileSprite;
 	private boolean keysActivated;
-	private int selectedX;
-	private int selectedY;
+	private int selectedX = 0;
+	private int selectedY = 0;
 	private Tile paintTile;
 	private WaveSetter waveSetter;
 	
@@ -127,15 +130,15 @@ public class MapEditor {
 	}
 	
 	// Open map
-	public MapEditor(String fileName, int resWidth, int resHeight) {
-		this.fileName = fileName;
+	public MapEditor(File saveFile, int resWidth, int resHeight) {
+		this.saveFile = saveFile;
 		this.resWidth = resWidth;
 		this.resHeight = resHeight;
 		this.init();
 	}
 	
 	public String getMapName() {
-		return this.fileName;
+		return this.mapName;
 	}
 	
 	public Tile[][] getMapTiles() {
@@ -164,8 +167,15 @@ public class MapEditor {
 		loadAssets();
 		
 		stage = new Stage();
-		if(fileName != null) {
-			stage.setTitle(fileName);
+		if(saveFile != null) {
+			MapSave mapSave = MapWriter.readSave(saveFile);
+			mapName = mapSave.getMapName();
+			stage.setTitle(mapName);
+			teamSpawns = mapSave.getTeamSpawns();
+			mapWidth = mapSave.getMapWidth();
+			mapHeight = mapSave.getMapHeight();
+			mapTiles = mapSave.getMapTiles();
+			this.waveSetter = new WaveSetter(mapEditor, mapSave.getZoneMap());
 		}
 		else {
 			stage.setTitle("New Map");
@@ -237,8 +247,8 @@ public class MapEditor {
 		// > > Map Name Label
 		mapNameLabel = new Label("Map Name: ");
 		info.getChildren().add(mapNameLabel);
-		if(fileName != null) {
-			mapNameLabel.setText("Map Name: " + fileName);
+		if(mapName != null) {
+			mapNameLabel.setText("Map Name: " + mapName);
 		}
 		
 		// > > Map Name Button
@@ -306,7 +316,9 @@ public class MapEditor {
 		});
 		
 		// > > > Team spawns
-		teamSpawns = new HashMap<Team, int[]>(); // {-1, -1} means unset
+		if(teamSpawns == null) {
+			teamSpawns = new HashMap<Team, int[]>(); // {-1, -1} means unset
+		}
 		
 		teamSpawnInfo = new GridPane();
 		info.getChildren().add(teamSpawnInfo);
@@ -461,16 +473,21 @@ public class MapEditor {
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(fileName == null) {
+				if(mapName == null) {
 					nameSetter();
 				}
-				MapWriter.saveMap(mapEditor);
+				MapWriter.saveMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap()));
 			}
 		});
 		
 		// > > > > Complete Button
 		completeButton = new Button("Complete");
 		saveCompleteHBox.getChildren().add(completeButton);
+		
+		if(saveFile != null) {
+			drawMapTiles();
+			
+		}
 		
 		stage.show();
         
@@ -878,9 +895,9 @@ public class MapEditor {
 		
 		Optional<String> name = dialog.showAndWait();
 		if(name.isPresent() && !name.get().equals("")) {
-			fileName = name.get();
-			mapNameLabel.setText("Map Name: " + fileName);
-			stage.setTitle(fileName);
+			mapName = name.get();
+			mapNameLabel.setText("Map Name: " + mapName);
+			stage.setTitle(mapName);
 		}
 		else {
 			Alert alert = new Alert(AlertType.ERROR);

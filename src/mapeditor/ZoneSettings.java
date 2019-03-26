@@ -1,11 +1,14 @@
 package mapeditor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import server.engine.state.map.tile.Door;
 
-public class ZoneSettings {
+public class ZoneSettings implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	protected String zoneName;
 	protected ArrayList<int[]> enemySpawns;

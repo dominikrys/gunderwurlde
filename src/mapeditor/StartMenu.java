@@ -72,12 +72,11 @@ public class StartMenu {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open your map");
 				String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-				fileChooser.setInitialDirectory(new File(currentPath + "/maps"));
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("GAMEMAP Files", "*.gamemap"));
+				fileChooser.setInitialDirectory(new File(currentPath + "/maps/saves"));
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("gm Files", "*.gm"));
 				File map = fileChooser.showOpenDialog(stage);
 				if(map != null) {
-					//MapEditor.init(new Stage(), map.getName().substring(0, map.getName().lastIndexOf(".")));
-					MapEditor mapEditor = new MapEditor(map.getName(), resWidth, resHeight);
+					MapEditor mapEditor = new MapEditor(map, resWidth, resHeight);
 				}
 			}
 		});

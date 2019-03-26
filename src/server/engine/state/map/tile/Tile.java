@@ -5,9 +5,11 @@ import shared.Location;
 import shared.lists.TileList;
 import shared.lists.TileState;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 
-public class Tile {
+public class Tile implements Serializable {
+	private static final long serialVersionUID = 1L;
     public static final int TILE_SIZE = Constants.TILE_SIZE;
     public static final double DEFAULT_DENSITY = 200;
 

@@ -90,6 +90,14 @@ public class WaveSetter {
 		this.init();
 	}
 	
+	public WaveSetter(MapEditor mapEditor, HashMap<String, ZoneSettings> zoneMap) {
+		this.mapEditor = mapEditor;
+		this.zoneMap = zoneMap;
+		this.selectedXY = new int[] {0, 0};
+		loadEnemySprite();
+		this.init();
+	}
+	
 	public void setSelectedXY(int[] selectedXY) {
 		this.selectedXY = selectedXY;
 		selectedXYLabel.setText("X: " + selectedXY[0] + " Y: " + selectedXY[1]);
@@ -230,17 +238,17 @@ public class WaveSetter {
 						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
 							WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
 							if(wave != null) {
-								setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+								setEnemyInfo(entry.getKey(), wave.getStartTime(), wave.getSpawnInterval(), wave.getAmountPerSpawn(), wave.getTotal(), wave.isReady());
 							}
 							else {
-								setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+								setEnemyInfo(entry.getKey(), 0, 0, 0, 0, false);
 							}
 							entry.getValue().setDisable(false);
 						}
 					}
 					else {
 						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
-							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							setEnemyInfo(entry.getKey(), 0, 0, 0, 0, false);
 							entry.getValue().setDisable(true);
 						}
 						roundDelete.setDisable(true);
@@ -319,7 +327,7 @@ public class WaveSetter {
 						roundAdd.setDisable(true);
 						roundDelete.setDisable(true);
 						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
-							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							setEnemyInfo(entry.getKey(), 0, 0, 0, 0, false);
 							entry.getValue().setDisable(true);
 						}
 					}
@@ -549,10 +557,10 @@ public class WaveSetter {
 					for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
 						WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
 						if(wave != null) {
-							setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+							setEnemyInfo(entry.getKey(), wave.getStartTime(), wave.getSpawnInterval(), wave.getAmountPerSpawn(), wave.getTotal(), wave.isReady());
 						}
 						else {
-							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							setEnemyInfo(entry.getKey(), 0, 0, 0, 0, false);
 						}
 					}
 				}
@@ -621,7 +629,7 @@ public class WaveSetter {
 						roundComboBox.setDisable(true);
 						roundDelete.setDisable(true);
 						for(Map.Entry<EntityList, Button> entry : enemySetButtons.entrySet()) {
-							setEnemyInfo(entry.getKey(), "0", "0", "0", "0", "false");
+							setEnemyInfo(entry.getKey(), 0, 0, 0, 0, false);
 							entry.getValue().setDisable(true);
 						}
 					}
@@ -629,7 +637,7 @@ public class WaveSetter {
 						roundComboBox.getSelectionModel().selectNext();
 						for(Map.Entry<EntityList, ImageView> entry : enemySprite.entrySet()) {
 							WaveSettings wave = zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey());
-							setEnemyInfo(entry.getKey(), Integer.toString(wave.getStartTime()), Integer.toString(wave.getSpawnInterval()), Integer.toString(wave.getAmountPerSpawn()), Integer.toString(wave.getTotal()), Boolean.toString(wave.isReady()));
+							setEnemyInfo(entry.getKey(), wave.getStartTime(), wave.getSpawnInterval(), wave.getAmountPerSpawn(), wave.getTotal(), wave.isReady());
 						}
 					}
 				}
@@ -689,9 +697,9 @@ public class WaveSetter {
 				@Override
 				public void handle(ActionEvent event) {
 					if(!zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().containsKey(entry.getKey())) {
-						zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().put(entry.getKey(), new WaveSettings(waveSetter, entry.getKey()));
+						zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().put(entry.getKey(), new WaveSettings(entry.getKey()));
 					}
-					zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey()).show();
+					EnemySetter enemySetter = new EnemySetter(waveSetter, entry.getKey(), zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(entry.getKey()));
 				}
 			});
 			
@@ -702,6 +710,18 @@ public class WaveSetter {
 			}
 		}
 		
+		if(!zoneMap.isEmpty()) {
+			for(Map.Entry<String, ZoneSettings> entry : zoneMap.entrySet()) {
+				zoneComboBox.getItems().add(entry.getKey());
+			}
+			zoneComboBox.getSelectionModel().selectFirst();
+			zoneComboBox.fireEvent(new ActionEvent());
+			zoneComboBox.setDisable(false);
+			zoneDelete.setDisable(false);
+			enemySpawnAdd.setDisable(false);
+			triggerAdd.setDisable(false);
+			roundAdd.setDisable(false);
+		}
 		
 		stage.setOnCloseRequest(we -> {
 			stage.close();
@@ -754,12 +774,19 @@ public class WaveSetter {
 		return true;
 	}
 	
-	public void setEnemyInfo(EntityList enemy, String startTime, String spawnInterval, String amountPerSpawn, String total, String ready) {
+	public void setEnemyInfo(EntityList enemy, int startTime, int spawnInterval, int amountPerSpawn, int total, boolean ready) {
 		enemyStartTimeLabels.get(enemy).setText("Start Time: " + startTime);
 		enemySpawnIntervalLabels.get(enemy).setText("Spawn Interval: " + spawnInterval);
 		enemyAmountPerSpawnLabels.get(enemy).setText("Amount Per Spawn: " + amountPerSpawn);
 		enemyTotalLabels.get(enemy).setText("Total: " + total);
 		enemyReadyLabels.get(enemy).setText("Ready: " + ready);
+		if(ready) {
+			zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(enemy).setStartTime(startTime);
+			zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(enemy).setSpawnInterval(spawnInterval);
+			zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(enemy).setAmountPerSpawn(amountPerSpawn);
+			zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(enemy).setTotal(total);
+			zoneMap.get(zoneComboBox.getValue()).getRounds().get(roundComboBox.getValue()).getWaves().get(enemy).setReady(ready);
+		}
 	}
 	
 	private void selectionError(String source) {

@@ -1,6 +1,9 @@
 package server.engine.state.map.tile;
 
-public class Door {
+import java.io.Serializable;
+
+public class Door implements Serializable{
+	private static final long serialVersionUID = 1L;
     protected Tile tileToReturn;
     protected int killsLeft;
 

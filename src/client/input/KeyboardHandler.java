@@ -85,6 +85,16 @@ public class KeyboardHandler extends UserInteraction {
     private TimerTask task;
     
     /**
+     * Boolean whether an item can be dropped
+     */
+    private boolean dropCoolDown;
+    
+    /**
+     * TimerTask for item dropping cooldown
+     */
+    private TimerTask checkDropCoolDown;
+    
+    /**
      * Boolean whether this keyboard handler is active
      */
     private boolean activated;
@@ -104,6 +114,7 @@ public class KeyboardHandler extends UserInteraction {
         super();
         this.playerID = playerID;
         this.settings = settings;
+        this.dropCoolDown = false;
     }
 
     /**
@@ -255,8 +266,16 @@ public class KeyboardHandler extends UserInteraction {
                 if (reloadPressed) {
                     reload.reload();
                 }
-                if (dropPressed) {
+                if (dropPressed && !dropCoolDown) {
                     dropItem.drop();
+                    dropCoolDown = true;
+                    checkDropCoolDown = new TimerTask() {
+            			@Override
+            			public void run() {
+            				dropCoolDown = false;
+            			}
+            		};
+                    timer.schedule(checkDropCoolDown, 1000);
                 }
                 if (interactPressed) {
 
