@@ -37,41 +37,41 @@ public class Movement extends Action{
 		//String action = settings.getAction(key);
 		int angle = -1;
 		switch (direction) {
-			case "up" :
+			case "up":
 				//pose.setY(pose.getY() - playerView.getMoveSpeed());
-			        angle = 270;
+				angle = 270;
 				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("up");
+				// System.out.println("up");
 				break;
-			case "left" :
+			case "left":
 				//pose.setX(pose.getX() - playerView.getMoveSpeed());
-			        angle = 180;
+				angle = 180;
 				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("left");
+				// System.out.println("left");
 				break;
-			case "down" :
+			case "down":
 				//pose.setY(pose.getY() + playerView.getMoveSpeed());
-			        angle = 90;
+				angle = 90;
 				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("down");
+				// System.out.println("down");
 				break;
-			case "right" :
+			case "right":
 				//pose.setX(pose.getX() + playerView.getMoveSpeed());
-			        angle = 0;
+				angle = 0;
 				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("right");
+				// System.out.println("right");
 				break;
-			case "upLeft" :
-			        angle = 225;
+			case "upLeft":
+				angle = 225;
 				break;
-			case "upRight" :
-			        angle = 315;
+			case "upRight":
+				angle = 315;
 				break;
-			case "downLeft" :
-			        angle = 135;
+			case "downLeft":
+				angle = 135;
 				break;
-			case "downRight" :
-			        angle = 45;
+			case "downRight":
+				angle = 45;
 				break;
 		}
 		this.handler.send(ActionList.MOVEMENT, angle);

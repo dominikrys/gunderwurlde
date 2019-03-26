@@ -15,9 +15,7 @@ import shared.view.entity.PlayerView;
 public class MouseHandler extends UserInteraction {
 
 	private int playerID;
-    private Scene scene;
     private Canvas mapCanvas;
-    private GameView gameView;
     private PlayerView playerView;
     private Attack attack;
     private ChangeItem changeItem;
@@ -29,7 +27,6 @@ public class MouseHandler extends UserInteraction {
     private double playerDegree;
     private double toRotate;
     private AnimationTimer t;
-    private boolean activated;
     private boolean hold;
 
     public MouseHandler(int playerID) {
@@ -89,7 +86,7 @@ public class MouseHandler extends UserInteraction {
         scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
 			mouseMovement(e);
 		});
-		
+
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			if(e.isPrimaryButtonDown()) {
 				mouseMovement(e);
@@ -100,20 +97,20 @@ public class MouseHandler extends UserInteraction {
 				mouseMovement(e);
 			}
 		});
-		
+
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(e.isPrimaryButtonDown()) {
 				attack.attack();
 				this.hold = true;
 			}
 		});
-		
+
 		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
 			if(e.getButton().toString().equals("PRIMARY")) {
 				this.hold = false;
 			}
 		});
-		
+
 		scene.setOnScroll(new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {

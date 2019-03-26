@@ -8,6 +8,8 @@ import server.Server;
 import shared.lists.MapList;
 import shared.lists.Team;
 
+import java.util.Set;
+
 /**
  * GameHandler class. Starts the game and all the necessary threads
  */
@@ -146,17 +148,42 @@ public class GameHandler extends Thread {
                     try {
                         // Create the server
                         server = new Server(map, playerName, team, 1, false);
+                        server.setName("Server");
+                        System.out.println("\n\n Threads alive when server constructed \n\n");
+                        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                        for(Thread t : threadSet){
+                            System.out.println(t.getName() + " is still alive");
+                        }
+
                         // create the client
                         client = new Client(stage, this, settings, 0);
+                        client.setName("Client");
+                        System.out.println("\n\n Threads alive when client constructed \n\n");
+                        threadSet = Thread.getAllStackTraces().keySet();
+                        for(Thread t : threadSet){
+                            System.out.println(t.getName() + " is still alive");
+                        }
+
                         // start client threads ready to receive and send
                         client.start();
+
                         // wait for threads to be setup completely
                         client.join();
+                        System.out.println("\n\n Threads alive when client threads setup \n\n");
+                        threadSet = Thread.getAllStackTraces().keySet();
+                        for(Thread t : threadSet){
+                            System.out.println(t.getName() + " is still alive");
+                        }
                         // start server threads ready to send and receive
                         server.start();
                         serverStarted = true;
                         // wait for threads to be setup completely
                         server.join();
+                        System.out.println("\n\n Threads alive when server threads constructed \n\n");
+                        threadSet = Thread.getAllStackTraces().keySet();
+                        for(Thread t : threadSet){
+                            System.out.println(t.getName() + " is still alive");
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -167,9 +194,11 @@ public class GameHandler extends Thread {
                     try {
                         // create the server
                         server = new Server(map, playerName, team, numPlayers, true);
+                        server.setName("Server");
                         // start the server as it needs to listen to requests
                         server.join();
-                        loadScreenController.update(server.getIPAddress(), server.getPort());
+                        String[] splitIPAddress = server.getIPAddress().split("/");
+                        loadScreenController.update(splitIPAddress[1] , server.getPort());
                         server.start();
                         serverStarted = true;
                         // Wait for TCPManager to be up and receiving
@@ -179,6 +208,7 @@ public class GameHandler extends Thread {
                         System.out.println("Server setup and waiting");
                         // create the client
                         client = new Client(stage, this, settings, 0);
+                        client.setName("Client");
                         // setup clients threads
                         client.start();
                         System.out.println("Client started");
@@ -201,6 +231,7 @@ public class GameHandler extends Thread {
                         serverStarted = true;
                         // create a client
                         client = new Client(stage, this, settings, address, port, playerName, team);
+                        client.setName("Client");
                         // Wait for the client to fully join the game
                         System.out.println("client joined");
                         client.join();

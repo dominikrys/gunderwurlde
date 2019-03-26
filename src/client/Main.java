@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.util.Set;
+
 /**
  * Main class. Extends application, sets all the necessary stage settings and displays the main menu
  */
@@ -46,8 +48,8 @@ public class Main extends Application {
 
         // Set stage to close and to kill handler when the window is closed
         stage.setOnCloseRequest(we -> {
+            System.out.println("Main ending");
             stage.close();
-
             //System.exit(0); todo: remove this once threads close
         });
 

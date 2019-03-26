@@ -239,7 +239,9 @@ public class Client extends Thread {
             System.out.println("Client Sender Address: " + senderAddress);
             System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
+            sender.setName("ClientSender");
             receiver = new ClientReceiver(listenSocket, this, settings);
+            receiver.setName("ClientReceiver");
             System.out.println("Closing client");
         } catch (IOException e) {
             e.printStackTrace();

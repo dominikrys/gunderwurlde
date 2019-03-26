@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 
 /**
  * Thread that handles the sending of requests to the server
@@ -104,7 +105,9 @@ public class ClientSender extends Thread {
                 out.close();
                 bos.close();
             }
-        } catch (IOException e) {
+        }catch(SocketException ex){
+        }
+        catch (IOException e) {
             //e.printStackTrace();
             System.out.println("unable to send message");
         }

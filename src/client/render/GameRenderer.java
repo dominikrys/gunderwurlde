@@ -28,6 +28,8 @@ import shared.view.GameView;
 import shared.view.SoundView;
 import shared.view.entity.PlayerView;
 
+import java.util.Set;
+
 /**
  * GameRenderer class. Contains the whole rendering backbone.
  *
@@ -456,6 +458,12 @@ public class GameRenderer implements Runnable {
                             paused = false;
                             backToGameFromPauseMenu();
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
+                            System.out.println("\n\n Threads alive when quit button in pause menu is pressed \n\n");
+                            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                            for(Thread t : threadSet){
+                                System.out.println(t.getName() + " is still alive");
+                            }
+
                             // Set pause to false and stop rendering
                             paused = false;
                             getKeyboardHandler().deactivate();
