@@ -1,6 +1,7 @@
 package client.render;
 
 import client.Client;
+import client.ConnectionType;
 import client.Settings;
 import client.gui.menucontrollers.MainMenuController;
 import client.gui.menucontrollers.PauseMenuController;
@@ -115,6 +116,11 @@ public class GameRenderer implements Runnable {
      */
     private PauseMenuController pauseMenuController;
     /**
+     * ConnectionType for whether single player or not
+     */
+    private ConnectionType connectionType;
+
+    /**
      * Constructor
      *
      * @param stage           Stage to display game on
@@ -125,13 +131,15 @@ public class GameRenderer implements Runnable {
 
     private Client handler;
 
-    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler) {
+    public GameRenderer(Stage stage, GameView initialGameView, int playerID, Settings settings, Client handler,
+                        ConnectionType connectionType) {
         // Initialise gameView, stage and playerID
         this.gameView = initialGameView;
         this.stage = stage;
         this.playerID = playerID;
         this.settings = settings;
         this.handler = handler;
+        this.connectionType = connectionType;
 
         // Set paused to false
         paused = false;
@@ -321,7 +329,7 @@ public class GameRenderer implements Runnable {
      */
     private void renderGameView() {
         // Check if should be in spectator mode or not
-        checkSpectator();
+        checkDead();
 
         // Render map
         mapCanvas.renderMap(gameView, rendererResourceLoader);
@@ -329,10 +337,10 @@ public class GameRenderer implements Runnable {
         // Render entities onto canvas
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
-        // Check if end of game and if so, display end message
+        // Check if end of game
         if (gameView.getWinningTeam() != null) {
-            hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
-                    rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+            // Call gameWon to handle end of game screen and score saving
+            gameWon();
         }
 
         // Update HUD
@@ -341,9 +349,40 @@ public class GameRenderer implements Runnable {
     }
 
     /**
-     * Check if the player should be in spectator mode or not and set up appropriate code
+     * Method for performing necessary actions when the game is won
      */
-    private void checkSpectator() {
+    private void gameWon() {
+        // Display end of game message in the HUD
+        hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
+                rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
+
+        // Calculate the score for the team and get a list of team members
+        int teamHighScore = 0;
+        StringBuilder teamMembers = new StringBuilder();
+
+        for (PlayerView player : gameView.getPlayers()) {
+            if (player.getTeam() == gameView.getWinningTeam()) {
+                // If first team member, start off the string with their name
+                if (teamHighScore == 0) {
+                    teamMembers = new StringBuilder(gameView.getWinningTeam().toString() + ": " + player.getName());
+                } else {
+                    teamMembers.append(", ").append(player.getTeam());
+                }
+
+                // Add score to total
+                teamHighScore += player.getScore();
+            }
+        }
+
+        // Add score to high scores
+        settings.addMultiPlayerHighScore(teamMembers.toString(), teamHighScore);
+        settings.saveToDisk();
+    }
+
+    /**
+     * Check if the player should be in spectator mode after death or not and set up appropriate code
+     */
+    private void checkDead() {
         // Check if player has died, in which case give them a free camera
         if (getCurrentPlayer().getStatus() == EntityStatus.DEAD) {
             if (!spectator) {
@@ -361,7 +400,15 @@ public class GameRenderer implements Runnable {
                 })
                 ).start();
 
+                // Set their spectator mode to true
                 spectator = true;
+
+                // Check if single player
+                if (connectionType == ConnectionType.SINGLE_PLAYER) {
+                    // Add high score and save
+                    settings.addSinglePlayerHighScore(getCurrentPlayer().getName(), getCurrentPlayer().getScore());
+                    settings.saveToDisk();
+                }
             }
         } else {
             // Check if coming back from spectator mode
