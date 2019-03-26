@@ -34,6 +34,15 @@
             <String fx:value="menuButton" />
          </styleClass>
       </Button>
+      <Button fx:id="mapEditorButton" mnemonicParsing="false" onAction="#mapEditorButtonPress" text="Map Editor">
+         <font>
+            <Font name="Manaspace" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="menuButton" />
+         </styleClass>
+      </Button>
       <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#settingsButtonPress" text="Settings">
          <font>
             <Font name="Manaspace" size="22.0" />
@@ -52,15 +61,6 @@
          </styleClass>
       </Button>
       <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonPress" text="Help">
-         <font>
-            <Font name="Manaspace" size="22.0" />
-         </font>
-         <styleClass>
-            <String fx:value="manaspaceFontWhite" />
-            <String fx:value="menuButton" />
-         </styleClass>
-      </Button>
-      <Button fx:id="mapEditorButton" mnemonicParsing="false" onAction="#mapEditorButtonPress" text="Map Editor">
          <font>
             <Font name="Manaspace" size="22.0" />
          </font>

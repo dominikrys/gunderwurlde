@@ -250,7 +250,8 @@ public class MapCanvas extends Canvas {
         renderAnimationSpriteOnMap(enemiesOnMapAnimations, currentEnemy.getID(), currentEnemy.getPose());
 
         // Render healthbar
-        renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
+        renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(),
+                currentEnemy.getEntityListName().getSize());
 
         // Put enemy into enemy locations hashmap
         lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
@@ -409,7 +410,8 @@ public class MapCanvas extends Canvas {
         renderAnimationSpriteOnMap(playersOnMapAnimations, currentPlayer.getID(), currentPlayer.getPose());
 
         // Render healthbar
-        renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
+        renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(),
+                Constants.TILE_SIZE);
 
         // Put player into player locations hashmap
         lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
@@ -517,21 +519,22 @@ public class MapCanvas extends Canvas {
      * @param pose          Pose of animation to get location to render to from
      * @param currentHealth Current health of the entity
      * @param maxHealth     Max health of the entity
+     * @param enemySize Size of enemy
      */
-    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
+    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, int enemySize) {
         // Variables for calculations
         int healthBarHeight = 5;
-        int verticalOffset = 12;
+        int verticalOffset = 15;
         double healthLeftPercentage = (double) currentHealth / (double) maxHealth;
 
         // Render current health portion
         mapGC.setFill(Color.LIME);
         mapGC.fillRect(pose.getX(), pose.getY() - verticalOffset,
-                Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
+                enemySize * healthLeftPercentage, healthBarHeight);
 
         // Render lost health portion
         mapGC.setFill(Color.RED);
-        mapGC.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset,
+        mapGC.fillRect(pose.getX() + enemySize * healthLeftPercentage, pose.getY() - verticalOffset,
                 Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
     }
 
