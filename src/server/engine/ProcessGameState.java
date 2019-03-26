@@ -52,6 +52,7 @@ import shared.request.Request;
 import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
+import shared.view.LaserView;
 import shared.view.TileView;
 import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
@@ -110,7 +111,7 @@ public class ProcessGameState extends Thread {
             playerViews.add(toPlayerView(playerToView));
         }
 
-        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
+        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
     }
 
@@ -186,6 +187,7 @@ public class ProcessGameState extends Thread {
             GameMap currentMap = gameState.getCurrentMap();
             Tile[][] tileMap = currentMap.getTileMap();
             LinkedHashSet<Projectile> newProjectiles = new LinkedHashSet<>();
+            LinkedHashSet<Laser> newLasers = new LinkedHashSet<>();
             LinkedHashMap<Integer, ItemDrop> items = gameState.getItems();
             LinkedHashMap<Integer, LivingEntity> livingEntities = gameState.getLivingEntities();
 
@@ -563,7 +565,7 @@ public class ProcessGameState extends Thread {
                         // move the projectile
                         Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
                                 distanceMoved);
-                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0);
+                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0, 0);
                         currentProjectile.setLocation(newLocation);
                         LinkedHashSet<int[]> tilesOn = projectileCoverage.getTilesOn();
                         for (int[] tileCords : tilesOn) {
@@ -646,6 +648,20 @@ public class ProcessGameState extends Thread {
                             currentProjectile.isCloaked(), currentProjectile.getStatus()));
                 }
             }
+
+            // lasers processing
+            LinkedHashSet<Laser> lasers = gameState.getLasers();
+            LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
+
+            for (Laser l : lasers) {
+                Laser currentLaser = l;
+
+                if (!l.isRemoved()) {
+
+                    newLasers.add(l);
+                }
+            }
+
 
             // physics processing
             for (LivingEntity e : livingEntities.values()) {
@@ -893,7 +909,7 @@ public class ProcessGameState extends Thread {
             }
 
             // create gameview and send to handler
-            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView, remainingTeam);
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, lasersView, tileMapView, remainingTeam);
             handler.updateGameView(view);
         }
         LOGGER.info("Engine stopped!");

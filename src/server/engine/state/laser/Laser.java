@@ -9,25 +9,34 @@ import shared.Pose;
 import shared.lists.TileState;
 
 public class Laser extends Line {
+    protected double originalSize;
     protected double size;
     protected int damage;
+    protected long duration;
+    protected long creationTime;
 
-    public Laser(Location start, Location end, double size, int damage) {
+    public Laser(Location start, Location end, double size, int damage, long duration) {
         super(start, end);
         this.size = size;
+        this.originalSize = size;
+        this.duration = duration;
+        this.creationTime = System.currentTimeMillis();
     }
 
-    public Laser(Line line, double size, int damage) {
+    public Laser(Line line, double size, int damage, long duration) {
         super(line);
         this.size = size;
+        this.originalSize = size;
         this.damage = damage;
+        this.duration = duration;
+        this.creationTime = System.currentTimeMillis();
     }
 
-    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage) {
+    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage, long duration) {
         int chunkLength = 100;
         boolean endPointFound = false;
         double offSet = (Tile.TILE_SIZE / 2) + (size / 2);
-        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0);
+        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0, 0);
         Location endPoint = testLaser.getEnd();
         double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
         double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
@@ -64,20 +73,30 @@ public class Laser extends Line {
             }
 
             if (!endPointFound) {
-                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0);
+                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0, 0);
                 endPoint = testLaser.getEnd();
             }
         }
 
-        return new Laser(start, endPoint, size, damage);
+        return new Laser(start, endPoint, size, damage, duration);
+    }
+
+    public boolean isRemoved() {
+        double portionLeft = (System.currentTimeMillis() - creationTime) / duration;
+        if (portionLeft >= 1) {
+            return true;
+        } else {
+            size = originalSize * (1 - portionLeft);
+            return false;
+        }
     }
 
     public double getSize() {
         return size;
     }
 
-    public void setSize(double size) {
-        this.size = size;
+    public void setOriginalSize(double newSize) {
+        this.originalSize = newSize;
     }
 
     public int getDamage() {
