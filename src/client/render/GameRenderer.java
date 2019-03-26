@@ -218,7 +218,8 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
+        mapCanvas = new MapCanvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
@@ -418,7 +419,6 @@ public class GameRenderer implements Runnable {
         double playerY = currentPlayer.getPose().getY();
 
         // Ratio for how sensitive the map is to mouse movements
-        // Proportional to position of player: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
         double cameraMouseSensitivity = 0.25;
 
         // Adjust map horizontally

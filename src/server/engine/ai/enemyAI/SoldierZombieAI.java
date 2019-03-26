@@ -13,7 +13,7 @@ import shared.lists.Team;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class SoldierZombieAI extends EnemyAI {
+public class SoldierZombieAI extends PoseGeneratorUsingEnemy {
 
     private final int RANGE_TO_SHOOT; //In Location metric
     private final int RATE_OF_FIRE;
@@ -22,7 +22,6 @@ public class SoldierZombieAI extends EnemyAI {
     private boolean moving = false;
     private long beginAttackTime;
     private Random rand = new Random();
-    private Pose poseToGo;
     private Pistol pistol = new Pistol();
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire) {
@@ -72,11 +71,6 @@ public class SoldierZombieAI extends EnemyAI {
             this.actionState = ActionList.NONE;
         }
         return attacks;
-    }
-
-    public synchronized void setPoseToGo(Pose pose) {
-        poseToGo = pose;
-        setProcessing(false);
     }
 
     protected Force generateMovementForce() {
