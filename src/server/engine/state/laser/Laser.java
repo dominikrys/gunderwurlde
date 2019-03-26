@@ -17,7 +17,7 @@ public class Laser extends Line {
     }
 
     public static Laser DrawLaser(Pose start, Tile[][] tileMap) {
-
+        return null; // TODO
     }
 
     public double getSize() {
