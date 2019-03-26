@@ -25,6 +25,7 @@ import javafx.util.Duration;
 import shared.Constants;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
+import shared.lists.Team;
 import shared.view.GameView;
 import shared.view.SoundView;
 import shared.view.entity.PlayerView;
@@ -340,7 +341,7 @@ public class GameRenderer implements Runnable {
         mapCanvas.renderEntitiesFromGameViewToCanvas(gameView, playerID, rendererResourceLoader);
 
         // Check if end of game
-        if (gameView.getWinningTeam() != null) {
+        if (gameView.getWinningTeam() != Team.NONE) {
             // Call gameWon to handle end of game screen and score saving
             gameWon();
         }

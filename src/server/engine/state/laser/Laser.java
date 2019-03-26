@@ -1,57 +1,121 @@
 package server.engine.state.laser;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import server.engine.state.map.tile.Tile;
 import shared.Line;
 import shared.Location;
 import shared.Pose;
+import shared.lists.Team;
 import shared.lists.TileState;
 
 public class Laser extends Line {
+    public static final long DAMAGE_TIMEOUT = 200;
+
+    protected double originalSize;
     protected double size;
     protected int damage;
+    protected long duration;
+    protected long creationTime;
+    protected Team team;
+    protected HashMap<Integer, Long> lastEntityDamageTime;
 
-    public Laser(Location start, Location end, double size, int damage) {
+    public Laser(Location start, Location end, double size, int damage, long duration) {
         super(start, end);
         this.size = size;
+        this.originalSize = size;
+        this.duration = duration;
+        this.creationTime = System.currentTimeMillis();
+        this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public Laser(Line line, double size, int damage) {
+    public Laser(Line line, double size, int damage, long duration) {
         super(line);
         this.size = size;
+        this.originalSize = size;
         this.damage = damage;
+        this.duration = duration;
+        this.creationTime = System.currentTimeMillis();
+        this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage) {
+    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage, long duration) {
         int chunkLength = 100;
         boolean endPointFound = false;
-        Location endPoint = start;
+        double offSet = (Tile.TILE_SIZE / 2) + (size / 2);
+        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0, 0);
+        Location endPoint = testLaser.getEnd();
+        double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
+        double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
 
         while (!endPointFound) {
-            Laser testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0);
-            endPoint = testLaser.getEnd();
             LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
 
             for (int[] tileOn : tilesOn) {
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
-                    // TODO find precise collision point and set as end
+                    Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
+                    double minX = tileLoc.getX() - offSet;
+                    double maxX = tileLoc.getX() + offSet;
+                    double minY = tileLoc.getY() - offSet;
+                    double maxY = tileLoc.getY() + offSet;
+                    double y1 = (minX * m) + c;
+                    double y2 = (maxX * m) + c;
+                    double x1 = (minY - c) / m;
+                    double x2 = (maxY - c) / m;
+
+                    if (y1 <= maxY && y1 >= minY) {
+                        endPoint = new Location(minX, y1);
+                    } else if (y2 <= maxY && y2 >= minY) {
+                        endPoint = new Location(maxX, y2);
+                    } else if (x1 <= maxX && x1 >= minX) {
+                        endPoint = new Location(x1, minY);
+                    } else {
+                        endPoint = new Location(x2, maxY);
+                    }
+
                     endPointFound = true;
                     break;
                 }
             }
+
+            if (!endPointFound) {
+                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0, 0);
+                endPoint = testLaser.getEnd();
+            }
         }
 
-        return new Laser(start, endPoint, size, damage);
+        return new Laser(start, endPoint, size, damage, duration);
+    }
+
+    public boolean canDamage(Integer ID) {
+        if (!lastEntityDamageTime.containsKey(ID))
+            return true;
+        else
+            return (lastEntityDamageTime.get(ID) + DAMAGE_TIMEOUT <= System.currentTimeMillis());
+    }
+
+    public boolean isRemoved() {
+        double portionLeft = (System.currentTimeMillis() - creationTime) / duration;
+        if (portionLeft >= 1) {
+            return true;
+        } else {
+            size = originalSize * (1 - portionLeft);
+            return false;
+        }
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public double getSize() {
         return size;
     }
 
-    public void setSize(double size) {
-        this.size = size;
+    public void setOriginalSize(double newSize) {
+        this.originalSize = newSize;
     }
 
     public int getDamage() {
@@ -60,6 +124,10 @@ public class Laser extends Line {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public void Damaged(Integer entityID) {
+        this.lastEntityDamageTime.put(entityID, System.currentTimeMillis());
     }
 
     public LinkedHashSet<int[]> getTilesOn() {

@@ -14,7 +14,7 @@ public class ZombieAI extends EnemyAI {
     private boolean turnLeft;
     private int stepsUntilNormPath = 0;
     boolean randomizePath = true;
-    private final int DISTANCE_TO_PLAYER_FOR_ATTACK;
+    final int DISTANCE_TO_PLAYER_FOR_ATTACK;
     protected Location attackLocation;
 
     public ZombieAI() {
@@ -24,8 +24,8 @@ public class ZombieAI extends EnemyAI {
         this.attacking = false;
     }
 
-    public ZombieAI(int distanceToPlayerForAttack) {
-        super(SHORT_DELAY);
+    public ZombieAI(int distanceToPlayerForAttack, long delay) {
+        super(delay);
         this.DISTANCE_TO_PLAYER_FOR_ATTACK = distanceToPlayerForAttack;
         this.beginAttackTime = System.currentTimeMillis();
         this.attacking = false;
@@ -55,8 +55,6 @@ public class ZombieAI extends EnemyAI {
             return new Force(angleToMove, maxMovementForce);
         }
     }
-
-    //TODO Maybe needs some more balancing
 
     private double randomizePath(double angle) {
         Random rand = new Random();
@@ -90,15 +88,4 @@ public class ZombieAI extends EnemyAI {
     protected Attack getAttackObj() {
         return new AoeAttack(closestPlayer, 24, 1, Team.ENEMY);
     }
-    //    @Override
-//    protected Pose generateNextPose() {
-//        pose = checkIfInSpawn();
-//
-//        if (outOfSpawn) {
-//            double angle = getAngle(pose, closestPlayer);
-//            pose = poseFromAngle(randomizePath(angle), angle, maxDistanceToMove);
-//        }
-//
-//        return pose;
-//    }
 }

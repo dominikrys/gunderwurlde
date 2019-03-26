@@ -194,7 +194,7 @@ public class MapCanvas extends Canvas {
                     case RUNNER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.RUNNER_WALK), 32, 32,
-                                17, 30, 0, AnimationType.MOVE));
+                                17, 25, 0, AnimationType.MOVE));
                         break;
                     case SOLDIER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
@@ -209,22 +209,22 @@ public class MapCanvas extends Canvas {
                     case BOOMER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.BOOMER_WALK), 40, 40,
-                                8, 75, 0, AnimationType.MOVE));
+                                8, 70, 0, AnimationType.MOVE));
                         break;
                     case MACHINE_GUNNER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.MACHINE_GUNNER_WALK), 34, 34,
-                                8, 25, 0, AnimationType.MOVE));
+                                8, 35, 0, AnimationType.MOVE));
                         break;
                     case SNIPER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.SNIPER_WALK), 32, 32,
-                                4, 75, 0, AnimationType.MOVE));
+                                4, 50, 0, AnimationType.MOVE));
                         break;
                     case MAGE:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.MAGE_WALK), 38, 38,
-                                8, 100, 0, AnimationType.MOVE));
+                                8, 90, 0, AnimationType.MOVE));
                         break;
                     case THEBOSS:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
@@ -235,7 +235,7 @@ public class MapCanvas extends Canvas {
                     default:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
-                                6, 75, 0, AnimationType.MOVE));
+                                6, 70, 0, AnimationType.MOVE));
                         break;
                 }
             }

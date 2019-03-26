@@ -1,16 +1,16 @@
 package server.engine.ai.enemyAI;
 
+import java.util.LinkedList;
+
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
-
-import java.util.LinkedList;
 
 public class MachineGunnerAI extends ZombieAI {
 
@@ -25,16 +25,15 @@ public class MachineGunnerAI extends ZombieAI {
     private int attackAngle;
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
-    private Gun smg = new Smg();
+    private ProjectileGun gun = new Smg();
     private boolean isInAttackPosition = false;
     private int currentAndStartAngDiff;
 
     public MachineGunnerAI(int attackWidth, int bulletsPerAttack, int turnRate) {
-        super(Constants.TILE_SIZE * 10);
+        super(Constants.TILE_SIZE * 10, LONG_DELAY);
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
         this.TURN_RATE = turnRate;
-        attackDelay = LONG_DELAY;
         randomizePath = false;
     }
 
@@ -46,7 +45,7 @@ public class MachineGunnerAI extends ZombieAI {
 
         if (delayPast && shootingPathUnobstructed && isInAttackPosition) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
-                attacks.add(new ProjectileAttack(smg.getProjectiles(
+                attacks.add(new ProjectileAttack(gun.getProjectiles(
                         new Pose(pose, attackAngle), Team.ENEMY)));
 
                 bulletsShotInThisAttack++;

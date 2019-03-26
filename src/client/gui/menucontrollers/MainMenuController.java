@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import mapeditor.StartMenu;
 import shared.lists.Team;
 
 import java.io.IOException;
@@ -171,6 +172,6 @@ public class MainMenuController extends VBox implements MenuController {
      */
     @FXML
     void mapEditorButtonPress(ActionEvent event) {
-
+        new StartMenu(stage);
     }
 }

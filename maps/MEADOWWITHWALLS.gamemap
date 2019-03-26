@@ -50,13 +50,13 @@ G 1 2 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-MIDGET 1 2000
+MIDGET
 0 1000 1 1
 
 
 #Zone2
 #EnemySpawns
-9 10
+15 10
 
 #Triggers
 6 10
