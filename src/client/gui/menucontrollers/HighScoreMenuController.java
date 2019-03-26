@@ -37,6 +37,9 @@ public class HighScoreMenuController extends VBox implements MenuController {
     @FXML
     private GridPane singlePlayerGrid;
 
+    @FXML
+    private GridPane multiPlayerGrid;
+
     /**
      * Constructor
      *
@@ -71,34 +74,66 @@ public class HighScoreMenuController extends VBox implements MenuController {
         settings.addSinglePlayerHighScore("fsefsf", 901672);
         settings.addSinglePlayerHighScore("ef33f", 9166312);
         settings.addSinglePlayerHighScore("3425", 903215312);
+        settings.addMultiPlayerHighScore("BLUE: 1234567890, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 1234567567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 123456789234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLU234567890, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 127890, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BL 1234567890, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 123456890, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 1234567234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 1234567, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 12345, 1234567899", 123123123);
+        settings.addMultiPlayerHighScore("BLUE: 1234567234567899", 123123123);
 
-        // Populate high scores
-        HashMap<String, Integer> singlePlayerScores = settings.getSinglePlayerHighScores();
-        singlePlayerScores = (HashMap<String, Integer>) sortByValue(singlePlayerScores, false);
+        // Set style sheet to stage to allow styling of labels
+        stage.getScene().getStylesheets().add("file:src/client/gui/css/menu_stylesheet.css");
 
+        // Populate grids from data stored in settings
+        singlePlayerGrid = populateGridPane(settings.getSinglePlayerHighScores(), singlePlayerGrid);
+        multiPlayerGrid = populateGridPane(settings.getMultiPlayerHighScores(), multiPlayerGrid);
+    }
+
+    /**
+     * Populate grid pane with scores hashmap in descending order
+     * @param scores HashMap containing player namees as keys and scores as values
+     * @param inputGridPane Input gridpane to populate
+     * @return Populated GridPane
+     */
+    private GridPane populateGridPane(HashMap<String, Integer> scores, GridPane inputGridPane) {
+        // Sort high scores HashMap
+        scores = (HashMap<String, Integer>) sortByValue(scores, false);
+
+        // Set up trackers for amount of rows traversed. Only top 10 or so entries are displayed.
         int maxRows = 10;
         int currentRow = 0;
 
-        for (Map.Entry<String, Integer> entry : singlePlayerScores.entrySet()) {
+        // Go through every entry
+        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+            // Check if not gone over the row limit
             if (currentRow < maxRows) {
-                System.out.println(entry.getValue());
-
-                // Add name
+                // Create name label
                 Label nameLabel = new Label(entry.getKey());
                 nameLabel.getStyleClass().add("highScoreEntry");
-                singlePlayerGrid.add(nameLabel, 0, currentRow);
+                nameLabel.getStyleClass().add("manaspaceFontWhite");
+                inputGridPane.add(nameLabel, 0, currentRow);
 
-                // Add score
+                // CCreate score label
                 Label scoreLabel = new Label(Integer.toString(entry.getValue()));
                 scoreLabel.getStyleClass().add("highScoreEntry");
-                singlePlayerGrid.add(scoreLabel, 1, currentRow);
+                scoreLabel.getStyleClass().add("manaspaceFontWhite");
+                inputGridPane.add(scoreLabel, 1, currentRow);
 
                 // Increment row counter
                 currentRow++;
             } else {
+                // Break if completely populated
                 break;
             }
         }
+
+        // Return populated gridpane
+        return inputGridPane;
     }
 
     /**
