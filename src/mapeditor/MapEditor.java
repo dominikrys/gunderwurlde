@@ -448,6 +448,7 @@ public class MapEditor {
 		waveButton = new Button("Set Waves");
 		waveDoorHBox.getChildren().add(waveButton);
 		waveButton.setDisable(true);
+		waveButton.setDisable(true);
 		waveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -462,6 +463,7 @@ public class MapEditor {
 		
 		doorButton = new Button("Set Doors");
 		waveDoorHBox.getChildren().add(doorButton);
+		doorButton.setDisable(true);
 		doorButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -491,6 +493,15 @@ public class MapEditor {
 		// > > > > Complete Button
 		completeButton = new Button("Complete");
 		saveCompleteHBox.getChildren().add(completeButton);
+		completeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(mapName == null) {
+					nameSetter();
+				}
+				MapWriter.completeMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap(), doors));
+			}
+		});
 		
 		if(saveFile != null) {
 			drawMapTiles();
