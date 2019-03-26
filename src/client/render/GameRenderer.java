@@ -383,6 +383,7 @@ public class GameRenderer implements Runnable {
      * @param e Key event
      */
     private void handleSpectatorCamera(KeyEvent e) {
+        // TODO: make this smoother/generally handle this better
         if (e.getCode().toString().equals(settings.getKey(KeyAction.UP))) {
             mapCanvas.setTranslateY(mapCanvas.getTranslateY() + 10);
         }
