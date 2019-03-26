@@ -17,6 +17,7 @@ import shared.lists.Team;
 import shared.view.GameView;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Set;
 
 /**
  * Class to initialise the sender, receiver threads and join the game
@@ -258,6 +259,12 @@ public class Client extends Thread {
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
+            System.out.println("\n\n Threads alive when received first gameView");
+
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for(Thread t : threadSet){
+                System.out.println(t.getName() + " is still alive");
+            }
             firstView = false;
             renderer = new GameRenderer(stage, this.view, playerID, settings, this);
             renderer.getKeyboardHandler().setGameHandler(this);

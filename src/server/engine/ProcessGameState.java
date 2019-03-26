@@ -64,7 +64,7 @@ public class ProcessGameState extends Thread {
     private static final int TICKS_TILL_INFO = 3600;
 
     static {
-        LOGGER.setLevel(Level.WARNING);
+        LOGGER.setLevel(Level.INFO);
     }
 
     private static Random random = new Random(); // TODO remove if unused

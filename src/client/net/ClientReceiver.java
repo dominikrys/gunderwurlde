@@ -12,6 +12,7 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Thread that handles the receiving of requests
@@ -69,7 +70,7 @@ public class ClientReceiver extends Thread {
      */
     public boolean getRunning() {
         return running;
-    }
+    };
 
     /**
      * run method for this thread, to receive packets from the server
@@ -80,6 +81,11 @@ public class ClientReceiver extends Thread {
                 // creates a packet and wait for the server to send a GameView
                 packet = new DatagramPacket(buffer, buffer.length);
                 listenSocket.receive(packet);
+                System.out.println("\n\n\n WHILE RUNNING \n\n\n");
+                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                for(Thread t : threadSet){
+                    System.out.println(t.getName() + " is still alive");
+                }
                 // If the packet is 8 bytes long then it is a special command
                 if(packet.getLength() == 8){
                     // Copy across the command and value bytes to integers

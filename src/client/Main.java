@@ -29,7 +29,6 @@ public class Main extends Application {
     public void start(Stage stage) {
         // Try to load settings from local file. If not found, create new
         Settings settings = Settings.loadSettingsFromFile();
-
         if (settings == null) {
             System.out.println("Settings file not found or there was an error reading it. Creating new one...");
             settings = new Settings();

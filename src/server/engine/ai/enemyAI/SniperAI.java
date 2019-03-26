@@ -62,7 +62,9 @@ public class SniperAI extends AStarUsingEnemy {
         if (posePath == null) {
             if (!getAStarProcessing()) {
                 if(poseToGo != null) {
-                    new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo).start();
+                    AStar star = new AStar(this, 1, transposeMatrix(tileMap), pose, poseToGo);
+                    star.setName("AStarThread");
+                    star.start();
                     poseToGo = null;
                 }else if (!isProcessing()){
                     (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();
