@@ -1,19 +1,25 @@
 package server.engine.state.laser;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import server.engine.state.map.tile.Tile;
 import shared.Line;
 import shared.Location;
 import shared.Pose;
+import shared.lists.Team;
 import shared.lists.TileState;
 
 public class Laser extends Line {
+    public static final long DAMAGE_TIMEOUT = 200;
+
     protected double originalSize;
     protected double size;
     protected int damage;
     protected long duration;
     protected long creationTime;
+    protected Team team;
+    protected HashMap<Integer, Long> lastEntityDamageTime;
 
     public Laser(Location start, Location end, double size, int damage, long duration) {
         super(start, end);
@@ -21,6 +27,7 @@ public class Laser extends Line {
         this.originalSize = size;
         this.duration = duration;
         this.creationTime = System.currentTimeMillis();
+        this.lastEntityDamageTime = new HashMap<>();
     }
 
     public Laser(Line line, double size, int damage, long duration) {
@@ -30,6 +37,7 @@ public class Laser extends Line {
         this.damage = damage;
         this.duration = duration;
         this.creationTime = System.currentTimeMillis();
+        this.lastEntityDamageTime = new HashMap<>();
     }
 
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage, long duration) {
@@ -81,6 +89,13 @@ public class Laser extends Line {
         return new Laser(start, endPoint, size, damage, duration);
     }
 
+    public boolean canDamage(Integer ID) {
+        if (!lastEntityDamageTime.containsKey(ID))
+            return true;
+        else
+            return (lastEntityDamageTime.get(ID) + DAMAGE_TIMEOUT <= System.currentTimeMillis());
+    }
+
     public boolean isRemoved() {
         double portionLeft = (System.currentTimeMillis() - creationTime) / duration;
         if (portionLeft >= 1) {
@@ -89,6 +104,10 @@ public class Laser extends Line {
             size = originalSize * (1 - portionLeft);
             return false;
         }
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public double getSize() {
@@ -105,6 +124,10 @@ public class Laser extends Line {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public void Damaged(Integer entityID) {
+        this.lastEntityDamageTime.put(entityID, System.currentTimeMillis());
     }
 
     public LinkedHashSet<int[]> getTilesOn() {

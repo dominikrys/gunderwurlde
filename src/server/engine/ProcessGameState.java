@@ -589,8 +589,7 @@ public class ProcessGameState extends Thread {
                         // check if projectile collides with a living entity
                         if (!removed) {
                             for (int[] tileCords : tilesOn) {
-                                Tile tileOn = tileMap[tileCords[0]][tileCords[1]];
-                                LinkedHashSet<Integer> entitiesOnTile = tileOn.getEntitiesOnTile();
+                                LinkedHashSet<Integer> entitiesOnTile = tileMap[tileCords[0]][tileCords[1]].getEntitiesOnTile();
                                 for (Integer entityID : entitiesOnTile) {
                                     LivingEntity entityBeingChecked = livingEntities.get(entityID);
 
@@ -654,10 +653,22 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
 
             for (Laser l : lasers) {
-                Laser currentLaser = l;
-
                 if (!l.isRemoved()) {
+                    LinkedHashSet<int[]> laserTilesOn = l.getTilesOn();
+                    for (int[] tileCords : laserTilesOn) {
+                        LinkedHashSet<Integer> entitiesOnTile = tileMap[tileCords[0]][tileCords[1]].getEntitiesOnTile();
+                        for (Integer entityID : entitiesOnTile) {
+                            LivingEntity entityBeingChecked = livingEntities.get(entityID);
+                            if (l.getTeam() != entityBeingChecked.getTeam() && l.canDamage(entityID) && entityBeingChecked.haveCollided(l)) {
+                                entityBeingChecked.damage(l.getDamage());
+                                l.Damaged(entityID);
+                                // TODO add force from laser
+                                livingEntities.put(entityID, entityBeingChecked);
+                            }
+                        }
+                    }
 
+                    lasersView.add(new LaserView(l.getStart(), l.getEnd(), l.getSize()));
                     newLasers.add(l);
                 }
             }
@@ -879,6 +890,7 @@ public class ProcessGameState extends Thread {
             gameState.setLivingEntities(livingEntities);
             gameState.setProjectiles(newProjectiles);
             gameState.setItems(items);
+            gameState.setLasers(newLasers);
             gameState.setTileMap(tileMap);
 
             // turn players to player view
