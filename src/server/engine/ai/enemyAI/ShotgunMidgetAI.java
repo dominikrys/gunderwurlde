@@ -32,7 +32,8 @@ public class ShotgunMidgetAI extends ZombieAI{
         } else if (getDistToPlayer(closestPlayer) >= DISTANCE_TO_PLAYER_FOR_ATTACK) {
             return AIAction.MOVE;
         } else if (getDistToPlayer(closestPlayer) < DISTANCE_TO_PLAYER_FOR_ATTACK
-        && (now - lastAttack) > MEDIUM_DELAY) {
+        && (now - lastAttack) > MEDIUM_DELAY
+        && pathUnobstructed(pose, closestPlayer, tileMap)) {
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();

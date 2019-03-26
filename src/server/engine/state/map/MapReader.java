@@ -183,13 +183,22 @@ public class MapReader {
                 return new Boomer(7);
             }
         case MACHINE_GUNNER:
-            return new MachineGunner(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 3) {
+                return new MachineGunner(
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new MachineGunner(60, 100, 1);
+            }
         case SNIPER:
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
         case THEBOSS:
                 return new TheBoss(Long.valueOf(entityParams.removeFirst()));
         case MAGE:
-            return new Mage(Long.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            return new Mage(
+                    Long.valueOf(entityParams.removeFirst()),
+                    Integer.valueOf(entityParams.removeFirst()));
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
