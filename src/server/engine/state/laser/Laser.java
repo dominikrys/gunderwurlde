@@ -46,7 +46,7 @@ public class Laser extends Line {
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
         int chunkLength = 200;
         boolean endPointFound = false;
-        double offSet = Tile.TILE_SIZE + (templateLaser.size / 2);
+        double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
         Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
         Location endPoint = testLaser.getEnd();
         double m = (testLaser.getEnd().getY() - testLaser.getStart().getY()) / (testLaser.getEnd().getX() - testLaser.getStart().getX());
@@ -198,13 +198,14 @@ public class Laser extends Line {
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
 
+        double offset = Tile.TILE_SIZE / 2;
         for (int t_x = startX; t_x != endX; t_x += cX) {
             for (int t_y = startY; t_y != endY; t_y += cY) {
                 Location tileLoc = Tile.tileToLocation(t_x, t_y);
-                minX = tileLoc.getX() - Tile.TILE_SIZE;
-                maxX = tileLoc.getX() + Tile.TILE_SIZE;
-                minY = tileLoc.getY() - Tile.TILE_SIZE;
-                maxY = tileLoc.getY() + Tile.TILE_SIZE;
+                minX = tileLoc.getX() - offset;
+                maxX = tileLoc.getX() + offset;
+                minY = tileLoc.getY() - offset;
+                maxY = tileLoc.getY() + offset;
                 double y1 = (minX * m) + c;
                 double y2 = (maxX * m) + c;
                 double x1 = (minY - c) / m;
