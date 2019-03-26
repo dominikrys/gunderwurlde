@@ -149,8 +149,7 @@ public class MainMenuController extends VBox implements MenuController {
      */
     @FXML
     void quitButtonPress(ActionEvent event) {
-        System.out.println("Process ending");
-        stage.close();
+
         System.out.println("\n\n Threads alive when quit button is pressed in main menu \n\n");
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         for(Thread t : threadSet){

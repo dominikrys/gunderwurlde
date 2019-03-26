@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.Set;
 
 /**
@@ -47,9 +48,12 @@ public class Main extends Application {
 
         // Set stage to close and to kill handler when the window is closed
         stage.setOnCloseRequest(we -> {
-            System.out.println("Main ending");
             stage.close();
-            //System.exit(0); todo: remove this once threads close
+            System.out.println("Main ended ,all are left alive: ");
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for(Thread t : threadSet){
+                System.out.println(t.getName() + " is still alive");
+            }
         });
 
         // Create the main menu and show it

@@ -260,7 +260,6 @@ public class Client extends Thread {
         // if this is the first GameView then create a renderer
         if (firstView) {
             System.out.println("\n\n Threads alive when received first gameView");
-
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             for(Thread t : threadSet){
                 System.out.println(t.getName() + " is still alive");

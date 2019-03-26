@@ -49,6 +49,7 @@ public class ClientReceiver extends Thread {
      */
     private Settings settings;
 
+    int test = 0;
     /**
      * Constructor
      * @param socket Socket to receive GameViews from the server
@@ -81,11 +82,6 @@ public class ClientReceiver extends Thread {
                 // creates a packet and wait for the server to send a GameView
                 packet = new DatagramPacket(buffer, buffer.length);
                 listenSocket.receive(packet);
-                System.out.println("\n\n\n WHILE RUNNING \n\n\n");
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                for(Thread t : threadSet){
-                    System.out.println(t.getName() + " is still alive");
-                }
                 // If the packet is 8 bytes long then it is a special command
                 if(packet.getLength() == 8){
                     // Copy across the command and value bytes to integers

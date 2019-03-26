@@ -896,6 +896,7 @@ public class ProcessGameState extends Thread {
             GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, tileMapView, remainingTeam);
             handler.updateGameView(view);
         }
+
         LOGGER.info("Engine stopped!");
         printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
     }

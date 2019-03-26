@@ -191,7 +191,7 @@ public class GameRenderer implements Runnable {
         setUpRenderer(gameView);
 
         // When the window is closed by pressing the "x" button, stop rendering
-        stage.setOnCloseRequest(we -> running = false);
+        stage.setOnCloseRequest(we -> this.stop());
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -466,10 +466,8 @@ public class GameRenderer implements Runnable {
 
                             // Set pause to false and stop rendering
                             paused = false;
-                            getKeyboardHandler().deactivate();
-                            getMouseHandler().deactivate();
-                            handler.close();
-                            stop();
+                            System.out.println("\n Ending threads to get to menu \n");
+                            this.stop();
 
                             // Go back to play menu with all player info still there
                             (new MainMenuController(stage, settings)).show();
@@ -482,6 +480,7 @@ public class GameRenderer implements Runnable {
                             ex.printStackTrace();
                         }
                     }
+                    System.out.println("GAME RENDERER PAUSE WATCHER ENDING");
                 })
                 ).start();
             } else {
@@ -561,5 +560,8 @@ public class GameRenderer implements Runnable {
      */
     public void stop() {
         running = false;
+        getKeyboardHandler().deactivate();
+        getMouseHandler().deactivate();
+        handler.close();
     }
 }
