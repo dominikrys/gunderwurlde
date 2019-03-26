@@ -29,6 +29,7 @@ import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.LaserGun;
 import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
@@ -195,6 +196,7 @@ public class ProcessGameState extends Thread {
             // views for the handler
             TileView[][] tileMapView = view.getTileMap();
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
+            LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
 
             // process player requests
@@ -310,7 +312,11 @@ public class ProcessGameState extends Thread {
                                     projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
                                 }
                             } else {
-                                // TODO add lasers from laser gun
+                                LinkedList<Laser> shotLasers = ((LaserGun) currentGun).getLasers(playerPose, currentPlayer.getTeam(), tileMap);
+                                for (Laser l : shotLasers) {
+                                    newLasers.add(l);
+                                    lasersView.add(new LaserView(l.getStart(), l.getEnd(), l.getSize(), l.getTeam()));
+                                }
                             }
                         }
                     } else if (currentItem.getItemType() == ItemType.CONSUMEABLE
@@ -655,7 +661,6 @@ public class ProcessGameState extends Thread {
 
             // lasers processing
             LinkedHashSet<Laser> lasers = gameState.getLasers();
-            LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
 
             for (Laser l : lasers) {
                 if (!l.isRemoved()) {
@@ -665,6 +670,7 @@ public class ProcessGameState extends Thread {
                         for (Integer entityID : entitiesOnTile) {
                             LivingEntity entityBeingChecked = livingEntities.get(entityID);
                             if (l.getTeam() != entityBeingChecked.getTeam() && l.canDamage(entityID) && entityBeingChecked.haveCollided(l)) {
+                                System.out.println("Laser damaging enemy with: " + l.getDamage());
                                 entityBeingChecked.damage(l.getDamage());
                                 l.Damaged(entityID);
                                 // TODO add force from laser
