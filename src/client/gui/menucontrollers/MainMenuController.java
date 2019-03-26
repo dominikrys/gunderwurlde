@@ -45,6 +45,9 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     private Button highScoreButton;
 
+    @FXML
+    private Button mapEditorButton;
+
     /**
      * Constructor
      *
@@ -149,5 +152,15 @@ public class MainMenuController extends VBox implements MenuController {
     @FXML
     void quitButtonPress(ActionEvent event) {
         stage.close();
+    }
+
+    /**
+     * Go into map editor
+     *
+     * @param event Map editor button press
+     */
+    @FXML
+    void mapEditorButtonPress(ActionEvent event) {
+
     }
 }

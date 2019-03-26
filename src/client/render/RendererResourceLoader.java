@@ -50,6 +50,7 @@ public class RendererResourceLoader {
         loadedSprites = new HashMap<>();
         fontManaspace18 = null;
         fontManaspace28 = null;
+        fontManaspace50 = null;
     }
 
     /**
@@ -105,7 +106,7 @@ public class RendererResourceLoader {
      * Load sprites used in game
      */
     public void loadFonts() {
-        // Load fonts
+        // Load fonts TODO: make more sophisticated, perhaps use hashmap
         try {
             fontManaspace28 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 28);
             fontManaspace18 = Font.loadFont(new FileInputStream(new File(Constants.MANASPACE_FONT_PATH)), 18);

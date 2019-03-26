@@ -35,100 +35,85 @@ import shared.view.entity.PlayerView;
  */
 public class GameRenderer implements Runnable {
     /**
+     * Ratio for how sensitive the map is to mouse movements
+     */
+    double cameraMouseSensitivity;
+    /**
      * RendererResourceLoader - Contains resources used by the renderer
      */
     private RendererResourceLoader rendererResourceLoader;
-
     /**
      * Canvas for the map - this contains the game
      */
     private MapCanvas mapCanvas;
-
     /**
      * The hud object
      */
     private HUD hud;
-
     /**
      * Pane for cursor - necessary as custom cursor used
      */
     private AnchorPane cursorPane;
-
     /**
      * Custom cursor image
      */
     private ImageView cursorImage;
-
     /**
      * X coordinate of mouse
      */
     private double mouseX;
-
     /**
      * Y coordinate of mouse
      */
     private double mouseY;
-
     /**
      * ID of the player that this GameRenderer is for
      */
     private int playerID;
-
     /**
      * The current gamestate
      */
     private GameView gameView;
-
     /**
      * Stage to display renderer on
      */
     private Stage stage;
-
     /**
      * Whether the game is paused or not
      */
     private boolean paused;
-
     /**
      * VBox containing the pause overlay
      */
     private VBox pausedOverlay;
-
     /**
      * KeyboardHandler
      */
-    private KeyboardHandler kbHandler; //TODO: move this out of renderer
-
+    private KeyboardHandler kbHandler; //TODO: input should be out of renderer, move this out
     /**
      * Mouse handler
      */
-    private MouseHandler mHandler; // todo: move this out of renderer
-
+    private MouseHandler mHandler; //TODO: input should be out of renderer, move this out
     /**
      * Settings object
      */
     private Settings settings;
-
     /**
      * SoundView object to be passed to the sound manager
      */
     private SoundView soundView;
-
     /**
      * Running boolean
      */
     private boolean running;
-
     /**
      * Boolean for spectator mode
      */
     private boolean spectator;
-
     /**
      * Controller for the pause menu
      */
     private PauseMenuController pauseMenuController;
-
     /**
      * Constructor
      *
@@ -168,13 +153,16 @@ public class GameRenderer implements Runnable {
         // Set spectator mode to false
         spectator = false;
 
+        // Set mouse sensitivity for camera
+        cameraMouseSensitivity = 0.25;
+
         // Initialise mouse positions to not bug out camera
         mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
         mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
-        mHandler = new MouseHandler(this.playerID);
+        mHandler = new MouseHandler(this.playerID, settings);
 
         // Initialise soundview
         soundView = new SoundView(initialGameView, settings);
@@ -218,7 +206,8 @@ public class GameRenderer implements Runnable {
      */
     private void setUpRenderer(GameView inputGameView) {
         // Initialise pane for map
-        mapCanvas = new MapCanvas(settings.getScreenWidth(), settings.getScreenHeight());
+        mapCanvas = new MapCanvas(inputGameView.getXDim() * Constants.TILE_SIZE,
+                inputGameView.getYDim() * Constants.TILE_SIZE);
 
         // Create HUD
         hud.createHUD(getCurrentPlayer(), rendererResourceLoader.getFontManaspace28(),
@@ -394,6 +383,7 @@ public class GameRenderer implements Runnable {
      * @param e Key event
      */
     private void handleSpectatorCamera(KeyEvent e) {
+        // TODO: make this smoother/generally handle this better
         if (e.getCode().toString().equals(settings.getKey(KeyAction.UP))) {
             mapCanvas.setTranslateY(mapCanvas.getTranslateY() + 10);
         }
@@ -417,16 +407,12 @@ public class GameRenderer implements Runnable {
         double playerX = currentPlayer.getPose().getX();
         double playerY = currentPlayer.getPose().getY();
 
-        // Ratio for how sensitive the map is to mouse movements
-        // Proportional to position of player: (1 - (Math.abs(mouseX - settings.getScreenWidth() / 2) / settings.getScreenWidth() * 2))
-        double cameraMouseSensitivity = 0.25;
-
         // Adjust map horizontally
-        mapCanvas.setTranslateX((double) settings.getScreenWidth() / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
+        mapCanvas.setTranslateX((double) (gameView.getXDim() * Constants.TILE_SIZE) / 2 - playerX - Constants.TILE_SIZE / 2 /* Center Player*/
                 + (settings.getScreenWidth() / 2 - mouseX) * cameraMouseSensitivity /* Mouse */);
 
         // Adjust map vertically
-        mapCanvas.setTranslateY((double) settings.getScreenHeight() / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
+        mapCanvas.setTranslateY((double) (gameView.getYDim() * Constants.TILE_SIZE) / 2 - playerY - Constants.TILE_SIZE / 2 /* Center Player*/
                 + (settings.getScreenHeight() / 2 - mouseY) * cameraMouseSensitivity /* Mouse */);
     }
 
@@ -467,7 +453,7 @@ public class GameRenderer implements Runnable {
                             (new MainMenuController(stage, settings)).show();
                         }
 
-                        //TODO: remove this, doesn't work otherwise for some reason
+                        //TODO: remove this, currently doesn't work otherwise since in big animationTimer
                         try {
                             Thread.sleep(1);
                         } catch (InterruptedException ex) {

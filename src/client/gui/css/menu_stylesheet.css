@@ -1,3 +1,13 @@
+/**
+    Stylesheet for menus.
+
+    Majority of styles defines here due to:
+    - compatibility with :hover classes. If declared inline or in SceneBuilder, causes major issues as JavaFX looks for
+      non-:hover variants inside of the CSS
+
+    - CSS is faster than inline as JavaFX can compile the CSS to a binary form for better performance
+ */
+
 @font-face {
     font-family: 'Manaspace';
     src: url('file:assets/fonts/manaspc.ttf');
@@ -182,4 +192,12 @@
 
 .backToMenuButton {
     -fx-font-size: 12px;
+}
+
+.helpSubheading {
+    -fx-font-size: 38px;
+}
+
+.helpText {
+    -fx-font-size: 20px;
 }

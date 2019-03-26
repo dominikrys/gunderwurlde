@@ -79,6 +79,7 @@ public class AnimatedSprite {
             timeline = new Timeline(new KeyFrame(Duration.millis(timeBetweenFrames),
                     e -> {
                         //TODO: this only supports once cycle - make it support more if necessary?
+
                         // Check if not reached end of frames
                         if (currentFrame < frameCount - 1) {
                             // Increment position x of current frame with the frame width

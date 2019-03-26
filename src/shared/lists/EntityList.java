@@ -77,24 +77,27 @@ public enum EntityList {
      * Enemy standing
      */
     ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
-    RUNNER("file:assets/img/entity/enemy/zombie.png", Constants.TILE_SIZE),
-    SOLDIER("file:assets/img/entity/enemy/zombie.png", Constants.soldierColorAdjust, Constants.TILE_SIZE),
-    MIDGET("file:assets/img/entity/enemy/zombie.png", Constants.midgetColorAdjust, Constants.TILE_SIZE),
-    BOOMER("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
-    MACHINE_GUNNER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
-    SNIPER("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
-    THEBOSS ("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE * 5),
-    MAGE("file:assets/img/entity/enemy/zombie.png", Constants.machineGunnerColorAdjust, Constants.TILE_SIZE),
+    RUNNER("file:assets/img/entity/enemy/runner.png", Constants.TILE_SIZE),
+    SOLDIER("file:assets/img/entity/enemy/soldier.png", 34),
+    MIDGET("file:assets/img/entity/enemy/midget.png", 24),
+    BOOMER("file:assets/img/entity/enemy/boomer.png", 40),
+    MACHINE_GUNNER("file:assets/img/entity/enemy/soldier.png", Constants.machineGunnerColorAdjust, 34),
+    SNIPER("file:assets/img/entity/enemy/sniper.png"),
+    MAGE("file:assets/img/entity/enemy/mage.png", 38),
+    THEBOSS("file:assets/img/entity/enemy/boss.png", Constants.TILE_SIZE * 5),
 
     /**
      * Enemy walking
      */
     ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.zombieColorAdjust),
-    RUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png"),
-    SOLDIER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.soldierColorAdjust),
-    MIDGET_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.midgetColorAdjust),
-    BOOMER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.boomerColorAdjust),
-    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.machineGunnerColorAdjust),
+    RUNNER_WALK("file:assets/img/entity/enemy/runner_walk.png"),
+    SOLDIER_WALK("file:assets/img/entity/enemy/soldier_walk.png"),
+    MIDGET_WALK("file:assets/img/entity/enemy/midget_walk.png"),
+    BOOMER_WALK("file:assets/img/entity/enemy/boomer_walk.png"),
+    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/soldier_walk.png", Constants.machineGunnerColorAdjust),
+    SNIPER_WALK("file:assets/img/entity/enemy/sniper_walk.png"),
+    MAGE_WALK("file:assets/img/entity/enemy/mage_walk.png"),
+    THEBOSS_WALK("file:assets/img/entity/enemy/boss_walk.png"),
 
     /**
      * Projectiles
@@ -109,7 +112,7 @@ public enum EntityList {
     ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
-    
+
 
     /**
      * Tiles
@@ -141,6 +144,7 @@ public enum EntityList {
     MAGIC_ESSENCE("file:assets/img/other/magic_essence.png"),
     HEAVY_AMMO("file:assets/img/other/heavy_ammo_clip.png"),
     ROCKET_AMMO("file:assets/img/other/rocket_ammo.png"),
+    MELEE("file:assets/img/other/melee.png"),
     HEART_FULL("file:assets/img/other/heart_full.png"),
     HEART_HALF("file:assets/img/other/heart_half.png"),
     HEART_LOST("file:assets/img/other/heart_lost.png"),

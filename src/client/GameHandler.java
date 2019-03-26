@@ -128,7 +128,7 @@ public class GameHandler extends Thread {
         this.team = team;
         this.numPlayers = Integer.parseInt(numOfPlayers);
         String[] split = ipValue.split("\\.");
-        this.address = split[3];
+        this.address = split[3]; // TODO: in case this is now size of 3, causes issues. limit here or in map selection.
         this.port = Integer.parseInt(portValue);
     }
 

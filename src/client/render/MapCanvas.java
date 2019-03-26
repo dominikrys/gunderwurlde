@@ -189,39 +189,58 @@ public class MapCanvas extends Canvas {
         if (currentEnemy.isMoving()) {
             // Check if already in the hashmap for enemies on the map
             if (enemiesOnMapAnimations.get(currentEnemy.getID()).getAnimationType() != AnimationType.MOVE) {
-                //TODO: add support for larger enemies/those that don't use the default zombie skin
-
-                // Get correct sprite
-                EntityList entityToRender = EntityList.ZOMBIE_WALK;
+                // Add appropriate animation to animation hashmap
                 switch (currentEnemy.getEntityListName()) {
-                    case ZOMBIE:
-                        entityToRender = EntityList.ZOMBIE_WALK;
-                        break;
                     case RUNNER:
-                        entityToRender = EntityList.RUNNER_WALK;
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.RUNNER_WALK), 32, 32,
+                                17, 30, 0, AnimationType.MOVE));
                         break;
                     case SOLDIER:
-                        entityToRender = EntityList.SOLDIER_WALK;
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.SOLDIER_WALK), 34, 34,
+                                8, 90, 0, AnimationType.MOVE));
                         break;
                     case MIDGET:
-                        entityToRender = EntityList.MIDGET_WALK;
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.MIDGET_WALK), 24, 24,
+                                8, 30, 0, AnimationType.MOVE));
                         break;
                     case BOOMER:
-                        entityToRender = EntityList.BOOMER_WALK;
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.BOOMER_WALK), 40, 40,
+                                8, 75, 0, AnimationType.MOVE));
                         break;
                     case MACHINE_GUNNER:
-                        entityToRender = EntityList.MACHINE_GUNNER_WALK;
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.MACHINE_GUNNER_WALK), 34, 34,
+                                8, 25, 0, AnimationType.MOVE));
+                        break;
+                    case SNIPER:
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.SNIPER_WALK), 32, 32,
+                                4, 75, 0, AnimationType.MOVE));
+                        break;
+                    case MAGE:
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.MAGE_WALK), 38, 38,
+                                8, 100, 0, AnimationType.MOVE));
+                        break;
+                    case THEBOSS:
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.THEBOSS_WALK), 160, 160,
+                                8, 100, 0, AnimationType.MOVE));
+                        break;
+                    case ZOMBIE:
+                    default:
+                        enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
+                                rendererResourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
+                                6, 75, 0, AnimationType.MOVE));
                         break;
                 }
-
-                // Add animation to animation hashmap
-                enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
-                        rendererResourceLoader.getSprite(entityToRender), 32, 32,
-                        6, 75, 0, AnimationType.MOVE));
             }
-        }
-        // Enemy standing, render standing image
-        else {
+        } else {
+            // Enemy standing, render standing image
             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                     rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
         }
@@ -230,7 +249,8 @@ public class MapCanvas extends Canvas {
         renderAnimationSpriteOnMap(enemiesOnMapAnimations, currentEnemy.getID(), currentEnemy.getPose());
 
         // Render healthbar
-        renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth());
+        renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(),
+                currentEnemy.getEntityListName().getSize());
 
         // Put enemy into enemy locations hashmap
         lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
@@ -389,7 +409,8 @@ public class MapCanvas extends Canvas {
         renderAnimationSpriteOnMap(playersOnMapAnimations, currentPlayer.getID(), currentPlayer.getPose());
 
         // Render healthbar
-        renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth());
+        renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(),
+                Constants.TILE_SIZE);
 
         // Put player into player locations hashmap
         lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
@@ -445,14 +466,17 @@ public class MapCanvas extends Canvas {
      * @return True if animation finished
      */
     private boolean runDeathSpawnAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
+        // Check if animation finished
         if (animation.getCurrentFrame() < frameCount - 1) {
             drawRotatedImageFromSpritesheet(animation.getImage(), 0, pose.getX(),
                     pose.getY(), animation.getXOffset(), animation.getYOffset(),
                     animation.getIndividualImageWidth(), animation.getIndividualImageHeight());
 
+            // Animation ongoing, return false
             return false;
         }
 
+        // Animation ended, return true
         return true;
     }
 
@@ -494,22 +518,23 @@ public class MapCanvas extends Canvas {
      * @param pose          Pose of animation to get location to render to from
      * @param currentHealth Current health of the entity
      * @param maxHealth     Max health of the entity
+     * @param enemySize     Size of enemy
      */
-    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth) {
+    private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, int enemySize) {
         // Variables for calculations
         int healthBarHeight = 5;
-        int verticalOffset = 12;
+        int verticalOffset = 16;
         double healthLeftPercentage = (double) currentHealth / (double) maxHealth;
 
         // Render current health portion
         mapGC.setFill(Color.LIME);
         mapGC.fillRect(pose.getX(), pose.getY() - verticalOffset,
-                Constants.TILE_SIZE * healthLeftPercentage, healthBarHeight);
+                enemySize * healthLeftPercentage, healthBarHeight);
 
         // Render lost health portion
         mapGC.setFill(Color.RED);
-        mapGC.fillRect(pose.getX() + Constants.TILE_SIZE * healthLeftPercentage, pose.getY() - verticalOffset,
-                Constants.TILE_SIZE * (1 - healthLeftPercentage), healthBarHeight);
+        mapGC.fillRect(pose.getX() + enemySize * healthLeftPercentage, pose.getY() - verticalOffset,
+                enemySize * (1 - healthLeftPercentage), healthBarHeight);
     }
 
     /**
