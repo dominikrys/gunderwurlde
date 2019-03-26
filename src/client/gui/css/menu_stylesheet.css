@@ -195,5 +195,9 @@
 }
 
 .helpSubheading {
-    -fx-font-size: 30px;
+    -fx-font-size: 38px;
+}
+
+.helpText {
+    -fx-font-size: 20px;
 }

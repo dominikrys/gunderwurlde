@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="CENTER" style="-fx-spacing: 15px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" style="-fx-spacing: 20px;" styleClass="background" stylesheets="@../css/menu_stylesheet.css" type="VBox" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/">
    <children>
       <Label text="Help">
          <font>
@@ -17,7 +17,7 @@
             <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Label>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" style="-fx-spacing: 5px;">
          <children>
             <Label text="General">
                <styleClass>
@@ -25,9 +25,15 @@
                   <String fx:value="manaspaceFontWhite" />
                </styleClass>
             </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="900.0" text="The aim of the game is to survive through as many waves of enemies as you can. By default, use the WASD keys to move, and shoot by aiming with your mouse and clicking the left mouse button. Other controls can be specified in the controls menu." textAlignment="CENTER" wrapText="true">
+               <styleClass>
+                  <String fx:value="helpText" />
+                  <String fx:value="manaspaceFontWhite" />
+               </styleClass>
+            </Label>
          </children>
       </VBox>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" style="-fx-spacing: 5px;">
          <children>
             <Label text="Single Player">
                <styleClass>
@@ -35,13 +41,25 @@
                   <String fx:value="manaspaceFontWhite" />
                </styleClass>
             </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="900.0" text="When playing alone, the game is essentially survival mode. Survive for as long as possible and try to beat your high score! High scores are accessible from the main menu." textAlignment="CENTER" wrapText="true">
+               <styleClass>
+                  <String fx:value="helpText" />
+                  <String fx:value="manaspaceFontWhite" />
+               </styleClass>
+            </Label>
          </children>
       </VBox>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" style="-fx-spacing: 5px;">
          <children>
             <Label text="Multiplayer">
                <styleClass>
                   <String fx:value="helpSubheading" />
+                  <String fx:value="manaspaceFontWhite" />
+               </styleClass>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="900.0" text="Team up or play in a free-for-all to outlast your opponents. Kill enemies from the waves to obtain better weapons, letting you eventually eliminate your opponents. The game ends when there's only one team standing." textAlignment="CENTER" wrapText="true">
+               <styleClass>
+                  <String fx:value="helpText" />
                   <String fx:value="manaspaceFontWhite" />
                </styleClass>
             </Label>
