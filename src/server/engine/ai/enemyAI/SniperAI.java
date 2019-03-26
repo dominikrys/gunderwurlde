@@ -5,7 +5,7 @@ import server.engine.ai.aStar.AStar;
 import server.engine.ai.newPoseGenerators.PoseAroundPlayerGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.SniperRifle;
 import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
-    Gun gun = new SniperRifle();
+    ProjectileGun gun = new SniperRifle();
     private boolean inPositionToAttack = false;
 
     public SniperAI(int rangeToRunAway) {

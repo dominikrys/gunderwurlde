@@ -2,7 +2,7 @@ package server.engine.ai.enemyAI;
 
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.physics.Force;
 import shared.Constants;
@@ -25,7 +25,7 @@ public class MachineGunnerAI extends ZombieAI {
     private int attackAngle;
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
-    private Gun smg = new Smg();
+    private ProjectileGun smg = new Smg();
     private boolean isInAttackPosition = false;
     private int currentAndStartAngDiff;
 

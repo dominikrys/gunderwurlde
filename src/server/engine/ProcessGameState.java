@@ -28,7 +28,7 @@ import server.engine.state.item.CreatesProjectiles;
 import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
 import server.engine.state.item.pickup.Health;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
@@ -283,8 +283,8 @@ public class ProcessGameState extends Thread {
                     currentPlayer = (Player) currentPlayer.getEffect().applyEffect(currentPlayer);
 
                 // gun reload processing
-                if (currentItem instanceof Gun) {
-                    Gun currentGun = ((Gun) currentItem);
+                if (currentItem instanceof ProjectileGun) {
+                    ProjectileGun currentGun = ((ProjectileGun) currentItem);
                     if (currentGun.isReloading()) {
                         AmmoList ammoType = currentGun.getAmmoType();
                         int amountTaken = currentGun.reload(currentPlayer.getAmmo(ammoType));
@@ -299,7 +299,7 @@ public class ProcessGameState extends Thread {
                 long useTime = currentPlayer.getLastUseTime();
                 if (request.getShoot() && useTime < lastProcessTime) {
                     if (currentItem.getItemType() == ItemType.GUN) {
-                        Gun currentGun = (Gun) currentItem;
+                        ProjectileGun currentGun = (ProjectileGun) currentItem;
                         if (currentGun.shoot(currentPlayer.getAmmo(currentGun.getAmmoType()))) {
                             currentPlayer.setCurrentAction(ActionList.ATTACKING);
                             LinkedList<Projectile> shotProjectiles = currentGun.getProjectiles(playerPose, currentPlayer.getTeam());
@@ -352,8 +352,8 @@ public class ProcessGameState extends Thread {
                     }
 
                 } else if (request.getReload()) {
-                    if (currentItem instanceof Gun) {
-                        Gun currentGun = ((Gun) currentItem);
+                    if (currentItem instanceof ProjectileGun) {
+                        ProjectileGun currentGun = ((ProjectileGun) currentItem);
                         if (currentGun.attemptReload(currentPlayer.getAmmo(currentGun.getAmmoType())))
                             currentPlayer.setCurrentAction(ActionList.RELOADING);
                         currentPlayer.setCurrentItem(currentItem);
@@ -948,7 +948,7 @@ public class ProcessGameState extends Thread {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
             if (i.getItemType() == ItemType.GUN) {
-                Gun g = (Gun) i;
+                ProjectileGun g = (ProjectileGun) i;
                 playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
             } else {
                 playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));

@@ -17,7 +17,7 @@ import java.util.Random;
 public class TheBossAI extends ZombieAI {
 
     private final long TIME_BETWEEN_ATTACKS;
-    private ArrayList<Gun> gunList = new ArrayList<>();
+    private ArrayList<ProjectileGun> gunList = new ArrayList<>();
     private long lastAttack;
     private Random rand;
 

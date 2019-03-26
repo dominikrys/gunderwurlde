@@ -7,7 +7,7 @@ import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.item.weapon.gun.FireGun;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.IceGun;
 import server.engine.state.physics.Force;
 import shared.Pose;
@@ -21,7 +21,7 @@ public class MageAI extends PoseGeneratorUsingEnemy {
     private final long TIME_BETWEEN_TELEPORTS;
     private final int DISTANCE_TO_PLAYER;
     private long lastTeleport = 0;
-    private Gun gun;
+    private ProjectileGun gun;
     private boolean teleportAway = false;
     long now;
 
