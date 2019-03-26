@@ -63,7 +63,7 @@ public class SniperAI extends AStarUsingEnemy {
         if (posePath == null) {
             if (!getAStarProcessing()) {
                 if(poseToGo != null) {
-//                    Pose posetogoo = new Pose(Tile.tileToLocation(30, 2));
+//                    Pose posetogoo = new Pose(Tile.tileToLocation(11, 11));
                     new AStar(this, 1, tileMap, pose, poseToGo).start();
                     poseToGo = null;
                 }else if (!isProcessing()){
