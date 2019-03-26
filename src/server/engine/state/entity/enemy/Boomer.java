@@ -10,7 +10,6 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class Boomer extends  Zombie{
-    public static final int DEFAULT_HEALTH = 5;
 
     public static final double DEFAULT_MOVEMENT_FORCE = 1;
     public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize();
@@ -26,13 +25,17 @@ public class Boomer extends  Zombie{
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.02, 2));
     }
 
-    public Boomer() {
-        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new BoomerAI(), DEFAULT_MASS);
+    private final int DEFAULT_DAMAGE;
+
+    public Boomer(int damage) {
+        super(EntityList.BOOMER, damage, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new BoomerAI(damage), DEFAULT_MASS);
+
+        this.DEFAULT_DAMAGE = damage;
     }
 
     @Override
     EnemyAI getNewAI() {
-        return new BoomerAI();
+        return new BoomerAI(DEFAULT_DAMAGE);
     }
 
 }

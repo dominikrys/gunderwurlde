@@ -18,7 +18,6 @@ public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
     Gun gun = new SniperRifle();
-    private boolean inPositionToAttack = false;
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -29,7 +28,7 @@ public class SniperAI extends AStarUsingEnemy {
     public AIAction getAction() {
         if (attacking) {
             return AIAction.ATTACK;
-        } else if (stillInPositionToAttack() && inPositionToAttack) {
+        } else if (stillInPositionToAttack() && movementFinished) {
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
             return AIAction.ATTACK;
@@ -46,11 +45,10 @@ public class SniperAI extends AStarUsingEnemy {
         if(stillInPosition){
             return true;
         }else{
-            inPositionToAttack = false;
+            movementFinished = false;
             return false;
         }
     }
-
 
     @Override
     protected Attack getAttackObj() {
@@ -60,35 +58,8 @@ public class SniperAI extends AStarUsingEnemy {
 
     @Override
     protected Force generateMovementForce() {
-        if (posePath == null) {
-            if (!getAStarProcessing()) {
-                if(poseToGo != null) {
-//                    Pose posetogoo = new Pose(Tile.tileToLocation(30, 2));
-                    new AStar(this, 1, tileMap, pose, poseToGo).start();
-                    poseToGo = null;
-                }else if (!isProcessing()){
-                    (new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose)).start();
-                }
-            }
-        } else {
-            Force angle = getForceFromPath();
-            if (angle != null) return angle;
-        }
-        return new Force(pose.getDirection(), 0);
+        return generateMovementForce(new PoseAroundPlayerGen(this, RANGE_TO_RUN_AWAY, true,closestPlayer, pose));
     }
 
-    private Force getForceFromPath() {
-        if (!Pose.compareLocation(pose, posePath.peekLast(), 5)) {
-            int angle = getAngle(pose, posePath.peekLast());
-            return new Force(angle, maxMovementForce);
-        } else {
-            posePath.pollLast();
-            if (posePath.size() == 0) {
-                posePath = null;
-                inPositionToAttack = true;
-            }
-        }
-        return null;
-    }
 
 }
