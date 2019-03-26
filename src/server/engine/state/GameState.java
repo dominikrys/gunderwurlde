@@ -8,6 +8,7 @@ import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.entity.player.Player;
 import server.engine.state.entity.projectile.Projectile;
+import server.engine.state.laser.Laser;
 import server.engine.state.map.GameMap;
 import server.engine.state.map.tile.Tile;
 import shared.Location;
@@ -21,6 +22,7 @@ public class GameState {
     protected LinkedHashSet<Integer> enemyIDs;
     protected LinkedHashSet<Projectile> projectiles;
     protected LinkedHashMap<Integer, ItemDrop> items;
+    protected LinkedHashSet<Laser> lasers;
     protected EnumMap<Team, Location> teamSpawns;
 
     public GameState(GameMap currentMap, LinkedHashMap<Integer, LivingEntity> players) {
@@ -37,8 +39,8 @@ public class GameState {
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
         this.enemyIDs = new LinkedHashSet<>();
-        this.projectiles = new LinkedHashSet<>(); // TODO see if setting to higher initial size improves performance (probably
-                                                  // negligible)
+        this.projectiles = new LinkedHashSet<>();
+        this.lasers = new LinkedHashSet<>();
         this.items = new LinkedHashMap<>();
         LinkedHashMap<Integer, LivingEntity> livingEntities = new LinkedHashMap<>();
         for (Integer p : playerIDs) {
@@ -58,10 +60,6 @@ public class GameState {
         this.items = items;
     }
 
-    public void addItem(ItemDrop item) {
-        this.items.put(item.getID(), item);
-    }
-
     public LinkedHashSet<Projectile> getProjectiles() {
         return projectiles;
     }
@@ -70,8 +68,12 @@ public class GameState {
         this.projectiles = projectiles;
     }
 
-    public void addProjectile(Projectile projectile) {
-        this.projectiles.add(projectile);
+    public LinkedHashSet<Laser> getLasers() {
+        return lasers;
+    }
+
+    public void setLasers(LinkedHashSet<Laser> lasers) {
+        this.lasers = lasers;
     }
 
     public void setTileMap(Tile[][] tileMap) {

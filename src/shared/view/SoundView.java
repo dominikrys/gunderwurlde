@@ -6,6 +6,7 @@ import javafx.scene.media.AudioClip;
 import shared.GameSound;
 import shared.lists.ActionList;
 import shared.lists.SoundList;
+import shared.view.entity.EnemyView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
@@ -16,23 +17,38 @@ import java.util.Map;
 
 public class SoundView {
 	
+	protected int clientID;
+	protected PlayerView client;
 	protected GameView gameView;
 	protected Settings settings;
-	protected HashMap<Integer, GameSound> playing;
+	protected HashMap<Integer, GameSound> pPlaying;
+	protected HashMap<Integer, GameSound> ePlaying;
 	protected HashMap<SoundList, AudioClip> loadedGameSounds;
 	protected AnimationTimer t;
 	
 	
-	public SoundView(GameView gameView, Settings settings) {
+	public SoundView(int clientID, GameView gameView, Settings settings) {
+		this.clientID = clientID;
+		for(PlayerView c : gameView.getPlayers()) {
+			if(c.getID() == this.clientID) {
+				this.client = c;
+			}
+		}
 		this.gameView = gameView;
 		this.settings = settings;
-		this.playing = new HashMap<Integer, GameSound>();
+		this.pPlaying = new HashMap<Integer, GameSound>();
+		this.ePlaying = new HashMap<Integer, GameSound>();
 		this.loadGameSounds();
 		this.t = null;
 	}
 	
 	public void setGameView(GameView gameView) {
 		this.gameView = gameView;
+		for(PlayerView c : gameView.getPlayers()) {
+			if(c.getID() == this.clientID) {
+				this.client = c;
+			}
+		}
 	}
 	
 	public void loadGameSounds() {
@@ -60,28 +76,54 @@ public class SoundView {
 	public void playSounds() {
 		for(PlayerView p : gameView.getPlayers()) {
 			if(!p.getCurrentAction().equals(ActionList.NONE) && !p.getCurrentAction().equals(ActionList.DEAD)) {
-				if(playing.containsKey(p.getID())) {
-					playing.get(p.getID()).setEntityView(p);
-					if(!playing.get(p.getID()).getActionList().equals(p.getCurrentAction())) {
-						playing.get(p.getID()).stop();
-						playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
+				if(pPlaying.containsKey(p.getID())) {
+					pPlaying.get(p.getID()).setEntityView(p);
+					if(!pPlaying.get(p.getID()).getActionList().equals(p.getCurrentAction())) {
+						pPlaying.get(p.getID()).stop();
+						pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 					}
 					else if(p.getCurrentAction().equals(ActionList.ATTACKING) || p.getCurrentAction().equals(ActionList.RELOADING)) {
-						if(playing.get(p.getID()).getReplayable()) {
-							playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
+						if(pPlaying.get(p.getID()).getReplayable()) {
+							pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 						}
 					}
 				}
 				else {
-					playing.put(p.getID(), new GameSound(loadedGameSounds, p, p.getCurrentAction(), this.settings.getSoundVolume()));
+					pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
+			}
+			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
+				//pPlaying.get(p.getID()).stop();
+			}
+		}
+		
+		for(EnemyView e : gameView.getEnemies()) {
+			if(!e.getCurrentAction().equals(ActionList.NONE) && !e.getCurrentAction().equals(ActionList.DEAD)) {
+				if(ePlaying.containsKey(e.getID())) {
+					ePlaying.get(e.getID()).setEntityView(e);
+					if(!ePlaying.get(e.getID()).getActionList().equals(e.getCurrentAction())) {
+						pPlaying.get(e.getID()).stop();
+						pPlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
+					}
+					else if(e.getCurrentAction().equals(ActionList.ATTACKING) || e.getCurrentAction().equals(ActionList.RELOADING)) {
+						if(ePlaying.get(e.getID()).getReplayable()) {
+							ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
+						}
+					}
+				}
+				else {
+					ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
+				}
+			}
+			else if(e.getCurrentAction().equals(ActionList.DEAD)) {
+				//ePlaying.get(e.getID()).stop();
 			}
 		}
 	}
 	
 	// NOT USED
 	public void clear() {
-		Iterator it = playing.entrySet().iterator();
+		Iterator it = pPlaying.entrySet().iterator();
 		while(it.hasNext()) {
 			Map.Entry<EntityView, GameSound> pair = (Map.Entry<EntityView, GameSound>) it.next();
 			if(!pair.getValue().isPlaying()) {

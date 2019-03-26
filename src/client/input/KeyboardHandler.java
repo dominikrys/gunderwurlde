@@ -16,19 +16,56 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * KeyboardHandler class. This is the class for keyboard inputs.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class KeyboardHandler extends UserInteraction {
+	
+	/**
+     * PlayerID for identification
+     */
     private int playerID;
+    
+    /**
+     * Client handler for sending requests
+     */
     private Client handler;
-    private Scene fscene;
-    private GameView gameView;
+    
+    /**
+     * PlayerView that contains player info
+     */
     private PlayerView playerView;
-    private Image pImage;
+    
+    /**
+     * Movement class for player movement
+     */
     private Movement movement;
+    
+    /**
+     * Reload class for player reload
+     */
     private Reload reload;
+    
+    /**
+     * DropItem class for dropping items
+     */
     private DropItem dropItem;
-    private PickItem pickItem;
+    
+    /**
+     * ChangeItem class for changing items
+     */
     private ChangeItem changeItem;
+    
+    /**
+     * ArrayList for storing pressed keys
+     */
     private ArrayList<String> input = new ArrayList<String>();
+    
+    /**
+     * Booleans for whether functional keys are pressed
+     */
     private boolean upPressed = false;
     private boolean leftPressed = false;
     private boolean downPressed = false;
@@ -36,35 +73,64 @@ public class KeyboardHandler extends UserInteraction {
     private boolean reloadPressed = false;
     private boolean dropPressed = false;
     private boolean interactPressed = false;
-    private AnimationTimer t;
+    
+    /**
+     * Timer that loops, checks for requests and sends them
+     */
     private Timer timer;
+    
+    /**
+     * TimerTask for timer behaviour
+     */
     private TimerTask task;
+    
+    /**
+     * Boolean whether an item can be dropped
+     */
+    private boolean dropCoolDown;
+    
+    /**
+     * TimerTask for item dropping cooldown
+     */
+    private TimerTask checkDropCoolDown;
+    
+    /**
+     * Boolean whether this keyboard handler is active
+     */
     private boolean activated;
 
-    // Settings
+    /**
+     * Settings that contains keys mapping
+     */
     private Settings settings;
 
+    /**
+     * Constructor
+     *
+     * @param playerID Player ID
+     * @param settings Game settings with keys mapping
+     */
     public KeyboardHandler(int playerID, Settings settings) {
         super();
         this.playerID = playerID;
         this.settings = settings;
+        this.dropCoolDown = false;
     }
 
-    // NOT USED
-    public static Pose center(Pose target, Image image) {
-        double width = image.getWidth();
-        double height = image.getHeight();
-        double centerX = target.getX() - width / 2;
-        double centerY = target.getY() - height / 2;
-        Pose center = new Pose((int) centerX, (int) centerY);
-        return center;
-    }
-
-    @Override
+    /**
+     * Setter for client handler
+     *
+     * @param handler Client handler
+     */
     public void setGameHandler(Client handler) {
         this.handler = handler;
     }
 
+    /**
+     * Setter for all key captures on scene
+     *
+     * @param scene scene
+     */
     @Override
     public void setScene(Scene scene) {
         this.scene = scene;
@@ -75,7 +141,6 @@ public class KeyboardHandler extends UserInteraction {
                 String pressed = event.getCode().toString();
                 if (!input.contains(pressed)) {
                     input.add(pressed);
-                    // System.out.println(input.toString());
                     if (settings.getKey(KeyAction.UP).equals(pressed)) {
                         upPressed = true;
                     }
@@ -118,7 +183,6 @@ public class KeyboardHandler extends UserInteraction {
             public void handle(KeyEvent event) {
                 String released = event.getCode().toString();
                 input.remove(released);
-                // System.out.println(input.toString());
                 if (settings.getKey(KeyAction.UP).equals(released)) {
                     upPressed = false;
                 }
@@ -144,28 +208,35 @@ public class KeyboardHandler extends UserInteraction {
         });
     }
 
+    /**
+     * Setter for game view
+     *
+     * @param gameView Game view and initialize actions
+     */
     @Override
     public void setGameView(GameView gameView) {
         super.setGameView(gameView);
 
         for (PlayerView p : gameView.getPlayers()) {
-            //System.out.print(p.getID() + " " + p.getName());
             if (p.getID() == this.playerID) {
                 this.playerView = p;
                 break;
             }
         }
-        this.pImage = new Image(EntityList.PLAYER.getPath());
-        this.movement = new Movement(handler, playerView, pImage, gameView.getTileMap(), settings, gameView.getItemDrops());
+        this.movement = new Movement(handler, playerView);
         this.reload = new Reload(handler, playerView);
         this.dropItem = new DropItem(handler, playerView);
         this.changeItem = new ChangeItem(handler, playerView);
     }
 
+    /**
+     * Method for activating the timer for capturing key inputs
+     *
+     */
     @Override
     public void activate() {
         super.activate();
-
+        
         this.timer = new Timer();
         this.task = new TimerTask() {
             @Override
@@ -194,8 +265,16 @@ public class KeyboardHandler extends UserInteraction {
                 if (reloadPressed) {
                     reload.reload();
                 }
-                if (dropPressed) {
+                if (dropPressed && !dropCoolDown) {
                     dropItem.drop();
+                    dropCoolDown = true;
+                    checkDropCoolDown = new TimerTask() {
+            			@Override
+            			public void run() {
+            				dropCoolDown = false;
+            			}
+            		};
+                    timer.schedule(checkDropCoolDown, 1000);
                 }
                 if (interactPressed) {
 
@@ -204,61 +283,23 @@ public class KeyboardHandler extends UserInteraction {
         };
 
         timer.scheduleAtFixedRate(task, 0, 1);
-
-		/*
-        this.t = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (upPressed || leftPressed || downPressed || rightPressed) {
-                	if((upPressed && !leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && !downPressed && rightPressed)) {
-                		movement.move("up");
-                	}
-                	else if((!upPressed && leftPressed && !downPressed && !rightPressed) || (upPressed && leftPressed && downPressed && !rightPressed)) {
-                		movement.move("left");
-                	}
-                	else if((!upPressed && !leftPressed && downPressed && !rightPressed) || (!upPressed && leftPressed && downPressed && rightPressed)) {
-                		movement.move("down");
-                	}
-                	else if((!upPressed && !leftPressed && !downPressed && rightPressed) || (upPressed && !leftPressed && downPressed && rightPressed)) {
-                		movement.move("right");
-                	}
-                	else if(upPressed && leftPressed && !downPressed && !rightPressed) {
-                		movement.move("upLeft");
-                	}
-                	else if(upPressed && !leftPressed && !downPressed && rightPressed) {
-                		movement.move("upRight");
-                	}
-                	else if(!upPressed && leftPressed && downPressed && !rightPressed) {
-                		movement.move("downLeft");
-                	}
-                	else if(!upPressed && !leftPressed && downPressed && rightPressed) {
-                		movement.move("downRight");
-                	}
-                	else {
-                		// do nothing
-                	}
-                }
-                if(reloadPressed) {
-                    reload.reload();
-                }
-                if(dropPressed) {
-                    dropItem.drop();
-                }
-                if(interactPressed) {
-
-                }
-            }
-        };
-
-        this.t.start();
-        */
     }
 
+    /**
+     * Method for deactivating the timer
+     *
+     */
     @Override
     public void deactivate() {
         super.deactivate();
+        this.timer.cancel();
     }
 
+    /**
+     * Check if timer is activated
+     *
+     * @return Boolean whether the timer is activated
+     */
     @Override
     public boolean isActivated() {
         return super.isActivated();

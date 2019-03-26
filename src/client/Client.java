@@ -7,7 +7,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import client.input.ActionList;
+import client.input.CommandList;
 import client.net.Addressing;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
@@ -393,7 +393,7 @@ private ConnectionType connectionType;
      * Method to send requests that do no require parameters to the server
      * @param action the list of actions to be sent to the server
      */
-    public void send(ActionList action) {
+    public void send(CommandList action) {
         switch (action.toString()) {
             case "ATTACK": // 0
                 sender.send(new Integer[]{0});
@@ -412,7 +412,7 @@ private ConnectionType connectionType;
      * @param action the list of actions to be sent to the server
      * @param parameter the parameters that actionlist requires
      */
-    public void send(ActionList action, int parameter) {
+    public void send(CommandList action, int parameter) {
         switch (action.toString()) {
             case "CHANGEITEM": // 3
                 sender.send(new Integer[]{3, parameter});
@@ -422,6 +422,9 @@ private ConnectionType connectionType;
                 break;
             case "TURN": //5
                 sender.send(new Integer[]{5, parameter});
+                break;
+            case "CONSUMABLE": // 6
+            	sender.send(new Integer[]{6, parameter});
         }
     }
 

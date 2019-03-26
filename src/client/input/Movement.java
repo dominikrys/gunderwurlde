@@ -1,65 +1,50 @@
 package client.input;
 
 import client.Client;
-import client.GameHandler;
-import client.Settings;
-import javafx.scene.image.Image;
-import shared.Pose;
-import shared.view.TileView;
-import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 
-import java.util.LinkedHashSet;
-
+/**
+ * Movement class. This is the class for player movements.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class Movement extends Action{
 	
+	/**
+     * Client handler for sending requests
+     */
 	private Client handler;
-	private PlayerView playerView;
-	private Settings settings;
-	private Collision collision;
-	//private PickItem pickItem;
 
-	public Movement(Client handler, PlayerView playerView, Image pImage, TileView[][] tileMap, Settings settings, LinkedHashSet<ItemDropView> itemDropView) {
+	/**
+     * Constructor
+     *
+     * @param handler Client handler
+     * @param playerView Player view
+     */
+	public Movement(Client handler, PlayerView playerView) {
 		super(handler, playerView);
 		this.handler = handler;
-		this.playerView = playerView;
-		this.settings = settings;
-		this.collision = new Collision(tileMap, pImage);
-		//this.pickItem = new PickItem(handler, playerView, itemDropView);
 	}
 	
+	/**
+     * Method for sending movement requests
+     * 
+     *	@param direction Direction to move
+     */
 	public void move(String direction) {
-		Pose pose = new Pose(playerView.getPose().getX(), playerView.getPose().getY(), playerView.getPose().getDirection());
-        // System.out.println(pose.getX());
-        // System.out.println(pose.getY());
-        // System.out.println(pose.getDirection());
-		//pickItem.checkPick();
-		//String action = settings.getAction(key);
 		int angle = -1;
 		switch (direction) {
 			case "up" :
-				//pose.setY(pose.getY() - playerView.getMoveSpeed());
 			        angle = 270;
-				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("up");
 				break;
 			case "left" :
-				//pose.setX(pose.getX() - playerView.getMoveSpeed());
 			        angle = 180;
-				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("left");
 				break;
 			case "down" :
-				//pose.setY(pose.getY() + playerView.getMoveSpeed());
 			        angle = 90;
-				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("down");
 				break;
 			case "right" :
-				//pose.setX(pose.getX() + playerView.getMoveSpeed());
 			        angle = 0;
-				//this.handler.send(ActionList.MOVEMENT, direction);
-            // System.out.println("right");
 				break;
 			case "upLeft" :
 			        angle = 225;
@@ -74,14 +59,7 @@ public class Movement extends Action{
 			        angle = 45;
 				break;
 		}
-		this.handler.send(ActionList.MOVEMENT, angle);
-		/*
-		if(collision.checkBoundary(pose.getX(), pose.getY())) {
-			//playerView.setPose(pose);
-			this.sender.send(direction);
-			// TODO: send request here (send pose)
-		}
-		*/
+		this.handler.send(CommandList.MOVEMENT, angle);
 	}
 	
 }

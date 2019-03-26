@@ -1,5 +1,6 @@
 package client.input;
 
+import client.Client;
 import client.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -9,30 +10,104 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import shared.lists.ItemType;
 import shared.view.GameView;
-import shared.view.GunView;
 import shared.view.entity.PlayerView;
+import shared.view.GunView;
 
+/**
+ * MouseHandler class. This is the class for mouse inputs.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class MouseHandler extends UserInteraction {
 
-    private int playerID;
-    private Scene scene;
-    private Canvas mapCanvas;
-    private GameView gameView;
+	/**
+     * PlayerID for identification
+     */
+	private int playerID;
+	
+	/**
+     * Map canvas for location calculation
+     */
+    
+    /**
+     * PlayerView that contains player info
+     */
     private PlayerView playerView;
+    
+    /**
+     * Attack class for player attacks
+     */
     private Attack attack;
+    
+    /**
+     * ChangeItem class for changing items
+     */
     private ChangeItem changeItem;
+    
+    private Canvas mapCanvas;
+    
     private Settings settings;
+    
+    /**
+     * Mouse cursor X coordinate on screen
+     */
     private double mouseX;
+    
+    /**
+     * Mouse cursor Y coordinate on screen
+     */
     private double mouseY;
+    
+    /**
+     * Player X coordinate on screen
+     */
     private double playerX;
+    
+    /**
+     * Player Y coordinate on screen
+     */
     private double playerY;
+    
+    /**
+     * Angle between player and mouse cursor
+     */
     private double mouseDegree;
+    
+    /**
+     * Angle player is facing
+     */
     private double playerDegree;
+    
+    /**
+     * Amount to rotate when mouse cursor moves
+     */
     private double toRotate;
+    
+    /**
+     * AnimationTimer that loops, checks for requests and sends them 
+     */
     private AnimationTimer t;
+    
+    /**
+     * Boolean whether this mouse handler is active
+     */
     private boolean activated;
+    
+    /**
+     * Boolean whether the primary mouse button is being pressed
+     */
     private boolean hold;
+    
+    /**
+     * Distance between player and cursor
+     */
+    private double distance;
 
+    /**
+     * Constructor
+     *
+     * @param playerID Player ID
+     */
     public MouseHandler(int playerID, Settings settings) {
         super();
         this.settings = settings;
@@ -40,10 +115,28 @@ public class MouseHandler extends UserInteraction {
         this.playerID = playerID;
         this.hold = false;
     }
+    
+    /**
+     * Setter for client handler
+     *
+     * @param handler Client handler
+     */
+    public void setGameHandler(Client handler) {
+        this.handler = handler;
+    }
 
-    private static int quarter(double playerX, double playerY, double destinationX, double destinationY) {
-        double xDif = destinationX - playerX;
-        double yDif = destinationY - playerY;
+    /**
+     * Calculate which quarter of the screen is the mouse cursor at
+     *
+     * @param playerX Player X coordinate on screen
+     * @param playerY Player Y coordinate on screen
+     * @param mouseX Mouse cursor X coordinate on screen
+     * @param mouseY Mouse cursor Y coordinate on screen
+     * @return 1 = top left, 2 = top right, 3 = bottom left, 4 = bottom right
+     */
+    private static int quarter(double playerX, double playerY, double mouseX, double mouseY) {
+        double xDif = mouseX - playerX;
+        double yDif = mouseY - playerY;
         if (xDif <= 0 && yDif < 0) {
             return 1;
         } else if (xDif > 0 && yDif < 0) {
@@ -53,6 +146,11 @@ public class MouseHandler extends UserInteraction {
         } else return 4;
     }
 
+    /**
+     * Method for converting mouse movement to player rotation requests
+     *
+     * @param e MouseEvent
+     */
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
@@ -78,61 +176,75 @@ public class MouseHandler extends UserInteraction {
             mouseDegree = 0;
         }
         playerDegree = mouseDegree;
-        // System.out.println("playerDegree: " + playerDegree);
-        // TODO: send changes(playerDegree) to server
-        handler.send(ActionList.TURN, (int) playerDegree - 90);
-
+        handler.send(CommandList.TURN, (int) playerDegree - 90);
     }
 
+    /**
+     * Setter for all mouse captures on scene
+     *
+     * @param scene scene
+     */
     @Override
     public void setScene(Scene scene) {
         super.setScene(scene);
 
         scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-            mouseMovement(e);
-        });
-
-        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-            if (e.isPrimaryButtonDown()) {
-                mouseMovement(e);
-                attack.attack();
-                this.hold = true;
-            } else {
-                mouseMovement(e);
-            }
-        });
-
-        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (e.isPrimaryButtonDown()) {
-                attack.attack();
-                this.hold = true;
-            }
-        });
-
-        scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-            if (e.getButton().toString().equals("PRIMARY")) {
-                this.hold = false;
-            }
-        });
-
-        scene.setOnScroll(new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if (event.getDeltaY() > 0) {
-                    changeItem.previousItem();
-                } else if (event.getDeltaY() < 0) {
-                    changeItem.nextItem();
-                }
-                //System.out.println(playerView.getCurrentItemIndex());
-                // TODO: send changes(item change) to server
-            }
-        });
+			mouseMovement(e);
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+			if(e.isPrimaryButtonDown()) {
+				mouseMovement(e);
+				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+				attack.attack(distance);
+				this.hold = true;
+			}
+			else {
+				mouseMovement(e);
+			}
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+			if(e.isPrimaryButtonDown()) {
+				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
+				attack.attack(distance);
+				this.hold = true;
+			}
+		});
+		
+		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+			if(e.getButton().toString().equals("PRIMARY")) {
+				this.hold = false;
+			}
+		});
+		
+		scene.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				if(event.getDeltaY() > 0) {
+					changeItem.previousItem();
+				}
+				else if(event.getDeltaY() < 0) {
+					changeItem.nextItem();
+				}
+			}
+		});
     }
 
+    /**
+     * Setter for mapCanvas
+     *
+     * @param mapCanvas Map canvas
+     */
     public void setCanvas(Canvas mapCanvas) {
         this.mapCanvas = mapCanvas;
     }
 
+    /**
+     * Setter for game view and initialize actions
+     *
+     * @param gameView Game view
+     */
     @Override
     public void setGameView(GameView gameView) {
         super.setGameView(gameView);
@@ -147,6 +259,10 @@ public class MouseHandler extends UserInteraction {
         this.changeItem = new ChangeItem(handler, playerView);
     }
 
+    /**
+     * Method for activating the timer for capturing mouse inputs
+     *
+     */
     @Override
     public void activate() {
         super.activate();
@@ -155,7 +271,7 @@ public class MouseHandler extends UserInteraction {
             public void handle(long now) {
                 if (hold == true) {
                     if (playerView.getCurrentItem().getItemType() == ItemType.GUN && ((GunView) playerView.getCurrentItem()).isAutoFire()) {
-                        attack.attack();
+                        attack.attack(distance);
                     }
                 }
             }
@@ -163,12 +279,21 @@ public class MouseHandler extends UserInteraction {
         this.t.start();
     }
 
+    /**
+     * Method for deactivating the timer
+     *
+     */
     @Override
     public void deactivate() {
         super.deactivate();
         this.t.stop();
     }
 
+    /**
+     * Check if timer is activated
+     *
+     * @return Boolean whether the timer is activated
+     */
     @Override
     public boolean isActivated() {
         return super.isActivated();
