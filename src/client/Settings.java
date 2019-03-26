@@ -377,6 +377,15 @@ public class Settings implements Serializable {
      * @param score      Score to save
      */
     public void addMultiPlayerHighScore(String playerName, int score) {
+        // Check if high score under that name exists
+        if (multiPlayerHighScores.containsKey(playerName)) {
+            // If stored high score is larger than the one to be inserted, skip
+            if (multiPlayerHighScores.get(playerName) > score) {
+                return;
+            }
+        }
+
+        // Put high score into hashmap
         multiPlayerHighScores.put(playerName, score);
     }
 
@@ -387,7 +396,15 @@ public class Settings implements Serializable {
      * @param score      Score to save
      */
     public void addSinglePlayerHighScore(String playerName, int score) {
-        singlePlayerHighScores.put(playerName, score);
+        // Check if high score under that name exists
+        if (singlePlayerHighScores.containsKey(playerName)) {
+            // If stored high score is larger than the one to be inserted, skip
+            if (singlePlayerHighScores.get(playerName) > score) {
+                return;
+            }
+        }
+
+        singlePlayerHighScores.put(playerName,  score);
     }
 }
 
