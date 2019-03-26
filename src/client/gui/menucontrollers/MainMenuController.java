@@ -1,6 +1,7 @@
 package client.gui.menucontrollers;
 
 import client.Settings;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -158,6 +159,9 @@ public class MainMenuController extends VBox implements MenuController {
             System.out.println(t.getName() + " is still alive");
         }
         stage.close();
+
+        //Platform.runLater(() -> System.exit(1));
+        // Last resort
     }
 
     /**

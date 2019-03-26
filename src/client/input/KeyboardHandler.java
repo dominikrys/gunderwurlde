@@ -2,13 +2,9 @@ package client.input;
 
 import client.Client;
 import client.Settings;
-import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import shared.Pose;
-import shared.lists.EntityList;
 import shared.view.GameView;
 import shared.view.entity.PlayerView;
 
@@ -57,7 +53,11 @@ public class KeyboardHandler extends UserInteraction {
      * ChangeItem class for changing items
      */
     private ChangeItem changeItem;
-    
+
+    /**
+     * Pause class for pausing the game
+     */
+    private Pause pauseGame;
     /**
      * ArrayList for storing pressed keys
      */
@@ -73,6 +73,9 @@ public class KeyboardHandler extends UserInteraction {
     private boolean reloadPressed = false;
     private boolean dropPressed = false;
     private boolean interactPressed = false;
+    private boolean pause = false;
+    private boolean currentlyPaused = false;
+    private boolean resume = false;
     
     /**
      * Timer that loops, checks for requests and sends them
@@ -172,7 +175,14 @@ public class KeyboardHandler extends UserInteraction {
                         changeItem.changeTo(3);
                     }
                     if (settings.getKey(KeyAction.ESC).equals(pressed)) {
-                        // TODO: escape menu
+                        if(currentlyPaused){
+                            resume = true;
+                            currentlyPaused = false;
+                        }
+                        else {
+                            pause = true;
+                            currentlyPaused = true;
+                        }
                     }
                 }
             }
@@ -204,6 +214,14 @@ public class KeyboardHandler extends UserInteraction {
                 if (settings.getKey(KeyAction.INTERACT).equals(released)) {
                     interactPressed = false;
                 }
+                if(settings.getKey(KeyAction.ESC).equals(released)){
+                    if(pause) {
+                        pause = false;
+                    }
+                    else{
+                        resume = false;
+                    }
+                }
             }
         });
     }
@@ -227,6 +245,7 @@ public class KeyboardHandler extends UserInteraction {
         this.reload = new Reload(handler, playerView);
         this.dropItem = new DropItem(handler, playerView);
         this.changeItem = new ChangeItem(handler, playerView);
+        this.pauseGame = new Pause(handler, playerView);
     }
 
     /**
@@ -258,12 +277,21 @@ public class KeyboardHandler extends UserInteraction {
                         movement.move("downLeft");
                     } else if (!upPressed && !leftPressed && downPressed && rightPressed) {
                         movement.move("downRight");
-                    } else {
+                    }
+                    else {
                         // do nothing
                     }
                 }
                 if (reloadPressed) {
                     reload.reload();
+                }
+                if(pause){
+                    pauseGame.pause();
+
+                }
+                if(resume){
+                    pauseGame.resume();
+
                 }
                 if (dropPressed && !dropCoolDown) {
                     dropItem.drop();

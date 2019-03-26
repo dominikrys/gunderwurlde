@@ -499,7 +499,6 @@ public class GameRenderer implements Runnable {
 
                             // Set pause to false and stop rendering
                             paused = false;
-                            System.out.println("\n Ending threads to get to menu \n");
                             this.stop();
 
                             // Go back to play menu with all player info still there
@@ -595,6 +594,7 @@ public class GameRenderer implements Runnable {
         running = false;
         getKeyboardHandler().deactivate();
         getMouseHandler().deactivate();
+        soundView.deactivate();
         handler.close();
     }
 }

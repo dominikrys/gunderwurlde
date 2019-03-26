@@ -417,6 +417,11 @@ private ConnectionType connectionType;
             case "RELOAD": // 2
                 sender.send(new Integer[]{2});
                 break;
+            case "PAUSED": //7
+                sender.send(new Integer[]{7});
+                break;
+            case "RESUME": //8
+                sender.send(new Integer[]{8});
         }
     }
 

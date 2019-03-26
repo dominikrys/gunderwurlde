@@ -101,4 +101,21 @@ public class ClientRequests {
         } else
             return false;
     }
+
+    public boolean playerRequestPause(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestPause();
+            return true;
+        } else
+            return false;
+    }
+
+    public boolean playerRequestResume(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestResume();
+            return true;
+        }
+        else
+            return false;
+    }
 }

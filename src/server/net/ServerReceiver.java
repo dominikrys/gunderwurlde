@@ -114,6 +114,12 @@ public class ServerReceiver extends Thread {
                             break;
                         case 5 : // TURN
                             handler.getClientRequests().playerRequestFacing(playerID, received[1]);
+                        case 7 : // Pause
+                            handler.getClientRequests().playerRequestPause(playerID);
+                            break;
+                        case 8 : // Resume
+                            handler.getClientRequests().playerRequestResume(playerID);
+                            break;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

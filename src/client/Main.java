@@ -56,6 +56,9 @@ public class Main extends Application {
             }
         });
 
+        //Platform.runLater(() -> System.exit(1));
+
+
         // Create the main menu and show it
         (new MainMenuController(stage, settings)).show();
 

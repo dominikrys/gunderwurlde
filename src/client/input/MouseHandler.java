@@ -1,8 +1,10 @@
 package client.input;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import client.Client;
 import client.Settings;
-import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,84 +22,89 @@ import shared.view.GunView;
  */
 public class MouseHandler extends UserInteraction {
 
-	/**
+    /**
      * PlayerID for identification
      */
-	private int playerID;
-	
-	/**
+    private int playerID;
+
+    /**
      * Map canvas for location calculation
      */
-    
+
     /**
      * PlayerView that contains player info
      */
     private PlayerView playerView;
-    
+
     /**
      * Attack class for player attacks
      */
     private Attack attack;
-    
+
     /**
      * ChangeItem class for changing items
      */
     private ChangeItem changeItem;
-    
+
     private Canvas mapCanvas;
-    
+
     private Settings settings;
-    
+
     /**
      * Mouse cursor X coordinate on screen
      */
     private double mouseX;
-    
+
     /**
      * Mouse cursor Y coordinate on screen
      */
     private double mouseY;
-    
+
     /**
      * Player X coordinate on screen
      */
     private double playerX;
-    
+
     /**
      * Player Y coordinate on screen
      */
     private double playerY;
-    
+
     /**
      * Angle between player and mouse cursor
      */
     private double mouseDegree;
-    
+
     /**
      * Angle player is facing
      */
     private double playerDegree;
-    
+
     /**
      * Amount to rotate when mouse cursor moves
      */
     private double toRotate;
-    
+
     /**
-     * AnimationTimer that loops, checks for requests and sends them 
+     * Timer that loops, checks for requests and sends them
      */
-    private AnimationTimer t;
-    
+    private Timer timer;
+
+    /**
+     * TimerTask for timer behaviour
+     */
+    private TimerTask task;
+
     /**
      * Boolean whether this mouse handler is active
      */
     private boolean activated;
-    
+
     /**
      * Boolean whether the primary mouse button is being pressed
      */
     private boolean hold;
-    
+
     /**
      * Distance between player and cursor
      */
@@ -106,20 +113,21 @@ public class MouseHandler extends UserInteraction {
     /**
      * Constructor
      *
-     * @param playerID Player ID
+     * @param playerID
+     *            Player ID
      */
     public MouseHandler(int playerID, Settings settings) {
         super();
         this.settings = settings;
-        this.t = null;
         this.playerID = playerID;
         this.hold = false;
     }
-    
+
     /**
      * Setter for client handler
      *
-     * @param handler Client handler
+     * @param handler
+     *            Client handler
      */
     public void setGameHandler(Client handler) {
         this.handler = handler;
@@ -128,10 +136,14 @@ public class MouseHandler extends UserInteraction {
     /**
      * Calculate which quarter of the screen is the mouse cursor at
      *
-     * @param playerX Player X coordinate on screen
-     * @param playerY Player Y coordinate on screen
-     * @param mouseX Mouse cursor X coordinate on screen
-     * @param mouseY Mouse cursor Y coordinate on screen
+     * @param playerX
+     *            Player X coordinate on screen
+     * @param playerY
+     *            Player Y coordinate on screen
+     * @param mouseX
+     *            Mouse cursor X coordinate on screen
+     * @param mouseY
+     *            Mouse cursor Y coordinate on screen
      * @return 1 = top left, 2 = top right, 3 = bottom left, 4 = bottom right
      */
     private static int quarter(double playerX, double playerY, double mouseX, double mouseY) {
@@ -143,13 +155,15 @@ public class MouseHandler extends UserInteraction {
             return 2;
         } else if (xDif <= 0 && yDif >= 0) {
             return 3;
-        } else return 4;
+        } else
+            return 4;
     }
 
     /**
      * Method for converting mouse movement to player rotation requests
      *
-     * @param e MouseEvent
+     * @param e
+     *            MouseEvent
      */
     private void mouseMovement(MouseEvent e) {
         mouseX = e.getSceneX();
@@ -182,59 +196,69 @@ public class MouseHandler extends UserInteraction {
     /**
      * Setter for all mouse captures on scene
      *
-     * @param scene scene
+     * @param scene
+     *            scene
      */
     @Override
     public void setScene(Scene scene) {
         super.setScene(scene);
 
         scene.addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-			mouseMovement(e);
-		});
+            if(activated) {
+                mouseMovement(e);
+            }
+        });
 
-		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			if(e.isPrimaryButtonDown()) {
-				mouseMovement(e);
-				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
-				attack.attack(distance);
-				this.hold = true;
-			}
-			else {
-				mouseMovement(e);
-			}
-		});
+        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+            if(activated) {
+                if (e.isPrimaryButtonDown()) {
+                    mouseMovement(e);
+                    distance = Math.sqrt((mouseX - playerX) * (mouseX - playerX) + (mouseY - playerY) * (mouseY - playerY));
+                    attack.attack(distance);
+                    this.hold = true;
+                } else {
+                    mouseMovement(e);
+                }
+            }
+        });
 
-		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-			if(e.isPrimaryButtonDown()) {
-				distance = Math.sqrt((mouseX - playerX)*(mouseX - playerX) + (mouseY - playerY)*(mouseY - playerY));
-				attack.attack(distance);
-				this.hold = true;
-			}
-		});
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if(activated) {
+                if (e.isPrimaryButtonDown()) {
+                    distance = Math.sqrt((mouseX - playerX) * (mouseX - playerX) + (mouseY - playerY) * (mouseY - playerY));
+                    attack.attack(distance);
+                    this.hold = true;
+                }
+            }
+        });
 
-		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-			if(e.getButton().toString().equals("PRIMARY")) {
-				this.hold = false;
-			}
-		});
+        scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+            if(activated) {
+                if (e.getButton().toString().equals("PRIMARY")) {
+                    this.hold = false;
+                }
+            }
+        });
 
-		scene.setOnScroll(new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if(event.getDeltaY() > 0) {
-					changeItem.previousItem();
-				}
-				else if(event.getDeltaY() < 0) {
-					changeItem.nextItem();
-				}
-			}
-		});
+        scene.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if(activated) {
+                    if (event.getDeltaY() > 0) {
+                        changeItem.previousItem();
+                    } else if (event.getDeltaY() < 0) {
+                        changeItem.nextItem();
+                    }
+                }
+            }
+        });
     }
 
     /**
      * Setter for mapCanvas
      *
-     * @param mapCanvas Map canvas
+     * @param mapCanvas
+     *            Map canvas
      */
     public void setCanvas(Canvas mapCanvas) {
         this.mapCanvas = mapCanvas;
@@ -243,7 +267,8 @@ public class MouseHandler extends UserInteraction {
     /**
      * Setter for game view and initialize actions
      *
-     * @param gameView Game view
+     * @param gameView
+     *            Game view
      */
     @Override
     public void setGameView(GameView gameView) {
@@ -266,17 +291,22 @@ public class MouseHandler extends UserInteraction {
     @Override
     public void activate() {
         super.activate();
-        this.t = new AnimationTimer() {
+        this.activated = true;
+
+        this.timer = new Timer();
+        this.task = new TimerTask() {
             @Override
-            public void handle(long now) {
+            public void run() {
                 if (hold == true) {
-                    if (playerView.getCurrentItem().getItemType() == ItemType.GUN && ((GunView) playerView.getCurrentItem()).isAutoFire()) {
+                    if (playerView.getCurrentItem().getItemType() == ItemType.GUN
+                            && ((GunView) playerView.getCurrentItem()).isAutoFire()) {
                         attack.attack(distance);
                     }
                 }
             }
         };
-        this.t.start();
+
+        timer.scheduleAtFixedRate(task, 0, 1);
     }
 
     /**
@@ -286,7 +316,9 @@ public class MouseHandler extends UserInteraction {
     @Override
     public void deactivate() {
         super.deactivate();
-        this.t.stop();
+        this.activated = false;
+        this.timer.cancel();
+        this.timer.purge();
     }
 
     /**
@@ -298,6 +330,5 @@ public class MouseHandler extends UserInteraction {
     public boolean isActivated() {
         return super.isActivated();
     }
-
 
 }
