@@ -15,6 +15,10 @@ public class Door implements Serializable{
     public Tile getTileToReturn() {
         return tileToReturn;
     }
+    
+    public int getKillsLeft() {
+    	return killsLeft;
+    }
 
     public boolean isOpen() {
         return (killsLeft <= 0);

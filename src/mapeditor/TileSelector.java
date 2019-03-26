@@ -25,6 +25,7 @@ import shared.lists.TileList;
 public class TileSelector {
 	
 	private MapEditor mapEditor;
+	private DoorSetter doorSetter;
 	private int tileX;
 	private int tileY;
 	private HashMap<TileList, Image> tileSprite;
@@ -58,6 +59,15 @@ public class TileSelector {
 	// TODO:
 	private VBox doorSettingsVBox;
 	private boolean paintMode;
+	private boolean doorMode;
+	
+	public TileSelector(DoorSetter doorSetter, HashMap<TileList, Image> tileSprite) {
+		this.doorSetter = doorSetter;
+		this.tileSprite = tileSprite;
+		this.doorMode = true;
+		this.paintMode = true;
+		this.init();
+	}
 	
 	public TileSelector(MapEditor mapEditor) {
 		this.mapEditor = mapEditor;
@@ -221,7 +231,12 @@ public class TileSelector {
 				public void handle(ActionEvent event) {
 					for(Map.Entry<TileList, Tile> entry : tileSettings.entrySet()) {
 						if(entry.getKey().toString().equals(tileMenu.getValue())) {
-							mapEditor.setPaintTile(entry.getValue());
+							if(!doorMode) {
+								mapEditor.setPaintTile(entry.getValue());
+							}
+							else {
+								doorSetter.displayTile(entry.getValue());
+							}
 						}
 					}
 					stage.close();

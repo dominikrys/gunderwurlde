@@ -2,6 +2,7 @@ package mapeditor;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.MapEditorAssetList;
@@ -106,6 +108,7 @@ public class MapEditor {
 	private HBox waveDoorHBox;
 	private Button waveButton;
 	private Button doorButton;
+	private HashMap<String, TileList> doors;
 	private HBox saveCompleteHBox;
 	private Button saveButton;
 	private Button completeButton;
@@ -175,7 +178,8 @@ public class MapEditor {
 			mapWidth = mapSave.getMapWidth();
 			mapHeight = mapSave.getMapHeight();
 			mapTiles = mapSave.getMapTiles();
-			this.waveSetter = new WaveSetter(mapEditor, mapSave.getZoneMap());
+			waveSetter = new WaveSetter(mapEditor, mapSave.getZoneMap());
+			doors = mapSave.getDoors();
 		}
 		else {
 			stage.setTitle("New Map");
@@ -452,12 +456,16 @@ public class MapEditor {
 		});
 		
 		// > > > > Door Settings
+		if(doors == null) {
+			doors = new HashMap<String, TileList>();
+		}
+		
 		doorButton = new Button("Set Doors");
 		waveDoorHBox.getChildren().add(doorButton);
 		doorButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+				DoorSetter doorSetter = new DoorSetter(tileSprite, doors, waveSetter.getZoneMap());
 			}
 		});
 		
@@ -476,7 +484,7 @@ public class MapEditor {
 				if(mapName == null) {
 					nameSetter();
 				}
-				MapWriter.saveMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap()));
+				MapWriter.saveMap(new MapSave(mapName, teamSpawns, mapWidth, mapHeight, mapTiles, waveSetter.getZoneMap(), doors));
 			}
 		});
 		
@@ -486,7 +494,10 @@ public class MapEditor {
 		
 		if(saveFile != null) {
 			drawMapTiles();
-			
+			for(Map.Entry<Team, int[]> entry : teamSpawns.entrySet()) {
+				drawSpawnLetter(entry.getValue()[0], entry.getValue()[1], entry.getKey());
+				setTeamSpawnInfo(Integer.toString(entry.getValue()[0]), Integer.toString(entry.getValue()[1]), entry.getKey());
+			}
 		}
 		
 		stage.show();
@@ -586,6 +597,9 @@ public class MapEditor {
 			params.setFill(Color.TRANSPARENT);
 			mapSnapshot = mapCanvas.snapshot(params, null);
 			mapTiles[tileX][tileY] = tile;
+			if(tile.getType() == TileList.DOOR || tile.getType() == TileList.RUINS_DOOR) {
+				doors.put(Arrays.toString(new int[] {tileX, tileY}), tile.getType());
+			}
 			if(!paintCheckbox.isSelected()) {
 				selectTile(tileX, tileY);
 			}
@@ -820,7 +834,7 @@ public class MapEditor {
 		for(Map.Entry<String, ZoneSettings> entry : waveSetter.getZoneMap().entrySet()) {
 			for(int i = 0 ; i < entry.getValue().getEnemySpawns().size() ; i++) {
 				if(Arrays.toString(entry.getValue().getEnemySpawns().get(i)).equals(Arrays.toString(new int[] {tileX, tileY}))) {
-					if(tileOverWritePopUp("enemy spawn at (" + tileX + ", " + tileY + ") of zone " + entry.getKey() + "?")) {
+					if(tileOverWritePopUp("enemy spawn at (" + tileX + ", " + tileY + ") of zone " + entry.getKey())) {
 						entry.getValue().getEnemySpawns().remove(i);
 						if(waveSetter.getZoneComboBox().getValue().equals(entry.getKey())) {
 							waveSetter.getEnemySpawnComboBox().getItems().remove(Arrays.toString(new int[] {tileX, tileY}));
@@ -831,11 +845,14 @@ public class MapEditor {
 							}
 						}
 					}
+					else {
+						return false;
+					}
 				}
 			}
 			for(int i = 0 ; i < entry.getValue().getTriggers().size() ; i++) {
 				if(Arrays.toString(entry.getValue().getTriggers().get(i)).equals(Arrays.toString(new int[] {tileX, tileY}))) {
-					if(tileOverWritePopUp("trigger at (" + tileX + ", " + tileY + ") of zone " + entry.getKey() + "?")) {
+					if(tileOverWritePopUp("trigger at (" + tileX + ", " + tileY + ") of zone " + entry.getKey())) {
 						entry.getValue().getTriggers().remove(i);
 						if(waveSetter.getZoneComboBox().getValue().equals(entry.getKey())) {
 							waveSetter.getTriggerComboBox().getItems().remove(Arrays.toString(new int[] {tileX, tileY}));
@@ -846,7 +863,18 @@ public class MapEditor {
 							}
 						}
 					}
+					else {
+						return false;
+					}
 				}
+			}
+		}
+		if(doors.containsKey(Arrays.toString(new int[] {tileX, tileY}))) {
+			if(tileOverWritePopUp("door at (" + tileX + ", " + tileY + ")")) {
+				doors.remove(Arrays.toString(new int[] {tileX, tileY}));
+			}
+			else {
+				return false;
 			}
 		}
 		return true;

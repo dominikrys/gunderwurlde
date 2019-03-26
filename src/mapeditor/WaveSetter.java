@@ -761,6 +761,11 @@ public class WaveSetter {
 				case SNIPER:
 					enemySprite.put(EntityList.SNIPER, sprite);
 					break;
+				case MAGE:
+					enemySprite.put(EntityList.MAGE, sprite);
+					break;
+				case THEBOSS:
+					enemySprite.put(EntityList.THEBOSS, sprite);
 			}
 		});
 	}

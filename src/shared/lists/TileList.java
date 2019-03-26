@@ -1,9 +1,11 @@
 package shared.lists;
 
+import java.io.Serializable;
+
 /**
  * TileList enum. Contains all tile types in the game
  */
-public enum TileList {
+public enum TileList implements Serializable{
     // Meadow Tiles
     GRASS(EntityList.GRASS_TILE, TileState.PASSABLE, 0.5),
     WOOD(EntityList.WOOD_TILE, TileState.SOLID, 0.7),
@@ -22,6 +24,8 @@ public enum TileList {
     MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.5),
     DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5),
     WATER(EntityList.WATER, TileState.PASSABLE, 0.8);
+	
+	private static final long serialVersionUID = 1L;
 
     /**
      * Corresponding name of this tileList in the entity list
