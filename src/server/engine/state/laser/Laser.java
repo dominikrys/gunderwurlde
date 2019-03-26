@@ -21,7 +21,7 @@ public class Laser extends Line {
     protected Team team;
     protected HashMap<Integer, Long> lastEntityDamageTime;
 
-    public Laser(Location start, Location end, double size, int damage, long duration) {
+    public Laser(Location start, Location end, double size, int damage, long duration, Team team) {
         super(start, end);
         this.size = size;
         this.originalSize = size;
@@ -30,7 +30,7 @@ public class Laser extends Line {
         this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public Laser(Line line, double size, int damage, long duration) {
+    public Laser(Line line, double size, int damage, long duration, Team team) {
         super(line);
         this.size = size;
         this.originalSize = size;
@@ -40,11 +40,11 @@ public class Laser extends Line {
         this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage, long duration) {
+    public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
         int chunkLength = 100;
         boolean endPointFound = false;
-        double offSet = (Tile.TILE_SIZE / 2) + (size / 2);
-        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0, 0);
+        double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
+        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
         Location endPoint = testLaser.getEnd();
         double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
         double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
@@ -81,12 +81,12 @@ public class Laser extends Line {
             }
 
             if (!endPointFound) {
-                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0, 0);
+                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
                 endPoint = testLaser.getEnd();
             }
         }
 
-        return new Laser(start, endPoint, size, damage, duration);
+        return new Laser(start, endPoint, templateLaser.size, templateLaser.damage, templateLaser.duration, team);
     }
 
     public boolean canDamage(Integer ID) {

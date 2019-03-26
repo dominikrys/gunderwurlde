@@ -570,7 +570,7 @@ public class ProcessGameState extends Thread {
                         // move the projectile
                         Location newLocation = Location.calculateNewLocation(currentProjectile.getLocation(), currentProjectile.getPose().getDirection(),
                                 distanceMoved);
-                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0, 0);
+                        Laser projectileCoverage = new Laser(currentProjectile.getLocation(), newLocation, currentProjectile.getSize(), 0, 0, Team.NONE);
                         currentProjectile.setLocation(newLocation);
                         LinkedHashSet<int[]> tilesOn = projectileCoverage.getTilesOn();
                         for (int[] tileCords : tilesOn) {
