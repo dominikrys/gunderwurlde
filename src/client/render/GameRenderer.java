@@ -488,6 +488,7 @@ public class GameRenderer implements Runnable {
                 (new Thread(() -> {
                     while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
+                            getKeyboardHandler().unpause();
                             // Unpause and close the pause window
                             paused = false;
                             backToGameFromPauseMenu();
@@ -530,6 +531,7 @@ public class GameRenderer implements Runnable {
         pausedOverlay.setVisible(false);
         stage.getScene().getRoot().setCursor(Cursor.NONE);
         cursorPane.setVisible(true);
+
 
         // Get settings from controller and apply them
         settings = pauseMenuController.getSettings();

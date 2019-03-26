@@ -114,6 +114,7 @@ public class ClientRequests {
     public boolean playerRequestResume(int playerID) {
         if(playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).requestResume();
+            System.out.println("PLAYER HAS REQUESTED RESUME");
             return true;
         }
         else

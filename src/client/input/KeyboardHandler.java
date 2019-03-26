@@ -311,6 +311,28 @@ public class KeyboardHandler extends UserInteraction {
         timer.scheduleAtFixedRate(task, 0, 1);
     }
 
+    public void unpause(){
+        if(currentlyPaused){
+            resumePressed = true;
+            currentlyPaused = false;
+        }
+        else {
+            pausePressed = true;
+            currentlyPaused = true;
+        }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(currentlyPaused) {
+            pausePressed = false;
+        }
+        else{
+            resumePressed = false;
+        }
+    }
+
     /**
      * Method for deactivating the timer
      *

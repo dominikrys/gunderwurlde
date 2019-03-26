@@ -95,7 +95,6 @@ public class ServerReceiver extends Thread {
                 ObjectInputStream ins = new ObjectInputStream(bis);
                 try {
                     Integer[] received =  (Integer[]) ins.readObject();
-                    System.out.println();
                     // Based on the request perform the specified action
                     switch(received[0]) {
                         case 0 : // ATTACK
