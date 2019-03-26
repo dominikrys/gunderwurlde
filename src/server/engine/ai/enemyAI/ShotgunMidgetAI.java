@@ -36,7 +36,7 @@ public class ShotgunMidgetAI extends ZombieAI{
             this.actionState = ActionList.ATTACKING;
             attacking = true;
             beginAttackTime = System.currentTimeMillis();
-            attackLocation = closestPlayer; 
+            attackLocation = closestPlayer;
             return AIAction.ATTACK;
         }
         return AIAction.WAIT;

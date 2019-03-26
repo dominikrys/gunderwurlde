@@ -160,16 +160,21 @@ public class MapReader {
         case SOLDIER:
             return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         case MIDGET:
-            if(entityParams.size() > 0) {
+            if(entityParams.size() == 3) {
                 return new ShotgunMidget(
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()));
             }else{
-                return new ShotgunMidget();
+                return new ShotgunMidget(2, 1500, 4);
             }
+
         case BOOMER:
-            return new Boomer();
+            if(entityParams.size() == 1) {
+                return new Boomer(Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new Boomer(7);
+            }
         case MACHINE_GUNNER:
             return new MachineGunner(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
         case SNIPER:

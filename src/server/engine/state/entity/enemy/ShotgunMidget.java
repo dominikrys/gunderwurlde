@@ -25,6 +25,7 @@ public class ShotgunMidget extends Zombie {
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.1, 1));
     }
 
+    // 2 1500 4
     public ShotgunMidget(int speed, int knockbackAmount, int distanceToPlayerToAttack) {
         super(EntityList.MIDGET, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE * speed, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL,
                 new ShotgunMidgetAI(knockbackAmount, distanceToPlayerToAttack),
@@ -33,16 +34,6 @@ public class ShotgunMidget extends Zombie {
         this.KNOCKBACK_AMOUNT = knockbackAmount;
         this.DISTANCE_TO_PLAYER_TO_ATTACK = distanceToPlayerToAttack;
     }
-
-    public ShotgunMidget() {
-        super(EntityList.MIDGET, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE * 2, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL,
-                new ShotgunMidgetAI(1500, 4),
-                DEFAULT_MASS);
-
-        this.KNOCKBACK_AMOUNT = 1500;
-        this.DISTANCE_TO_PLAYER_TO_ATTACK = 4;
-    }
-
 
     @Override
     EnemyAI getNewAI() {
