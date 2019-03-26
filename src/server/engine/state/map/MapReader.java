@@ -183,16 +183,21 @@ public class MapReader {
                 return new Boomer(7);
             }
         case MACHINE_GUNNER:
-            if(entityParams.size() == 3) {
+            if(entityParams.size() == 4) {
                 return new MachineGunner(
+                        Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()));
             }else{
-                return new MachineGunner(60, 50, 1);
+                return new MachineGunner(10, 20, 5, 5);
             }
         case SNIPER:
+            if(entityParams.size() == 1) {
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new Sniper(400);
+            }
         case THEBOSS:
                 return new TheBoss(Long.valueOf(entityParams.removeFirst()));
         case MAGE:
