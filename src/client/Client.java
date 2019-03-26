@@ -143,7 +143,9 @@ public class Client extends Thread {
      */
     private ClientReceiver receiver;
 
-    // TODO still dont really know what this is
+    /**
+     * Stage to render to
+     */
     private Stage stage;
 
     /**

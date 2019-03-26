@@ -89,11 +89,11 @@ public class GameRenderer implements Runnable {
     /**
      * KeyboardHandler
      */
-    private KeyboardHandler kbHandler; //TODO: move this out of renderer
+    private KeyboardHandler kbHandler; //TODO: input should be out of renderer, move this out
     /**
      * Mouse handler
      */
-    private MouseHandler mHandler; // todo: move this out of renderer
+    private MouseHandler mHandler; //TODO: input should be out of renderer, move this out
     /**
      * Settings object
      */
@@ -452,7 +452,7 @@ public class GameRenderer implements Runnable {
                             (new MainMenuController(stage, settings)).show();
                         }
 
-                        //TODO: remove this, doesn't work otherwise for some reason
+                        //TODO: remove this, currently doesn't work otherwise since in big animationTimer
                         try {
                             Thread.sleep(1);
                         } catch (InterruptedException ex) {

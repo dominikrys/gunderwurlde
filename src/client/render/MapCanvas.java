@@ -239,9 +239,8 @@ public class MapCanvas extends Canvas {
                         break;
                 }
             }
-        }
-        // Enemy standing, render standing image
-        else {
+        } else {
+            // Enemy standing, render standing image
             enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                     rendererResourceLoader.getSprite(currentEnemy.getEntityListName()), AnimationType.STAND));
         }
@@ -519,7 +518,7 @@ public class MapCanvas extends Canvas {
      * @param pose          Pose of animation to get location to render to from
      * @param currentHealth Current health of the entity
      * @param maxHealth     Max health of the entity
-     * @param enemySize Size of enemy
+     * @param enemySize     Size of enemy
      */
     private void renderHealthBar(Pose pose, int currentHealth, int maxHealth, int enemySize) {
         // Variables for calculations
