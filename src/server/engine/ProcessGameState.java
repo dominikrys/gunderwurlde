@@ -668,7 +668,7 @@ public class ProcessGameState extends Thread {
                         }
                     }
 
-                    lasersView.add(new LaserView(l.getStart(), l.getEnd(), l.getSize()));
+                    lasersView.add(new LaserView(l.getStart(), l.getEnd(), l.getSize(), l.getTeam()));
                     newLasers.add(l);
                 }
             }
