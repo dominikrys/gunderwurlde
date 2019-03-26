@@ -9,8 +9,6 @@ public enum TileList {
     WOOD(EntityList.WOOD_TILE, TileState.SOLID, 0.7),
     DOOR(EntityList.DOOR_TILE, TileState.SOLID, 0.9),
     RUINS_FLOOR(EntityList.RUINS_FLOOR, TileState.PASSABLE, 0.5, 200),
-    RUINS_DOOR(EntityList.RUINS_DOOR, TileState.SOLID, 0.9),
-    RUINS_DOOR_OPEN(EntityList.RUINS_DOOR_OPEN, TileState.PASSABLE, 0.5, 200),
     RUINS_ORNATE_BLOCK(EntityList.RUINS_ORNATE_BLOCK, TileState.SOLID, 0.5),
     RUINS_SOLID_BLOCK_DARK(EntityList.RUINS_SOLID_BLOCK_DARK, TileState.SOLID, 0.5),
     RUINS_SOLID_BLOCK_LIGHT(EntityList.RUINS_SOLID_BLOCK_LIGHT, TileState.SOLID, 0.5),
