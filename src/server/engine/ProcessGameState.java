@@ -565,10 +565,6 @@ public class ProcessGameState extends Thread {
         for (Integer e : enemyIDs) {
             Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
-            // reset values
-            currentEnemy.setMoving(false);
-            currentEnemy.setTakenDamage(false);
-
             if (currentEnemy.hasEffect())
                 currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
             else if (currentEnemy.getStatus() == EntityStatus.SPAWNING)
@@ -640,6 +636,10 @@ public class ProcessGameState extends Thread {
             enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
                     currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                     currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
+
+            // reset values
+            currentEnemy.setMoving(false);
+            currentEnemy.setTakenDamage(false);
         }
     }
 
