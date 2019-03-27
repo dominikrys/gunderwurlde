@@ -338,16 +338,16 @@ public class HUD extends BorderPane {
             } else {
                 switch (playerView.getTeam()) {
                     case RED:
-                        playerRectangle.setFill(Color.rgb(255, 0, 47));
+                        playerRectangle.setFill(Constants.redTeamColor);
                         break;
                     case BLUE:
-                        playerRectangle.setFill(Color.rgb(66, 173, 244));
+                        playerRectangle.setFill(Constants.blueTeamColor);
                         break;
                     case GREEN:
-                        playerRectangle.setFill(Color.rgb(90, 240, 41));
+                        playerRectangle.setFill(Constants.greenTeamColor);
                         break;
                     case YELLOW:
-                        playerRectangle.setFill(Color.rgb(232, 232, 0));
+                        playerRectangle.setFill(Constants.yellowTeamColor);
                         break;
                     default:
                         playerRectangle.setFill(Color.rgb(178, 177, 169));
@@ -422,16 +422,16 @@ public class HUD extends BorderPane {
         teamLabel.setFont(fontManaspace28);
         switch (winningTeam) {
             case RED:
-                teamLabel.setTextFill(Color.rgb(255, 0, 47));
+                teamLabel.setTextFill(Constants.redTeamColor);
                 break;
             case BLUE:
-                teamLabel.setTextFill(Color.rgb(66, 173, 244));
+                teamLabel.setTextFill(Constants.blueTeamColor);
                 break;
             case GREEN:
-                teamLabel.setTextFill(Color.rgb(90, 240, 41));
+                teamLabel.setTextFill(Constants.greenTeamColor);
                 break;
             case YELLOW:
-                teamLabel.setTextFill(Color.rgb(232, 232, 0));
+                teamLabel.setTextFill(Constants.yellowTeamColor);
                 break;
             default:
                 teamLabel.setTextFill(Color.BLACK);
