@@ -89,7 +89,7 @@ public class ClientReceiver extends Thread {
                     int command = wrappedCommand.getInt();
                     ByteBuffer wrappedValue = ByteBuffer.wrap(ValueBytes);
                     int value = wrappedValue.getInt();
-                    // if command ==1 then it is updating the size of the buffer
+                    // if command == 1 then it is updating the size of the buffer
                     if(command == 1){
                         buffer = new byte[value];
                     }

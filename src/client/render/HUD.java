@@ -414,7 +414,7 @@ public class HUD extends BorderPane {
         gameWinLabel.setFont(fontManaspace50);
         gameWinLabel.setTextFill(Color.RED);
         gameWinLabel.setPadding(new Insets(10, 10, 10, 10));
-        gameWinLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+        gameWinLabel.setBackground(new Background(new BackgroundFill(Color.BLACK,
                 new CornerRadii(0), new Insets(0, 0, 0, 0))));
 
         // Label with which team won
@@ -437,7 +437,7 @@ public class HUD extends BorderPane {
                 teamLabel.setTextFill(Color.BLACK);
         }
         teamLabel.setPadding(new Insets(10, 10, 10, 10));
-        teamLabel.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5),
+        teamLabel.setBackground(new Background(new BackgroundFill(Color.BLACK,
                 new CornerRadii(0), new Insets(0, 0, 0, 0))));
 
         // Add labels to VBox and display VBox
