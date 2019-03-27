@@ -307,6 +307,10 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(),
                 currentEnemy.getEntityListName().getSize());
 
+        // Render status effect
+        renderStatusEffect(currentEnemy.getPose(), currentEnemy.getEntityListName().getSize(),
+                currentEnemy.getStatus(), rendererResourceLoader);
+
         // Put enemy into enemy locations hashmap
         lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
     }
@@ -467,6 +471,10 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(),
                 Constants.TILE_SIZE);
 
+        // Render status effect
+        renderStatusEffect(currentPlayer.getPose(), currentPlayer.getEntityListName().getSize(),
+                currentPlayer.getStatus(), rendererResourceLoader);
+
         // Put player into player locations hashmap
         lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
     }
@@ -590,6 +598,43 @@ public class MapCanvas extends Canvas {
         mapGC.setFill(Color.RED);
         mapGC.fillRect(pose.getX() + enemySize * healthLeftPercentage, pose.getY() - verticalOffset,
                 enemySize * (1 - healthLeftPercentage), healthBarHeight);
+    }
+
+    /**
+     * Render status effect above enemu
+     *
+     * @param pose                   Pose to render at
+     * @param entitySize             Size of enemy to center effect
+     * @param effect                 Effect to render
+     * @param rendererResourceLoader Renderer resources
+     */
+    private void renderStatusEffect(Pose pose, int entitySize, EntityStatus effect, RendererResourceLoader rendererResourceLoader) {
+        // Get the image to render
+        Image imageToRender;
+        switch (effect) {
+            case SLOWED:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                break;
+            case FROZEN:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
+                break;
+            case BURNING:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                break;
+            case FUSED:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.FUSED);
+                break;
+            default:
+                // No status effect needed, return
+                return;
+        }
+
+        // How far above the entity to render the status effect
+        int verticalDebuffOffset = 24;
+
+        // Draw debuff image centered above the entity
+        mapGC.drawImage(imageToRender, pose.getX() + (entitySize - (double) EntityList.BURNING.getSize() / 2),
+                pose.getY() - verticalDebuffOffset);
     }
 
     /**
