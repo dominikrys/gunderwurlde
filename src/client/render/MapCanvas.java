@@ -318,7 +318,7 @@ public class MapCanvas extends Canvas {
                     case THEBOSS:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.THEBOSS_WALK), 160, 160,
-                                7, 100, 0, AnimationType.MOVE));
+                                8, 85, 0, AnimationType.MOVE));
                         break;
                     case ZOMBIE:
                     default:
