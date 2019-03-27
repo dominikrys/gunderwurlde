@@ -17,6 +17,6 @@ public class BoomerAI extends ZombieAI {
 
     @Override
     protected Attack getAttackObj() {
-        return new AoeAttack(pose, 50, DAMAGE, Team.NONE);
+        return new AoeAttack(pose, 50, DAMAGE, Team.NONE, true);
     }
 }
