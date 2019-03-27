@@ -2,6 +2,7 @@ package client.render;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import client.Settings;
@@ -57,13 +58,15 @@ public class TestRenderer extends Application {
                 ActionList.NONE, false, false, false);
         playersView.add(playerView);
         GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), tileMapView, Team.NONE);
+                new LinkedHashSet<>(), new LinkedHashMap<>(), MapList.MEADOW, Team.NONE);
+        view1.setTileMap(tileMapView);
         playersView = new LinkedHashSet<>();
         playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new EnumMap<AmmoList, Integer>(AmmoList.class), 0, Team.RED,
                 false, EntityStatus.NONE, ActionList.NONE, false, false, false);
         playersView.add(playerView);
         GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), tileMapView, Team.NONE);
+                new LinkedHashSet<>(), new LinkedHashMap<>(), MapList.MEADOW, Team.NONE);
+        view2.setTileMap(tileMapView);
 
         // Set up renderer
         // GameRenderer rend = new GameRenderer(primaryStage, view1, 0, settings);

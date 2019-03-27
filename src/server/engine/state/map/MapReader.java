@@ -30,6 +30,7 @@ import shared.lists.MapList;
 import shared.lists.Team;
 import shared.lists.TileList;
 import shared.lists.TileState;
+import shared.view.TileView;
 
 public class MapReader {
     private static String MAP_LOCATION = "maps";
@@ -231,6 +232,19 @@ public class MapReader {
             System.out.println(fileName + "is empty!");
         }
         return file;
+    }
+
+    public static TileView[][] readMapView(MapList mapName) {
+        Tile[][] tileMap = readMap(mapName).getTileMap();
+        TileView[][] tileMapView = new TileView[tileMap.length][tileMap[0].length];
+
+        for (int x = 0; x < tileMap.length; x++) {
+            for (int y = 0; y < tileMap[0].length; y++) {
+                Tile currentTile = tileMap[x][y];
+                tileMapView[x][y] = new TileView(currentTile.getType(), currentTile.getState());
+            }
+        }
+        return tileMapView;
     }
     
 }
