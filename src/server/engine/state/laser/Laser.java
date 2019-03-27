@@ -44,13 +44,13 @@ public class Laser extends Line {
     }
 
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
-        int chunkLength = 200;
+        int chunkLength = 16; // TODO increase chunk size back to ~200 if old code fixed
         boolean endPointFound = false;
-        double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
+        //double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
         Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
         Location endPoint = testLaser.getEnd();
-        double m = (testLaser.getEnd().getY() - testLaser.getStart().getY()) / (testLaser.getEnd().getX() - testLaser.getStart().getX());
-        double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
+        //double m = (testLaser.getEnd().getY() - testLaser.getStart().getY()) / (testLaser.getEnd().getX() - testLaser.getStart().getX());
+        //double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
 
         while (!endPointFound) {
             LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
@@ -58,7 +58,8 @@ public class Laser extends Line {
             for (int[] tileOn : tilesOn) {
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
-                    Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
+                    // TODO remove old code if unfixed
+                    /*Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
                     double minX = tileLoc.getX() - offSet;
                     double maxX = tileLoc.getX() + offSet;
                     double minY = tileLoc.getY() - offSet;
@@ -78,7 +79,7 @@ public class Laser extends Line {
                         endPoint = new Location(x2, maxY);
                     }
 
-                    endPoint = tileLoc;
+                    endPoint = tileLoc;*/
 
                     endPointFound = true;
                     break;

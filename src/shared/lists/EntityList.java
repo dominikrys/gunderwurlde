@@ -27,44 +27,48 @@ public enum EntityList {
     BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
     ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
     GRENADE("file:assets/img/entity/item/grenade.png", Constants.TILE_SIZE),
-    LASER_CANNON("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE), // TODO
+    LASER_CANNON("file:assets/img/entity/item/laser_cannon.png", Constants.TILE_SIZE),
     LASER_PISTOL("file:assets/img/entity/item/laser_pistol.png", Constants.TILE_SIZE),
+    MAGIC_KNIFE("file:assets/img/entity/item/magic_knife.png", Constants.TILE_SIZE),
+    DEATH_RAY("file:assets/img/entity/item/death_ray.png", Constants.TILE_SIZE),
+    REGEN_POTION("file:assets/img/entity/item/regen_potion.png", Constants.TILE_SIZE),
+    SPEED_POTION("file:assets/img/entity/item/speed_potion.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
      */
     PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 3), // TODO: remove the -3?
-    PLAYER_RED("file:assets/img/entity/player/player.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_YELLOW("file:assets/img/entity/player/player.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_RED("file:assets/img/entity/player/player.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_YELLOW("file:assets/img/entity/player/player.png", Constants.YELLOW_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
 
     /**
      * Player standing with a gun
      */
     PLAYER_WITH_GUN("file:assets/img/entity/player/player_gun.png"),
-    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RED("file:assets/img/entity/player/player_gun.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_BLUE("file:assets/img/entity/player/player_gun.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_GREEN("file:assets/img/entity/player/player_gun.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_YELLOW("file:assets/img/entity/player/player_gun.png", Constants.YELLOW_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
 
     /**
      * Player recoiling due to shooting a gun
      */
     PLAYER_WITH_GUN_RECOIL("file:assets/img/entity/player/player_gun_recoil.png", Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_RED("file:assets/img/entity/player/player_gun_recoil.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_BLUE("file:assets/img/entity/player/player_gun_recoil.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_GREEN("file:assets/img/entity/player/player_gun_recoil.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_WITH_GUN_RECOIL_YELLOW("file:assets/img/entity/player/player_gun_recoil.png", Constants.YELLOW_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
 
     /**
      * Player reloading
      */
     PLAYER_RELOAD("file:assets/img/entity/player/player_reload.png", Constants.TILE_SIZE),
-    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", Constants.redPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", Constants.bluePlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", Constants.greenPlayerColorAdjust, Constants.TILE_SIZE),
-    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.yellowPlayerColorAdjust, Constants.TILE_SIZE),
+    PLAYER_RELOAD_RED("file:assets/img/entity/player/player_reload.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_RELOAD_BLUE("file:assets/img/entity/player/player_reload.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_RELOAD_GREEN("file:assets/img/entity/player/player_reload.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
+    PLAYER_RELOAD_YELLOW("file:assets/img/entity/player/player_reload.png", Constants.YELLOW_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
 
     /**
      * Player walking animation
@@ -78,12 +82,12 @@ public enum EntityList {
     /**
      * Enemy standing
      */
-    ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.zombieColorAdjust, Constants.TILE_SIZE),
+    ZOMBIE("file:assets/img/entity/enemy/zombie.png", Constants.ZOMBIE_COLOR_ADJUST, Constants.TILE_SIZE),
     RUNNER("file:assets/img/entity/enemy/runner.png", Constants.TILE_SIZE),
     SOLDIER("file:assets/img/entity/enemy/soldier.png", 34),
     MIDGET("file:assets/img/entity/enemy/midget.png", 24),
     BOOMER("file:assets/img/entity/enemy/boomer.png", 40),
-    MACHINE_GUNNER("file:assets/img/entity/enemy/soldier.png", Constants.machineGunnerColorAdjust, 34),
+    MACHINE_GUNNER("file:assets/img/entity/enemy/soldier.png", Constants.MACHINE_GUNNER_COLOR_ADJUST, 34),
     SNIPER("file:assets/img/entity/enemy/sniper.png"),
     MAGE("file:assets/img/entity/enemy/mage.png", 38),
     THEBOSS("file:assets/img/entity/enemy/boss.png", Constants.TILE_SIZE * 5),
@@ -91,12 +95,12 @@ public enum EntityList {
     /**
      * Enemy walking
      */
-    ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.zombieColorAdjust),
+    ZOMBIE_WALK("file:assets/img/entity/enemy/zombie_walk.png", Constants.ZOMBIE_COLOR_ADJUST),
     RUNNER_WALK("file:assets/img/entity/enemy/runner_walk.png"),
     SOLDIER_WALK("file:assets/img/entity/enemy/soldier_walk.png"),
     MIDGET_WALK("file:assets/img/entity/enemy/midget_walk.png"),
     BOOMER_WALK("file:assets/img/entity/enemy/boomer_walk.png"),
-    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/soldier_walk.png", Constants.machineGunnerColorAdjust),
+    MACHINE_GUNNER_WALK("file:assets/img/entity/enemy/soldier_walk.png", Constants.MACHINE_GUNNER_COLOR_ADJUST),
     SNIPER_WALK("file:assets/img/entity/enemy/sniper_walk.png"),
     MAGE_WALK("file:assets/img/entity/enemy/mage_walk.png"),
     THEBOSS_WALK("file:assets/img/entity/enemy/boss_walk.png"),
@@ -150,6 +154,14 @@ public enum EntityList {
     HEART_LOST("file:assets/img/other/heart_lost.png"),
     CROSSHAIR("file:assets/img/gui/crosshair.png"),
     PAUSE_BG("file:assets/img/gui/pause_bg.png"),
+
+    /**
+     * Status effects
+     */
+    BURNING("file:assets/img/other/debuff/burning.png"),
+    FROZEN("file:assets/img/other/debuff/frozen.png"),
+    FUSED("file:assets/img/other/debuff/fused.png"),
+    SLOWED("file:assets/img/other/debuff/slowed.png"),
 
     /**
      * Animations

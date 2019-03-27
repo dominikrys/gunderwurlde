@@ -9,16 +9,31 @@ import shared.lists.Team;
 
 //AOE - Area of Effect
 public class AoeAttack extends Entity implements Attack {
-    private static final int FORCE_SCALING = 300;
+    private static final int FORCE_SCALING = 600;
     private static final double FALL_OFF = 0.75;
 
     protected int damage;
     protected Team team;
+    protected boolean isExplosion;
 
     public AoeAttack(Location attackLocation, int attackSize, int damage, Team team) {
         super(attackLocation, attackSize, EntityList.DEFAULT);
         this.damage = damage;
         this.team = team;
+        this.isExplosion = false;
+    }
+
+    public AoeAttack(Location attackLocation, int attackSize, int damage, Team team, boolean isExplosion) {
+        this(attackLocation, attackSize, damage, team);
+        this.isExplosion = isExplosion;
+    }
+
+    public boolean isExplosion() {
+        return isExplosion;
+    }
+
+    public void setExplosion(boolean isExplosion) {
+        this.isExplosion = isExplosion;
     }
 
     public int getDamage() {
@@ -43,6 +58,9 @@ public class AoeAttack extends Entity implements Attack {
         Location locationToUse = this.pose;
         double[] components = Physics.fromComponents(location.getX() - locationToUse.getX(), location.getY() - locationToUse.getY());
         double force = Math.pow(damage, 1.5) * FORCE_SCALING;
+
+        if (isExplosion)
+            force *= 2;
 
         double falloffDist = this.size * FALL_OFF;
 
