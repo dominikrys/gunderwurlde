@@ -244,6 +244,7 @@ private ConnectionType connectionType;
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
             listenSocket.joinGroup(listenAddress);
+            listenSocket.setSoTimeout(3000);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
             System.out.println("Client Listen Address: " + listenAddress);
@@ -386,6 +387,9 @@ private ConnectionType connectionType;
      */
     public void close() {
         try {
+            if(renderer.isRunning()){
+                renderer.stop();
+            }
             // Close sender first
             sender.close();
             // When sender has joined close the socket

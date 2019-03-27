@@ -485,7 +485,7 @@ public class GameRenderer implements Runnable {
                 cursorPane.setVisible(false);
 
                 // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
-                (new Thread(() -> {
+                Thread pauseMenu = new Thread(() -> {
                     while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
                             getKeyboardHandler().unpause();
@@ -498,11 +498,9 @@ public class GameRenderer implements Runnable {
                             for(Thread t : threadSet){
                                 System.out.println(t.getName() + " is still alive");
                             }
-
                             // Set pause to false and stop rendering
-                            paused = false;
                             this.stop();
-
+                            paused = false;
                             // Go back to play menu with all player info still there
                             (new MainMenuController(stage, settings)).show();
                         }
@@ -515,8 +513,9 @@ public class GameRenderer implements Runnable {
                         }
                     }
                     System.out.println("GAME RENDERER PAUSE WATCHER ENDING");
-                })
-                ).start();
+                });
+                pauseMenu.setName("PauseMenu");
+                pauseMenu.start();
             } else {
                 backToGameFromPauseMenu();
             }
@@ -599,5 +598,9 @@ public class GameRenderer implements Runnable {
         getMouseHandler().deactivate();
         soundView.deactivate();
         handler.close();
+    }
+
+    public boolean isRunning(){
+        return running;
     }
 }

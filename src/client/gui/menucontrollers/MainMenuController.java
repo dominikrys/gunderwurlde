@@ -1,6 +1,7 @@
 package client.gui.menucontrollers;
 
 import client.Settings;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,10 @@ import shared.lists.Team;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * MainMenuController class. Contains loader and controller for the menu menu.
@@ -160,7 +165,8 @@ public class MainMenuController extends VBox implements MenuController {
             System.out.println(t.getName() + " is still alive");
         }
         stage.close();
-
+        System.out.println("Stage has been closed");
+        //Second last resort
         //Platform.runLater(() -> System.exit(1));
         // Last resort
     }

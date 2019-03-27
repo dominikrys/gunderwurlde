@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -109,7 +110,11 @@ public class ClientReceiver extends Thread {
                         view = (GameView) ois.readObject();
                         // set the gameView for the client
                         client.setGameView(view, settings);
-                    } catch (ClassNotFoundException ex) {
+                    }catch(SocketException ex){
+                        System.out.println("lost connection to the host");
+                        client.close();
+                    }
+                    catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
                     } catch (EOFException ex) {
                         ex.printStackTrace();
