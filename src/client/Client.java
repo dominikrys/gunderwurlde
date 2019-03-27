@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 import client.input.CommandList;
@@ -297,9 +298,21 @@ private ConnectionType connectionType;
         }
         //else just update the GameView
         else {
+            updateTileMap();
             this.view.setTileMap(tileMap);
             renderer.updateGameView(this.view);
         }
+    }
+    
+    /*
+     * Method for updating the tileMap with the changes from the GameView
+     */
+    private void updateTileMap() {
+        for (Map.Entry<int[], TileView> tileChange : view.getTileViewChanges().entrySet()) {
+            int[] cords = tileChange.getKey();
+            tileMap[cords[0]][cords[1]] = tileChange.getValue();
+        }
+        
     }
 
     /**
