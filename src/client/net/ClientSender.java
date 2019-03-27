@@ -106,6 +106,7 @@ public class ClientSender extends Thread {
                 bos.close();
             }
         }catch(SocketException ex){
+            ex.printStackTrace();
         }
         catch (IOException e) {
             //e.printStackTrace();

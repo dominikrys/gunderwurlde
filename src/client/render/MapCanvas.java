@@ -176,10 +176,10 @@ public class MapCanvas extends Canvas {
 
         // Start thread for rendering the animation
         new AnimationTimer() {
-            int frameCount = 40;
+            int frameCount = 32;
             AnimatedSprite deathAnimation = new AnimatedSprite(
                     animationToRender, (int) animationToRender.getHeight(), (int) animationToRender.getHeight(),
-                    frameCount, 20, 1, AnimationType.NONE);
+                    frameCount, 35, 1, AnimationType.NONE);
 
             @Override
             public void handle(long now) {
@@ -650,10 +650,10 @@ public class MapCanvas extends Canvas {
                 imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
                 break;
             case FROZEN:
-                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
+                imageToRender = rendererResourceLoader.getSprite(EntityList.FROZEN);
                 break;
             case BURNING:
-                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
                 break;
             case FUSED:
                 imageToRender = rendererResourceLoader.getSprite(EntityList.FUSED);
