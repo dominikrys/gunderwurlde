@@ -141,15 +141,6 @@
       <Separator maxWidth="900.0" prefWidth="900.0" />
       <HBox alignment="CENTER" prefWidth="200.0" style="-fx-spacing: 15px;">
          <children>
-            <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">
-               <font>
-                  <Font name="Consolas" size="22.0" />
-               </font>
-               <styleClass>
-                  <String fx:value="manaspaceFontWhite" />
-                  <String fx:value="backButton" />
-               </styleClass>
-            </Button>
             <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonPress" text="Reset Settings">
                <font>
                   <Font name="Consolas" size="22.0" />
@@ -170,6 +161,17 @@
             </Button>
          </children>
       </HBox>
+      <Separator maxWidth="900.0" prefWidth="900.0" />
+      <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">
+         <font>
+            <Font name="Consolas" size="22.0" />
+         </font>
+         <styleClass>
+            <String fx:value="manaspaceFontWhite" />
+            <String fx:value="backButton" />
+         </styleClass>
+      </Button>
+      <Separator maxWidth="900.0" prefWidth="900.0" />
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />
