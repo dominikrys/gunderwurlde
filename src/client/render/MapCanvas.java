@@ -650,10 +650,10 @@ public class MapCanvas extends Canvas {
                 imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
                 break;
             case FROZEN:
-                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
+                imageToRender = rendererResourceLoader.getSprite(EntityList.FROZEN);
                 break;
             case BURNING:
-                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
                 break;
             case FUSED:
                 imageToRender = rendererResourceLoader.getSprite(EntityList.FUSED);
