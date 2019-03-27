@@ -965,8 +965,10 @@ public class ProcessGameState extends Thread {
             }
 
             // mark inactive zones for removal
-            if (!z.isActive())
+            if (!z.isActive()) {
                 zonesToRemove.add(z.getId());
+                LOGGER.info("Removing zone: " + z.getId());
+            }
         }
 
         zonesToRemove.stream().forEach((z) -> activeZones.remove(z));
@@ -1073,7 +1075,6 @@ public class ProcessGameState extends Thread {
             LivingEntity entityBeingChecked) {
         boolean removed;
         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
-        entityBeingChecked.setTakenDamage(true);
 
         if (currentProjectile instanceof HasEffect) {
             if (entityBeingChecked.hasEffect())
@@ -1170,7 +1171,6 @@ public class ProcessGameState extends Thread {
                 if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && aoeAttack.haveCollided(entitiyBeingChecked)) {
                     affectedEntities.add(entitiyID);
                     entitiyBeingChecked.damage(aoeAttack.getDamage());
-                    entitiyBeingChecked.setTakenDamage(true);
                     entitiyBeingChecked.addNewForce(aoeAttack.getForce(entitiyBeingChecked.getPose(), source));
                     livingEntities.put(entitiyID, entitiyBeingChecked);
                 }
