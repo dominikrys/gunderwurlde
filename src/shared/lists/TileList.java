@@ -1,5 +1,7 @@
 package shared.lists;
 
+import shared.Constants;
+
 import java.io.Serializable;
 
 /**
@@ -22,7 +24,10 @@ public enum TileList implements Serializable{
     MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.49, 200),
     DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5, 200),
     WATER(EntityList.WATER, TileState.PASSABLE, 0.49, 6000),
-	VOID(EntityList.VOID, TileState.SOLID, 0);
+	VOID(EntityList.VOID, TileState.SOLID, 0),
+    CARPET(EntityList.CARPET, TileState.PASSABLE, 0.3),
+    WOOD_DARK(EntityList.WOOD_DARK, TileState.SOLID, 0.5),
+    FOOTPATH(EntityList.FOOTPATH, TileState.PASSABLE, 0.4);
 	
 	private static final long serialVersionUID = 1L;
 
