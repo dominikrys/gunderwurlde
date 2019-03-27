@@ -168,8 +168,8 @@ public class GameRenderer implements Runnable {
         cameraMouseSensitivity = 0.25;
 
         // Initialise mouse positions to not bug out camera
-        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
-        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
+        mouseX = (double) settings.getScreenWidth() / 2;
+        mouseY = (double) settings.getScreenHeight() / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
