@@ -176,10 +176,10 @@ public class MapCanvas extends Canvas {
 
         // Start thread for rendering the animation
         new AnimationTimer() {
-            int frameCount = 40;
+            int frameCount = 32;
             AnimatedSprite deathAnimation = new AnimatedSprite(
                     animationToRender, (int) animationToRender.getHeight(), (int) animationToRender.getHeight(),
-                    frameCount, 20, 1, AnimationType.NONE);
+                    frameCount, 35, 1, AnimationType.NONE);
 
             @Override
             public void handle(long now) {
