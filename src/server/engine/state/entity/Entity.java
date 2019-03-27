@@ -159,7 +159,8 @@ public abstract class Entity {
         double xDist = (((eY - c) / m) - eX) / 2;
 
         double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
-
+        System.out.println("laserDist: " + laserDist);
+        System.out.println("radius: " + eRadius);
         return (eRadius >= laserDist);
     }
 
