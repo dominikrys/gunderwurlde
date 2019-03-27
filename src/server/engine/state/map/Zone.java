@@ -48,7 +48,6 @@ public class Zone {
             }
         }
 
-        // TODO remove if doors dynamically open and close
         for (int[] doorToRemove : tileChanges.keySet()) {
             doors.remove(doorToRemove);
         }
@@ -84,7 +83,6 @@ public class Zone {
                                 entitySpawnIterator = entitySpawns.iterator();
                             Entity entityToSpawn = templateEntityToSpawn.makeCopy();
                             entityToSpawn.setPose(new Pose(entitySpawnIterator.next()));
-                            // TODO spawning status
                             entityToSpawn.setZoneID(this.id);
                             entitysToSpawn.add(entityToSpawn);
                             entityCount++;

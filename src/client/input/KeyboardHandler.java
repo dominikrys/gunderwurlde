@@ -341,6 +341,7 @@ public class KeyboardHandler extends UserInteraction {
     public void deactivate() {
         super.deactivate();
         this.timer.cancel();
+        this.timer.purge();
     }
 
     /**

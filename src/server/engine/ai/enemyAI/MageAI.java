@@ -79,7 +79,7 @@ public class MageAI extends PoseGeneratorUsingEnemy {
     protected Attack getAttackObj() {
         teleportAway = true;
         int attackAngle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, attackAngle), Team.ENEMY , 0));
     }
 
     @Override

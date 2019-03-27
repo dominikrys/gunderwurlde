@@ -14,6 +14,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SoundView {
 	
@@ -24,7 +26,15 @@ public class SoundView {
 	protected HashMap<Integer, GameSound> pPlaying;
 	protected HashMap<Integer, GameSound> ePlaying;
 	protected HashMap<SoundList, AudioClip> loadedGameSounds;
-	protected AnimationTimer t;
+	/**
+	 * Timer that loops, checks for requests and sends them
+	 */
+	private Timer timer;
+
+	/**
+	 * TimerTask for timer behaviour
+	 */
+	private TimerTask task;
 	
 	
 	public SoundView(int clientID, GameView gameView, Settings settings) {
@@ -39,7 +49,6 @@ public class SoundView {
 		this.pPlaying = new HashMap<Integer, GameSound>();
 		this.ePlaying = new HashMap<Integer, GameSound>();
 		this.loadGameSounds();
-		this.t = null;
 	}
 	
 	public void setGameView(GameView gameView) {
@@ -57,20 +66,24 @@ public class SoundView {
 	}
 	
 	public void activate() {
-		this.t = new AnimationTimer() {
+		this.timer = new Timer();
+		
+		this.task = new TimerTask() {
 			@Override
-			public void handle(long now) {
+			public void run() {
 				if(!settings.isSoundMute()) {
 					playSounds();
 				}
-				
 			}
 		};
-		this.t.start();
+		
+		timer.scheduleAtFixedRate(task, 0, 1);
 	}
 	
 	public void deactivate() {
-		this.t.stop();
+		System.out.println("sound view timer stopped");
+		this.timer.cancel();
+		this.timer.purge();
 	}
 	
 	public void playSounds() {

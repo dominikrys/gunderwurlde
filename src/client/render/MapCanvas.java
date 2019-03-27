@@ -3,6 +3,8 @@ package client.render;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -18,6 +20,7 @@ import shared.lists.ItemType;
 import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
+import shared.view.LaserView;
 import shared.view.entity.*;
 
 import java.util.HashMap;
@@ -147,6 +150,58 @@ public class MapCanvas extends Canvas {
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntityView(currentProjectile, rendererResourceLoader);
         }
+
+        // Render lasers
+        for (LaserView currentLaser : gameView.getLasers()) {
+            renderLaser(currentLaser);
+        }
+    }
+
+    /**
+     * Render laser to canvas
+     *
+     * @param laserView Laser to render
+     */
+    private void renderLaser(LaserView laserView) {
+        // Save state of canvas
+        mapGC.save();
+
+        // Set laser and shadow colour
+        DropShadow dropShadow;
+        switch (laserView.getTeam()) {
+            case RED:
+                mapGC.setStroke(Constants.RED_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.RED_TEAM_COLOR);
+                break;
+            case BLUE:
+                mapGC.setStroke(Constants.BLUE_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.BLUE_TEAM_COLOR);
+                break;
+            case GREEN:
+                mapGC.setStroke(Constants.GREEN_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.GREEN_TEAM_COLOR);
+                break;
+            case YELLOW:
+                mapGC.setStroke(Constants.YELLOW_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.YELLOW_TEAM_COLOR);
+                break;
+            default:
+                mapGC.setStroke(Color.GREY);
+                dropShadow = new DropShadow(10, Color.GREY);
+                break;
+        }
+
+        // Add bloom adn set effect
+        dropShadow.setInput(new Bloom(0));
+        mapGC.setEffect(dropShadow);
+
+        // Set laser width and render on canvas
+        mapGC.setLineWidth(laserView.getWidth());
+        mapGC.strokeLine(laserView.getStart().getX(), laserView.getStart().getY(),
+                laserView.getEnd().getX(), laserView.getEnd().getY());
+
+        // Restore canvas
+        mapGC.restore();
     }
 
     /**

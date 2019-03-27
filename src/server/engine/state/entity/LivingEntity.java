@@ -42,6 +42,7 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         this.takenDamage = false;
         this.moving = false;
         this.currentAction = ActionList.NONE;
+        this.status = EntityStatus.SPAWNING;
         this.velocity = new Velocity();
         this.resultantForce = new Force();
         this.mass = mass;

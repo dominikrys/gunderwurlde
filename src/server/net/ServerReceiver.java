@@ -115,10 +115,14 @@ public class ServerReceiver extends Thread {
                         case 5 : // TURN
                             handler.getClientRequests().playerRequestFacing(playerID, received[1]);
                             break;
-                        case 7 : // Pause
+                        case 6 : // CONSUME
+                            handler.getClientRequests().playerRequestShoot(playerID);
+                            handler.getClientRequests().playerRequestConsume(playerID, received[1]);
+                            break;
+                        case 7 : // PAUSE
                             handler.getClientRequests().playerRequestPause(playerID);
                             break;
-                        case 8 : // Resume
+                        case 8 : // RESUME
                             handler.getClientRequests().playerRequestResume(playerID);
                             break;
                     }

@@ -25,6 +25,10 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
         this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, DEFAULT_RANGE, DEFAULT_FUSE_TIME);
     }
 
+    public LiveGrenade(int range) {
+        this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, range, DEFAULT_FUSE_TIME);
+    }
+
     public LiveGrenade(int speed, int damage, int size, int range, long fuseTime) {
         super(speed, damage, EntityList.GRENADE, size, range);
         this.creationTime = System.currentTimeMillis();
@@ -45,6 +49,13 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
     @Override
     public Entity makeCopy() {
         return new LiveGrenade(speed, damage, size, max_range, fuseTime, pose, team);
+    }
+
+    @Override
+    public boolean maxRangeReached(double distanceMoved) {
+        if (super.maxRangeReached(distanceMoved))
+            this.speed = 0;
+        return false;
     }
 
     @Override

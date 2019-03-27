@@ -1,11 +1,16 @@
 package server.engine.state.item.weapon.gun;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 import server.engine.state.item.Limited;
 import server.engine.state.item.weapon.Weapon;
+import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
 public abstract class Gun extends Weapon implements Limited {
+    private static Random random = new Random();
 
     protected int clipSize;
     protected int ammoInClip;
@@ -164,4 +169,24 @@ public abstract class Gun extends Weapon implements Limited {
     public void cancelReload() {
         this.reloading = false;
     }
+
+    protected LinkedList<Pose> getShotPoses(Pose gunPose) {
+        int spacing = 0;
+        if (outputPerShot > 1)
+            spacing = (2 * spread) / (outputPerShot - 1);
+
+        LinkedList<Pose> poses = new LinkedList<>();
+
+        int nextDirection = gunPose.getDirection() - spread;
+        for (int i = 0; i < outputPerShot; i++) {
+            int direction = nextDirection;
+            if (accuracy != 0)
+                direction += (random.nextInt(accuracy) - (accuracy / 2));
+            poses.add(new Pose(gunPose, direction));
+            nextDirection += spacing;
+        }
+
+        return poses;
+    }
+
 }

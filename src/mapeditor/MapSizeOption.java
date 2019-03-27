@@ -132,7 +132,7 @@ public class MapSizeOption {
 		});
 		heightTextField.setTooltip(new Tooltip("Height of map"));
 		mapSizeHBox.getChildren().addAll(mapSizeLabel, widthTextField, mapSizeX, heightTextField);
-
+/*
 		// > > Resize anchor
 		resizePane = new StackPane();
 		vBox.getChildren().add(resizePane);
@@ -143,7 +143,7 @@ public class MapSizeOption {
 		resizeArrowsCanvas = new Canvas(90, 90);
 		resizePane.getChildren().add(resizeArrowsCanvas);
 		drawResizeArrows(dotX, dotY);
-		
+*/
 		// > > Save & Cancel
 		saveAndCancelHBox = new HBox();
 		vBox.getChildren().add(saveAndCancelHBox);
@@ -160,8 +160,10 @@ public class MapSizeOption {
 					int newWidth = Integer.parseInt(widthTextField.getText());
 					int newHeight = Integer.parseInt(heightTextField.getText());
 					if (newWidth < mapWidth || newHeight < mapHeight) {
-						System.out.println("Cropping may occur");
-						// TODO: cropping warning, anchor arrowhead change
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error");
+						alert.setHeaderText("Cropping may occur");
+						alert.showAndWait();
 					}
 					else {
 						mapWidth = newWidth;

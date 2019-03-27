@@ -104,6 +104,8 @@ public class MapEditor {
 	private HBox paintHBox;
 	private ImageView paintTileImageView;
 	private Button paintChangeButton;
+	private HBox squareDeleteHBox;
+	private CheckBox squareCheckBox;
 	private CheckBox deleteCheckbox;
 	private HBox waveDoorHBox;
 	private Button waveButton;
@@ -396,17 +398,19 @@ public class MapEditor {
 		paintVBox.setAlignment(Pos.CENTER);
 		
 		// > > > > Paint Mode Checkbox
-		paintCheckbox = new CheckBox("Activate Paint Mode");
+		paintCheckbox = new CheckBox("Paint Mode");
 		paintVBox.getChildren().add(paintCheckbox);
 		paintCheckbox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if(paintCheckbox.isSelected()) {
 					paintChangeButton.setDisable(false);
+					squareCheckBox.setDisable(false);
 					deleteCheckbox.setDisable(false);
 				}
 				else {
 					paintChangeButton.setDisable(true);
+					squareCheckBox.setDisable(true);
 					deleteCheckbox.setDisable(true);
 				}
 			}
@@ -433,9 +437,20 @@ public class MapEditor {
 			}
 		});
 		
-		// > > > > Delete mode
-		deleteCheckbox = new CheckBox("Activate Delete Mode");
-		paintVBox.getChildren().add(deleteCheckbox);
+		// > > > > Square & Delete Mode HBox
+		squareDeleteHBox = new HBox();
+		paintVBox.getChildren().add(squareDeleteHBox);
+		squareDeleteHBox.setAlignment(Pos.CENTER);
+		squareDeleteHBox.setSpacing(10);
+		
+		// > > > > > Square mode
+		squareCheckBox = new CheckBox("Square Mode");
+		squareDeleteHBox.getChildren().add(squareCheckBox);
+		squareCheckBox.setDisable(true);
+		
+		// > > > > > Delete mode
+		deleteCheckbox = new CheckBox("Delete Mode");
+		squareDeleteHBox.getChildren().add(deleteCheckbox);
 		deleteCheckbox.setDisable(true);
 		
 		// > > > Wave & Door HBox
@@ -727,7 +742,12 @@ public class MapEditor {
 					TileSelector paintTileSelector = new TileSelector(mapEditor);
 				}
 				if(paintTile != null) {
-					drawTile(selectedX, selectedY, paintTile);
+					if(!squareCheckBox.isSelected()) {
+						drawTile(selectedX, selectedY, paintTile);
+					}
+					else {
+						
+					}
 				}
 			}
 			else {

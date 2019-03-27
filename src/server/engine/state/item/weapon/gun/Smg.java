@@ -15,7 +15,7 @@ public class Smg extends ProjectileGun {
     public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.BASIC_AMMO;
     public static final int DEFAULT_SPREAD = 0;
     public static final int DEFAULT_COOL_DOWN = 100;
-    public static final int DEFAULT_ACCURACY = 15; // TODO have accuracy slowly get worse?
+    public static final int DEFAULT_ACCURACY = 15;
 
     public Smg() {
         super(NAME, DEFAULT_CLIP_SIZE, DEFAULT_RELOAD_TIME, DEFAULT_AMMO_PER_SHOT,

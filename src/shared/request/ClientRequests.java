@@ -64,7 +64,6 @@ public class ClientRequests {
     public boolean playerRequestSelectItem(int playerID, int itemPosition) {
         if (playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).setSelectItem(itemPosition);
-            ;
             return true;
         } else
             return false;
@@ -106,6 +105,14 @@ public class ClientRequests {
         if(playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).requestPause();
             System.out.println("PLAYER HAS REQUESTED PAUSE");
+            return true;
+        } else
+            return false;
+        }
+
+    public boolean playerRequestConsume(int playerID, int dist) {
+        if (playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).setConsumeDist(dist);
             return true;
         } else
             return false;
