@@ -69,7 +69,7 @@ public class Client extends Thread {
     /**
      * Integer to hold the next assignable IP address
      */
-    private int lowestAvailableAddress = 1;
+    private static int lowestAvailableAddress = 1;
 
 
     /**
@@ -198,6 +198,11 @@ private ConnectionType connectionType;
            this.playerID = playerID;
            this.connectionType = connectionType;
            firstView = true;
+
+           System.out.println("Client listen: " + listenAddress.toString());
+           System.out.println("Client send: " + senderAddress.toString());
+           System.out.println("Client listenport: " + listenPort);
+           System.out.println("Client sendport: " + sendPort);
        } catch (UnknownHostException e) {
            e.printStackTrace();
        }

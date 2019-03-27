@@ -195,6 +195,11 @@ public class Server extends Thread implements HasEngine {
             Addressing.setInterfaces(sendSocket);
             updatedLowestAvailableAddress();
             System.out.println("Server constructor finished");
+
+            System.out.println("Server listen: " + listenAddress.toString());
+            System.out.println("Server send: " + senderAddress.toString());
+            System.out.println("Server listenport: " + listenPort);
+            System.out.println("Server sendport: " + sendPort);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -296,7 +301,7 @@ public class Server extends Thread implements HasEngine {
      * method to update to the next assignable address
      */
     private void updatedLowestAvailableAddress() {
-        lowestAvailableAddress += 2;
+        lowestAvailableAddress++;
     }
 
     /**
