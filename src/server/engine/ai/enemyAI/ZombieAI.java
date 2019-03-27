@@ -47,7 +47,7 @@ public class ZombieAI extends EnemyAI {
             }
             return AIAction.WAIT;
         }else{
-            return AIAction.WAIT;
+            return AIAction.UPDATE;
         }
     }
 

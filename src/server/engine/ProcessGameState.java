@@ -234,7 +234,7 @@ public class ProcessGameState extends Thread {
             HashSet<Pose> playerPoses = new HashSet<>();
             for (Integer p : playerIDs) {
                 LivingEntity currentPlayer = livingEntities.get(p);
-                // if (currentPlayer.getStatus() != EntityStatus.DEAD) //TODO when fixed in AI
+                 if (currentPlayer.getStatus() != EntityStatus.DEAD) //TODO when fixed in AI
                     playerPoses.add(currentPlayer.getPose());
             }
 

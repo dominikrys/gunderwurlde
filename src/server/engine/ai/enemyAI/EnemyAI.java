@@ -180,6 +180,7 @@ public abstract class EnemyAI {
     }
 
     public Enemy getUpdatedEnemy() {
+        enemy.setAI(new SoldierZombieAI(0, 0, 150));
         return enemy;
     }
 

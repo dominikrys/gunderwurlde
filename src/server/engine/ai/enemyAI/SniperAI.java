@@ -33,7 +33,7 @@ public class SniperAI extends AStarUsingEnemy {
                 return AIAction.MOVE;
             }
         }else{
-            return AIAction.WAIT;
+            return AIAction.UPDATE;
         }
     }
 
