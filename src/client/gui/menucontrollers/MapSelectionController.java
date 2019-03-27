@@ -151,17 +151,17 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void meadowButtonPress(ActionEvent event) {
-        startGame(MapList.MEADOW);
+        startGame(MapList.MEADOWWITHWALLS);
     }
 
     /**
-     * Select map 2
+     * Select ruins
      *
      * @param event Button press
      */
     @FXML
     void map2ButtonPress(ActionEvent event) {
-        startGame(MapList.MEADOWWITHWALLS);
+        startGame(MapList.RUINS);
     }
 
     /**
