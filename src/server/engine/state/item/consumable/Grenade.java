@@ -19,7 +19,7 @@ public class Grenade extends Consumable implements CreatesProjectiles {
     }
 
     public Grenade(int quantity) {
-        super(NAME, ItemType.CONSUMEABLE, DEFAULT_MAX_QUANTITY, quantity);
+        super(NAME, ItemType.CONSUMEABLE, ConsumableType.PROJECTILE, DEFAULT_MAX_QUANTITY, quantity);
     }
 
     @Override

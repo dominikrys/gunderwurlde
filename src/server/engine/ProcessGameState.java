@@ -26,6 +26,7 @@ import server.engine.state.entity.projectile.Projectile;
 import server.engine.state.item.CreatesProjectiles;
 import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Consumable;
+import server.engine.state.item.consumable.ConsumableType;
 import server.engine.state.item.pickup.Health;
 import server.engine.state.item.weapon.gun.Gun;
 import server.engine.state.item.weapon.gun.LaserGun;
@@ -411,14 +412,15 @@ public class ProcessGameState extends Thread {
                     }
                 } else if (currentItem.getItemType() == ItemType.CONSUMEABLE
                         && (lastProcessTime - useTime) > Player.CONSUMABLE_COOLDOWN) {
+
                     Consumable currentConsumable = (Consumable) currentItem;
-                    // TODO use enum to improve performance?
-                    if (currentItem instanceof CreatesProjectiles) {
+
+                    if (currentConsumable.getConsumableType() == ConsumableType.PROJECTILE) {
                         newProjectiles.addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam()));
-                    } else if (currentItem instanceof HasEffect) {
-                        // TODO
-                    } else if (currentItem instanceof ContainsAttack) {
-                        // TODO
+                    } else if (currentConsumable.getConsumableType() == ConsumableType.EFFECT) {
+                        currentPlayer.addEffect(((HasEffect) currentConsumable).getEffect());
+                    } else if (currentConsumable.getConsumableType() == ConsumableType.ATTACK) {
+                        applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, ((ContainsAttack) currentConsumable).getAttack(), playerPose);
                     } else {
                         LOGGER.warning("Unknown consumable used: " + currentItem.getItemListName().toString());
                     }
@@ -1034,23 +1036,27 @@ public class ProcessGameState extends Thread {
     private void processProjectileRemoval(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<ProjectileView> projectilesView, Projectile currentProjectile) {
         if (currentProjectile instanceof ContainsAttack) {
-            Attack attack = ((ContainsAttack) currentProjectile).getAttack();
-            switch (attack.getAttackType()) {
-            case AOE:
-                applyAoeAttack(tileMap, livingEntities, currentProjectile.getLocation(), (AoeAttack) attack);
-                break;
-            case PROJECTILE:
-                ProjectileAttack projectileAttack = (ProjectileAttack) attack;
-                for (Projectile p2 : projectileAttack.getProjectiles()) {
-                    newProjectiles.add(p2);
-                    projectilesView.add(new ProjectileView(p2.getPose(), 1, p2.getEntityListName(), p2.isCloaked(), p2.getStatus()));
-                }
-                break;
-            default:
-                LOGGER.warning("Unkown attack: " + attack.getAttackType().toString() + ". from projectile: "
-                        + currentProjectile.getEntityListName().toString());
-                break;
+            applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, ((ContainsAttack) currentProjectile).getAttack(),
+                    currentProjectile.getLocation());
+        }
+    }
+
+    private void applyAttack(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
+            LinkedHashSet<ProjectileView> projectilesView, Attack attack, Location sourceLocation) {
+        switch (attack.getAttackType()) {
+        case AOE:
+            applyAoeAttack(tileMap, livingEntities, sourceLocation, (AoeAttack) attack);
+            break;
+        case PROJECTILE:
+            ProjectileAttack projectileAttack = (ProjectileAttack) attack;
+            for (Projectile p2 : projectileAttack.getProjectiles()) {
+                newProjectiles.add(p2);
+                projectilesView.add(new ProjectileView(p2.getPose(), 1, p2.getEntityListName(), p2.isCloaked(), p2.getStatus()));
             }
+            break;
+        default:
+            LOGGER.warning("Unkown attack: " + attack.getAttackType().toString());
+            break;
         }
     }
 

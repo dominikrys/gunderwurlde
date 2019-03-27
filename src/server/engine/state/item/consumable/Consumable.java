@@ -9,18 +9,24 @@ public abstract class Consumable extends Item implements Limited {
 
     protected int quantity;
     protected int maxQuantity;
+    protected ConsumableType consumableType;
     
-    protected Consumable(ItemList itemListName, ItemType itemType) {
-        this(itemListName, itemType, -1);
+    protected Consumable(ItemList itemListName, ItemType itemType, ConsumableType consumableType) {
+        this(itemListName, itemType, consumableType, -1);
     }
 
-    protected Consumable(ItemList itemListName, ItemType itemType, int maxQuantity) {
-        this(itemListName, itemType, maxQuantity, 1);
+    protected Consumable(ItemList itemListName, ItemType itemType, ConsumableType consumableType, int maxQuantity) {
+        this(itemListName, itemType, consumableType, maxQuantity, 1);
     }
 
-    protected Consumable(ItemList itemListName, ItemType itemType, int maxQuantity, int quantity) {
+    protected Consumable(ItemList itemListName, ItemType itemType, ConsumableType consumableType, int maxQuantity, int quantity) {
         super(itemListName, itemType);
         this.quantity = quantity;
+        this.consumableType = consumableType;
+    }
+
+    public ConsumableType getConsumableType() {
+        return consumableType;
     }
 
     public boolean isRemoved() {
