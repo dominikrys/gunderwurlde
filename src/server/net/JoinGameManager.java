@@ -66,7 +66,7 @@ public class JoinGameManager extends Thread {
     /**
      * method to increase the assignable ID
      */
-    public static void increaseAvailableID(){
+    public void increaseAvailableID(){
         lowestAvailableID++;
     }
 
