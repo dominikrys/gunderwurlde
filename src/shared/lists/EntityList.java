@@ -152,6 +152,14 @@ public enum EntityList {
     PAUSE_BG("file:assets/img/gui/pause_bg.png"),
 
     /**
+     * Status effects
+     */
+    BURNING("file:assets/img/other/debuff/burning.png"),
+    FROZEN("file:assets/img/other/debuff/frozen.png"),
+    FUSED("file:assets/img/other/debuff/fused.png"),
+    SLOWED("file:assets/img/other/debuff/slowed.png"),
+
+    /**
      * Animations
      */
     SMOKE_CLOUD("file:assets/img/misc_animations/smoke_cloud.png"),
