@@ -23,6 +23,7 @@ public enum ItemList {
     BUCKSHOT_SHOTGUN(EntityList.BUCKSHOT_SHOTGUN, null),
     ROCKET_LAUNCHER(EntityList.ROCKET_LAUNCHER, null),
     LASER_PISTOL(EntityList.LASER_PISTOL, null),
+    LASER_CANNON(EntityList.LASER_CANNON, null),
 
     // Ammo
     BASIC_AMMO(EntityList.AMMO_CLIP, AmmoList.BASIC_AMMO),

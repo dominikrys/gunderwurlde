@@ -1,14 +1,12 @@
 package server.engine.state.map.tile;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 
 import shared.Constants;
 import shared.Location;
 import shared.lists.TileList;
 import shared.lists.TileState;
-
-import java.io.Serializable;
-import java.util.LinkedHashSet;
 
 public class Tile implements Serializable {
 	private static final long serialVersionUID = 1L;
