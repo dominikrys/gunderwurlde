@@ -59,6 +59,10 @@ public abstract class EnemyAI {
 
     public abstract AIAction getAction();
 
+    public HashSet<Pose> getPlayerPoses(){
+        return playerPoses;
+    }
+
     public Tile[][] getTileMap(){
         return tileMap;
     }
