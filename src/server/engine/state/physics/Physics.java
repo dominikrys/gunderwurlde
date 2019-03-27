@@ -74,7 +74,7 @@ public class Physics {
                 normal = 270;
                 loc = new Location(loc.getX(), tileLoc.getY() - gapSize);
             }
-        } else if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        } else {
             if (xDiff < 0) {
                 normal = 0;
                 loc = new Location(tileLoc.getX() + gapSize, loc.getY());
@@ -82,10 +82,6 @@ public class Physics {
                 normal = 180;
                 loc = new Location(tileLoc.getX() - gapSize, loc.getY());
             }
-        } else {
-            System.out.println("Corner hit!");
-            // TODO handle
-            normal = 0;
         }
 
         e.setLocation(loc);

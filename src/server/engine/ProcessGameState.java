@@ -384,6 +384,8 @@ public class ProcessGameState extends Thread {
             // apply status effects to player
             if (currentPlayer.hasEffect())
                 currentPlayer = (Player) currentPlayer.getEffect().applyEffect(currentPlayer);
+            else if (currentPlayer.getStatus() == EntityStatus.SPAWNING)
+                currentPlayer.setStatus(EntityStatus.NONE);
 
             // gun reload processing
             if (currentItem instanceof Gun) {
@@ -558,6 +560,8 @@ public class ProcessGameState extends Thread {
 
             if (currentEnemy.hasEffect())
                 currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
+            else if (currentEnemy.getStatus() == EntityStatus.SPAWNING)
+                currentEnemy.setStatus(EntityStatus.NONE);
 
             int enemyID = currentEnemy.getID();
             double maxMovementForce = currentEnemy.getMovementForce();
