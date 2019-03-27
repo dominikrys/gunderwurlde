@@ -11,16 +11,14 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
+import server.engine.state.entity.Entity;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 import shared.lists.ItemType;
-import shared.view.GameView;
-import shared.view.GunView;
-import shared.view.ItemView;
-import shared.view.LaserView;
+import shared.view.*;
 import shared.view.entity.*;
 
 import java.util.HashMap;
@@ -155,6 +153,43 @@ public class MapCanvas extends Canvas {
         for (LaserView currentLaser : gameView.getLasers()) {
             renderLaser(currentLaser);
         }
+
+        // Render explosions
+        for (ExplosionView currentExplosion : gameView.getExplosions()) {
+            renderExplosion(currentExplosion, rendererResourceLoader);
+        }
+    }
+
+    /**
+     * Render explosion on canvas
+     *
+     * @param explosionView          Explosion to render
+     * @param rendererResourceLoader Renderer resources
+     */
+    private void renderExplosion(ExplosionView explosionView, RendererResourceLoader rendererResourceLoader) {
+        // Calculate where to render explosion - center it at the specified location
+        Pose poseToRenderAt = new Pose(explosionView.getLocation().getX() - (double) explosionView.getSize() / 2,
+                explosionView.getLocation().getY()- (double) explosionView.getSize() / 2);
+
+        // Resize explosion spritesheet to render
+        int explosionScaleFactor = explosionView.getSize() / Constants.TILE_SIZE;
+        Image animationToRender = resampleImage(rendererResourceLoader.getSprite(EntityList.EXPLOSION), explosionScaleFactor);
+
+        // Start thread for rendering the animation
+        new AnimationTimer() {
+            int frameCount = 40;
+            AnimatedSprite deathAnimation = new AnimatedSprite(
+                    animationToRender, (int) animationToRender.getHeight(), (int) animationToRender.getHeight(),
+                    frameCount, 20, 1, AnimationType.NONE);
+
+            @Override
+            public void handle(long now) {
+                // Check if animation still running - if not, stop animation
+                if (renderOneOffAnimation(deathAnimation, poseToRenderAt, frameCount)) {
+                    this.stop();
+                }
+            }
+        }.start();
     }
 
     /**
@@ -221,7 +256,7 @@ public class MapCanvas extends Canvas {
             @Override
             public void handle(long now) {
                 // Check if animation still running - if not, stop animation
-                if (runDeathSpawnAnimation(deathAnimation, pose, frameCount)) {
+                if (renderOneOffAnimation(deathAnimation, pose, frameCount)) {
                     this.stop();
                 }
             }
@@ -512,7 +547,7 @@ public class MapCanvas extends Canvas {
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (runDeathSpawnAnimation(spawnAnimation, pose, frameCount)) {
+                    if (renderOneOffAnimation(spawnAnimation, pose, frameCount)) {
                         this.stop();
                     }
                 }
@@ -521,14 +556,14 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * See if the death or spawn animation should still run, in which case update it, otherwise return true
+     * See if one off animation should still run, in which case update it, otherwise return true
      *
      * @param animation  Running animation to check
      * @param pose       Pose to render animation at
      * @param frameCount Total amount of frames for animation
      * @return True if animation finished
      */
-    private boolean runDeathSpawnAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
+    private boolean renderOneOffAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
         // Check if animation finished
         if (animation.getCurrentFrame() < frameCount - 1) {
             drawRotatedImageFromSpritesheet(animation.getImage(), 0, pose.getX(),
@@ -723,6 +758,11 @@ public class MapCanvas extends Canvas {
      * @return Enlarged image
      */
     private Image resampleImage(Image inputImage, int scaleFactor) {
+        // Check if scale factor is 1, in which case don't resize
+        if (scaleFactor == 1) {
+            return inputImage;
+        }
+
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 
