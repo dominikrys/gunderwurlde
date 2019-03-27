@@ -8,9 +8,9 @@ public class ExplosionView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected final Location location;
-    protected final double size;
+    protected final int size;
 
-    public ExplosionView(Location location, double size) {
+    public ExplosionView(Location location, int size) {
         this.location = location;
         this.size = size;
     }
@@ -19,7 +19,7 @@ public class ExplosionView implements Serializable {
         return location;
     }
 
-    public double getSize() {
+    public int getSize() {
         return size;
     }
 

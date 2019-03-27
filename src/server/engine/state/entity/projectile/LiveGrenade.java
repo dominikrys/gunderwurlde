@@ -76,7 +76,7 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
 
     @Override
     public Attack getAttack() {
-        return new AoeAttack(pose, Tile.TILE_SIZE * 3, 3, Team.NONE);
+        return new AoeAttack(pose, Tile.TILE_SIZE * 3, 3, Team.NONE, true);
     }
 
 }

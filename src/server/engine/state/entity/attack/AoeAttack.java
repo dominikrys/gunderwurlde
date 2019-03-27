@@ -14,11 +14,26 @@ public class AoeAttack extends Entity implements Attack {
 
     protected int damage;
     protected Team team;
+    protected boolean isExplosion;
 
     public AoeAttack(Location attackLocation, int attackSize, int damage, Team team) {
         super(attackLocation, attackSize, EntityList.DEFAULT);
         this.damage = damage;
         this.team = team;
+        this.isExplosion = false;
+    }
+
+    public AoeAttack(Location attackLocation, int attackSize, int damage, Team team, boolean isExplosion) {
+        this(attackLocation, attackSize, damage, team);
+        this.isExplosion = isExplosion;
+    }
+
+    public boolean isExplosion() {
+        return isExplosion;
+    }
+
+    public void setExplosion(boolean isExplosion) {
+        this.isExplosion = isExplosion;
     }
 
     public int getDamage() {

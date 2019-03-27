@@ -51,6 +51,7 @@ import shared.lists.Team;
 import shared.lists.TileState;
 import shared.request.ClientRequests;
 import shared.request.Request;
+import shared.view.ExplosionView;
 import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
@@ -114,7 +115,8 @@ public class ProcessGameState extends Thread {
             playerViews.add(toPlayerView(playerToView));
         }
 
-        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
+        view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
+                tileMapView, Team.NONE);
         LOGGER.info("Engine set up.");
     }
 
@@ -201,6 +203,7 @@ public class ProcessGameState extends Thread {
             TileView[][] tileMapView = view.getTileMap();
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
             LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
+            LinkedHashSet<ExplosionView> explosionsView = new LinkedHashSet<>();
             LinkedHashSet<ItemDropView> itemDropsView = new LinkedHashSet<>();
 
             // process player requests
@@ -210,7 +213,7 @@ public class ProcessGameState extends Thread {
 
             // process player requests and updated number of paused players
             numPaused = processPlayerRequests(lastProcessTime, numPaused, tileMap, newProjectiles, newLasers, items, livingEntities, projectilesView,
-                    lasersView, itemDropsView, playerRequests, playerIDs);
+                    lasersView, explosionsView, itemDropsView, playerRequests, playerIDs);
 
             // prevent any processing if paused
             if (numPaused == playerIDs.size()) {
@@ -239,7 +242,7 @@ public class ProcessGameState extends Thread {
             if (tileMapChanged)
                 EnemyAI.setTileMap(tileMap);
 
-            processEnemies(tileMap, newProjectiles, livingEntities, projectilesView, enemiesView, enemyIDs, enemiesToRemove, playerPoses);
+            processEnemies(tileMap, newProjectiles, livingEntities, projectilesView, explosionsView, enemiesView, enemyIDs, enemiesToRemove, playerPoses);
 
             // tileMap now assumed to be unchanged
             tileMapChanged = false;
@@ -249,7 +252,7 @@ public class ProcessGameState extends Thread {
 
             // process projectiles
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
-            processProjectiles(currentTimeDifference, tileMap, newProjectiles, livingEntities, tileMapView, projectilesView, projectiles);
+            processProjectiles(currentTimeDifference, tileMap, newProjectiles, livingEntities, tileMapView, projectilesView, explosionsView, projectiles);
 
             // lasers processing
             LinkedHashSet<Laser> lasers = gameState.getLasers();
@@ -285,7 +288,7 @@ public class ProcessGameState extends Thread {
             Team remainingTeam = checkWinCondition(livingEntities, playerIDs);
 
             // create gameview and send to handler
-            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, lasersView, tileMapView, remainingTeam);
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, lasersView, explosionsView, tileMapView, remainingTeam);
             handler.updateGameView(view);
         }
         LOGGER.info("Engine stopped!");
@@ -317,8 +320,8 @@ public class ProcessGameState extends Thread {
 
     private int processPlayerRequests(long lastProcessTime, int numPaused, Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles,
             LinkedHashSet<Laser> newLasers, LinkedHashMap<Integer, ItemDrop> items, LinkedHashMap<Integer, LivingEntity> livingEntities,
-            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<LaserView> lasersView, LinkedHashSet<ItemDropView> itemDropsView,
-            LinkedHashMap<Integer, Request> playerRequests, LinkedHashSet<Integer> playerIDs) {
+            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<LaserView> lasersView, LinkedHashSet<ExplosionView> explosionsView,
+            LinkedHashSet<ItemDropView> itemDropsView, LinkedHashMap<Integer, Request> playerRequests, LinkedHashSet<Integer> playerIDs) {
         for (Map.Entry<Integer, Request> playerRequest : playerRequests.entrySet()) {
             int playerID = playerRequest.getKey();
             Player currentPlayer = (Player) livingEntities.get(playerID);
@@ -421,7 +424,8 @@ public class ProcessGameState extends Thread {
                     } else if (currentConsumable.getConsumableType() == ConsumableType.EFFECT) {
                         currentPlayer.addEffect(((HasEffect) currentConsumable).getEffect());
                     } else if (currentConsumable.getConsumableType() == ConsumableType.ATTACK) {
-                        applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, ((ContainsAttack) currentConsumable).getAttack(), playerPose);
+                        applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, explosionsView, ((ContainsAttack) currentConsumable).getAttack(),
+                                playerPose);
                     } else {
                         LOGGER.warning("Unknown consumable used: " + currentItem.getItemListName().toString());
                     }
@@ -552,7 +556,8 @@ public class ProcessGameState extends Thread {
     }
 
     private void processEnemies(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
-            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<EnemyView> enemiesView, LinkedHashSet<Integer> enemyIDs,
+            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, LinkedHashSet<EnemyView> enemiesView,
+            LinkedHashSet<Integer> enemyIDs,
             LinkedList<Integer> enemiesToRemove, HashSet<Pose> playerPoses) {
         for (Integer e : enemyIDs) {
             Enemy currentEnemy = (Enemy) livingEntities.get(e);
@@ -586,7 +591,7 @@ public class ProcessGameState extends Thread {
                 for (Attack a : attacks) {
                     switch (a.getAttackType()) {
                     case AOE:
-                        applyAoeAttack(tileMap, livingEntities, currentEnemy.getLocation(), (AoeAttack) a);
+                        applyAoeAttack(tileMap, livingEntities, currentEnemy.getLocation(), (AoeAttack) a, explosionsView);
                         break;
                     case PROJECTILE:
                         ProjectileAttack projectileAttack = (ProjectileAttack) a;
@@ -967,7 +972,7 @@ public class ProcessGameState extends Thread {
 
     private void processProjectiles(long currentTimeDifference, Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles,
             LinkedHashMap<Integer, LivingEntity> livingEntities, TileView[][] tileMapView, LinkedHashSet<ProjectileView> projectilesView,
-            LinkedHashSet<Projectile> projectiles) {
+            LinkedHashSet<ExplosionView> explosionsView, LinkedHashSet<Projectile> projectiles) {
         for (Projectile p : projectiles) {
             Projectile currentProjectile = p;
             boolean removed = currentProjectile.isRemoved();
@@ -1025,7 +1030,7 @@ public class ProcessGameState extends Thread {
 
             // process projectile removal
             if (removed) {
-                processProjectileRemoval(tileMap, newProjectiles, livingEntities, projectilesView, currentProjectile);
+                processProjectileRemoval(tileMap, newProjectiles, livingEntities, projectilesView, explosionsView, currentProjectile);
             } else {
                 newProjectiles.add(currentProjectile);
                 projectilesView.add(new ProjectileView(currentProjectile.getPose(), currentProjectile.getSize(), currentProjectile.getEntityListName(),
@@ -1035,18 +1040,18 @@ public class ProcessGameState extends Thread {
     }
 
     private void processProjectileRemoval(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
-            LinkedHashSet<ProjectileView> projectilesView, Projectile currentProjectile) {
+            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, Projectile currentProjectile) {
         if (currentProjectile instanceof ContainsAttack) {
-            applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, ((ContainsAttack) currentProjectile).getAttack(),
+            applyAttack(tileMap, newProjectiles, livingEntities, projectilesView, explosionsView, ((ContainsAttack) currentProjectile).getAttack(),
                     currentProjectile.getLocation());
         }
     }
 
     private void applyAttack(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
-            LinkedHashSet<ProjectileView> projectilesView, Attack attack, Location sourceLocation) {
+            LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, Attack attack, Location sourceLocation) {
         switch (attack.getAttackType()) {
         case AOE:
-            applyAoeAttack(tileMap, livingEntities, sourceLocation, (AoeAttack) attack);
+            applyAoeAttack(tileMap, livingEntities, sourceLocation, (AoeAttack) attack, explosionsView);
             break;
         case PROJECTILE:
             ProjectileAttack projectileAttack = (ProjectileAttack) attack;
@@ -1135,7 +1140,11 @@ public class ProcessGameState extends Thread {
     }
 
     private static void applyAoeAttack(Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities, Location source,
-            AoeAttack aoeAttack) {
+            AoeAttack aoeAttack, LinkedHashSet<ExplosionView> explosionsView) {
+
+        if (aoeAttack.isExplosion())
+            explosionsView.add(new ExplosionView(aoeAttack.getLocation(), aoeAttack.getSize()));
+
         LinkedHashSet<int[]> tilesOn = aoeAttack.getTilesOn();
         LinkedHashSet<Integer> affectedEntities = new LinkedHashSet<>();
 
