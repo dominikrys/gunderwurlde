@@ -203,7 +203,11 @@ public class MapReader {
                 return new Sniper(400);
             }
         case THEBOSS:
+            if(entityParams.size() == 1) {
                 return new TheBoss(Long.valueOf(entityParams.removeFirst()));
+            }else{
+                return new TheBoss(1000);
+            }
         case MAGE:
             if(entityParams.size() == 2) {
                 return new Mage(

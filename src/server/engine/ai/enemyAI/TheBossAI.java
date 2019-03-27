@@ -1,7 +1,6 @@
 package server.engine.ai.enemyAI;
 
 import server.engine.ai.AIAction;
-import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
 import server.engine.state.entity.projectile.Projectile;
