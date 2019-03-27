@@ -9,6 +9,7 @@ public class Request implements Serializable {
     protected int movementDir;
     protected int facing;
     protected int selectItemAt;
+    protected int consumeDist;
     protected boolean shoot;
     protected boolean reload;
     protected boolean leave;
@@ -26,6 +27,15 @@ public class Request implements Serializable {
         this.movementDir = -1;
         this.facing = -1;
         this.selectItemAt = -1;
+        this.consumeDist = -1;
+    }
+
+    public int getConsumeDist() { // if the player "Shoots" with a consumable
+        return consumeDist;
+    }
+
+    public void setConsumeDist(int dist) {
+        this.consumeDist = dist;
     }
 
     public void requestDrop() {
