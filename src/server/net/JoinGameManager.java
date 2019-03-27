@@ -14,7 +14,7 @@ public class JoinGameManager extends Thread {
     /**
      *  integer holding the next assignable ID
      */
-    private static int lowestAvailableID;
+    private int lowestAvailableID;
 
     /**
      * boolean to tell if the thread should keep running

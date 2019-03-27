@@ -79,7 +79,6 @@ public class ClientReceiver extends Thread {
             while (running) {
                 // creates a packet and wait for the server to send a GameView
                 packet = new DatagramPacket(buffer, buffer.length);
-                System.out.println("Waiting for packet");
                 listenSocket.receive(packet);
                 // If the packet is 8 bytes long then it is a special command
                     if(packet.getLength() == 8){
@@ -90,7 +89,7 @@ public class ClientReceiver extends Thread {
                     int command = wrappedCommand.getInt();
                     ByteBuffer wrappedValue = ByteBuffer.wrap(ValueBytes);
                     int value = wrappedValue.getInt();
-                    // if command ==1 then it is updating the size of the buffer
+                    // if command == 1 then it is updating the size of the buffer
                     if(command == 1){
                         buffer = new byte[value];
                     }
