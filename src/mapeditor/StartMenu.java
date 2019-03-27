@@ -16,14 +16,17 @@ import javafx.stage.Stage;
 
 public class StartMenu {
 	
+	private Stage stage;
 	private StartMenu startMenu = this;
-	private int resWidth;
-	private int resHeight;
+	private int resWidth = 800;
+	private int resHeight = 600;
 	
-	public StartMenu(Stage stage) {
-		this.resWidth = 800;
-		this.resHeight = 600;
-		this.init(stage);
+	public StartMenu() {
+		this.init(null);
+	}
+	
+	public StartMenu(Stage main) {
+		this.init(main);
 	}
 	
 	public void setResWidth(int resWidth) {
@@ -35,7 +38,13 @@ public class StartMenu {
 	}
 	
 	// Initialize
-	private void init(Stage stage) {
+	private void init(Stage main) {
+		if(stage == null) {
+			this.stage = new Stage();
+		}
+		else {
+			this.stage = main;
+		}
 		stage.setTitle("Gunderwurlde Map Editor");
         stage.setResizable(false);
         stage.setFullScreen(false);

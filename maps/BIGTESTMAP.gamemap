@@ -34,11 +34,11 @@ B J J J J J C C J J J J J J J A A A A A A H A A A O O D H B
 B A A A A A A A A A A A A A A A A A A A A H A A A O O O H B
 B A A A A A A A A A A A A A A A A A A A A C A A A A O O H B
 B A A A A A A A A A A A A A A A A A A A A C A A A A A O H B
-B A A A A A A A A A A A A A A A A A A A A H N N N A A A H B
-B A A A A A A A A A A A A A A A A A A A A H N A N N A A H B
-B A A A A A A A A A A A A A A A A A A A A A H H H H H H H B
-B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
-B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
+B A A A A A A A A A G A A A A A A A A A A H N N N A A A H B
+B A A A A A A A A G G G G A A A A A A A A H N A N N A A H B
+B A A A A A A A A G G G G A A A A A A A A A H H H H H H H B
+B A A A A A A A A G G G G A A A A A A A A A A A A A A A A B
+B A A A A A A A A A A G G A A A A A A A A A A A A A A A A B
 B A A A A A A A A A A A A A A A A A A A A A A A A A A A A B
 B A A A A A A A A A A A A A A A A N N N N A K K A A A A A B
 B A A A A A A A A A A A A A A A K O O O O O A K A A A A A B
@@ -88,22 +88,22 @@ ZOMBIE
 7 10
 
 #Optional Doors (Tile to return) (Location params) (Kills Required)
-L 4 21 10
 L 5 21 10
+L 4 21 10
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-ZOMBIE
-0 1000 2 10
-
 BOOMER
 0 1000 2 4
 
-#Round2
 ZOMBIE
+0 1000 2 10
+
+#Round2
+BOOMER
 0 1000 3 6
 
-BOOMER
+ZOMBIE
 0 1000 3 6
 
 

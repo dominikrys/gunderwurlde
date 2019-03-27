@@ -34,6 +34,7 @@ public class GameSound {
 	private double volume;
 	private Timer timer;
 	private TimerTask checkReplay;
+	private TimerTask play;
 	private boolean replayable;
 	private long startDelay;
 	final double hearableDistance = 500	;
@@ -49,6 +50,14 @@ public class GameSound {
 			@Override
 			public void run() {
 				replayable = true;
+				timer.cancel();
+				timer.purge();
+			}
+		};
+		this.play = new TimerTask() {
+			@Override
+			public void run() {
+				audio.play();
 			}
 		};
 		this.startDelay = 0;
@@ -56,12 +65,6 @@ public class GameSound {
 		if(this.audio != null) {
 			this.replayable = false;
 			this.calculateSound(this.audio);
-			TimerTask play = new TimerTask() {
-				@Override
-				public void run() {
-					audio.play();
-				}
-			};
 			this.timer.schedule(play, startDelay);
 		}
 	}
@@ -118,15 +121,18 @@ public class GameSound {
 	}
 	
 	private void playShellsFall(long startDelay) {
+		Timer shellTimer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				AudioClip shells = new AudioClip(SoundList.SHELLS_FALL.getPath());
 				calculateSound(shells);
 				shells.play();
+				shellTimer.cancel();
+				shellTimer.purge();
 			}
 		};
-		this.timer.schedule(task, 700 + startDelay);
+		shellTimer.schedule(task, 700 + startDelay);
 	}
 	
 	private void calculateSound(AudioClip audio) {
