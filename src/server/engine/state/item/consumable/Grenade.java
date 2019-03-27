@@ -23,10 +23,10 @@ public class Grenade extends Consumable implements CreatesProjectiles {
     }
 
     @Override
-    public LinkedList<Projectile> getProjectiles(Pose origin, Team team) { // TODO have toss location somehow
+    public LinkedList<Projectile> getProjectiles(Pose origin, Team team, int desiredDistance) {
         quantity--;
         LinkedList<Projectile> grenades = new LinkedList<>();
-        grenades.add(new LiveGrenade().createFor(origin, team));
+        grenades.add(new LiveGrenade(desiredDistance).createFor(origin, team));
         return grenades;
     }
 
