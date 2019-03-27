@@ -1116,6 +1116,9 @@ public class ProcessGameState extends Thread {
             if (i.getItemType() == ItemType.GUN) {
                 Gun g = (Gun) i;
                 playerItems.add(new GunView(g.getItemListName(), g.getAmmoType(), g.getClipSize(), g.getAmmoInClip(), g.isAutoFire(), g.getReloadTime()));
+            } else if (i.getItemType() == ItemType.CONSUMEABLE) {
+                Consumable c = (Consumable) i;
+                playerItems.add(new ItemView(c.getItemListName(), c.getItemType(), c.getQuantity()));
             } else {
                 playerItems.add(new ItemView(i.getItemListName(), i.getItemType()));
             }

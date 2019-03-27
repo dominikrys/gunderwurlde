@@ -10,7 +10,6 @@ public class GunView extends ItemView implements Serializable {
     private static final long serialVersionUID = 1L;
     protected AmmoList ammoType;
     protected int clipSize;
-    protected int ammoInClip;
     protected boolean autoFire;
     protected int reloadTime;
 
@@ -18,7 +17,7 @@ public class GunView extends ItemView implements Serializable {
         super(name, ItemType.GUN);
         this.ammoType = ammoType;
         this.clipSize = clipSize;
-        this.ammoInClip = ammoInClip;
+        this.quantity = ammoInClip;
         this.autoFire = autoFire;
         this.reloadTime = reloadTime;
 
@@ -41,6 +40,6 @@ public class GunView extends ItemView implements Serializable {
     }
 
     public int getAmmoInClip() {
-        return ammoInClip;
+        return quantity;
     }
 }

@@ -27,6 +27,10 @@ public abstract class Consumable extends Item implements Limited {
         return (quantity <= 0);
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
     @Override
     public void replenish() {
         quantity = maxQuantity;
