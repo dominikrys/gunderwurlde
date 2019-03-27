@@ -44,7 +44,7 @@ public class Laser extends Line {
     }
 
     public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
-        int chunkLength = 16;
+        int chunkLength = 16; // TODO increase chunk size back to ~200 if old code fixed
         boolean endPointFound = false;
         //double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
         Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
@@ -58,6 +58,7 @@ public class Laser extends Line {
             for (int[] tileOn : tilesOn) {
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
+                    // TODO remove old code if unfixed
                     /*Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
                     double minX = tileLoc.getX() - offSet;
                     double maxX = tileLoc.getX() + offSet;

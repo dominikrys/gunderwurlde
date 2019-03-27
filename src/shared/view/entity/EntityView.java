@@ -1,19 +1,19 @@
 package shared.view.entity;
 
+import java.io.Serializable;
+
 import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 
-import java.io.Serializable;
-
 public abstract class EntityView implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    protected Pose pose;
-    protected EntityList entityListName;
-    protected EntityStatus status;
-    protected int sizeScaleFactor;
-    protected boolean cloaked;
+    protected final Pose pose;
+    protected final EntityList entityListName;
+    protected final EntityStatus status;
+    protected final int sizeScaleFactor;
+    protected final boolean cloaked;
 
     protected EntityView(Pose pose, int size, EntityList entityListName, Boolean cloaked, EntityStatus status) {
         int radius = size;
