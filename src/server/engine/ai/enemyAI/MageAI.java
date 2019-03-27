@@ -26,7 +26,7 @@ public class MageAI extends PoseGeneratorUsingEnemy {
     long now;
 
     public MageAI(long timeBetweenTeleports, int distanceToPlayer) {
-        super(SHORT_DELAY);
+        super(MEDIUM_DELAY);
         this.DISTANCE_TO_PLAYER = distanceToPlayer;
         this.TIME_BETWEEN_TELEPORTS = timeBetweenTeleports;
         Random rand = new Random();
@@ -57,6 +57,7 @@ public class MageAI extends PoseGeneratorUsingEnemy {
             if (poseToGo != null) {
                 this.actionState = ActionList.ATTACKING;
                 attacking = true;
+                beginAttackTime = System.currentTimeMillis();
                 return AIAction.UPDATE;
 
             } else if (!isProcessing()) {
@@ -64,13 +65,14 @@ public class MageAI extends PoseGeneratorUsingEnemy {
                         this, DISTANCE_TO_PLAYER, true, closestPlayer, pose)).start();
             }
         }
-        return AIAction.WAIT;
+        return AIAction.MOVE;
     }
 
     @Override
     public Enemy getUpdatedEnemy() {
         lastTeleport = System.currentTimeMillis();
-        enemy.setPose(poseToGo);
+        int attackAngle = getAngle(pose, closestPlayer);
+        enemy.setPose(new Pose(poseToGo, attackAngle));
         poseToGo = null;
         return enemy;
     }
@@ -84,6 +86,7 @@ public class MageAI extends PoseGeneratorUsingEnemy {
 
     @Override
     protected Force generateMovementForce() {
-        return new Force(pose.getDirection(), 0);
+        int attackAngle = getAngle(pose, closestPlayer);
+        return new Force(attackAngle, 0);
     }
 }

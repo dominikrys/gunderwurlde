@@ -25,7 +25,7 @@ public class Mage extends Zombie{
     private final int DISTANCE_TO_PLAYER;
 
     public Mage(long timeBetweenTeleports, int distanceToPlayer) {
-        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new MageAI(timeBetweenTeleports, distanceToPlayer),
+        super(EntityList.MAGE, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new MageAI(timeBetweenTeleports, distanceToPlayer),
                 DEFAULT_MASS);
 
         this.TIME_BETWEEN_TELEPORTS = timeBetweenTeleports;

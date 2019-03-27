@@ -29,18 +29,22 @@ public class MachineGunner extends Zombie {
     private final int ATTACK_WIDTH;
     private final int BULLETS_PER_ATTACK;
     private final int TURN_RATE;
+    private final int DISTANCE_TO_PLAYER_TO_ATTACK;
 
-    public MachineGunner(int attackWidth, int bulletsPerAttack, int turnRate) {
+    public MachineGunner(int attackWidth, int bulletsPerAttack, int turnRate, int distanceToPlayerToAttack) {
         super(EntityList.MACHINE_GUNNER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL,
-                new MachineGunnerAI(attackWidth, bulletsPerAttack, turnRate), DEFAULT_MASS);
+                new MachineGunnerAI(attackWidth, bulletsPerAttack, turnRate, distanceToPlayerToAttack), DEFAULT_MASS);
 
         this.ATTACK_WIDTH = attackWidth;
         this.BULLETS_PER_ATTACK = bulletsPerAttack;
         this.TURN_RATE = turnRate;
+        this.DISTANCE_TO_PLAYER_TO_ATTACK = distanceToPlayerToAttack;
     }
 
     @Override
     EnemyAI getNewAI() {
-        return new MachineGunnerAI(ATTACK_WIDTH, BULLETS_PER_ATTACK, TURN_RATE);
+        return new MachineGunnerAI(
+                ATTACK_WIDTH, BULLETS_PER_ATTACK,
+                TURN_RATE, DISTANCE_TO_PLAYER_TO_ATTACK);
     }
 }

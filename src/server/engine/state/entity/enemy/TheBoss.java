@@ -27,7 +27,7 @@ public class TheBoss extends Zombie{
     private final long TIME_BETWEEN_ATTACKS;
 
     public TheBoss(long timeBetweenAttacks) {
-        super(EntityList.BOOMER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new TheBossAI(timeBetweenAttacks),
+        super(EntityList.THEBOSS, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL, new TheBossAI(timeBetweenAttacks),
                 DEFAULT_MASS);
 
         this.TIME_BETWEEN_ATTACKS = timeBetweenAttacks;

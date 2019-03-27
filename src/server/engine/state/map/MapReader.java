@@ -157,7 +157,11 @@ public class MapReader {
         case ZOMBIE:
             return new Zombie();
         case RUNNER:
-            return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 1) {
+                return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new RunnerZombie(3);
+            }
         case SOLDIER:
             if(entityParams.size() == 3) {
                 return new SoldierZombie(
@@ -174,7 +178,7 @@ public class MapReader {
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()));
             }else{
-                return new ShotgunMidget(2, 1500, 4);
+                return new ShotgunMidget(3, 1500, 4);
             }
 
         case BOOMER:
@@ -184,22 +188,35 @@ public class MapReader {
                 return new Boomer(7);
             }
         case MACHINE_GUNNER:
-            if(entityParams.size() == 3) {
+            if(entityParams.size() == 4) {
                 return new MachineGunner(
+                        Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()),
                         Integer.valueOf(entityParams.removeFirst()));
             }else{
-                return new MachineGunner(60, 50, 1);
+                return new MachineGunner(10, 20, 5, 5);
             }
         case SNIPER:
+            if(entityParams.size() == 1) {
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new Sniper(400);
+            }
         case THEBOSS:
+            if(entityParams.size() == 1) {
                 return new TheBoss(Long.valueOf(entityParams.removeFirst()));
+            }else{
+                return new TheBoss(1000);
+            }
         case MAGE:
-            return new Mage(
-                    Long.valueOf(entityParams.removeFirst()),
-                    Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 2) {
+                return new Mage(
+                        Long.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new Mage(1500, 100);
+            }
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();
