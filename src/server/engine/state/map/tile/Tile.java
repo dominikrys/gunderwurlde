@@ -11,7 +11,6 @@ import shared.lists.TileState;
 public class Tile implements Serializable {
 	private static final long serialVersionUID = 1L;
     public static final int TILE_SIZE = Constants.TILE_SIZE;
-    public static final double DEFAULT_DENSITY = 200;
 
     // Type of tileList
     protected TileList tileList;
@@ -151,7 +150,7 @@ public class Tile implements Serializable {
     }
 
     public double getDensity() {
-        return DEFAULT_DENSITY;
+        return density;
     }
 
     @Override

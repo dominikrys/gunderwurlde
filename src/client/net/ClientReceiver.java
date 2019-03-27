@@ -108,10 +108,12 @@ public class ClientReceiver extends Thread {
                         // set the gameView for the client
                         client.setGameView(view, settings);
                     }catch(SocketTimeoutException ex){
+                        ex.printStackTrace();
                         System.out.println("lost connection to the host");
                     }
                     catch(SocketException ex){
                         System.out.println("lost connection to the host, or paused");
+                        ex.printStackTrace();
                         client.close();
                     }
                     catch (ClassNotFoundException ex) {
