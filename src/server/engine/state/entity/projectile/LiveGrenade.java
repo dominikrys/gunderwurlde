@@ -52,6 +52,13 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
     }
 
     @Override
+    public boolean maxRangeReached(double distanceMoved) {
+        if (super.maxRangeReached(distanceMoved))
+            this.speed = 0;
+        return false;
+    }
+
+    @Override
     public boolean isRemoved() {
         return ((System.currentTimeMillis() - creationTime) > fuseTime);
     }
