@@ -65,7 +65,7 @@ public class SoldierZombieAI extends AStarUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY));
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY, 0));
     }
 
 }

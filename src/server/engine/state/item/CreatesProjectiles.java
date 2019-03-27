@@ -7,5 +7,5 @@ import shared.Pose;
 import shared.lists.Team;
 
 public interface CreatesProjectiles {
-    public LinkedList<Projectile> getProjectiles(Pose origin, Team team);
+    public LinkedList<Projectile> getProjectiles(Pose origin, Team team, int desiredDistance);
 }

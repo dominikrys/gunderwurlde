@@ -46,7 +46,7 @@ public class MachineGunnerAI extends ZombieAI {
         if (delayPast && shootingPathUnobstructed && isInAttackPosition) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(gun.getProjectiles(
-                        new Pose(pose, attackAngle), Team.ENEMY)));
+                        new Pose(pose, attackAngle), Team.ENEMY ,0)));
 
                 bulletsShotInThisAttack++;
 

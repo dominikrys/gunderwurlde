@@ -54,12 +54,12 @@ public class TheBossAI extends ZombieAI {
     protected Attack getAttackObj() {
         int attackAngle = getAngle(pose, closestPlayer);
         int weapon = rand.nextInt(gunList.size());
-        LinkedList<Projectile> attackProjectiles = new LinkedList<>(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle), Team.ENEMY));
+        LinkedList<Projectile> attackProjectiles = new LinkedList<>(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle), Team.ENEMY, 0));
 
         weapon = rand.nextInt(gunList.size());
-        attackProjectiles.addAll(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle - 10), Team.ENEMY));
+        attackProjectiles.addAll(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle - 10), Team.ENEMY, 0));
         weapon = rand.nextInt(gunList.size());
-        attackProjectiles.addAll(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle + 10), Team.ENEMY));
+        attackProjectiles.addAll(gunList.get(weapon).getProjectiles(new Pose(pose, attackAngle + 10), Team.ENEMY, 0));
         return new ProjectileAttack(attackProjectiles);
     }
 

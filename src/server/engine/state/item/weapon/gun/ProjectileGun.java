@@ -20,7 +20,7 @@ public abstract class ProjectileGun extends Gun implements CreatesProjectiles {
     }
 
     @Override
-    public LinkedList<Projectile> getProjectiles(Pose gunPose, Team team) {
+    public LinkedList<Projectile> getProjectiles(Pose gunPose, Team team, int desiredDistance) {
         LinkedList<Projectile> shotProjectiles = new LinkedList<>();
         LinkedList<Pose> bulletPoses = getShotPoses(gunPose);
 
