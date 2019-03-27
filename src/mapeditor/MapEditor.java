@@ -104,6 +104,9 @@ public class MapEditor {
 	private HBox paintHBox;
 	private ImageView paintTileImageView;
 	private Button paintChangeButton;
+	private HBox squareDeleteHBox;
+	private CheckBox squareCheckBox;
+	private int squarePoints;
 	private CheckBox deleteCheckbox;
 	private HBox waveDoorHBox;
 	private Button waveButton;
@@ -121,6 +124,10 @@ public class MapEditor {
 	private boolean keysActivated;
 	private int selectedX = 0;
 	private int selectedY = 0;
+	private int[] squareXY1;
+	private int[] squareXY2;
+	private int numOfTiles;
+	private int drawnTiles;
 	private Tile paintTile;
 	private WaveSetter waveSetter;
 	
@@ -396,18 +403,22 @@ public class MapEditor {
 		paintVBox.setAlignment(Pos.CENTER);
 		
 		// > > > > Paint Mode Checkbox
-		paintCheckbox = new CheckBox("Activate Paint Mode");
+		paintCheckbox = new CheckBox("Paint Mode");
 		paintVBox.getChildren().add(paintCheckbox);
 		paintCheckbox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if(paintCheckbox.isSelected()) {
 					paintChangeButton.setDisable(false);
+					squareCheckBox.setDisable(false);
 					deleteCheckbox.setDisable(false);
 				}
 				else {
 					paintChangeButton.setDisable(true);
+					squareCheckBox.setDisable(true);
 					deleteCheckbox.setDisable(true);
+					squareCheckBox.setSelected(false);
+					deleteCheckbox.setSelected(false);
 				}
 			}
 		});
@@ -433,10 +444,40 @@ public class MapEditor {
 			}
 		});
 		
-		// > > > > Delete mode
-		deleteCheckbox = new CheckBox("Activate Delete Mode");
-		paintVBox.getChildren().add(deleteCheckbox);
+		// > > > > Square & Delete Mode HBox
+		squareDeleteHBox = new HBox();
+		paintVBox.getChildren().add(squareDeleteHBox);
+		squareDeleteHBox.setAlignment(Pos.CENTER);
+		squareDeleteHBox.setSpacing(10);
+		
+		// > > > > > Square mode
+		squareCheckBox = new CheckBox("Square Mode");
+		squareDeleteHBox.getChildren().add(squareCheckBox);
+		squareCheckBox.setDisable(true);
+		squareCheckBox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(!squareCheckBox.isSelected()) {
+					squarePoints = 0;
+				}
+				else {
+					deleteCheckbox.setSelected(false);
+				}
+			}
+		});
+		
+		// > > > > > Delete mode
+		deleteCheckbox = new CheckBox("Delete Mode");
+		squareDeleteHBox.getChildren().add(deleteCheckbox);
 		deleteCheckbox.setDisable(true);
+		deleteCheckbox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(deleteCheckbox.isSelected()) {
+					squareCheckBox.setSelected(false);
+				}
+			}
+		});
 		
 		// > > > Wave & Door HBox
 		waveDoorHBox = new HBox();
@@ -609,12 +650,16 @@ public class MapEditor {
 	// Draw a tile
 	protected void drawTile(int tileX, int tileY, Tile tile) {
 		if(checkTile(tileX, tileY) && 0 <= tileX && tileX < mapTiles.length && 0 <= tileY && tileY < mapTiles[0].length) {
-			mapGc.drawImage(mapSnapshot, 0, 0);
+			if(drawnTiles == 0 || !squareCheckBox.isSelected()) {
+				mapGc.drawImage(mapSnapshot, 0, 0);
+			}
 			mapGc.drawImage(tileSprite.get(tile.getType()), tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
 			drawEdge(tileX, tileY, Color.GREY);
+			if(drawnTiles + 1 == numOfTiles || !squareCheckBox.isSelected()) {
 			SnapshotParameters params = new SnapshotParameters();
 			params.setFill(Color.TRANSPARENT);
 			mapSnapshot = mapCanvas.snapshot(params, null);
+			}
 			mapTiles[tileX][tileY] = tile;
 			if(tile.getType() == TileList.DOOR) {
 				doors.put(Arrays.toString(new int[] {tileX, tileY}), tile.getType());
@@ -641,6 +686,30 @@ public class MapEditor {
 					selectTile(tileX, tileY);
 				}
 			}
+		}
+	}
+	
+	private void drawSquare() {
+		switch(squarePoints) {
+			case 0:
+				squareXY1 = new int[] {selectedX, selectedY};
+				squarePoints++;
+				break;
+			case 1:
+				squareXY2 = new int[] {selectedX, selectedY};
+				int[] topLeft = new int[] {Math.min(squareXY1[0], squareXY2[0]), Math.min(squareXY1[1], squareXY2[1])};
+				int[] bottomRight = new int[] {Math.max(squareXY1[0], squareXY2[0]), Math.max(squareXY1[1], squareXY2[1])};
+				squarePoints = 0;
+				drawnTiles = 0;
+				numOfTiles = (bottomRight[0] + 1 - topLeft[0])*(bottomRight[1] + 1 - topLeft[1]);
+				for(int i = topLeft[0] ; i <= bottomRight[0] ; i++) {
+					for(int j = topLeft[1] ; j <= bottomRight[1] ; j++) {
+						drawTile(i, j, paintTile);
+						drawnTiles++;
+					}
+				}
+				
+				break;
 		}
 	}
 	
@@ -727,7 +796,12 @@ public class MapEditor {
 					TileSelector paintTileSelector = new TileSelector(mapEditor);
 				}
 				if(paintTile != null) {
-					drawTile(selectedX, selectedY, paintTile);
+					if(!squareCheckBox.isSelected()) {
+						drawTile(selectedX, selectedY, paintTile);
+					}
+					else {
+						drawSquare();
+					}
 				}
 			}
 			else {

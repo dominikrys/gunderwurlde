@@ -75,23 +75,11 @@ public class Settings implements Serializable {
      * Constructor
      */
     public Settings() {
-        // Initialise sound settings
-        soundVolume = 70;
-        musicVolume = 70;
-        soundMute = false;
-        musicMute = false;
-
-        // Initialise screen settings
-        fullScreen = false;
-        screenWidth = 1280;
-        screenHeight = 720;
-
-        // Initialise controls settings
-        mapDefaultKeys();
+        // Set up settings exclusing high scores
+        initialiseSettings();
 
         // Initialise high score hashmaps
-        singlePlayerHighScores = new HashMap<>();
-        multiPlayerHighScores = new HashMap<>();
+        resetHighScores();
     }
 
     /**
@@ -138,6 +126,26 @@ public class Settings implements Serializable {
         keyMapping.put(KeyAction.ITEM3, "DIGIT3");
         keyMapping.put(KeyAction.ESC, "ESCAPE");
     }
+
+    /**
+     * Method for resetting settings to default values
+     */
+    public void initialiseSettings() {
+        // Initialise sound settings
+        soundVolume = 70;
+        musicVolume = 70;
+        soundMute = false;
+        musicMute = false;
+
+        // Initialise screen settings
+        fullScreen = false;
+        screenWidth = 1280;
+        screenHeight = 720;
+
+        // Initialise controls settings
+        mapDefaultKeys();
+    }
+
 
     /**
      * Get sound volume
@@ -327,6 +335,9 @@ public class Settings implements Serializable {
                 ObjectOutput output = new ObjectOutputStream(buffer)
         ) {
             output.writeObject(this);
+
+            // Notify user
+            System.out.println("Settings saved to disk.");
         } catch (IOException e) {
             System.out.println("Can't write settings to disk:" + e.getMessage());
         }
@@ -351,11 +362,36 @@ public class Settings implements Serializable {
     }
 
     /**
-     * Remove all stores high scores
+     * Remove all stores high scores and populate with new initial values
      */
     public void resetHighScores() {
+        // Reset hashmaps
         singlePlayerHighScores = new HashMap<>();
         multiPlayerHighScores = new HashMap<>();
+
+        // Single player scores
+        singlePlayerHighScores.put("Gaben", 9001);
+        singlePlayerHighScores.put("Ian Kenny", 1000);
+        singlePlayerHighScores.put("Tom G", 2000);
+        singlePlayerHighScores.put("Zombie", 130);
+        singlePlayerHighScores.put("Notch", 64);
+        singlePlayerHighScores.put("Dom", 500);
+        singlePlayerHighScores.put("Tomas", 750);
+        singlePlayerHighScores.put("Timothy", 250);
+        singlePlayerHighScores.put("George", 545);
+        singlePlayerHighScores.put("Richard", 345);
+
+        // Multiplayer scores
+        multiPlayerHighScores.put("BLUE: Steve, Herobrine", 13450);
+        multiPlayerHighScores.put("RED: DiddyKong, DonkeyKong", 400);
+        multiPlayerHighScores.put("GREEN: Luigi, Mario, Toad", 200);
+        multiPlayerHighScores.put("RED: Pac-Man, Ms Pac-Man", 150);
+        multiPlayerHighScores.put("GREEN: Link, Zelda", 100);
+        multiPlayerHighScores.put("YELLOW: Booker, Elizabeth", 50);
+        multiPlayerHighScores.put("BLUE: Chief, Cortana", 800);
+        multiPlayerHighScores.put("YELLOW: Banjo, Kazooie", 675);
+        multiPlayerHighScores.put("GREEN: Sonic, Tails", 2350);
+        multiPlayerHighScores.put("RED: Ellie, Joel", 600);
     }
 
     /**
@@ -365,6 +401,15 @@ public class Settings implements Serializable {
      * @param score      Score to save
      */
     public void addMultiPlayerHighScore(String playerName, int score) {
+        // Check if high score under that name exists
+        if (multiPlayerHighScores.containsKey(playerName)) {
+            // If stored high score is larger than the one to be inserted, skip
+            if (multiPlayerHighScores.get(playerName) > score) {
+                return;
+            }
+        }
+
+        // Put high score into hashmap
         multiPlayerHighScores.put(playerName, score);
     }
 
@@ -375,6 +420,14 @@ public class Settings implements Serializable {
      * @param score      Score to save
      */
     public void addSinglePlayerHighScore(String playerName, int score) {
+        // Check if high score under that name exists
+        if (singlePlayerHighScores.containsKey(playerName)) {
+            // If stored high score is larger than the one to be inserted, skip
+            if (singlePlayerHighScores.get(playerName) > score) {
+                return;
+            }
+        }
+
         singlePlayerHighScores.put(playerName, score);
     }
 }

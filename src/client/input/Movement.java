@@ -46,17 +46,17 @@ public class Movement extends Action{
 			case "right" :
 			        angle = 0;
 				break;
-			case "upLeft" :
-			        angle = 225;
+			case "upLeft":
+				angle = 225;
 				break;
-			case "upRight" :
-			        angle = 315;
+			case "upRight":
+				angle = 315;
 				break;
-			case "downLeft" :
-			        angle = 135;
+			case "downLeft":
+				angle = 135;
 				break;
-			case "downRight" :
-			        angle = 45;
+			case "downRight":
+				angle = 45;
 				break;
 		}
 		this.handler.send(CommandList.MOVEMENT, angle);

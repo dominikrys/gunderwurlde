@@ -17,6 +17,7 @@ import shared.view.GameView;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.Set;
 
 /**
  * class to initialise the sender, receiver threads and handle the engine
@@ -194,6 +195,11 @@ public class Server extends Thread implements HasEngine {
             Addressing.setInterfaces(sendSocket);
             updatedLowestAvailableAddress();
             System.out.println("Server constructor finished");
+
+            System.out.println("Server listen: " + listenAddress.toString());
+            System.out.println("Server send: " + senderAddress.toString());
+            System.out.println("Server listenport: " + listenPort);
+            System.out.println("Server sendport: " + sendPort);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -205,16 +211,13 @@ public class Server extends Thread implements HasEngine {
      * Check if the game is multiplayer and then create the sender and receiver for the server
      */
     public void run(){
-        System.out.println("Server Listen Address: " + listenAddress);
-        System.out.println("Server Listen Port: " + listenPort);
-        System.out.println("Server Sender Address: " + senderAddress);
-        System.out.println("Server Sender Port: " + sendPort);
         try {
             // Check if the game is going to be multiplayer
             if(multiplayer) {
                 // Create the TCP threads to handle the join protocol
                 // Setup a TCP manager to receive join requests
                 tcpMananger = new JoinGameManager(this);
+                tcpMananger.setName("TCPManager");
                 tcpMananger.start();
 
                 // Create the socket that will give joining players the TCP address
@@ -266,12 +269,19 @@ public class Server extends Thread implements HasEngine {
                     }
                 // Create the threads that will run as sender and receiver
                 sender = new ServerSender(senderAddress, sendSocket, sendPort);
+                sender.setName("ServerSender");
                 receiver = new ServerReceiver(listenSocket, this);
-
+                receiver.setName("ServerReceiver");
                 this.clientRequests = new ClientRequests(numOfPlayers);
                 // create the engine and start it
                 this.engine = new ProcessGameState(this, mapName, playersToAdd);
                 engine.start();
+                    System.out.println("\n\n Threads alive when engine started \n\n");
+                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                for(Thread t : threadSet){
+                    System.out.println(t.getName() + " is still alive");
+                }
+                engine.setName("GameEngine");
                 System.out.println("Closing server");
             } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -291,7 +301,7 @@ public class Server extends Thread implements HasEngine {
      * method to update to the next assignable address
      */
     private void updatedLowestAvailableAddress() {
-        lowestAvailableAddress += 2;
+        lowestAvailableAddress++;
     }
 
     /**
@@ -361,6 +371,7 @@ public class Server extends Thread implements HasEngine {
      */
     public void close() {
         // close the engine down
+        System.out.println("CLOSING SERVER THREADS");
         engine.handlerClosing();
         sender.close();
         try {
@@ -380,5 +391,17 @@ public class Server extends Thread implements HasEngine {
 
     public boolean isReceiving() {
         return receiving;
+    }
+
+    public String getIPAddress(){
+        return senderAddress.toString();
+    }
+
+    public String getPort(){
+        return Integer.toString(sendPort);
+    }
+
+    public boolean isThreadsRunning(){
+        return sender.isAlive() && receiver.isAlive();
     }
 }

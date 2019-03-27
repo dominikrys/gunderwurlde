@@ -3,6 +3,8 @@ package client.render;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -15,9 +17,7 @@ import shared.lists.ActionList;
 import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 import shared.lists.ItemType;
-import shared.view.GameView;
-import shared.view.GunView;
-import shared.view.ItemView;
+import shared.view.*;
 import shared.view.entity.*;
 
 import java.util.HashMap;
@@ -147,6 +147,95 @@ public class MapCanvas extends Canvas {
         for (ProjectileView currentProjectile : gameView.getProjectiles()) {
             renderEntityView(currentProjectile, rendererResourceLoader);
         }
+
+        // Render lasers
+        for (LaserView currentLaser : gameView.getLasers()) {
+            renderLaser(currentLaser);
+        }
+
+        // Render explosions
+        for (ExplosionView currentExplosion : gameView.getExplosions()) {
+            renderExplosion(currentExplosion, rendererResourceLoader);
+        }
+    }
+
+    /**
+     * Render explosion on canvas
+     *
+     * @param explosionView          Explosion to render
+     * @param rendererResourceLoader Renderer resources
+     */
+    private void renderExplosion(ExplosionView explosionView, RendererResourceLoader rendererResourceLoader) {
+        // Calculate where to render explosion - center it at the specified location
+        Pose poseToRenderAt = new Pose(explosionView.getLocation().getX() - (double) explosionView.getSize() / 2,
+                explosionView.getLocation().getY() - (double) explosionView.getSize() / 2);
+
+        // Resize explosion spritesheet to render
+        int explosionScaleFactor = explosionView.getSize() / Constants.TILE_SIZE;
+        Image animationToRender = resampleImage(rendererResourceLoader.getSprite(EntityList.EXPLOSION), explosionScaleFactor);
+
+        // Start thread for rendering the animation
+        new AnimationTimer() {
+            int frameCount = 40;
+            AnimatedSprite deathAnimation = new AnimatedSprite(
+                    animationToRender, (int) animationToRender.getHeight(), (int) animationToRender.getHeight(),
+                    frameCount, 20, 1, AnimationType.NONE);
+
+            @Override
+            public void handle(long now) {
+                // Check if animation still running - if not, stop animation
+                if (renderOneOffAnimation(deathAnimation, poseToRenderAt, frameCount)) {
+                    this.stop();
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Render laser to canvas
+     *
+     * @param laserView Laser to render
+     */
+    private void renderLaser(LaserView laserView) {
+        // Save state of canvas
+        mapGC.save();
+
+        // Set laser and shadow colour
+        DropShadow dropShadow;
+        switch (laserView.getTeam()) {
+            case RED:
+                mapGC.setStroke(Constants.RED_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.RED_TEAM_COLOR);
+                break;
+            case BLUE:
+                mapGC.setStroke(Constants.BLUE_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.BLUE_TEAM_COLOR);
+                break;
+            case GREEN:
+                mapGC.setStroke(Constants.GREEN_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.GREEN_TEAM_COLOR);
+                break;
+            case YELLOW:
+                mapGC.setStroke(Constants.YELLOW_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.YELLOW_TEAM_COLOR);
+                break;
+            default:
+                mapGC.setStroke(Color.GREY);
+                dropShadow = new DropShadow(10, Color.GREY);
+                break;
+        }
+
+        // Add bloom adn set effect
+        dropShadow.setInput(new Bloom(0));
+        mapGC.setEffect(dropShadow);
+
+        // Set laser width and render on canvas
+        mapGC.setLineWidth(laserView.getWidth());
+        mapGC.strokeLine(laserView.getStart().getX(), laserView.getStart().getY(),
+                laserView.getEnd().getX(), laserView.getEnd().getY());
+
+        // Restore canvas
+        mapGC.restore();
     }
 
     /**
@@ -166,7 +255,7 @@ public class MapCanvas extends Canvas {
             @Override
             public void handle(long now) {
                 // Check if animation still running - if not, stop animation
-                if (runDeathSpawnAnimation(deathAnimation, pose, frameCount)) {
+                if (renderOneOffAnimation(deathAnimation, pose, frameCount)) {
                     this.stop();
                 }
             }
@@ -194,7 +283,7 @@ public class MapCanvas extends Canvas {
                     case RUNNER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.RUNNER_WALK), 32, 32,
-                                17, 30, 0, AnimationType.MOVE));
+                                17, 25, 0, AnimationType.MOVE));
                         break;
                     case SOLDIER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
@@ -209,22 +298,22 @@ public class MapCanvas extends Canvas {
                     case BOOMER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.BOOMER_WALK), 40, 40,
-                                8, 75, 0, AnimationType.MOVE));
+                                8, 70, 0, AnimationType.MOVE));
                         break;
                     case MACHINE_GUNNER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.MACHINE_GUNNER_WALK), 34, 34,
-                                8, 25, 0, AnimationType.MOVE));
+                                8, 35, 0, AnimationType.MOVE));
                         break;
                     case SNIPER:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.SNIPER_WALK), 32, 32,
-                                4, 75, 0, AnimationType.MOVE));
+                                4, 50, 0, AnimationType.MOVE));
                         break;
                     case MAGE:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.MAGE_WALK), 38, 38,
-                                8, 100, 0, AnimationType.MOVE));
+                                8, 90, 0, AnimationType.MOVE));
                         break;
                     case THEBOSS:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
@@ -235,7 +324,7 @@ public class MapCanvas extends Canvas {
                     default:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.ZOMBIE_WALK), 32, 32,
-                                6, 75, 0, AnimationType.MOVE));
+                                6, 70, 0, AnimationType.MOVE));
                         break;
                 }
             }
@@ -251,6 +340,10 @@ public class MapCanvas extends Canvas {
         // Render healthbar
         renderHealthBar(currentEnemy.getPose(), currentEnemy.getHealth(), currentEnemy.getMaxHealth(),
                 currentEnemy.getEntityListName().getSize());
+
+        // Render status effect
+        renderStatusEffect(currentEnemy.getPose(), currentEnemy.getEntityListName().getSize(),
+                currentEnemy.getStatus(), rendererResourceLoader);
 
         // Put enemy into enemy locations hashmap
         lastEntityLocations.put(currentEnemy.getID(), currentEnemy.getPose());
@@ -412,6 +505,10 @@ public class MapCanvas extends Canvas {
         renderHealthBar(currentPlayer.getPose(), currentPlayer.getHealth(), currentPlayer.getMaxHealth(),
                 Constants.TILE_SIZE);
 
+        // Render status effect
+        renderStatusEffect(currentPlayer.getPose(), currentPlayer.getEntityListName().getSize(),
+                currentPlayer.getStatus(), rendererResourceLoader);
+
         // Put player into player locations hashmap
         lastEntityLocations.put(currentPlayer.getID(), currentPlayer.getPose());
     }
@@ -449,7 +546,7 @@ public class MapCanvas extends Canvas {
                 @Override
                 public void handle(long now) {
                     // Check if animation still running - if not, stop animation
-                    if (runDeathSpawnAnimation(spawnAnimation, pose, frameCount)) {
+                    if (renderOneOffAnimation(spawnAnimation, pose, frameCount)) {
                         this.stop();
                     }
                 }
@@ -458,14 +555,14 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * See if the death or spawn animation should still run, in which case update it, otherwise return true
+     * See if one off animation should still run, in which case update it, otherwise return true
      *
      * @param animation  Running animation to check
      * @param pose       Pose to render animation at
      * @param frameCount Total amount of frames for animation
      * @return True if animation finished
      */
-    private boolean runDeathSpawnAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
+    private boolean renderOneOffAnimation(AnimatedSprite animation, Pose pose, int frameCount) {
         // Check if animation finished
         if (animation.getCurrentFrame() < frameCount - 1) {
             drawRotatedImageFromSpritesheet(animation.getImage(), 0, pose.getX(),
@@ -535,6 +632,43 @@ public class MapCanvas extends Canvas {
         mapGC.setFill(Color.RED);
         mapGC.fillRect(pose.getX() + enemySize * healthLeftPercentage, pose.getY() - verticalOffset,
                 enemySize * (1 - healthLeftPercentage), healthBarHeight);
+    }
+
+    /**
+     * Render status effect above enemu
+     *
+     * @param pose                   Pose to render at
+     * @param entitySize             Size of enemy to center effect
+     * @param effect                 Effect to render
+     * @param rendererResourceLoader Renderer resources
+     */
+    private void renderStatusEffect(Pose pose, int entitySize, EntityStatus effect, RendererResourceLoader rendererResourceLoader) {
+        // Get the image to render
+        Image imageToRender;
+        switch (effect) {
+            case SLOWED:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                break;
+            case FROZEN:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.BURNING);
+                break;
+            case BURNING:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.SLOWED);
+                break;
+            case FUSED:
+                imageToRender = rendererResourceLoader.getSprite(EntityList.FUSED);
+                break;
+            default:
+                // No status effect needed, return
+                return;
+        }
+
+        // How far above the entity to render the status effect
+        int verticalDebuffOffset = 24;
+
+        // Draw debuff image centered above the entity
+        mapGC.drawImage(imageToRender, pose.getX() + (entitySize - (double) EntityList.BURNING.getSize() / 2),
+                pose.getY() - verticalDebuffOffset);
     }
 
     /**
@@ -623,6 +757,11 @@ public class MapCanvas extends Canvas {
      * @return Enlarged image
      */
     private Image resampleImage(Image inputImage, int scaleFactor) {
+        // Check if scale factor is 1, in which case don't resize
+        if (scaleFactor == 1) {
+            return inputImage;
+        }
+
         final int inputImageWidth = (int) inputImage.getWidth();
         final int inputImageHeight = (int) inputImage.getHeight();
 

@@ -5,7 +5,7 @@ import server.engine.state.entity.projectile.Projectile;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
-public class CrystalLauncher extends Gun {
+public class CrystalLauncher extends ProjectileGun {
     public static final ItemList NAME = ItemList.CRYSTAL_LAUNCHER;
     public static final int DEFAULT_CLIP_SIZE = 4;
     public static final int DEFAULT_RELOAD_TIME = 2000;

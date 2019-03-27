@@ -64,7 +64,6 @@ public class ClientRequests {
     public boolean playerRequestSelectItem(int playerID, int itemPosition) {
         if (playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).setSelectItem(itemPosition);
-            ;
             return true;
         } else
             return false;
@@ -99,6 +98,33 @@ public class ClientRequests {
             playerRequests.get(playerID).requestDrop();
             return true;
         } else
+            return false;
+    }
+
+    public boolean playerRequestPause(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestPause();
+            System.out.println("PLAYER HAS REQUESTED PAUSE");
+            return true;
+        } else
+            return false;
+        }
+
+    public boolean playerRequestConsume(int playerID, int dist) {
+        if (playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).setConsumeDist(dist);
+            return true;
+        } else
+            return false;
+    }
+
+    public boolean playerRequestResume(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestResume();
+            System.out.println("PLAYER HAS REQUESTED RESUME");
+            return true;
+        }
+        else
             return false;
     }
 }

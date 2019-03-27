@@ -25,6 +25,10 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
         this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, DEFAULT_RANGE, DEFAULT_FUSE_TIME);
     }
 
+    public LiveGrenade(int range) {
+        this(DEFAULT_SPEED, DEFAULT_DAMAGE, DEFAULT_SIZE, range, DEFAULT_FUSE_TIME);
+    }
+
     public LiveGrenade(int speed, int damage, int size, int range, long fuseTime) {
         super(speed, damage, EntityList.GRENADE, size, range);
         this.creationTime = System.currentTimeMillis();
@@ -48,6 +52,13 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
     }
 
     @Override
+    public boolean maxRangeReached(double distanceMoved) {
+        if (super.maxRangeReached(distanceMoved))
+            this.speed = 0;
+        return false;
+    }
+
+    @Override
     public boolean isRemoved() {
         return ((System.currentTimeMillis() - creationTime) > fuseTime);
     }
@@ -65,7 +76,7 @@ public class LiveGrenade extends Projectile implements ContainsAttack {
 
     @Override
     public Attack getAttack() {
-        return new AoeAttack(pose, Tile.TILE_SIZE * 3, 3, Team.NONE);
+        return new AoeAttack(pose, Tile.TILE_SIZE * 3, 3, Team.NONE, true);
     }
 
 }

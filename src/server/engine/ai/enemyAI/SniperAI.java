@@ -1,23 +1,19 @@
 package server.engine.ai.enemyAI;
 
 import server.engine.ai.AIAction;
-import server.engine.ai.aStar.AStar;
 import server.engine.ai.newPoseGenerators.PoseAroundPlayerGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.SniperRifle;
-import server.engine.state.map.tile.Tile;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
 
-import java.util.LinkedList;
-
 public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
-    Gun gun = new SniperRifle();
+    ProjectileGun gun = new SniperRifle();
 
     public SniperAI(int rangeToRunAway) {
         super(LONG_DELAY * 2);
@@ -53,7 +49,7 @@ public class SniperAI extends AStarUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY));
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY, 0));
     }
 
     @Override

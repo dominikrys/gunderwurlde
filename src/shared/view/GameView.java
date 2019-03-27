@@ -1,8 +1,10 @@
 package shared.view;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import shared.lists.MapList;
 import shared.lists.Team;
 import shared.view.entity.EnemyView;
 import shared.view.entity.ItemDropView;
@@ -16,22 +18,35 @@ public class GameView implements Serializable {
     protected final LinkedHashSet<ProjectileView> projectiles;
     protected final LinkedHashSet<ItemDropView> itemDrops;
     protected final LinkedHashSet<LaserView> lasers;
-    protected final TileView[][] tileMap;
+    protected final LinkedHashSet<ExplosionView> explosions;
+    protected final LinkedHashMap<int[], TileView> tileViewChanges;
+    protected final MapList mapName;
     protected final Team winningTeam; // NONE if nobody has won yet
-    protected final int xDim;
-    protected final int yDim;
+
+    protected TileView[][] tileMap;
+    protected int xDim;
+    protected int yDim;
 
     public GameView(LinkedHashSet<PlayerView> players, LinkedHashSet<EnemyView> enemies, LinkedHashSet<ProjectileView> projectiles,
-            LinkedHashSet<ItemDropView> itemDrops, LinkedHashSet<LaserView> lasers, TileView[][] tileMap, Team winningTeam) {
+            LinkedHashSet<ItemDropView> itemDrops, LinkedHashSet<LaserView> lasers, LinkedHashSet<ExplosionView> explosions,
+            LinkedHashMap<int[], TileView> tileViewChanges, MapList mapName, Team winningTeam) {
         this.players = players;
         this.enemies = enemies;
         this.projectiles = projectiles;
         this.itemDrops = itemDrops;
         this.lasers = lasers;
-        this.tileMap = tileMap;
-        this.xDim = tileMap.length;
-        this.yDim = tileMap[0].length;
+        this.explosions = explosions;
+        this.tileViewChanges = tileViewChanges;
+        this.mapName = mapName;
         this.winningTeam = winningTeam;
+    }
+
+    public MapList getMapName() {
+        return mapName;
+    }
+
+    public LinkedHashMap<int[], TileView> getTileViewChanges() {
+        return tileViewChanges;
     }
 
     public int getXDim() {
@@ -62,8 +77,18 @@ public class GameView implements Serializable {
         return lasers;
     }
 
+    public LinkedHashSet<ExplosionView> getExplosions() {
+        return explosions;
+    }
+
     public TileView[][] getTileMap() {
         return tileMap;
+    }
+
+    public void setTileMap(TileView[][] tileMap) {
+        this.tileMap = tileMap;
+        this.xDim = tileMap.length;
+        this.yDim = tileMap[0].length;
     }
 
     public Team getWinningTeam() {

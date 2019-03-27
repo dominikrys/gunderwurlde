@@ -7,9 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import mapeditor.StartMenu;
 import shared.lists.Team;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * MainMenuController class. Contains loader and controller for the menu menu.
@@ -73,15 +75,22 @@ public class MainMenuController extends VBox implements MenuController {
     }
 
     /**
-     * Show menu on stage
+     * Show menu on stage if stage is clear
      */
-    public void show() {
+    public void showInitial() {
         // Main menu is displayed first, so see if setRootToStage necessary
         if (stage.getScene() == null) {
             MenuController.setRootToStage(stage, this, settings);
         } else {
-            this.stage.getScene().setRoot(this);
+            show();
         }
+    }
+
+    /**
+     * Set this to stage
+     */
+    public void show() {
+        this.stage.getScene().setRoot(this);
     }
 
     /**
@@ -147,11 +156,20 @@ public class MainMenuController extends VBox implements MenuController {
     /**
      * Close stage when the quit button is pressed
      *
-     * @param event Quit button press
+     * @param event Quit button presssd
      */
     @FXML
     void quitButtonPress(ActionEvent event) {
+        System.out.println("\n\n Threads alive when quit button is pressed in main menu \n\n");
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for (Thread t : threadSet) {
+            System.out.println(t.getName() + " is still alive");
+        }
         stage.close();
+        System.out.println("Stage has been closed");
+        //Second last resort
+        //Platform.runLater(() -> System.exit(1));
+        // Last resort
     }
 
     /**
@@ -161,6 +179,6 @@ public class MainMenuController extends VBox implements MenuController {
      */
     @FXML
     void mapEditorButtonPress(ActionEvent event) {
-
+        new StartMenu(stage);
     }
 }

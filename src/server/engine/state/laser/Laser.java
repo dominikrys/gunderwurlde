@@ -11,7 +11,7 @@ import shared.lists.Team;
 import shared.lists.TileState;
 
 public class Laser extends Line {
-    public static final long DAMAGE_TIMEOUT = 200;
+    public static final long DAMAGE_TIMEOUT = 800;
 
     protected double originalSize;
     protected double size;
@@ -21,33 +21,36 @@ public class Laser extends Line {
     protected Team team;
     protected HashMap<Integer, Long> lastEntityDamageTime;
 
-    public Laser(Location start, Location end, double size, int damage, long duration) {
+    public Laser(Location start, Location end, double size, int damage, long duration, Team team) {
         super(start, end);
         this.size = size;
         this.originalSize = size;
+        this.damage = damage;
         this.duration = duration;
+        this.team = team;
         this.creationTime = System.currentTimeMillis();
         this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public Laser(Line line, double size, int damage, long duration) {
+    public Laser(Line line, double size, int damage, long duration, Team team) {
         super(line);
         this.size = size;
         this.originalSize = size;
         this.damage = damage;
         this.duration = duration;
+        this.team = team;
         this.creationTime = System.currentTimeMillis();
         this.lastEntityDamageTime = new HashMap<>();
     }
 
-    public static Laser DrawLaser(Pose start, Tile[][] tileMap, double size, int damage, long duration) {
-        int chunkLength = 100;
+    public static Laser DrawLaser(Pose start, Tile[][] tileMap, Laser templateLaser, Team team) {
+        int chunkLength = 16; // TODO increase chunk size back to ~200 if old code fixed
         boolean endPointFound = false;
-        double offSet = (Tile.TILE_SIZE / 2) + (size / 2);
-        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), size / 2, 0, 0);
+        //double offSet = (Tile.TILE_SIZE / 2) + (templateLaser.size / 2);
+        Laser testLaser = new Laser(new Line(start, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
         Location endPoint = testLaser.getEnd();
-        double m = chunkLength / Math.abs(testLaser.getEnd().getX() - testLaser.getStart().getX());
-        double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
+        //double m = (testLaser.getEnd().getY() - testLaser.getStart().getY()) / (testLaser.getEnd().getX() - testLaser.getStart().getX());
+        //double c = testLaser.getStart().getY() - (m * testLaser.getStart().getX());
 
         while (!endPointFound) {
             LinkedHashSet<int[]> tilesOn = testLaser.getTilesOn();
@@ -55,7 +58,8 @@ public class Laser extends Line {
             for (int[] tileOn : tilesOn) {
                 Tile tileBeingChecked = tileMap[tileOn[0]][tileOn[1]];
                 if (tileBeingChecked.getState() == TileState.SOLID) {
-                    Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
+                    // TODO remove old code if unfixed
+                    /*Location tileLoc = Tile.tileToLocation(tileOn[0], tileOn[1]);
                     double minX = tileLoc.getX() - offSet;
                     double maxX = tileLoc.getX() + offSet;
                     double minY = tileLoc.getY() - offSet;
@@ -75,18 +79,20 @@ public class Laser extends Line {
                         endPoint = new Location(x2, maxY);
                     }
 
+                    endPoint = tileLoc;*/
+
                     endPointFound = true;
                     break;
                 }
             }
 
             if (!endPointFound) {
-                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), size / 2, 0, 0);
+                testLaser = new Laser(new Line(endPoint, start.getDirection(), chunkLength), templateLaser.size / 2, 0, 0, Team.NONE);
                 endPoint = testLaser.getEnd();
             }
         }
 
-        return new Laser(start, endPoint, size, damage, duration);
+        return new Laser(start, endPoint, templateLaser.size, templateLaser.damage, templateLaser.duration, team);
     }
 
     public boolean canDamage(Integer ID) {
@@ -131,7 +137,7 @@ public class Laser extends Line {
     }
 
     public LinkedHashSet<int[]> getTilesOn() {
-        double m = length / Math.abs(end.getX() - start.getX());
+        double m = (end.getY() - start.getY()) / (end.getX() - start.getX());
         double c = start.getY() - (m * start.getX());
         double maxX = start.getX();
         double maxY = start.getY();
@@ -188,18 +194,23 @@ public class Laser extends Line {
         }
 
         LinkedHashSet<int[]> tilesOn = new LinkedHashSet<>();
-        double offSet = (Tile.TILE_SIZE / 2) + size;
+
+        double offset = Tile.TILE_SIZE / 2;
         for (int t_x = startX; t_x != endX; t_x += cX) {
             for (int t_y = startY; t_y != endY; t_y += cY) {
                 Location tileLoc = Tile.tileToLocation(t_x, t_y);
-                minX = tileLoc.getX() - offSet;
-                maxX = tileLoc.getX() + offSet;
-                minY = tileLoc.getY() - offSet;
-                maxY = tileLoc.getY() + offSet;
+                minX = tileLoc.getX() - offset;
+                maxX = tileLoc.getX() + offset;
+                minY = tileLoc.getY() - offset;
+                maxY = tileLoc.getY() + offset;
                 double y1 = (minX * m) + c;
                 double y2 = (maxX * m) + c;
                 double x1 = (minY - c) / m;
                 double x2 = (maxY - c) / m;
+                minX -= size;
+                maxX += size;
+                minY -= size;
+                maxY += size;
 
                 if ((y1 <= maxY && y1 >= minY) || (y2 <= maxY && y2 >= minY) || (x1 <= maxX && x1 >= minX) || (x2 <= maxX && x2 >= minX))
                     tilesOn.add(new int[] { t_x, t_y });

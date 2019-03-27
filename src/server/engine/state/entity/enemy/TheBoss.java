@@ -1,7 +1,6 @@
 package server.engine.state.entity.enemy;
 
 import server.engine.ai.enemyAI.EnemyAI;
-import server.engine.ai.enemyAI.SniperAI;
 import server.engine.ai.enemyAI.TheBossAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;

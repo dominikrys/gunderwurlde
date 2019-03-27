@@ -69,6 +69,9 @@ public class SettingsMenuController extends VBox implements MenuController {
     @FXML
     private Button resetButton;
 
+    @FXML
+    private Button resetHighScoreButton;
+
     /**
      * Constructor
      *
@@ -305,8 +308,8 @@ public class SettingsMenuController extends VBox implements MenuController {
      */
     @FXML
     void resetButtonPress(ActionEvent event) {
-        // Override settings object
-        settings = new Settings();
+        // Reset settings
+        settings.initialiseSettings();
 
         // Save settings
         settings.saveToDisk();
@@ -315,5 +318,16 @@ public class SettingsMenuController extends VBox implements MenuController {
         updateScreen();
         (new SettingsMenuController(stage, settings)).show();
         this.getChildren().clear();
+    }
+
+    /**
+     * Reset high scores
+     *
+     * @param event Reset high score button press
+     */
+    @FXML
+    void resetHighScoreButtonPress(ActionEvent event) {
+        settings.resetHighScores();
+        settings.saveToDisk();
     }
 }

@@ -1,14 +1,13 @@
 package server.engine.state.entity.enemy;
 
+import java.util.LinkedHashSet;
+
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.MageAI;
-import server.engine.ai.enemyAI.TheBossAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
-
-import java.util.LinkedHashSet;
 
 public class Mage extends Zombie{
     public static final int DEFAULT_HEALTH = 10;

@@ -4,6 +4,7 @@ import javafx.scene.media.AudioClip;
 import server.engine.state.item.weapon.gun.AssaultRifle;
 import server.engine.state.item.weapon.gun.BuckshotShotgun;
 import server.engine.state.item.weapon.gun.HeavyPistol;
+import server.engine.state.item.weapon.gun.LaserPistol;
 import server.engine.state.item.weapon.gun.MachineGun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.PlasmaPistol;
@@ -34,6 +35,7 @@ public class GameSound {
 	private double volume;
 	private Timer timer;
 	private TimerTask checkReplay;
+	private TimerTask play;
 	private boolean replayable;
 	private long startDelay;
 	final double hearableDistance = 500	;
@@ -49,6 +51,14 @@ public class GameSound {
 			@Override
 			public void run() {
 				replayable = true;
+				timer.cancel();
+				timer.purge();
+			}
+		};
+		this.play = new TimerTask() {
+			@Override
+			public void run() {
+				audio.play();
 			}
 		};
 		this.startDelay = 0;
@@ -56,12 +66,6 @@ public class GameSound {
 		if(this.audio != null) {
 			this.replayable = false;
 			this.calculateSound(this.audio);
-			TimerTask play = new TimerTask() {
-				@Override
-				public void run() {
-					audio.play();
-				}
-			};
 			this.timer.schedule(play, startDelay);
 		}
 	}
@@ -118,15 +122,18 @@ public class GameSound {
 	}
 	
 	private void playShellsFall(long startDelay) {
+		Timer shellTimer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
 				AudioClip shells = new AudioClip(SoundList.SHELLS_FALL.getPath());
 				calculateSound(shells);
 				shells.play();
+				shellTimer.cancel();
+				shellTimer.purge();
 			}
 		};
-		this.timer.schedule(task, 700 + startDelay);
+		shellTimer.schedule(task, 700 + startDelay);
 	}
 	
 	private void calculateSound(AudioClip audio) {
@@ -195,6 +202,10 @@ public class GameSound {
 							break;
 						case ROCKET_LAUNCHER:
 							break;
+						case LASER_PISTOL:
+							break;
+						case LASER_CANNON:
+							break;
 					}
 				}
 				break;
@@ -225,7 +236,6 @@ public class GameSound {
 						case PLASMA_PISTOL:
 							audio = loadedGameSounds.get(SoundList.LASER3);
 							this.timer.schedule(checkReplay, PlasmaPistol.DEFAULT_COOL_DOWN);
-							this.playShellsFall(0);
 							break;
 						case MACHINE_GUN:
 							audio = loadedGameSounds.get(SoundList.MACHINE_GUN);
@@ -258,6 +268,17 @@ public class GameSound {
 						case ROCKET_LAUNCHER:
 							audio = loadedGameSounds.get(SoundList.MISSLE);
 							this.timer.schedule(checkReplay, RocketLauncher.DEFAULT_COOL_DOWN);
+							break;
+						case LASER_PISTOL:
+							audio = loadedGameSounds.get(SoundList.LASER2);
+							this.timer.schedule(checkReplay, LaserPistol.DEFAULT_COOL_DOWN);
+							break;
+						case LASER_CANNON:
+							break;
+						case GRENADE:
+							audio = loadedGameSounds.get(SoundList.SHOTGUN);
+							this.startDelay = 3000;
+							this.timer.schedule(checkReplay, 0);
 							break;
 					}
 				}

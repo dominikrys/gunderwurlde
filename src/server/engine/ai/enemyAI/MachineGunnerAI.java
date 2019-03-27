@@ -1,16 +1,16 @@
 package server.engine.ai.enemyAI;
 
+import java.util.LinkedList;
+
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.Smg;
 import server.engine.state.physics.Force;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
-
-import java.util.LinkedList;
 
 public class MachineGunnerAI extends ZombieAI {
 
@@ -25,7 +25,7 @@ public class MachineGunnerAI extends ZombieAI {
     private int attackAngle;
     private int bulletsShotInThisAttack = 0;
     private boolean delayPast;
-    private Gun gun = new Smg();
+    private ProjectileGun gun = new Smg();
     private boolean isInAttackPosition = false;
     private int currentAndStartAngDiff;
 
@@ -46,7 +46,7 @@ public class MachineGunnerAI extends ZombieAI {
         if (delayPast && shootingPathUnobstructed && isInAttackPosition) {
             if (bulletsShotInThisAttack != BULLETS_PER_ATTACK) {
                 attacks.add(new ProjectileAttack(gun.getProjectiles(
-                        new Pose(pose, attackAngle), Team.ENEMY)));
+                        new Pose(pose, attackAngle), Team.ENEMY ,0)));
 
                 bulletsShotInThisAttack++;
 

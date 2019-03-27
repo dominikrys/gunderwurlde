@@ -10,5 +10,7 @@ public enum CommandList {
 	MOVEMENT,
 	RELOAD,
 	TURN,
-	CONSUMABLE;
+	CONSUMABLE,
+	PAUSED,
+	RESUME;
 }

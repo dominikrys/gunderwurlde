@@ -1,9 +1,5 @@
 package client.render;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.LinkedHashSet;
-
 import client.Settings;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,17 +9,17 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.EntityStatus;
-import shared.lists.ItemList;
-import shared.lists.MapList;
-import shared.lists.Team;
+import shared.lists.*;
 import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class TestRenderer extends Application {
 
@@ -56,12 +52,16 @@ public class TestRenderer extends Application {
         PlayerView playerView = new PlayerView(new Pose(30, 30, 30), 1, 20, 20, playerItems, 0, 0, "Bob", playerAmmo, 0, Team.RED, false, EntityStatus.NONE,
                 ActionList.NONE, false, false, false);
         playersView.add(playerView);
-        GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
+        GameView view1 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
+                new LinkedHashSet<>(), new LinkedHashMap<>(), MapList.MEADOW, Team.NONE);
+        view1.setTileMap(tileMapView);
         playersView = new LinkedHashSet<>();
         playerView = new PlayerView(new Pose(90, 90, 210), 1, 20, 20, playerItems, 0, 0, "Bob", new EnumMap<AmmoList, Integer>(AmmoList.class), 0, Team.RED,
                 false, EntityStatus.NONE, ActionList.NONE, false, false, false);
         playersView.add(playerView);
-        GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), tileMapView, Team.NONE);
+        GameView view2 = new GameView(playersView, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
+                new LinkedHashSet<>(), new LinkedHashMap<>(), MapList.MEADOW, Team.NONE);
+        view2.setTileMap(tileMapView);
 
         // Set up renderer
         // GameRenderer rend = new GameRenderer(primaryStage, view1, 0, settings);

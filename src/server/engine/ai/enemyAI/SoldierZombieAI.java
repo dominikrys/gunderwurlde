@@ -1,17 +1,16 @@
 package server.engine.ai.enemyAI;
 
+import java.util.Random;
+
 import server.engine.ai.AIAction;
 import server.engine.ai.newPoseGenerators.RandomPoseGen;
 import server.engine.state.entity.attack.Attack;
 import server.engine.state.entity.attack.ProjectileAttack;
-import server.engine.state.item.weapon.gun.Gun;
-import server.engine.state.item.weapon.gun.Pistol;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import server.engine.state.item.weapon.gun.RocketLauncher;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
-
-import java.util.Random;
 
 public class SoldierZombieAI extends AStarUsingEnemy {
 
@@ -19,7 +18,7 @@ public class SoldierZombieAI extends AStarUsingEnemy {
     private final int RATE_OF_FIRE;
     private final int DISTANCE_TO_MOVE;
     private Random rand = new Random();
-    private Gun gun = new RocketLauncher();
+    private ProjectileGun gun = new RocketLauncher();
 
     public SoldierZombieAI(int rangeToShoot, int rateOfFire, int distanceToMove) {
         super(SHORT_DELAY);
@@ -66,7 +65,7 @@ public class SoldierZombieAI extends AStarUsingEnemy {
     @Override
     protected Attack getAttackObj() {
         int angle = getAngle(pose, closestPlayer);
-        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY));
+        return new ProjectileAttack(gun.getProjectiles(new Pose(pose, angle), Team.ENEMY, 0));
     }
 
 }

@@ -3,9 +3,17 @@ package client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 import client.input.CommandList;
 import client.net.Addressing;
@@ -13,10 +21,11 @@ import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
+import server.engine.state.map.MapReader;
 import shared.lists.Team;
 import shared.view.GameView;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
+import shared.view.TileView;
+
 
 /**
  * Class to initialise the sender, receiver threads and join the game
@@ -25,78 +34,61 @@ public class Client extends Thread {
 
 
     /**
-     * Socket to receive GameViews from the server
-     */
-    private MulticastSocket listenSocket;
-
-    /**
-     * Socket to send client requests to the server
-     */
-    private MulticastSocket sendSocket;
-
-    /**
-     * Socket to return the TCP address needed to join the game
-     */
-    private MulticastSocket joinGameSocket;
-
-    /**
-     * Socket that handles a player joining a game
-     */
-    private Socket tcpSocket;
-
-
-    /**
-     * Address the client will receive gameViews on
-     */
-    private InetAddress listenAddress;
-
-    /**
-     * Address the client will send requests on
-     */
-    private InetAddress senderAddress;
-
-    /**
-     * The UDP address to request to join a game
-     */
-    private InetAddress joinGameAddress;
-
-    /**
-     * The server machines IP address
-     */
-    private InetAddress tcpAddress;
-
-    /**
-     * Integer to hold the next assignable IP address
-     */
-    private int lowestAvailableAddress = 1;
-
-
-    /**
-     * The port the client will receive gameView across
-     */
-    private int listenPort;
-
-    /**
-     * The port the client will send requests across
-     */
-    private int sendPort;
-
-    /**
      * The port players will request the TCP address of the server machine on
      */
     private static final int JOINPORT = 8080;
-
     /**
      * The port the player will use to join the game
      */
     private static final int TCPPORT = 8081;
-
+    /**
+     * Integer to hold the next assignable IP address
+     */
+    private static int lowestAvailableAddress = 1;
     /**
      * Integer to hold the next assignable port
      */
     private static int lowestAvailablePort = 4444;
-
-
+    /**
+     * Socket to receive GameViews from the server
+     */
+    private MulticastSocket listenSocket;
+    /**
+     * Socket to send client requests to the server
+     */
+    private MulticastSocket sendSocket;
+    /**
+     * Socket to return the TCP address needed to join the game
+     */
+    private MulticastSocket joinGameSocket;
+    /**
+     * Socket that handles a player joining a game
+     */
+    private Socket tcpSocket;
+    /**
+     * Address the client will receive gameViews on
+     */
+    private InetAddress listenAddress;
+    /**
+     * Address the client will send requests on
+     */
+    private InetAddress senderAddress;
+    /**
+     * The UDP address to request to join a game
+     */
+    private InetAddress joinGameAddress;
+    /**
+     * The server machines IP address
+     */
+    private InetAddress tcpAddress;
+    /**
+     * The port the client will receive gameView across
+     */
+    private int listenPort;
+    /**
+     * The port the client will send requests across
+     */
+    private int sendPort;
     /**
      * byte array to hold information being received and sent when joining a game
      */
@@ -126,6 +118,7 @@ public class Client extends Thread {
      * The object that will hold the constantly updating view of the game
      */
     private GameView view;
+    private TileView[][] tileMap;
 
     /**
      * The object that will render the graphics to the screen
@@ -171,49 +164,56 @@ public class Client extends Thread {
     /**
      * Connection type
      */
-private ConnectionType connectionType;
+    private ConnectionType connectionType;
 
     /**
      * Constructor for single player or multiplayer host
+     *
      * @param stage
-     * @param handler object that created this client. Used to end the threads on close
-     * @param settings object to hold previously saved settings e.g. sound settings
-     * @param playerID The identification value for a player
+     * @param handler        object that created this client. Used to end the threads on close
+     * @param settings       object to hold previously saved settings e.g. sound settings
+     * @param playerID       The identification value for a player
      * @param connectionType Connection type
      */
     public Client(Stage stage, GameHandler handler, Settings settings, int playerID, ConnectionType connectionType) {
-       try {
-           // Assign the value for the ports and update the next available port
-           this.listenPort = lowestAvailablePort;
-           this.sendPort = lowestAvailablePort + 1;
-           updateLowestAvailablePort();
-           // Assign the values for the addresses and update the next available address
-           this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
-           this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
-           updateLowestAvailableAddress();
-           this.stage = stage;
-           this.handler = handler;
-           this.settings = settings;
-           this.playerID = playerID;
-           this.connectionType = connectionType;
-           firstView = true;
-       } catch (UnknownHostException e) {
-           e.printStackTrace();
-       }
+        try {
+            // Assign the value for the ports and update the next available port
+            this.listenPort = lowestAvailablePort;
+            this.sendPort = lowestAvailablePort + 1;
+            updateLowestAvailablePort();
+            // Assign the values for the addresses and update the next available address
+            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            updateLowestAvailableAddress();
+            this.stage = stage;
+            this.handler = handler;
+            this.settings = settings;
+            this.playerID = playerID;
+            this.connectionType = connectionType;
+            firstView = true;
+
+            System.out.println("Client listen: " + listenAddress.toString());
+            System.out.println("Client send: " + senderAddress.toString());
+            System.out.println("Client listenport: " + listenPort);
+            System.out.println("Client sendport: " + sendPort);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Constructor for multiplayer join
+     *
      * @param stage
-     * @param handler object that created this client. Used to end the threads on close
-     * @param settings object to hold previously saved settings e.g. sound settings
-     * @param ipValue The IP address the server is sending on
-     * @param portValue The port the server is sending across
-     * @param playerName The name of the player playing the game
-     * @param team The team of the player playing the game
+     * @param handler        object that created this client. Used to end the threads on close
+     * @param settings       object to hold previously saved settings e.g. sound settings
+     * @param ipValue        The IP address the server is sending on
+     * @param portValue      The port the server is sending across
+     * @param playerName     The name of the player playing the game
+     * @param team           The team of the player playing the game
      * @param connectionType Connection ype
      */
-    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName,
+    public Client(Stage stage, GameHandler handler, Settings settings, String ipValue, int portValue, String playerName,
                   Team team, ConnectionType connectionType) {
         try {
             // Assign the player name and player value
@@ -250,7 +250,9 @@ private ConnectionType connectionType;
             System.out.println("Client Sender Address: " + senderAddress);
             System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
+            sender.setName("ClientSender");
             receiver = new ClientReceiver(listenSocket, this, settings);
+            receiver.setName("ClientReceiver");
             System.out.println("Closing client");
         } catch (IOException e) {
             e.printStackTrace();
@@ -259,15 +261,23 @@ private ConnectionType connectionType;
 
     /**
      * Method to set the GameView for the client so that new graphics appear
-     * @param view the GameView that will be displayed to the screen
+     *
+     * @param view     the GameView that will be displayed to the screen
      * @param settings object to hold previously saved settings e.g. sound settings
      */
-    public void setGameView(GameView view, Settings settings){
+    public void setGameView(GameView view, Settings settings) {
         // sets the value for view
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
+            System.out.println("\n\n Threads alive when received first gameView");
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for (Thread t : threadSet) {
+                System.out.println(t.getName() + " is still alive");
+            }
             firstView = false;
+            this.tileMap = MapReader.readMapView(view.getMapName());
+            this.view.setTileMap(tileMap);
             renderer = new GameRenderer(stage, this.view, playerID, settings, this, connectionType);
             renderer.getKeyboardHandler().setGameHandler(this);
             renderer.getMouseHandler().setGameHandler(this);
@@ -275,8 +285,21 @@ private ConnectionType connectionType;
         }
         //else just update the GameView
         else {
+            updateTileMap();
+            this.view.setTileMap(tileMap);
             renderer.updateGameView(this.view);
         }
+    }
+    
+    /*
+     * Method for updating the tileMap with the changes from the GameView
+     */
+    private void updateTileMap() {
+        for (Map.Entry<int[], TileView> tileChange : view.getTileViewChanges().entrySet()) {
+            int[] cords = tileChange.getKey();
+            tileMap[cords[0]][cords[1]] = tileChange.getValue();
+        }
+        
     }
 
     /**
@@ -289,6 +312,7 @@ private ConnectionType connectionType;
             Addressing.setInterfaces(joinGameSocket);
             joinGameAddress = InetAddress.getByName("230.0.0.0");
             joinGameSocket.joinGroup(joinGameAddress);
+            joinGameSocket.setSoTimeout(5000);
 
             // Prepare the gameIPAddress to transmission
             String gameIPAddress = listenAddress.toString();
@@ -327,6 +351,7 @@ private ConnectionType connectionType;
                 }
                 // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
+                tcpSocket.setSoTimeout(5000);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
 
@@ -361,6 +386,8 @@ private ConnectionType connectionType;
             e.printStackTrace();
             // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
+        } catch (SocketTimeoutException ex) {
+            System.out.println("Failed to reach server, Is the IP and port correct");
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -373,6 +400,9 @@ private ConnectionType connectionType;
      */
     public void close() {
         try {
+            if (renderer.isRunning()) {
+                renderer.stop();
+            }
             // Close sender first
             sender.close();
             // When sender has joined close the socket
@@ -391,6 +421,7 @@ private ConnectionType connectionType;
 
     /**
      * Method to send requests that do no require parameters to the server
+     *
      * @param action the list of actions to be sent to the server
      */
     public void send(CommandList action) {
@@ -404,12 +435,18 @@ private ConnectionType connectionType;
             case "RELOAD": // 2
                 sender.send(new Integer[]{2});
                 break;
+            case "PAUSED": //7
+                sender.send(new Integer[]{7});
+                break;
+            case "RESUME": //8
+                sender.send(new Integer[]{8});
         }
     }
 
     /**
      * Method to send requests that do require parameters to the server
-     * @param action the list of actions to be sent to the server
+     *
+     * @param action    the list of actions to be sent to the server
      * @param parameter the parameters that actionlist requires
      */
     public void send(CommandList action, int parameter) {
@@ -424,7 +461,7 @@ private ConnectionType connectionType;
                 sender.send(new Integer[]{5, parameter});
                 break;
             case "CONSUMABLE": // 6
-            	sender.send(new Integer[]{6, parameter});
+                sender.send(new Integer[]{6, parameter});
         }
     }
 
