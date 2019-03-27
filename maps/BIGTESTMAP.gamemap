@@ -88,22 +88,22 @@ ZOMBIE
 7 10
 
 #Optional Doors (Tile to return) (Location params) (Kills Required)
-L 5 21 10
 L 4 21 10
+L 5 21 10
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-BOOMER
-0 1000 2 4
-
 ZOMBIE
 0 1000 2 10
 
-#Round2
 BOOMER
+0 1000 2 4
+
+#Round2
+ZOMBIE
 0 1000 3 6
 
-ZOMBIE
+BOOMER
 0 1000 3 6
 
 

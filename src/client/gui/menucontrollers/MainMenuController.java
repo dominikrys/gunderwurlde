@@ -74,15 +74,22 @@ public class MainMenuController extends VBox implements MenuController {
     }
 
     /**
-     * Show menu on stage
+     * Show menu on stage if stage is clear
      */
-    public void show() {
+    public void showInitial() {
         // Main menu is displayed first, so see if setRootToStage necessary
         if (stage.getScene() == null) {
             MenuController.setRootToStage(stage, this, settings);
         } else {
-            this.stage.getScene().setRoot(this);
+            show();
         }
+    }
+
+    /**
+     * Set this to stage
+     */
+    public void show() {
+        this.stage.getScene().setRoot(this);
     }
 
     /**
@@ -162,6 +169,6 @@ public class MainMenuController extends VBox implements MenuController {
      */
     @FXML
     void mapEditorButtonPress(ActionEvent event) {
-    	StartMenu mapEditor = new StartMenu();
+        new StartMenu(stage);
     }
 }

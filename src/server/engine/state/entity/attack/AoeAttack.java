@@ -9,7 +9,7 @@ import shared.lists.Team;
 
 //AOE - Area of Effect
 public class AoeAttack extends Entity implements Attack {
-    private static final int FORCE_SCALING = 800;
+    private static final int FORCE_SCALING = 300;
     private static final double FALL_OFF = 0.75;
 
     protected int damage;

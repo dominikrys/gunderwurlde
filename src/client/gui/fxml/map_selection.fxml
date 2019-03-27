@@ -24,6 +24,13 @@
             <String fx:value="manaspaceFontWhite" />
          </styleClass>
       </Label>
+      <HBox fx:id="playerAmountBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
+         <children>
+            <Label styleClass="serverColon" text="Number of players:" />
+            <Slider fx:id="playerSlider" blockIncrement="1.0" max="4.0" minorTickCount="0" onMouseReleased="#playerSliderDragged" showTickMarks="true" snapToTicks="true" />
+            <Label fx:id="playerNumberLabel" styleClass="serverColon" text="0" />
+         </children>
+      </HBox>
       <GridPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -76,13 +83,6 @@
             </Button>
          </children>
       </GridPane>
-      <HBox fx:id="playerAmountBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10px;">
-         <children>
-            <Label styleClass="serverColon" text="Number of players:" />
-            <Slider fx:id="playerSlider" blockIncrement="1.0" max="4.0" minorTickCount="0" onMouseReleased="#playerSliderDragged" showTickMarks="true" snapToTicks="true" />
-            <Label fx:id="playerNumberLabel" styleClass="serverColon" text="0" />
-         </children>
-      </HBox>
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonPress" text="Back">
          <font>
             <Font name="Consolas" size="22.0" />

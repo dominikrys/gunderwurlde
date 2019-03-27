@@ -4,6 +4,7 @@ import javafx.scene.media.AudioClip;
 import server.engine.state.item.weapon.gun.AssaultRifle;
 import server.engine.state.item.weapon.gun.BuckshotShotgun;
 import server.engine.state.item.weapon.gun.HeavyPistol;
+import server.engine.state.item.weapon.gun.LaserPistol;
 import server.engine.state.item.weapon.gun.MachineGun;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.PlasmaPistol;
@@ -201,6 +202,10 @@ public class GameSound {
 							break;
 						case ROCKET_LAUNCHER:
 							break;
+						case LASER_PISTOL:
+							break;
+						case LASER_CANNON:
+							break;
 					}
 				}
 				break;
@@ -263,6 +268,17 @@ public class GameSound {
 						case ROCKET_LAUNCHER:
 							audio = loadedGameSounds.get(SoundList.MISSLE);
 							this.timer.schedule(checkReplay, RocketLauncher.DEFAULT_COOL_DOWN);
+							break;
+						case LASER_PISTOL:
+							audio = loadedGameSounds.get(SoundList.LASER2);
+							this.timer.schedule(checkReplay, LaserPistol.DEFAULT_COOL_DOWN);
+							break;
+						case LASER_CANNON:
+							break;
+						case GRENADE:
+							audio = loadedGameSounds.get(SoundList.SHOTGUN);
+							this.startDelay = 3000;
+							this.timer.schedule(checkReplay, 0);
 							break;
 					}
 				}

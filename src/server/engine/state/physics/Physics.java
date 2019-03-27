@@ -11,7 +11,7 @@ public class Physics {
     private static double OBJECT_BOUNCE = 0.9;
 
 
-    public static HasPhysics[] objectCollision(HasPhysics e1, HasPhysics e2, Tile[][] tileMap) {
+    public static void objectCollision(HasPhysics e1, HasPhysics e2, Tile[][] tileMap) {
         double e1Mass = e1.getMass();
         double e2Mass = e1.getMass();
 
@@ -53,16 +53,13 @@ public class Physics {
                     && tileMap[tileCords[0]][tileCords[1]].getState() != TileState.SOLID)
                 e2.setLocation(newLocation);
         }
-
-        HasPhysics[] result = { e1, e2 };
-        return result;
     }
 
     private static double getNewVelocity(double e1Velocity, double e2Velocity, double e1Mass, double e2Mass) { // for e1
         return ((e1Mass * e1Velocity) + (e2Mass * e2Velocity) + (e2Mass * OBJECT_BOUNCE * (e2Velocity - e1Velocity))) / (e1Mass + e2Mass);
     }
 
-    public static HasPhysics tileCollision(HasPhysics e, Location tileLoc, double tileBounce) {
+    public static void tileCollision(HasPhysics e, Location tileLoc, double tileBounce) {
         int gapSize = e.getSize() + (Tile.TILE_SIZE / 2) + 1;
         Location loc = e.getLocation();
         double xDiff = tileLoc.getX() - loc.getX();
@@ -77,7 +74,7 @@ public class Physics {
                 normal = 270;
                 loc = new Location(loc.getX(), tileLoc.getY() - gapSize);
             }
-        } else if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        } else {
             if (xDiff < 0) {
                 normal = 0;
                 loc = new Location(tileLoc.getX() + gapSize, loc.getY());
@@ -85,10 +82,6 @@ public class Physics {
                 normal = 180;
                 loc = new Location(tileLoc.getX() - gapSize, loc.getY());
             }
-        } else {
-            System.out.println("Corner hit!");
-            // TODO handle
-            normal = 0;
         }
 
         e.setLocation(loc);
@@ -98,8 +91,6 @@ public class Physics {
             newDirection += 360;
         currentVelocity = new Velocity(newDirection, currentVelocity.getSpeed() * tileBounce);
         e.setVelocity(currentVelocity);
-
-        return e;
     }
 
     public static Force getFrictionalForce(double frictionCoefficient, double mass, int directionOfVelocity) {

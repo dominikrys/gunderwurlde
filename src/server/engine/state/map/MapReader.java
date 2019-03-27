@@ -158,19 +158,47 @@ public class MapReader {
         case RUNNER:
             return new RunnerZombie(Integer.valueOf(entityParams.removeFirst()));
         case SOLDIER:
-            return new SoldierZombie(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 3) {
+                return new SoldierZombie(
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new SoldierZombie(250, 4, 150);
+            }
         case MIDGET:
-            return new ShotgunMidget(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 3) {
+                return new ShotgunMidget(
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new ShotgunMidget(2, 1500, 4);
+            }
+
         case BOOMER:
-            return new Boomer();
+            if(entityParams.size() == 1) {
+                return new Boomer(Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new Boomer(7);
+            }
         case MACHINE_GUNNER:
-            return new MachineGunner(Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            if(entityParams.size() == 3) {
+                return new MachineGunner(
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()),
+                        Integer.valueOf(entityParams.removeFirst()));
+            }else{
+                return new MachineGunner(60, 50, 1);
+            }
         case SNIPER:
                 return new Sniper(Integer.valueOf(entityParams.removeFirst()));
         case THEBOSS:
                 return new TheBoss(Long.valueOf(entityParams.removeFirst()));
         case MAGE:
-            return new Mage(Long.valueOf(entityParams.removeFirst()), Integer.valueOf(entityParams.removeFirst()));
+            return new Mage(
+                    Long.valueOf(entityParams.removeFirst()),
+                    Integer.valueOf(entityParams.removeFirst()));
         default:
             System.out.println("ERROR: Entity not yet supported for spawning: " + entity.toString());
             return new Zombie();

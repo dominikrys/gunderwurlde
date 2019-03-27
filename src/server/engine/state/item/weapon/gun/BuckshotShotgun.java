@@ -51,10 +51,10 @@ public class BuckshotShotgun extends Shotgun {
 
     @Override
     public LinkedList<Projectile> getProjectiles(Pose gunPose, Team team) {
-        int oldProjectsPileShot = projectilesPerShot;
-        projectilesPerShot = (int) (projectilesPerShot * (Double.valueOf(ammoUsed) / ammoPerShot));
+        int oldProjectsPileShot = outputPerShot;
+        outputPerShot = (int) (outputPerShot * (Double.valueOf(ammoUsed) / ammoPerShot));
         LinkedList<Projectile> shotProjectiles = super.getProjectiles(gunPose, team);
-        projectilesPerShot = oldProjectsPileShot;
+        outputPerShot = oldProjectsPileShot;
         return shotProjectiles;
     }
 

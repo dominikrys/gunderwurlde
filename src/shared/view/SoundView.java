@@ -81,6 +81,7 @@ public class SoundView {
 	}
 	
 	public void deactivate() {
+		System.out.println("sound view timer stopped");
 		this.timer.cancel();
 		this.timer.purge();
 	}

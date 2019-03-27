@@ -7,14 +7,16 @@ import shared.lists.Team;
 
 public class BoomerAI extends ZombieAI {
 
-    public BoomerAI(){
-        super(Constants.TILE_SIZE * 2);
+    private final int DAMAGE;
+
+    public BoomerAI(int damage){
+        super(Constants.TILE_SIZE * 2, LONG_DELAY);
         randomizePath = false;
-        attackDelay = LONG_DELAY;
+        this.DAMAGE = damage;
     }
 
     @Override
     protected Attack getAttackObj() {
-        return new AoeAttack(pose, 50, 3, Team.NONE);
+        return new AoeAttack(pose, 50, DAMAGE, Team.NONE);
     }
 }

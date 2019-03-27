@@ -11,24 +11,27 @@ import shared.view.entity.ProjectileView;
 
 public class GameView implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected LinkedHashSet<PlayerView> players;
-    protected LinkedHashSet<EnemyView> enemies;
-    protected LinkedHashSet<ProjectileView> projectiles;
-    protected LinkedHashSet<ItemDropView> itemDrops;
-    protected TileView[][] tileMap;
-    protected Team winningTeam; // NONE if nobody has won yet
-    protected int xDim;
-    protected int yDim;
+    protected final LinkedHashSet<PlayerView> players;
+    protected final LinkedHashSet<EnemyView> enemies;
+    protected final LinkedHashSet<ProjectileView> projectiles;
+    protected final LinkedHashSet<ItemDropView> itemDrops;
+    protected final LinkedHashSet<LaserView> lasers;
+    protected final TileView[][] tileMap;
+    protected final Team winningTeam; // NONE if nobody has won yet
+    protected final int xDim;
+    protected final int yDim;
 
     public GameView(LinkedHashSet<PlayerView> players, LinkedHashSet<EnemyView> enemies, LinkedHashSet<ProjectileView> projectiles,
-            LinkedHashSet<ItemDropView> itemDrops, TileView[][] tileMap, Team winningTeam) {
+            LinkedHashSet<ItemDropView> itemDrops, LinkedHashSet<LaserView> lasers, TileView[][] tileMap, Team winningTeam) {
         this.players = players;
         this.enemies = enemies;
         this.projectiles = projectiles;
         this.itemDrops = itemDrops;
+        this.lasers = lasers;
         this.tileMap = tileMap;
         this.xDim = tileMap.length;
         this.yDim = tileMap[0].length;
+        this.winningTeam = winningTeam;
     }
 
     public int getXDim() {
@@ -53,6 +56,10 @@ public class GameView implements Serializable {
 
     public LinkedHashSet<ItemDropView> getItemDrops() {
         return itemDrops;
+    }
+
+    public LinkedHashSet<LaserView> getLasers() {
+        return lasers;
     }
 
     public TileView[][] getTileMap() {

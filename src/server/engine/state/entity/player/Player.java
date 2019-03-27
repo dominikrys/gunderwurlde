@@ -9,9 +9,9 @@ import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Grenade;
-import server.engine.state.item.weapon.gun.Gun;
+import server.engine.state.item.weapon.gun.LaserPistol;
 import server.engine.state.item.weapon.gun.Pistol;
-import server.engine.state.item.weapon.gun.PlasmaPistol;
+import server.engine.state.item.weapon.gun.ProjectileGun;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
@@ -52,7 +52,7 @@ public class Player extends LivingEntity {
         super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
-        items.add(new PlasmaPistol()); // TODO remove testing only
+        items.add(new LaserPistol()); // TODO remove testing only
         items.add(new Grenade()); // TODO remove testing only
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
@@ -192,8 +192,8 @@ public class Player extends LivingEntity {
         else if (slot > items.size() - 1)
             slot = items.size() - 1;
         if (slot != currentItem) {
-            if (items.get(currentItem) instanceof Gun)
-                ((Gun) items.get(currentItem)).cancelReload();
+            if (items.get(currentItem) instanceof ProjectileGun)
+                ((ProjectileGun) items.get(currentItem)).cancelReload();
             currentItem = slot;
         }
     }

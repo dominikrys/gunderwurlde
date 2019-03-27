@@ -16,8 +16,9 @@ public class SoldierZombie extends Zombie {
     public static final double DEFAULT_MOVEMENT_FORCE = 3;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
-    private int rangeToShoot;
-    private int rateOfFire;
+    private final int RANGE_TO_SHOOT;
+    private final int RATE_OF_FIRE;
+    private final int DISTANCE_TO_MOVE;
 
     static {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.5, 4, 2));
@@ -27,18 +28,19 @@ public class SoldierZombie extends Zombie {
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.06, 1));
     }
 
-    public SoldierZombie(int range_to_shoot, int rate_of_fire) {
+    public SoldierZombie(int range_to_shoot, int rate_of_fire, int distanceToMove) {
         super(EntityList.SOLDIER, DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, DEFAULT_SIZE, DEFAULT_DROPS, DEFAULT_SCORE_ON_KILL,
-                new SoldierZombieAI(range_to_shoot, rate_of_fire),
+                new SoldierZombieAI(range_to_shoot, rate_of_fire, distanceToMove),
                 DEFAULT_MASS);
 
-        this.rangeToShoot = range_to_shoot;
-        this.rateOfFire = rate_of_fire;
+        this.RANGE_TO_SHOOT = range_to_shoot;
+        this.RATE_OF_FIRE = rate_of_fire;
+        this.DISTANCE_TO_MOVE = distanceToMove;
     }
 
     @Override
     EnemyAI getNewAI() {
-        return new SoldierZombieAI(rangeToShoot, rateOfFire);
+        return new SoldierZombieAI(RANGE_TO_SHOOT, RATE_OF_FIRE, DISTANCE_TO_MOVE);
     }
 
 }
