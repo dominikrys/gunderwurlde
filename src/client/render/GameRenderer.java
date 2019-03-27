@@ -15,6 +15,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -488,8 +490,8 @@ public class GameRenderer implements Runnable {
                 Thread pauseMenu = new Thread(() -> {
                     while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
-                            getKeyboardHandler().unpause();
                             // Unpause and close the pause window
+                            getKeyboardHandler().unpause();
                             paused = false;
                             backToGameFromPauseMenu();
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
@@ -498,10 +500,18 @@ public class GameRenderer implements Runnable {
                             for(Thread t : threadSet){
                                 System.out.println(t.getName() + " is still alive");
                             }
+
                             // Set pause to false and stop rendering
                             this.stop();
                             paused = false;
-                            // Go back to play menu with all player info still there
+
+                            // Set scene to new, black VBox to avoid issues with JavaFX
+                            VBox tempBox = new VBox();
+                            tempBox.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0),
+                                    new Insets(0, 0, 0, 0))));
+                            stage.getScene().setRoot(tempBox);
+
+                            // Go back to main menu
                             (new MainMenuController(stage, settings)).show();
                         }
 

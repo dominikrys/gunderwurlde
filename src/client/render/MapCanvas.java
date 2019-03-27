@@ -11,7 +11,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import server.engine.state.entity.Entity;
 import shared.Constants;
 import shared.Pose;
 import shared.lists.ActionList;
@@ -169,7 +168,7 @@ public class MapCanvas extends Canvas {
     private void renderExplosion(ExplosionView explosionView, RendererResourceLoader rendererResourceLoader) {
         // Calculate where to render explosion - center it at the specified location
         Pose poseToRenderAt = new Pose(explosionView.getLocation().getX() - (double) explosionView.getSize() / 2,
-                explosionView.getLocation().getY()- (double) explosionView.getSize() / 2);
+                explosionView.getLocation().getY() - (double) explosionView.getSize() / 2);
 
         // Resize explosion spritesheet to render
         int explosionScaleFactor = explosionView.getSize() / Constants.TILE_SIZE;
