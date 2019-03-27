@@ -27,7 +27,7 @@ public enum EntityList {
     BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
     ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
     GRENADE("file:assets/img/entity/item/grenade.png", Constants.TILE_SIZE),
-    LASER_CANNON("file:assets/img/entity/item/pistol.png", Constants.TILE_SIZE), // TODO
+    LASER_CANNON("file:assets/img/entity/item/laser_cannon.png", Constants.TILE_SIZE), // TODO
     LASER_PISTOL("file:assets/img/entity/item/laser_pistol.png", Constants.TILE_SIZE),
 
     /**
