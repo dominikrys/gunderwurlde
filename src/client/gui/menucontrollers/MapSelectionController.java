@@ -190,7 +190,7 @@ public class MapSelectionController extends VBox implements MenuController {
         handler.start();
         System.out.println("\n\n Threads alive after map is clicked \n\n");
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for(Thread t : threadSet){
+        for (Thread t : threadSet) {
             System.out.println(t.getName() + " is still alive");
         }
     }

@@ -428,7 +428,7 @@ public class Settings implements Serializable {
             }
         }
 
-        singlePlayerHighScores.put(playerName,  score);
+        singlePlayerHighScores.put(playerName, score);
     }
 }
 

@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.Set;
 
 /**
@@ -51,7 +50,7 @@ public class Main extends Application {
             stage.close();
             System.out.println("Main ended ,all are left alive: ");
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-            for(Thread t : threadSet){
+            for (Thread t : threadSet) {
                 System.out.println(t.getName() + " is still alive");
             }
         });
