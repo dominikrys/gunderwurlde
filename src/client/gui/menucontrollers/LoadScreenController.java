@@ -1,5 +1,6 @@
 package client.gui.menucontrollers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -32,7 +33,8 @@ public class LoadScreenController {
         ipLabel.setManaged(true);
 
         // Update the IP and port labels with the obtained IP and port
-        ipLabel.setText("Server IP: " + ip);
-        portLabel.setText("Port: " + port);
+        Platform.runLater(() -> ipLabel.setText("Server IP: " + ip));
+        Platform.runLater(() -> portLabel.setText("Port: " + port));
+
     }
 }

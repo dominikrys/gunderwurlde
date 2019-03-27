@@ -30,6 +30,8 @@ import shared.view.GameView;
 import shared.view.SoundView;
 import shared.view.entity.PlayerView;
 
+import java.util.Set;
+
 /**
  * GameRenderer class. Contains the whole rendering backbone.
  *
@@ -186,7 +188,7 @@ public class GameRenderer implements Runnable {
         setUpRenderer(gameView);
 
         // When the window is closed by pressing the "x" button, stop rendering
-        stage.setOnCloseRequest(we -> running = false);
+        stage.setOnCloseRequest(we -> this.stop());
 
         // Update the HUD and game at intervals - animationtimer used for maximum frame rate
         new AnimationTimer() {
@@ -483,20 +485,22 @@ public class GameRenderer implements Runnable {
                 cursorPane.setVisible(false);
 
                 // Start a thread which check whether the 'back to game' or 'quit to menu' buttons have been pressed
-                (new Thread(() -> {
+                Thread pauseMenu = new Thread(() -> {
                     while (paused && running) {
                         if (pauseMenuController.getBackToGamePressed()) {
+                            getKeyboardHandler().unpause();
                             // Unpause and close the pause window
                             paused = false;
                             backToGameFromPauseMenu();
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
+                            System.out.println("\n\n Threads alive when quit button in pause menu is pressed \n\n");
+                            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                            for(Thread t : threadSet){
+                                System.out.println(t.getName() + " is still alive");
+                            }
                             // Set pause to false and stop rendering
+                            this.stop();
                             paused = false;
-                            getKeyboardHandler().deactivate();
-                            getMouseHandler().deactivate();
-                            handler.close();
-                            stop();
-
                             // Go back to play menu with all player info still there
                             (new MainMenuController(stage, settings)).show();
                         }
@@ -508,8 +512,10 @@ public class GameRenderer implements Runnable {
                             ex.printStackTrace();
                         }
                     }
-                })
-                ).start();
+                    System.out.println("GAME RENDERER PAUSE WATCHER ENDING");
+                });
+                pauseMenu.setName("PauseMenu");
+                pauseMenu.start();
             } else {
                 backToGameFromPauseMenu();
             }
@@ -524,6 +530,7 @@ public class GameRenderer implements Runnable {
         pausedOverlay.setVisible(false);
         stage.getScene().getRoot().setCursor(Cursor.NONE);
         cursorPane.setVisible(true);
+
 
         // Get settings from controller and apply them
         settings = pauseMenuController.getSettings();
@@ -587,5 +594,13 @@ public class GameRenderer implements Runnable {
      */
     public void stop() {
         running = false;
+        getKeyboardHandler().deactivate();
+        getMouseHandler().deactivate();
+        soundView.deactivate();
+        handler.close();
+    }
+
+    public boolean isRunning(){
+        return running;
     }
 }

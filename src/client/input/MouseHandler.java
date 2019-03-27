@@ -21,7 +21,6 @@ import shared.view.GunView;
  * @author Mak Hong Lun Timothy
  */
 public class MouseHandler extends UserInteraction {
-
 	/**
 	 * PlayerID for identification
 	 */
@@ -330,5 +329,4 @@ public class MouseHandler extends UserInteraction {
 	public boolean isActivated() {
 		return super.isActivated();
 	}
-
 }

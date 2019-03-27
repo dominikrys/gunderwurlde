@@ -68,7 +68,7 @@ public class ProcessGameState extends Thread {
     private static final int TICKS_TILL_INFO = 3600; // ticks between performance info being logged
 
     static {
-        LOGGER.setLevel(Level.WARNING);
+        LOGGER.setLevel(Level.INFO);
     }
 
     private final HasEngine handler;
@@ -479,6 +479,7 @@ public class ProcessGameState extends Thread {
                 currentPlayer.setCurrentAction(ActionList.ITEM_SWITCH);
             }
 
+            // prevent any processing if paused
             livingEntities.put(playerID, currentPlayer);
 
         }

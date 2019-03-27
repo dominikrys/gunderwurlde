@@ -18,6 +18,7 @@ import shared.lists.MapList;
 import shared.lists.Team;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * MapSelectionController class. Has loader and controller for the map selection menu
@@ -184,6 +185,13 @@ public class MapSelectionController extends VBox implements MenuController {
         this.getChildren().clear();
 
         // Start gamehandler with correct connectiontype, map and team
-        (new GameHandler(stage, connectionType, settings, playerName, selectedTeam, mapList, playerNumberLabel.getText())).start();
+        GameHandler handler = new GameHandler(stage, connectionType, settings, playerName, selectedTeam, mapList, playerNumberLabel.getText());
+        handler.setName("GameHandler");
+        handler.start();
+        System.out.println("\n\n Threads alive after map is clicked \n\n");
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for(Thread t : threadSet){
+            System.out.println(t.getName() + " is still alive");
+        }
     }
 }

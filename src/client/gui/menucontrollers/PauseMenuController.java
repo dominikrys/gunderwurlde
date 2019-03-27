@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 
+import java.util.Set;
+
 /**
  * PauseMenuController class. This is the controller for the pause menu.
  *
@@ -72,6 +74,11 @@ public class PauseMenuController {
      */
     @FXML
     void backToMenuButtonPress(ActionEvent event) {
+        System.out.println(" \n\n BAck to Menu pressed in puase menu \n\n");
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for(Thread t : threadSet){
+            System.out.println(t.getName() + " is still alive");
+        }
         // Enable confirm button
         confirmButton.setManaged(true);
         confirmButton.setVisible(true);

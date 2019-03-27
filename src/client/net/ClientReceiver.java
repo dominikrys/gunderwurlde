@@ -7,11 +7,10 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.MulticastSocket;
-import java.net.SocketException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Thread that handles the receiving of requests
@@ -48,6 +47,7 @@ public class ClientReceiver extends Thread {
      */
     private Settings settings;
 
+    int test = 0;
     /**
      * Constructor
      * @param socket Socket to receive GameViews from the server
@@ -69,7 +69,7 @@ public class ClientReceiver extends Thread {
      */
     public boolean getRunning() {
         return running;
-    }
+    };
 
     /**
      * run method for this thread, to receive packets from the server
@@ -81,7 +81,7 @@ public class ClientReceiver extends Thread {
                 packet = new DatagramPacket(buffer, buffer.length);
                 listenSocket.receive(packet);
                 // If the packet is 8 bytes long then it is a special command
-                if(packet.getLength() == 8){
+                    if(packet.getLength() == 8){
                     // Copy across the command and value bytes to integers
                     byte[] commandBytes = Arrays.copyOfRange(packet.getData(), 0, 4);
                     byte[] ValueBytes = Arrays.copyOfRange(packet.getData(), 4, 8);
@@ -107,7 +107,14 @@ public class ClientReceiver extends Thread {
                         view = (GameView) ois.readObject();
                         // set the gameView for the client
                         client.setGameView(view, settings);
-                    } catch (ClassNotFoundException ex) {
+                    }catch(SocketTimeoutException ex){
+                        System.out.println("lost connection to the host");
+                    }
+                    catch(SocketException ex){
+                        System.out.println("lost connection to the host, or paused");
+                        client.close();
+                    }
+                    catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
                     } catch (EOFException ex) {
                         ex.printStackTrace();
@@ -121,13 +128,14 @@ public class ClientReceiver extends Thread {
                     }
                 }
             }
+            System.out.println("ClientReceiver ending");
         }catch(SocketException ex){
-            System.out.println("End thread Received");
+            System.out.println("Closing clientReceiver");
         }
         catch (IOException e1) {
             e1.printStackTrace();
         }
-        System.out.println("Closing clientReceiver");
+
     }
 
     /**

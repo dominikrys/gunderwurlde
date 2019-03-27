@@ -53,6 +53,7 @@ public class JoinGameManager extends Thread {
                 // increase assignable ID so no 2 players have the same ID
                 increaseAvailableID();
                 Thread instance = new Thread(new JoinGameThread(connection, lowestAvailableID, server));
+                instance.setName("joinGame-" + lowestAvailableID);
                 instance.start();
             }
         } catch (SocketException e) {

@@ -17,6 +17,7 @@ import shared.lists.Team;
 import shared.view.GameView;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Set;
 
 /**
  * Class to initialise the sender, receiver threads and join the game
@@ -250,7 +251,9 @@ private ConnectionType connectionType;
             System.out.println("Client Sender Address: " + senderAddress);
             System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
+            sender.setName("ClientSender");
             receiver = new ClientReceiver(listenSocket, this, settings);
+            receiver.setName("ClientReceiver");
             System.out.println("Closing client");
         } catch (IOException e) {
             e.printStackTrace();
@@ -267,6 +270,11 @@ private ConnectionType connectionType;
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
+            System.out.println("\n\n Threads alive when received first gameView");
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for(Thread t : threadSet){
+                System.out.println(t.getName() + " is still alive");
+            }
             firstView = false;
             renderer = new GameRenderer(stage, this.view, playerID, settings, this, connectionType);
             renderer.getKeyboardHandler().setGameHandler(this);
@@ -289,6 +297,7 @@ private ConnectionType connectionType;
             Addressing.setInterfaces(joinGameSocket);
             joinGameAddress = InetAddress.getByName("230.0.0.0");
             joinGameSocket.joinGroup(joinGameAddress);
+            joinGameSocket.setSoTimeout(5000);
 
             // Prepare the gameIPAddress to transmission
             String gameIPAddress = listenAddress.toString();
@@ -327,6 +336,7 @@ private ConnectionType connectionType;
                 }
                 // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
+                tcpSocket.setSoTimeout(5000);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
 
@@ -361,7 +371,10 @@ private ConnectionType connectionType;
             e.printStackTrace();
             // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
-        } catch (SocketException e) {
+        } catch (SocketTimeoutException ex){
+            System.out.println("Failed to reach server, Is the IP and port correct");
+        }
+        catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -373,6 +386,9 @@ private ConnectionType connectionType;
      */
     public void close() {
         try {
+            if(renderer.isRunning()){
+                renderer.stop();
+            }
             // Close sender first
             sender.close();
             // When sender has joined close the socket
@@ -404,6 +420,11 @@ private ConnectionType connectionType;
             case "RELOAD": // 2
                 sender.send(new Integer[]{2});
                 break;
+            case "PAUSED": //7
+                sender.send(new Integer[]{7});
+                break;
+            case "RESUME": //8
+                sender.send(new Integer[]{8});
         }
     }
 

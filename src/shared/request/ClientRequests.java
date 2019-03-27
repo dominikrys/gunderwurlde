@@ -101,11 +101,30 @@ public class ClientRequests {
             return false;
     }
 
+    public boolean playerRequestPause(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestPause();
+            System.out.println("PLAYER HAS REQUESTED PAUSE");
+            return true;
+        } else
+            return false;
+        }
+
     public boolean playerRequestConsume(int playerID, int dist) {
         if (playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).setConsumeDist(dist);
             return true;
         } else
+            return false;
+    }
+
+    public boolean playerRequestResume(int playerID) {
+        if(playerRequests.containsKey(playerID)) {
+            playerRequests.get(playerID).requestResume();
+            System.out.println("PLAYER HAS REQUESTED RESUME");
+            return true;
+        }
+        else
             return false;
     }
 }

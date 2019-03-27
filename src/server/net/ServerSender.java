@@ -87,7 +87,7 @@ public class ServerSender extends Thread {
         while (running) {
             Thread.yield();
         }
-        System.out.println("Closing serversender");
+        System.out.println("closing ServerSender");
     }
 
     /**
