@@ -1,6 +1,5 @@
 package client.render;
 
-import client.gui.menucontrollers.ControllerUtils;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -171,20 +170,20 @@ public class MapCanvas extends Canvas {
         DropShadow dropShadow;
         switch (laserView.getTeam()) {
             case RED:
-                mapGC.setStroke(Constants.redTeamColor);
-                dropShadow = new DropShadow(10, Constants.redTeamColor);
+                mapGC.setStroke(Constants.RED_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.RED_TEAM_COLOR);
                 break;
             case BLUE:
-                mapGC.setStroke(Constants.blueTeamColor);
-                dropShadow = new DropShadow(10, Constants.blueTeamColor);
+                mapGC.setStroke(Constants.BLUE_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.BLUE_TEAM_COLOR);
                 break;
             case GREEN:
-                mapGC.setStroke(Constants.greenTeamColor);
-                dropShadow = new DropShadow(10, Constants.greenTeamColor);
+                mapGC.setStroke(Constants.GREEN_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.GREEN_TEAM_COLOR);
                 break;
             case YELLOW:
-                mapGC.setStroke(Constants.yellowTeamColor);
-                dropShadow = new DropShadow(10, Constants.yellowTeamColor);
+                mapGC.setStroke(Constants.YELLOW_TEAM_COLOR);
+                dropShadow = new DropShadow(10, Constants.YELLOW_TEAM_COLOR);
                 break;
             default:
                 mapGC.setStroke(Color.GREY);
