@@ -165,6 +165,7 @@ public class Client extends Thread {
      * Connection type
      */
     private ConnectionType connectionType;
+    private boolean shouldClose = false;
 
     /**
      * Constructor for single player or multiplayer host
@@ -191,11 +192,9 @@ public class Client extends Thread {
             this.playerID = playerID;
             this.connectionType = connectionType;
             firstView = true;
-
-            System.out.println("Client listen: " + listenAddress.toString());
-            System.out.println("Client send: " + senderAddress.toString());
-            System.out.println("Client listenport: " + listenPort);
-            System.out.println("Client sendport: " + sendPort);
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -230,6 +229,9 @@ public class Client extends Thread {
             firstView = true;
             this.connectionType = connectionType;
             joinGame();
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -245,15 +247,15 @@ public class Client extends Thread {
             listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
-            System.out.println("Client Listen Address: " + listenAddress);
-            System.out.println("Client Listen Port: " + listenPort);
-            System.out.println("Client Sender Address: " + senderAddress);
-            System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             sender.setName("ClientSender");
             receiver = new ClientReceiver(listenSocket, this, settings);
             receiver.setName("ClientReceiver");
             System.out.println("Closing client");
+            //waits for the sender and receiver to be created before ending them cleanly
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -270,11 +272,6 @@ public class Client extends Thread {
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
-            System.out.println("\n\n Threads alive when received first gameView");
-            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-            for (Thread t : threadSet) {
-                System.out.println(t.getName() + " is still alive");
-            }
             firstView = false;
             this.tileMap = MapReader.readMapView(view.getMapName());
             this.view.setTileMap(tileMap);
@@ -389,7 +386,7 @@ public class Client extends Thread {
         } catch (SocketTimeoutException ex) {
             System.out.println("Failed to reach server, Is the IP and port correct");
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Closing client whilst in joinGame");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -398,23 +395,39 @@ public class Client extends Thread {
     /**
      * Method to end this thread
      */
-    public void close() {
+    public void close(boolean passUp) {
         try {
-            if (renderer.isRunning()) {
+            shouldClose = true;
+            if(joinGameSocket != null){
+                joinGameSocket.close();
+            }
+            if(tcpSocket != null){
+                tcpSocket.close();
+            }
+            if (renderer != null && renderer.isRunning()) {
                 renderer.stop();
             }
-            // Close sender first
-            sender.close();
-            // When sender has joined close the socket
-            sender.join();
-            sendSocket.close();
-            // Close receiver
-            receiver.close();
-            // when receiver has joined tell handler to close server if exists
-            receiver.join();
-            // no need to close socket as its closed within receiver
-            handler.end();
+            if(sender != null) {
+                // Close sender first
+                sender.close();
+                // When sender has joined close the socket
+                sender.join();
+            }
+            if(receiver != null) {
+                // Close receiver
+                receiver.close();
+                // when receiver has joined tell handler to close server if exists
+                receiver.join();
+                // no need to close socket as its closed within receiver
+            }
+            // check if close needs to be passed up the trail
+            if(passUp) {
+                handler.end();
+            }
+
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

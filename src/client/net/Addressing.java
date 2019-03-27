@@ -37,7 +37,7 @@ public class Addressing {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Socket closed in addressing");
         }
     }
 
@@ -67,7 +67,7 @@ public class Addressing {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Socket closed in addressing");
         }
         return null;
     }

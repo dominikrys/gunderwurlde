@@ -158,6 +158,7 @@ public class Server extends Thread implements HasEngine {
      * bool value to tell if the server is waiting for players to join the game
      */
     private boolean receiving;
+    private boolean  shouldClose = false;
 
     /**
      * Constructor
@@ -194,12 +195,9 @@ public class Server extends Thread implements HasEngine {
             senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
             Addressing.setInterfaces(sendSocket);
             updatedLowestAvailableAddress();
-            System.out.println("Server constructor finished");
-
-            System.out.println("Server listen: " + listenAddress.toString());
-            System.out.println("Server send: " + senderAddress.toString());
-            System.out.println("Server listenport: " + listenPort);
-            System.out.println("Server sendport: " + sendPort);
+            if(shouldClose){
+                this.close();
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -276,17 +274,19 @@ public class Server extends Thread implements HasEngine {
                 // create the engine and start it
                 this.engine = new ProcessGameState(this, mapName, playersToAdd);
                 engine.start();
-                    System.out.println("\n\n Threads alive when engine started \n\n");
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                for(Thread t : threadSet){
-                    System.out.println(t.getName() + " is still alive");
-                }
                 engine.setName("GameEngine");
                 System.out.println("Closing server");
-            } catch (UnknownHostException e) {
+        }
+        catch(SocketException ex){
+            System.out.println("Ending server");
+        }
+        catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(shouldClose){
+            this.close();
         }
     }
 
@@ -370,19 +370,26 @@ public class Server extends Thread implements HasEngine {
      * method to close the server and its threads
      */
     public void close() {
-        // close the engine down
-        System.out.println("CLOSING SERVER THREADS");
-        engine.handlerClosing();
-        sender.close();
-        try {
-            sender.join();
-            sendSocket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        receiver.close();
-        try {
-            receiver.join();
+        try{
+            shouldClose = true;
+            if(joinGameSocket != null){
+                joinGameSocket.close();
+            }
+            if(tcpMananger != null){
+                tcpMananger.close();
+            }
+            // close the engine down
+            if(engine != null) {
+                engine.handlerClosing();
+            }
+            if(sender != null) {
+                sender.close();
+                sender.join();
+            }
+            if(receiver != null) {
+                receiver.close();
+                receiver.join();
+            }
             //ServerReceiver closes itself
         } catch (InterruptedException e) {
             e.printStackTrace();

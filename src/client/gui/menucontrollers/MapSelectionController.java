@@ -188,10 +188,5 @@ public class MapSelectionController extends VBox implements MenuController {
         GameHandler handler = new GameHandler(stage, connectionType, settings, playerName, selectedTeam, mapList, playerNumberLabel.getText());
         handler.setName("GameHandler");
         handler.start();
-        System.out.println("\n\n Threads alive after map is clicked \n\n");
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for (Thread t : threadSet) {
-            System.out.println(t.getName() + " is still alive");
-        }
     }
 }

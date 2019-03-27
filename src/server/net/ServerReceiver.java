@@ -126,7 +126,10 @@ public class ServerReceiver extends Thread {
                             handler.getClientRequests().playerRequestResume(playerID);
                             break;
                     }
-                } catch (ClassNotFoundException e) {
+                } catch(SocketException ex){
+                    ex.printStackTrace();
+                }
+                catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } finally {
                     ins.close();
@@ -135,8 +138,7 @@ public class ServerReceiver extends Thread {
             }
 
         }catch(SocketException ex){
-            System.out.println("closing ServerReceiver");
-            ex.printStackTrace();
+            System.out.println("Server receiver ending");
             // Server Receiver told to close
         }
         catch (IOException e1) {

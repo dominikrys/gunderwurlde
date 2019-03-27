@@ -78,6 +78,8 @@ public class ServerSender extends Thread {
      */
     public void close() {
         this.running = false;
+        this.interrupt();
+        sendSocket.close();
     }
 
     /**
@@ -128,7 +130,7 @@ public class ServerSender extends Thread {
             // TODO Will be set on a loop to send every ______ seconds
 
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Server Sender ending");
         } catch (IOException e) {
             e.printStackTrace();
         }
