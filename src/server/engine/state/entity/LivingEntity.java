@@ -48,6 +48,10 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
         this.mass = mass;
     }
 
+    public static void resetIDAssignment() { // WARNING ONLY CALL THIS FOR GAME RESET
+        nextID = 0;
+    }
+
     public ActionList getCurrentAction() {
         return currentAction;
     }

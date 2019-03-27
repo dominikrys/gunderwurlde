@@ -16,18 +16,21 @@ public class GameView implements Serializable {
     protected final LinkedHashSet<ProjectileView> projectiles;
     protected final LinkedHashSet<ItemDropView> itemDrops;
     protected final LinkedHashSet<LaserView> lasers;
+    protected final LinkedHashSet<ExplosionView> explosions;
     protected final TileView[][] tileMap;
     protected final Team winningTeam; // NONE if nobody has won yet
     protected final int xDim;
     protected final int yDim;
 
     public GameView(LinkedHashSet<PlayerView> players, LinkedHashSet<EnemyView> enemies, LinkedHashSet<ProjectileView> projectiles,
-            LinkedHashSet<ItemDropView> itemDrops, LinkedHashSet<LaserView> lasers, TileView[][] tileMap, Team winningTeam) {
+            LinkedHashSet<ItemDropView> itemDrops, LinkedHashSet<LaserView> lasers, LinkedHashSet<ExplosionView> explosions, TileView[][] tileMap,
+            Team winningTeam) {
         this.players = players;
         this.enemies = enemies;
         this.projectiles = projectiles;
         this.itemDrops = itemDrops;
         this.lasers = lasers;
+        this.explosions = explosions;
         this.tileMap = tileMap;
         this.xDim = tileMap.length;
         this.yDim = tileMap[0].length;
@@ -60,6 +63,10 @@ public class GameView implements Serializable {
 
     public LinkedHashSet<LaserView> getLasers() {
         return lasers;
+    }
+
+    public LinkedHashSet<ExplosionView> getExplosions() {
+        return explosions;
     }
 
     public TileView[][] getTileMap() {
