@@ -107,15 +107,20 @@ public abstract class EnemyAI {
     }
 
     private Pose findClosestPlayer(HashSet<Pose> playerPoses) {
-        Pose closestPlayer = playerPoses.iterator().next();
-        int distToClosest = Integer.MAX_VALUE;
+        Pose closestPlayer;
+        try {
+            closestPlayer = playerPoses.iterator().next();
+            int distToClosest = Integer.MAX_VALUE;
 
-        for (Pose playerPose : playerPoses) {
-            int distToPlayer = getDistToPlayer(playerPose);
-            if (distToPlayer < distToClosest) {
-                distToClosest = distToPlayer;
-                closestPlayer = playerPose;
+            for (Pose playerPose : playerPoses) {
+                int distToPlayer = getDistToPlayer(playerPose);
+                if (distToPlayer < distToClosest) {
+                    distToClosest = distToPlayer;
+                    closestPlayer = playerPose;
+                }
             }
+        }catch (Exception e){
+            return null;
         }
 
         return closestPlayer;
