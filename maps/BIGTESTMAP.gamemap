@@ -69,8 +69,8 @@ YELLOW 28 28
 19 3
 
 #Optional Doors (Tile to return) (Location params) (Kills Required)
-A 7 9 5
 A 6 9 5
+A 7 9 5
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1

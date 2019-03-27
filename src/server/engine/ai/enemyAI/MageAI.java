@@ -68,17 +68,21 @@ public class MageAI extends PoseGeneratorUsingEnemy {
             }
             return AIAction.MOVE;
         }else {
-            return AIAction.WAIT;
+            return AIAction.UPDATE;
         }
     }
 
     @Override
     public Enemy getUpdatedEnemy() {
-        lastTeleport = System.currentTimeMillis();
-        int attackAngle = getAngle(pose, closestPlayer);
-        enemy.setPose(new Pose(poseToGo, attackAngle));
-        poseToGo = null;
-        return enemy;
+        if(closestPlayer != null) {
+            lastTeleport = System.currentTimeMillis();
+            int attackAngle = getAngle(pose, closestPlayer);
+            enemy.setPose(new Pose(poseToGo, attackAngle));
+            poseToGo = null;
+            return enemy;
+        }else{
+            return super.getUpdatedEnemy();
+        }
     }
 
     @Override

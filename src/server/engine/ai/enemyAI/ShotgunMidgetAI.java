@@ -43,7 +43,7 @@ public class ShotgunMidgetAI extends ZombieAI{
             }
             return AIAction.WAIT;
         }else{
-            return AIAction.WAIT;
+            return AIAction.UPDATE;
         }
     }
 

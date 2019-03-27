@@ -10,7 +10,7 @@ import shared.lists.EntityList;
 import java.util.LinkedHashSet;
 
 public class TheBoss extends Zombie{
-    public static final int DEFAULT_HEALTH = 50;
+    public static final int DEFAULT_HEALTH = 25;
     public static final double DEFAULT_MOVEMENT_FORCE = 0.9;
     public static final int DEFAULT_SIZE = EntityList.THEBOSS.getSize() / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 500;
