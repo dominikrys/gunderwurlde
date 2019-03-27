@@ -103,6 +103,7 @@ public class MapSizeOption {
 		widthTextField = new TextField(Integer.toString(mapWidth));
 		widthTextField.setPrefWidth(75);
 		widthTextField.setPromptText("W");
+		/*
 		widthTextField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -112,6 +113,7 @@ public class MapSizeOption {
 				}
 			}
 		});
+		*/
 		widthTextField.setTooltip(new Tooltip("Width of map"));
 
 		// > > > X
@@ -121,6 +123,7 @@ public class MapSizeOption {
 		heightTextField = new TextField(Integer.toString(mapHeight));
 		heightTextField.setPrefWidth(75);
 		heightTextField.setPromptText("H");
+		/*
 		heightTextField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -130,6 +133,7 @@ public class MapSizeOption {
 				}
 			}
 		});
+		*/
 		heightTextField.setTooltip(new Tooltip("Height of map"));
 		mapSizeHBox.getChildren().addAll(mapSizeLabel, widthTextField, mapSizeX, heightTextField);
 /*
