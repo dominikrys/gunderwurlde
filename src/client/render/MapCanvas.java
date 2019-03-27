@@ -318,7 +318,7 @@ public class MapCanvas extends Canvas {
                     case THEBOSS:
                         enemiesOnMapAnimations.put(currentEnemy.getID(), new AnimatedSprite(
                                 rendererResourceLoader.getSprite(EntityList.THEBOSS_WALK), 160, 160,
-                                8, 100, 0, AnimationType.MOVE));
+                                7, 100, 0, AnimationType.MOVE));
                         break;
                     case ZOMBIE:
                     default:
@@ -664,10 +664,10 @@ public class MapCanvas extends Canvas {
         }
 
         // How far above the entity to render the status effect
-        int verticalDebuffOffset = 24;
+        int verticalDebuffOffset = 54;
 
         // Draw debuff image centered above the entity
-        mapGC.drawImage(imageToRender, pose.getX() + (entitySize - (double) EntityList.BURNING.getSize() / 2),
+        mapGC.drawImage(imageToRender, pose.getX() + (double) (entitySize - EntityList.BURNING.getSize()) / 2,
                 pose.getY() - verticalDebuffOffset);
     }
 

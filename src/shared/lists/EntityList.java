@@ -37,7 +37,7 @@ public enum EntityList {
     /**
      * Player standing
      */
-    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 3), // TODO: remove the -3?
+    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE),
     PLAYER_RED("file:assets/img/entity/player/player.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
     PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
     PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
@@ -158,10 +158,10 @@ public enum EntityList {
     /**
      * Status effects
      */
-    BURNING("file:assets/img/other/debuff/burning.png"),
-    FROZEN("file:assets/img/other/debuff/frozen.png"),
-    FUSED("file:assets/img/other/debuff/fused.png"),
-    SLOWED("file:assets/img/other/debuff/slowed.png"),
+    BURNING("file:assets/img/other/debuff/burning.png", Constants.TILE_SIZE),
+    FROZEN("file:assets/img/other/debuff/frozen.png", Constants.TILE_SIZE),
+    FUSED("file:assets/img/other/debuff/fused.png", Constants.TILE_SIZE),
+    SLOWED("file:assets/img/other/debuff/slowed.png", Constants.TILE_SIZE),
 
     /**
      * Animations
