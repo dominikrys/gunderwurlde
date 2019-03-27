@@ -416,7 +416,8 @@ public class ProcessGameState extends Thread {
                     Consumable currentConsumable = (Consumable) currentItem;
 
                     if (currentConsumable.getConsumableType() == ConsumableType.PROJECTILE) {
-                        newProjectiles.addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam()));
+                        newProjectiles
+                                .addAll(((CreatesProjectiles) currentConsumable).getProjectiles(playerPose, currentPlayer.getTeam(), request.getConsumeDist()));
                     } else if (currentConsumable.getConsumableType() == ConsumableType.EFFECT) {
                         currentPlayer.addEffect(((HasEffect) currentConsumable).getEffect());
                     } else if (currentConsumable.getConsumableType() == ConsumableType.ATTACK) {
@@ -498,7 +499,7 @@ public class ProcessGameState extends Thread {
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<LaserView> lasersView, LivingEntity shootingEntity, Gun gunShot) {
         Pose gunPose = shootingEntity.getPose();
         if (gunShot instanceof ProjectileGun) {
-            LinkedList<Projectile> shotProjectiles = ((ProjectileGun) gunShot).getProjectiles(gunPose, shootingEntity.getTeam());
+            LinkedList<Projectile> shotProjectiles = ((ProjectileGun) gunShot).getProjectiles(gunPose, shootingEntity.getTeam(), -1); // TODO include desired dist?
             for (Projectile p : shotProjectiles) {
                 newProjectiles.add(p);
                 projectilesView.add(new ProjectileView(p.getPose(), p.getSize(), p.getEntityListName(), p.isCloaked(), p.getStatus()));
