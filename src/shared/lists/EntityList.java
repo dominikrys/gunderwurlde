@@ -27,8 +27,12 @@ public enum EntityList {
     BUCKSHOT_SHOTGUN("file:assets/img/entity/item/sawedoff.png", Constants.TILE_SIZE),
     ROCKET_LAUNCHER("file:assets/img/entity/item/rpg.png", Constants.TILE_SIZE),
     GRENADE("file:assets/img/entity/item/grenade.png", Constants.TILE_SIZE),
-    LASER_CANNON("file:assets/img/entity/item/laser_cannon.png", Constants.TILE_SIZE), // TODO
+    LASER_CANNON("file:assets/img/entity/item/laser_cannon.png", Constants.TILE_SIZE),
     LASER_PISTOL("file:assets/img/entity/item/laser_pistol.png", Constants.TILE_SIZE),
+    MAGIC_KNIFE("file:assets/img/entity/item/magic_knife.png", Constants.TILE_SIZE),
+    DEATH_RAY("file:assets/img/entity/item/death_ray.png", Constants.TILE_SIZE),
+    REGEN_POTION("file:assets/img/entity/item/regen_potion.png", Constants.TILE_SIZE),
+    SPEED_POTION("file:assets/img/entity/item/speed_potion.png", Constants.TILE_SIZE),
 
     /**
      * Player standing
