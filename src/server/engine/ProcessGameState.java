@@ -116,7 +116,7 @@ public class ProcessGameState extends Thread {
         }
 
         view = new GameView(playerViews, new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(), new LinkedHashSet<>(),
-                tileMapView, Team.NONE);
+                new LinkedHashMap<>(), map.getMapName(), Team.NONE);
         LOGGER.info("Engine set up.");
     }
 
@@ -200,7 +200,7 @@ public class ProcessGameState extends Thread {
             LinkedHashMap<Integer, LivingEntity> livingEntities = gameState.getLivingEntities();
 
             // views for the handler
-            TileView[][] tileMapView = view.getTileMap();
+            LinkedHashMap<int[], TileView> tileViewChanges = new LinkedHashMap<>();
             LinkedHashSet<ProjectileView> projectilesView = new LinkedHashSet<>();
             LinkedHashSet<LaserView> lasersView = new LinkedHashSet<>();
             LinkedHashSet<ExplosionView> explosionsView = new LinkedHashSet<>();
@@ -252,7 +252,7 @@ public class ProcessGameState extends Thread {
 
             // process projectiles
             LinkedHashSet<Projectile> projectiles = gameState.getProjectiles();
-            processProjectiles(currentTimeDifference, tileMap, newProjectiles, livingEntities, tileMapView, projectilesView, explosionsView, projectiles);
+            processProjectiles(currentTimeDifference, tileMap, newProjectiles, livingEntities, tileViewChanges, projectilesView, explosionsView, projectiles);
 
             // lasers processing
             LinkedHashSet<Laser> lasers = gameState.getLasers();
@@ -267,7 +267,7 @@ public class ProcessGameState extends Thread {
             }
 
             // process zones
-            tileMapChanged = processZones(activeZones, tileMap, livingEntities, tileMapView, enemyIDs, tileMapChanged);
+            tileMapChanged = processZones(activeZones, tileMap, livingEntities, tileViewChanges, enemyIDs, tileMapChanged);
 
             // update gamestate
             gameState.setPlayerIDs(playerIDs);
@@ -288,7 +288,8 @@ public class ProcessGameState extends Thread {
             Team remainingTeam = checkWinCondition(livingEntities, playerIDs);
 
             // create gameview and send to handler
-            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, lasersView, explosionsView, tileMapView, remainingTeam);
+            GameView view = new GameView(playersView, enemiesView, projectilesView, itemDropsView, lasersView, explosionsView, tileViewChanges,
+                    currentMap.getMapName(), remainingTeam);
             handler.updateGameView(view);
         }
         LivingEntity.resetIDAssignment();
@@ -941,7 +942,7 @@ public class ProcessGameState extends Thread {
     }
 
     private boolean processZones(LinkedHashMap<Integer, Zone> activeZones, Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities,
-            TileView[][] tileMapView, LinkedHashSet<Integer> enemyIDs, boolean tileMapChanged) {
+            LinkedHashMap<int[], TileView> tileViewChanges, LinkedHashSet<Integer> enemyIDs, boolean tileMapChanged) {
         LinkedList<Integer> zonesToRemove = new LinkedList<>();
 
         // spawn new enemies from active zones
@@ -960,7 +961,7 @@ public class ProcessGameState extends Thread {
                 int[] cords = tileChanged.getKey();
                 Tile newTile = tileChanged.getValue();
                 tileMap[cords[0]][cords[1]] = newTile;
-                tileMapView[cords[0]][cords[1]] = new TileView(newTile.getType(), newTile.getState());
+                tileViewChanges.put(cords, new TileView(newTile.getType(), newTile.getState()));
             }
 
             // mark inactive zones for removal
@@ -973,7 +974,7 @@ public class ProcessGameState extends Thread {
     }
 
     private void processProjectiles(long currentTimeDifference, Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles,
-            LinkedHashMap<Integer, LivingEntity> livingEntities, TileView[][] tileMapView, LinkedHashSet<ProjectileView> projectilesView,
+            LinkedHashMap<Integer, LivingEntity> livingEntities, LinkedHashMap<int[], TileView> tileViewChanges, LinkedHashSet<ProjectileView> projectilesView,
             LinkedHashSet<ExplosionView> explosionsView, LinkedHashSet<Projectile> projectiles) {
         for (Projectile p : projectiles) {
             Projectile currentProjectile = p;
@@ -1004,7 +1005,7 @@ public class ProcessGameState extends Thread {
                         // remove if projectile hit solid tile
                         if (tileOn.getState() == TileState.SOLID) {
                             removed = currentProjectile.isRemoved(tileOn, Tile.tileToLocation(tileCords[0], tileCords[1]));
-                            tileMapView[tileCords[0]][tileCords[1]] = new TileView(tileOn.getType(), tileOn.getState(), true); // Tile hit
+                            tileViewChanges.put(tileCords, new TileView(tileOn.getType(), tileOn.getState(), true)); // Tile hit
                             break;
                         }
                     }

@@ -6,8 +6,10 @@ import client.net.ClientReceiver;
 import client.net.ClientSender;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
+import server.engine.state.map.MapReader;
 import shared.lists.Team;
 import shared.view.GameView;
+import shared.view.TileView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Set;
+
 
 /**
  * Class to initialise the sender, receiver threads and join the game
@@ -108,6 +111,7 @@ public class Client extends Thread {
      * The object that will hold the constantly updating view of the game
      */
     private GameView view;
+    private TileView[][] tileMap;
 
     /**
      * The object that will render the graphics to the screen
@@ -265,6 +269,8 @@ public class Client extends Thread {
                 System.out.println(t.getName() + " is still alive");
             }
             firstView = false;
+            this.tileMap = MapReader.readMapView(view.getMapName());
+            this.view.setTileMap(tileMap);
             renderer = new GameRenderer(stage, this.view, playerID, settings, this, connectionType);
             renderer.getKeyboardHandler().setGameHandler(this);
             renderer.getMouseHandler().setGameHandler(this);
@@ -272,6 +278,7 @@ public class Client extends Thread {
         }
         //else just update the GameView
         else {
+            this.view.setTileMap(tileMap);
             renderer.updateGameView(this.view);
         }
     }
