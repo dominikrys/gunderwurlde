@@ -152,15 +152,16 @@ public abstract class Entity {
         Location start = l.getStart();
         Location end = l.getEnd();
         double size = l.getSize();
-        double m = (end.getY() - start.getY()) / (end.getX() - start.getX());
-        double c = start.getY() - (m * start.getX());
+        double xDist = end.getX() - start.getX();
+        double yDist = end.getY() - start.getY();
 
-        double yDist = (((eX * m) + c) - eY) / 2;
-        double xDist = (((eY - c) / m) - eX) / 2;
+        double dot = ((eX - start.getX()) * xDist) + ((eY - start.getY()) * yDist);
+        dot /= Math.pow(l.getLength(), 2);
+
+        yDist = start.getY() + (dot * yDist) - eY;
+        xDist = start.getX() + (dot * xDist) - eX;
 
         double laserDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) - size;
-        System.out.println("laserDist: " + laserDist);
-        System.out.println("radius: " + eRadius);
         return (eRadius >= laserDist);
     }
 

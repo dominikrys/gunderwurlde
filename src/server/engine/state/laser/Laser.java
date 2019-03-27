@@ -91,10 +91,6 @@ public class Laser extends Line {
             }
         }
 
-        System.out.println("laser made.");
-        System.out.println("start: " + start.getX() + " " + start.getY() + " " + start.getDirection());
-        System.out.println("end: " + endPoint.getX() + " " + endPoint.getY());
-
         return new Laser(start, endPoint, templateLaser.size, templateLaser.damage, templateLaser.duration, team);
     }
 
