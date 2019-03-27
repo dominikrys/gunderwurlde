@@ -245,7 +245,7 @@ public class GameHandler extends Thread {
                         // setup the threads for that client
                         client.start();
                         System.out.println("client started");
-                        // wait for threads to completely setup
+                        // wait for threads to completely setup and player to join game
                         client.join();
                         if(shouldClose){
                             this.end();
