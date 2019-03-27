@@ -17,7 +17,7 @@ public enum TileList implements Serializable{
     RUINS_WALL_DARK(EntityList.RUINS_WALL_DARK, TileState.SOLID, 0.5),
     RUINS_WALL_MID(EntityList.RUINS_WALL_MID, TileState.SOLID, 0.5),
     RUINS_WALL_LIGHT(EntityList.RUINS_WALL_LIGHT, TileState.SOLID, 0.5),
-    SAND(EntityList.SAND, TileState.PASSABLE, 0.502, 2000),
+    SAND(EntityList.SAND, TileState.PASSABLE, 0.502, 1000),
     RED_GROUND(EntityList.RED_GROUND, TileState.PASSABLE, 0.5, 200),
     MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.49, 200),
     DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5, 200),
