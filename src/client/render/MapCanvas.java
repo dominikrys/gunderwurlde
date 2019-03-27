@@ -106,7 +106,7 @@ public class MapCanvas extends Canvas {
         // Render items
         for (ItemDropView currentItem : gameView.getItemDrops()) {
             // Make item flicker when timer on it is expiring
-            if (currentItem.getTimeLeft() < 6000 && currentItem.getTimeLeft() >= 3500) {
+            if (currentItem.getTimeLeft() < 5000 && currentItem.getTimeLeft() >= 3500) {
                 if (currentItem.getTimeLeft() % 400 < 200) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
@@ -114,7 +114,7 @@ public class MapCanvas extends Canvas {
                 if (currentItem.getTimeLeft() % 250 < 125) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
-            } else if (currentItem.getTimeLeft() < 1500 && currentItem.getTimeLeft() >= 0) {
+            } else if (currentItem.getTimeLeft() < 2000 && currentItem.getTimeLeft() >= 0) {
                 if (currentItem.getTimeLeft() % 100 < 50) {
                     renderEntityView(currentItem, rendererResourceLoader);
                 }
