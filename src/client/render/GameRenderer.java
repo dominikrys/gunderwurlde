@@ -15,8 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -170,8 +168,8 @@ public class GameRenderer implements Runnable {
         cameraMouseSensitivity = 0.25;
 
         // Initialise mouse positions to not bug out camera
-        mouseX = (double) settings.getScreenWidth() / 2 - getCurrentPlayer().getPose().getX() - (double) Constants.TILE_SIZE / 2;
-        mouseY = (double) settings.getScreenHeight() / 2 - getCurrentPlayer().getPose().getY() - (double) Constants.TILE_SIZE / 2;
+        mouseX = (double) settings.getScreenWidth() / 2;
+        mouseY = (double) settings.getScreenHeight() / 2;
 
         // Initialise input variables
         kbHandler = new KeyboardHandler(this.playerID, settings);
@@ -497,7 +495,7 @@ public class GameRenderer implements Runnable {
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
                             System.out.println("\n\n Threads alive when quit button in pause menu is pressed \n\n");
                             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                            for(Thread t : threadSet){
+                            for (Thread t : threadSet) {
                                 System.out.println(t.getName() + " is still alive");
                             }
 
@@ -610,7 +608,7 @@ public class GameRenderer implements Runnable {
         handler.close();
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return running;
     }
 }

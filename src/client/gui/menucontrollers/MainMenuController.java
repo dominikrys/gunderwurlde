@@ -1,8 +1,6 @@
 package client.gui.menucontrollers;
 
 import client.Settings;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,10 +12,6 @@ import shared.lists.Team;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * MainMenuController class. Contains loader and controller for the menu menu.
@@ -168,7 +162,7 @@ public class MainMenuController extends VBox implements MenuController {
     void quitButtonPress(ActionEvent event) {
         System.out.println("\n\n Threads alive when quit button is pressed in main menu \n\n");
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for(Thread t : threadSet){
+        for (Thread t : threadSet) {
             System.out.println(t.getName() + " is still alive");
         }
         stage.close();

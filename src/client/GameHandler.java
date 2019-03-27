@@ -151,7 +151,7 @@ public class GameHandler extends Thread {
                         server.setName("Server");
                         System.out.println("\n\n Threads alive when server constructed \n\n");
                         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                        for(Thread t : threadSet){
+                        for (Thread t : threadSet) {
                             System.out.println(t.getName() + " is still alive");
                         }
 
@@ -160,7 +160,7 @@ public class GameHandler extends Thread {
                         client.setName("Client");
                         System.out.println("\n\n Threads alive when client constructed \n\n");
                         threadSet = Thread.getAllStackTraces().keySet();
-                        for(Thread t : threadSet){
+                        for (Thread t : threadSet) {
                             System.out.println(t.getName() + " is still alive");
                         }
 
@@ -172,7 +172,7 @@ public class GameHandler extends Thread {
                         client.join();
                         System.out.println("\n\n Threads alive when client threads setup \n\n");
                         threadSet = Thread.getAllStackTraces().keySet();
-                        for(Thread t : threadSet){
+                        for (Thread t : threadSet) {
                             System.out.println(t.getName() + " is still alive");
                         }
                         // start server threads ready to send and receive
@@ -182,7 +182,7 @@ public class GameHandler extends Thread {
                         server.join();
                         System.out.println("\n\n Threads alive when server threads constructed \n\n");
                         threadSet = Thread.getAllStackTraces().keySet();
-                        for(Thread t : threadSet){
+                        for (Thread t : threadSet) {
                             System.out.println(t.getName() + " is still alive");
                         }
                     } catch (InterruptedException e) {
@@ -199,7 +199,7 @@ public class GameHandler extends Thread {
                         // start the server as it needs to listen to requests
                         server.join();
                         String[] splitIPAddress = server.getIPAddress().split("/");
-                        loadScreenController.update(splitIPAddress[1] , server.getPort());
+                        loadScreenController.update(splitIPAddress[1], server.getPort());
                         server.start();
                         serverStarted = true;
                         // Wait for TCPManager to be up and receiving

@@ -1,10 +1,5 @@
 package client.render;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-
 import client.Settings;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,17 +9,17 @@ import server.engine.state.map.GameMap;
 import server.engine.state.map.MapReader;
 import server.engine.state.map.tile.Tile;
 import shared.Pose;
-import shared.lists.ActionList;
-import shared.lists.AmmoList;
-import shared.lists.EntityStatus;
-import shared.lists.ItemList;
-import shared.lists.MapList;
-import shared.lists.Team;
+import shared.lists.*;
 import shared.view.GameView;
 import shared.view.GunView;
 import shared.view.ItemView;
 import shared.view.TileView;
 import shared.view.entity.PlayerView;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class TestRenderer extends Application {
 

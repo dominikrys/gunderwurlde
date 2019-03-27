@@ -26,6 +26,7 @@ import shared.lists.Team;
 import shared.view.GameView;
 import shared.view.TileView;
 
+
 /**
  * Class to initialise the sender, receiver threads and join the game
  */
@@ -33,78 +34,61 @@ public class Client extends Thread {
 
 
     /**
-     * Socket to receive GameViews from the server
-     */
-    private MulticastSocket listenSocket;
-
-    /**
-     * Socket to send client requests to the server
-     */
-    private MulticastSocket sendSocket;
-
-    /**
-     * Socket to return the TCP address needed to join the game
-     */
-    private MulticastSocket joinGameSocket;
-
-    /**
-     * Socket that handles a player joining a game
-     */
-    private Socket tcpSocket;
-
-
-    /**
-     * Address the client will receive gameViews on
-     */
-    private InetAddress listenAddress;
-
-    /**
-     * Address the client will send requests on
-     */
-    private InetAddress senderAddress;
-
-    /**
-     * The UDP address to request to join a game
-     */
-    private InetAddress joinGameAddress;
-
-    /**
-     * The server machines IP address
-     */
-    private InetAddress tcpAddress;
-
-    /**
-     * Integer to hold the next assignable IP address
-     */
-    private static int lowestAvailableAddress = 1;
-
-
-    /**
-     * The port the client will receive gameView across
-     */
-    private int listenPort;
-
-    /**
-     * The port the client will send requests across
-     */
-    private int sendPort;
-
-    /**
      * The port players will request the TCP address of the server machine on
      */
     private static final int JOINPORT = 8080;
-
     /**
      * The port the player will use to join the game
      */
     private static final int TCPPORT = 8081;
-
+    /**
+     * Integer to hold the next assignable IP address
+     */
+    private static int lowestAvailableAddress = 1;
     /**
      * Integer to hold the next assignable port
      */
     private static int lowestAvailablePort = 4444;
-
-
+    /**
+     * Socket to receive GameViews from the server
+     */
+    private MulticastSocket listenSocket;
+    /**
+     * Socket to send client requests to the server
+     */
+    private MulticastSocket sendSocket;
+    /**
+     * Socket to return the TCP address needed to join the game
+     */
+    private MulticastSocket joinGameSocket;
+    /**
+     * Socket that handles a player joining a game
+     */
+    private Socket tcpSocket;
+    /**
+     * Address the client will receive gameViews on
+     */
+    private InetAddress listenAddress;
+    /**
+     * Address the client will send requests on
+     */
+    private InetAddress senderAddress;
+    /**
+     * The UDP address to request to join a game
+     */
+    private InetAddress joinGameAddress;
+    /**
+     * The server machines IP address
+     */
+    private InetAddress tcpAddress;
+    /**
+     * The port the client will receive gameView across
+     */
+    private int listenPort;
+    /**
+     * The port the client will send requests across
+     */
+    private int sendPort;
     /**
      * byte array to hold information being received and sent when joining a game
      */
@@ -180,54 +164,56 @@ public class Client extends Thread {
     /**
      * Connection type
      */
-private ConnectionType connectionType;
+    private ConnectionType connectionType;
 
     /**
      * Constructor for single player or multiplayer host
+     *
      * @param stage
-     * @param handler object that created this client. Used to end the threads on close
-     * @param settings object to hold previously saved settings e.g. sound settings
-     * @param playerID The identification value for a player
+     * @param handler        object that created this client. Used to end the threads on close
+     * @param settings       object to hold previously saved settings e.g. sound settings
+     * @param playerID       The identification value for a player
      * @param connectionType Connection type
      */
     public Client(Stage stage, GameHandler handler, Settings settings, int playerID, ConnectionType connectionType) {
-       try {
-           // Assign the value for the ports and update the next available port
-           this.listenPort = lowestAvailablePort;
-           this.sendPort = lowestAvailablePort + 1;
-           updateLowestAvailablePort();
-           // Assign the values for the addresses and update the next available address
-           this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
-           this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
-           updateLowestAvailableAddress();
-           this.stage = stage;
-           this.handler = handler;
-           this.settings = settings;
-           this.playerID = playerID;
-           this.connectionType = connectionType;
-           firstView = true;
+        try {
+            // Assign the value for the ports and update the next available port
+            this.listenPort = lowestAvailablePort;
+            this.sendPort = lowestAvailablePort + 1;
+            updateLowestAvailablePort();
+            // Assign the values for the addresses and update the next available address
+            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            updateLowestAvailableAddress();
+            this.stage = stage;
+            this.handler = handler;
+            this.settings = settings;
+            this.playerID = playerID;
+            this.connectionType = connectionType;
+            firstView = true;
 
-           System.out.println("Client listen: " + listenAddress.toString());
-           System.out.println("Client send: " + senderAddress.toString());
-           System.out.println("Client listenport: " + listenPort);
-           System.out.println("Client sendport: " + sendPort);
-       } catch (UnknownHostException e) {
-           e.printStackTrace();
-       }
+            System.out.println("Client listen: " + listenAddress.toString());
+            System.out.println("Client send: " + senderAddress.toString());
+            System.out.println("Client listenport: " + listenPort);
+            System.out.println("Client sendport: " + sendPort);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Constructor for multiplayer join
+     *
      * @param stage
-     * @param handler object that created this client. Used to end the threads on close
-     * @param settings object to hold previously saved settings e.g. sound settings
-     * @param ipValue The IP address the server is sending on
-     * @param portValue The port the server is sending across
-     * @param playerName The name of the player playing the game
-     * @param team The team of the player playing the game
+     * @param handler        object that created this client. Used to end the threads on close
+     * @param settings       object to hold previously saved settings e.g. sound settings
+     * @param ipValue        The IP address the server is sending on
+     * @param portValue      The port the server is sending across
+     * @param playerName     The name of the player playing the game
+     * @param team           The team of the player playing the game
      * @param connectionType Connection ype
      */
-    public Client(Stage stage, GameHandler handler, Settings settings,String ipValue, int portValue, String playerName,
+    public Client(Stage stage, GameHandler handler, Settings settings, String ipValue, int portValue, String playerName,
                   Team team, ConnectionType connectionType) {
         try {
             // Assign the player name and player value
@@ -275,17 +261,18 @@ private ConnectionType connectionType;
 
     /**
      * Method to set the GameView for the client so that new graphics appear
-     * @param view the GameView that will be displayed to the screen
+     *
+     * @param view     the GameView that will be displayed to the screen
      * @param settings object to hold previously saved settings e.g. sound settings
      */
-    public void setGameView(GameView view, Settings settings){
+    public void setGameView(GameView view, Settings settings) {
         // sets the value for view
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
             System.out.println("\n\n Threads alive when received first gameView");
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-            for(Thread t : threadSet){
+            for (Thread t : threadSet) {
                 System.out.println(t.getName() + " is still alive");
             }
             firstView = false;
@@ -399,10 +386,9 @@ private ConnectionType connectionType;
             e.printStackTrace();
             // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
-        } catch (SocketTimeoutException ex){
+        } catch (SocketTimeoutException ex) {
             System.out.println("Failed to reach server, Is the IP and port correct");
-        }
-        catch (SocketException e) {
+        } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -414,7 +400,7 @@ private ConnectionType connectionType;
      */
     public void close() {
         try {
-            if(renderer.isRunning()){
+            if (renderer.isRunning()) {
                 renderer.stop();
             }
             // Close sender first
@@ -435,6 +421,7 @@ private ConnectionType connectionType;
 
     /**
      * Method to send requests that do no require parameters to the server
+     *
      * @param action the list of actions to be sent to the server
      */
     public void send(CommandList action) {
@@ -458,7 +445,8 @@ private ConnectionType connectionType;
 
     /**
      * Method to send requests that do require parameters to the server
-     * @param action the list of actions to be sent to the server
+     *
+     * @param action    the list of actions to be sent to the server
      * @param parameter the parameters that actionlist requires
      */
     public void send(CommandList action, int parameter) {
@@ -473,7 +461,7 @@ private ConnectionType connectionType;
                 sender.send(new Integer[]{5, parameter});
                 break;
             case "CONSUMABLE": // 6
-            	sender.send(new Integer[]{6, parameter});
+                sender.send(new Integer[]{6, parameter});
         }
     }
 
