@@ -29,33 +29,37 @@ public class SoldierZombieAI extends AStarUsingEnemy {
 
     @Override
     public AIAction getAction() {
-        if (attacking) {                                //If attacking, continue to attack
-            return AIAction.ATTACK;
-        } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT
-        && pathUnobstructed(pose, closestPlayer, tileMap)) {
-            int decision = rand.nextInt(100);
-            //Will decide whether to attack based on the RATE_OF_FIRE
-            if (decision <= RATE_OF_FIRE && decision >= 2) {
-                attacking = true;
-                beginAttackTime = System.currentTimeMillis();
+        if(closestPlayer != null) {
+            if (attacking) {                                //If attacking, continue to attack
                 return AIAction.ATTACK;
-            } else if (decision < 2 && decision > 0) {
+            } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT
+                    && pathUnobstructed(pose, closestPlayer, tileMap)) {
+                int decision = rand.nextInt(100);
+                //Will decide whether to attack based on the RATE_OF_FIRE
+                if (decision <= RATE_OF_FIRE && decision >= 2) {
+                    attacking = true;
+                    beginAttackTime = System.currentTimeMillis();
+                    return AIAction.ATTACK;
+                } else if (decision < 2 && decision > 0) {
+                    return AIAction.MOVE;
+                } else {
+                    return AIAction.WAIT;
+                }
+            } else if (!movementFinished) {                    //If moving, continue to move
                 return AIAction.MOVE;
-            } else {
-                return AIAction.WAIT;
-            }
-        } else if (!movementFinished) {                    //If moving, continue to move
-            return AIAction.MOVE;
 
-        } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
-            //1 in 50 change it will decide to move
-            if (rand.nextInt(50) == 0) {
-                return AIAction.MOVE;
-            } else {
-                return AIAction.WAIT;
+            } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
+                //1 in 50 change it will decide to move
+                if (rand.nextInt(50) == 0) {
+                    return AIAction.MOVE;
+                } else {
+                    return AIAction.WAIT;
+                }
             }
+            return AIAction.WAIT;
+        }else {
+            return AIAction.WAIT;
         }
-        return AIAction.WAIT;
     }
 
     protected Force generateMovementForce() {

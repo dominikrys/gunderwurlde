@@ -36,17 +36,21 @@ public class TheBossAI extends ZombieAI {
 
     @Override
     public AIAction getAction() {
-        long now = System.currentTimeMillis();
-        if (attacking) {
-            return AIAction.ATTACK;
-        } else if (now - lastAttack >= TIME_BETWEEN_ATTACKS) {
-            this.actionState = ActionList.ATTACKING;
-            attacking = true;
-            lastAttack = System.currentTimeMillis();
-            attackLocation = closestPlayer; // Prevents teleporting attacks onto the player
-            return AIAction.ATTACK;
+        if(closestPlayer != null) {
+            long now = System.currentTimeMillis();
+            if (attacking) {
+                return AIAction.ATTACK;
+            } else if (now - lastAttack >= TIME_BETWEEN_ATTACKS) {
+                this.actionState = ActionList.ATTACKING;
+                attacking = true;
+                lastAttack = System.currentTimeMillis();
+                attackLocation = closestPlayer; // Prevents teleporting attacks onto the player
+                return AIAction.ATTACK;
+            }
+            return AIAction.MOVE;
+        }else{
+            return AIAction.WAIT;
         }
-        return AIAction.MOVE;
     }
 
     @Override

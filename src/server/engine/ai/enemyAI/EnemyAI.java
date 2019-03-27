@@ -24,13 +24,9 @@ public abstract class EnemyAI {
     static long LONG_DELAY = 1000;
     protected Pose pose;
     private boolean isProcessing = false;
-    //    double maxDistanceToMove;
-//    private int enemSize;
     private HashSet<Pose> playerPoses;
     Pose closestPlayer;
     static Tile[][] tileMap;
-    //    protected int mapXDim;
-//    protected int mapYDim;
     ActionList actionState;
     protected double maxMovementForce;
     long beginAttackTime;
@@ -83,13 +79,9 @@ public abstract class EnemyAI {
     //Static for RandomPoseGenerator
     public static boolean tileNotSolid(int[] tile, Tile[][] tileMap) {
         boolean tileNotSolid;
-//        int mapXDim = tileMap.length;
-//        int mapYDim = tileMap[0].length;
 
         try {
             tileNotSolid = (tileMap[tile[1]][tile[0]].getState() != TileState.SOLID);
-//                    !((tileList[0] == 0 && tileList[1] == (mapYDim - 2) / 2) ||
-//                            ((tileList[0] == mapXDim - 1 && tileList[1] == (mapYDim - 2) / 2)));
         } catch (Exception e) {
             return false;
         }
@@ -100,9 +92,7 @@ public abstract class EnemyAI {
     public void setInfo(Enemy enemy, HashSet<Pose> playerPoses) {
         this.enemy = enemy;
         this.pose = this.enemy.getPose();
-//        this.enemSize = this.enemy.getSize();
         this.playerPoses = playerPoses;
-        //        this.tileMap = tileMap;
         this.closestPlayer = findClosestPlayer(playerPoses);
     }
 
@@ -117,15 +107,20 @@ public abstract class EnemyAI {
     }
 
     private Pose findClosestPlayer(HashSet<Pose> playerPoses) {
-        Pose closestPlayer = playerPoses.iterator().next();
-        int distToClosest = Integer.MAX_VALUE;
+        Pose closestPlayer;
+        try {
+            closestPlayer = playerPoses.iterator().next();
+            int distToClosest = Integer.MAX_VALUE;
 
-        for (Pose playerPose : playerPoses) {
-            int distToPlayer = getDistToPlayer(playerPose);
-            if (distToPlayer < distToClosest) {
-                distToClosest = distToPlayer;
-                closestPlayer = playerPose;
+            for (Pose playerPose : playerPoses) {
+                int distToPlayer = getDistToPlayer(playerPose);
+                if (distToPlayer < distToClosest) {
+                    distToClosest = distToPlayer;
+                    closestPlayer = playerPose;
+                }
             }
+        }catch (Exception e){
+            return null;
         }
 
         return closestPlayer;
@@ -181,8 +176,6 @@ public abstract class EnemyAI {
         double vecI = Math.cos(Math.toRadians(angleToPose)) * distanceToPose;
         double vecJ = Math.sin(Math.toRadians(angleToPose)) * distanceToPose;
 
-//        System.out.println("VecI : " + vecI + " " + Math.cos(Math.toRadians(angleToPose)) + " vecJ : " + vecJ + " " + Math.sin(Math.toRadians(angleToPose)));
-
         return new Pose((int) vecI + startingPose.getX(), (int) vecJ + startingPose.getY());
     }
 
@@ -201,92 +194,5 @@ public abstract class EnemyAI {
     public static void setTileMap(Tile[][] tm) {
         tileMap = transposeMatrix(tm);
     }
-
-//    protected abstract Pose generateNextPose();
-
-//    public Pose getNewPose(double maxDistanceToMove) {
-//        this.maxDistanceToMove = maxDistanceToMove;
-//        return generateNextPose();
-
-//    }
-
-
-//    Pose poseFromAngle(double angleToMove, double angleToFace, double distToMove) {
-//        Pose newPose = null;
-//
-//        //east
-//        if (angleToMove > 337.5 || angleToMove <= 22.5) {
-//            newPose = new Pose(pose.getX() + distToMove, pose.getY(), (int) angleToFace + 90);
-//
-//            //north-east
-//        } else if (angleToMove > 22.5 && angleToMove <= 67.5) {
-//            newPose = new Pose(pose.getX() + distToMove, pose.getY() + distToMove, (int) angleToFace + 90);
-//
-//            //north
-//        } else if (angleToMove > 67.5 && angleToMove <= 112.5) {
-//            newPose = new Pose(pose.getX(), pose.getY() + distToMove, (int) angleToFace + 90);
-//
-//            //north-west
-//        } else if (angleToMove > 112.5 && angleToMove <= 157.5) {
-//            newPose = new Pose(pose.getX() - distToMove, pose.getY() + distToMove, (int) angleToFace + 90);
-//
-//            //west
-//        } else if (angleToMove > 157.5 && angleToMove <= 202.5) {
-//            newPose = new Pose(pose.getX() - distToMove, pose.getY(), (int) angleToFace + 90);
-//
-//            //south-west
-//        } else if (angleToMove > 202.5 && angleToMove <= 247.5) {
-//            newPose = new Pose(pose.getX() - distToMove, pose.getY() - distToMove, (int) angleToFace + 90);
-//
-//            //south
-//        } else if (angleToMove > 247.5 && angleToMove <= 292.5) {
-//            newPose = new Pose(pose.getX(), pose.getY() - distToMove, (int) angleToFace + 90);
-//
-//            //south-east
-//        } else if (angleToMove > 292.5 && angleToMove <= 337.5) {
-//            newPose = new Pose(pose.getX() + distToMove, pose.getY() - distToMove, (int) angleToFace + 90);
-//        }
-//
-//        if (newPose != null) {
-//            if (tileNotSolid(TileList.locationToTile(newPose), tileMap)) {
-//                return newPose;
-//            }
-//        }
-//
-//        return pose;
-//
-//    }
-
-//    private Pose moveOutOfSpawn(Pose pose) {
-//        int[] tileList = TileList.locationToTile(pose);
-//
-//        if ((tileList[0] == 0 && tileList[1] == (mapYDim - 2) / 2)
-//                || (tileList[0] == 1 && tileList[1] == (mapYDim - 2) / 2)) {
-//            return new Pose(pose.getX() + maxDistanceToMove, pose.getY(), 90);
-//        }
-//
-//        if ((tileList[0] == mapXDim - 1 && tileList[1] == (mapYDim - 2) / 2)
-//                || (tileList[0] == mapXDim - 2 && tileList[1] == (mapYDim - 2) / 2)) {
-//            return new Pose(pose.getX() - maxDistanceToMove, pose.getY(), 270);
-//
-//        }
-//
-//        return pose;
-
-//    }
-//    Pose checkIfInSpawn() {
-//        Pose nextPose = pose;
-//        if (!outOfSpawn) {
-//            //This will return original pose if zombie is out of spawn
-//            nextPose = moveOutOfSpawn(pose);
-//            if (nextPose == pose) {
-//                outOfSpawn = true;
-//            } else {
-//                return nextPose;
-//            }
-//        }
-//        return nextPose;
-
-//    }
 
 }
