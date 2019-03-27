@@ -730,16 +730,16 @@ public class MapEditor {
 	// Move camera
 	private void moveCamera(KeyCode key) {
 		switch(key) {
-			case W:
+			case S:
 				mapCanvas.setTranslateY(mapCanvas.getTranslateY() - (double)Constants.TILE_SIZE);
 				break;
-			case A:
+			case D:
 				mapCanvas.setTranslateX(mapCanvas.getTranslateX() - (double)Constants.TILE_SIZE);
 				break;
-			case S:
+			case W:
 				mapCanvas.setTranslateY(mapCanvas.getTranslateY() + (double)Constants.TILE_SIZE);
 				break;
-			case D:
+			case A:
 				mapCanvas.setTranslateX(mapCanvas.getTranslateX() + (double)Constants.TILE_SIZE);
 				break;
 		}
