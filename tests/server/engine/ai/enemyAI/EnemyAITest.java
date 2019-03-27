@@ -1,25 +1,34 @@
 package server.engine.ai.enemyAI;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.runner.RunWith;
+import org.junit.BeforeClass;
+import server.engine.state.entity.enemy.Enemy;
+import server.engine.state.entity.enemy.Zombie;
+import shared.Pose;
 
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.HashSet;
 
-@RunWith(Arquillian.class)
+import static org.junit.Assert.assertEquals;
+
 public class EnemyAITest {
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClass(EnemyAI.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
+    private static EnemyAI enemy;
+
+    @BeforeClass
+    public static void setup() {
+        enemy = new ZombieAI();
+        HashSet<Pose> playerPoses = new HashSet<Pose>(Arrays.asList(
+                new Pose(300, 300, 90),
+                new Pose(200, 200, 180),
+                new Pose(100, 100, 270)
+        ));
+
+        enemy.setInfo(new Zombie(), playerPoses);
     }
 
     @org.junit.Test
     public void getAttacks() {
+
     }
 
     @org.junit.Test
@@ -43,7 +52,16 @@ public class EnemyAITest {
     }
 
     @org.junit.Test
-    public void setInfo() {
+    public void testSetInfo() {
+        Enemy newEnemy = new Zombie();
+        HashSet<Pose> newPlayerPoses = new HashSet<Pose>(Arrays.asList(
+                new Pose(300, 300, 90),
+                new Pose(200, 200, 180)
+        ));
+        enemy.setInfo(newEnemy, newPlayerPoses);
+
+        assertEquals(enemy.enemy, newEnemy);
+        assertEquals(enemy.getPlayerPoses(), newPlayerPoses);
     }
 
     @org.junit.Test
@@ -81,4 +99,6 @@ public class EnemyAITest {
     @org.junit.Test
     public void setTileMap() {
     }
+
+
 }
