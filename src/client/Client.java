@@ -244,7 +244,6 @@ private ConnectionType connectionType;
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
             listenSocket.joinGroup(listenAddress);
-            listenSocket.setSoTimeout(3000);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
             System.out.println("Client Listen Address: " + listenAddress);
