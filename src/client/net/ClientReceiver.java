@@ -114,7 +114,6 @@ public class ClientReceiver extends Thread {
                     catch(SocketException ex){
                         System.out.println("lost connection to the host, or paused");
                         ex.printStackTrace();
-                        client.close();
                     }
                     catch (ClassNotFoundException ex) {
                         ex.printStackTrace();

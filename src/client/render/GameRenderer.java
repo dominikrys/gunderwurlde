@@ -620,7 +620,7 @@ public class GameRenderer implements Runnable {
         getKeyboardHandler().deactivate();
         getMouseHandler().deactivate();
         soundView.deactivate();
-        handler.close();
+        handler.close(true);
     }
 
     public boolean isRunning() {

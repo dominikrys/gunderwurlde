@@ -136,8 +136,6 @@ public class ServerReceiver extends Thread {
 
         }catch(SocketException ex){
             System.out.println("closing ServerReceiver");
-            ex.printStackTrace();
-            // Server Receiver told to close
         }
         catch (IOException e1) {
             e1.printStackTrace();
