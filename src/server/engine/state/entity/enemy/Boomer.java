@@ -4,8 +4,10 @@ import java.util.LinkedHashSet;
 
 import server.engine.ai.enemyAI.BoomerAI;
 import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.state.item.consumable.Grenade;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.HeavyLaserCannon;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -27,6 +29,9 @@ public class Boomer extends  Zombie{
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.4, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.1, 1));
+        DEFAULT_DROPS.add(new Drop(new HeavyLaserCannon(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.5, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.5, 1, 1));
 
     }
 

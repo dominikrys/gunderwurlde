@@ -5,8 +5,13 @@ import java.util.LinkedHashSet;
 
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.SoldierZombieAI;
+import server.engine.state.item.consumable.Grenade;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.AssaultRifle;
+import server.engine.state.item.weapon.gun.HeavyPistol;
+import server.engine.state.item.weapon.gun.RocketLauncher;
+import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -28,6 +33,11 @@ public class SoldierZombie extends Zombie {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.2, 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.06, 2));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
+        DEFAULT_DROPS.add(new Drop(new RocketLauncher(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Smg(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new AssaultRifle(), 0.05, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new HeavyPistol(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.3, 1, 1));
     }
 
     public SoldierZombie(int range_to_shoot, int rate_of_fire, int distanceToMove) {

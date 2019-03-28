@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import server.engine.ai.enemyAI.ZombieAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.PlasmaPistol;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -25,6 +26,7 @@ public class RunnerZombie extends Zombie {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.1, 1, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.03, 1));
+        DEFAULT_DROPS.add(new Drop(new PlasmaPistol(), 0.1, 1, 1));
     }
 
     public RunnerZombie(int speed){

@@ -6,6 +6,9 @@ import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.MageAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.CrystalLauncher;
+import server.engine.state.item.weapon.gun.FireGun;
+import server.engine.state.item.weapon.gun.IceGun;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -22,6 +25,9 @@ public class Mage extends Zombie{
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.2, 1));
+        DEFAULT_DROPS.add(new Drop(new FireGun(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new IceGun(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new CrystalLauncher(), 0.1, 1, 1));
     }
 
     private final long TIME_BETWEEN_TELEPORTS;

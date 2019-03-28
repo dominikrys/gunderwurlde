@@ -6,6 +6,8 @@ import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.SniperAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.LaserPistol;
+import server.engine.state.item.weapon.gun.SniperRifle;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -25,6 +27,8 @@ public class Sniper extends Zombie {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.1, 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.06, 2));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
+        DEFAULT_DROPS.add(new Drop(new LaserPistol(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new SniperRifle(), 0.1, 1, 1));
     }
 
     private final int RANGE_TO_RUN_WAY;

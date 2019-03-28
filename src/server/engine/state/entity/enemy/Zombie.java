@@ -6,6 +6,9 @@ import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.ZombieAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.HeavyPistol;
+import server.engine.state.item.weapon.gun.LaserPistol;
+import server.engine.state.item.weapon.gun.Pistol;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -24,7 +27,10 @@ public class Zombie extends Enemy {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.05, 16, 4));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.05, 1, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.01, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.03, 1));
+        DEFAULT_DROPS.add(new Drop(new Pistol(), 0.08, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new LaserPistol(), 0.02, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new HeavyPistol(), 0.02, 1, 1));
     }
 
     public Zombie() {
