@@ -74,11 +74,6 @@ public class PauseMenuController {
      */
     @FXML
     void backToMenuButtonPress(ActionEvent event) {
-        System.out.println(" \n\n BAck to Menu pressed in puase menu \n\n");
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for (Thread t : threadSet) {
-            System.out.println(t.getName() + " is still alive");
-        }
         // Enable confirm button
         confirmButton.setManaged(true);
         confirmButton.setVisible(true);

@@ -104,7 +104,6 @@ public class ClientRequests {
     public boolean playerRequestPause(int playerID) {
         if(playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).requestPause();
-            System.out.println("PLAYER HAS REQUESTED PAUSE");
             return true;
         } else
             return false;
@@ -121,7 +120,6 @@ public class ClientRequests {
     public boolean playerRequestResume(int playerID) {
         if(playerRequests.containsKey(playerID)) {
             playerRequests.get(playerID).requestResume();
-            System.out.println("PLAYER HAS REQUESTED RESUME");
             return true;
         }
         else
