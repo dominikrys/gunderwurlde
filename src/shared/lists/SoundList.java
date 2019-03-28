@@ -13,6 +13,7 @@ public enum SoundList {
     MACHINE_GUN("file:assets/sound/gun/machine_gun.wav"),
     MACHINE_GUN2("file:assets/sound/gun/machine_gun2.wav"),
     MACHINE_GUN3("file:assets/sound/gun/machine_gun3.wav"),
+    MACHINE_GUN4("file:assets/sound/gun/machine_gun4.wav"),
     MISSLE("file:assets/sound/gun/missle.wav"),
     PISTOL("file:assets/sound/gun/pistol.wav"),
     RELOAD_MAG("file:assets/sound/gun/reload_mag.wav"),
@@ -27,7 +28,8 @@ public enum SoundList {
     SHOTGUN2("file:assets/sound/gun/shotgun2.wav"),
     SMG("file:assets/sound/gun/smg.wav"),
     SNIPER("file:assets/sound/gun/sniper.wav"),
-	OUCH("file:assets/sound/ouch.wav");
+	OUCH("file:assets/sound/ouch.wav"),
+	OUCH2("file:assets/sound/ouch2.wav");
 
     /**
      * Path to sound file

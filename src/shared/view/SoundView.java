@@ -107,7 +107,7 @@ public class SoundView {
 			}
 			else if(p.hasTakenDamage()) {
 				if(pPlaying.containsKey(p.getID())) {
-					pPlaying.get(p.getID()).playDamaged();
+					pPlaying.get(p.getID()).playDamaged(this.client, p);
 				}
 				else {
 					pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, ActionList.NONE, this.settings.getSoundVolume()));
@@ -116,6 +116,8 @@ public class SoundView {
 		}
 		
 		for(EnemyView e : gameView.getEnemies()) {
+			System.out.println(e.getEntityListName().toString());
+			System.out.println(e.getStatus());
 			if(!e.getCurrentAction().equals(ActionList.NONE) && !e.getCurrentAction().equals(ActionList.DEAD)) {
 				if(ePlaying.containsKey(e.getID())) {
 					ePlaying.get(e.getID()).setEntityView(e);
@@ -135,7 +137,7 @@ public class SoundView {
 			}
 			else if(e.hasTakenDamage()) {
 				if(ePlaying.containsKey(e.getID())) {
-					ePlaying.get(e.getID()).playDamaged();
+					ePlaying.get(e.getID()).playDamaged(this.client, e);
 				}
 				else {
 					ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, ActionList.NONE, this.settings.getSoundVolume()));

@@ -153,8 +153,18 @@ public class GameSound {
 		shellTimer.schedule(task, 700 + startDelay);
 	}
 	
-	public void playDamaged() {
-		AudioClip ouch = new AudioClip(SoundList.OUCH.getPath());
+	public void playDamaged(PlayerView player, EntityView entity) {
+		this.client = player;
+		this.entity = entity;
+		AudioClip ouch;
+		if(entity instanceof PlayerView) {
+			ouch = new AudioClip(SoundList.OUCH.getPath());
+		}
+		else {
+			ouch = new AudioClip(SoundList.OUCH2.getPath());
+		}
+		this.audio = ouch;
+		calculateSound(ouch);
 		ouch.play();
 	}
 	
@@ -230,7 +240,7 @@ public class GameSound {
 						case BUCKSHOT_SHOTGUN:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN_SINGLE_RELOAD2);
 							if(((PlayerView) entity).getAmmo().get(AmmoList.SHOTGUN_ROUND) > 0 && ((GunView)((PlayerView) entity).getCurrentItem()).getAmmoInClip() + 1 != 2) {
-								this.timer.schedule(checkReplay, BuckshotShotgun.DEFAULT_RELOAD_TIME);
+								this.timer.schedule(checkReplay, BuckshotShotgun.DEFAULT_RELOAD_TIME + 300);
 							}
 							break;
 						case ROCKET_LAUNCHER:
@@ -322,19 +332,22 @@ public class GameSound {
 						case RUNNER:
 							break;
 						case SOLDIER:
+							System.out.println("HERE");
+							audio = loadedGameSounds.get(SoundList.MISSLE);
+							this.timer.schedule(checkReplay, 500);
 							break;
 						case MIDGET:
 							audio = loadedGameSounds.get(SoundList.SHOTGUN2);
 							this.timer.schedule(checkReplay, Shotgun.DEFAULT_COOL_DOWN);
-							this.startDelay = 200;
+							this.startDelay = 300;
 							this.playShellsFall(startDelay);
 							break;
 						case BOOMER:
 							break;
 						case MACHINE_GUNNER:
-							audio = loadedGameSounds.get(SoundList.MACHINE_GUN2);
-							this.timer.schedule(checkReplay, MachineGun.DEFAULT_COOL_DOWN);
-							//this.startDelay = 200;
+							audio = loadedGameSounds.get(SoundList.MACHINE_GUN4);
+							this.timer.schedule(checkReplay, 1400);
+							this.startDelay = 850;
 							//this.playShellsFall(startDelay);
 							break;
 						case SNIPER:
