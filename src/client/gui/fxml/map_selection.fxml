@@ -42,7 +42,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="meadowButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#meadowButtonPress" text="Meadow">
+            <Button fx:id="meadowButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#meadowButtonPress" text="Mansion">
                <styleClass>
                   <String fx:value="manaspaceFontWhite" />
                   <String fx:value="mapButton" />
@@ -50,12 +50,12 @@
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                        <Image url="file:assets/img/map_thumbnail/mansion.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="map2Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Ruins" GridPane.columnIndex="1">
+            <Button fx:id="map2Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map2ButtonPress" text="Island" GridPane.columnIndex="1">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />
@@ -63,12 +63,12 @@
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                        <Image url="file:assets/img/map_thumbnail/island.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="map3Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map3ButtonPress" text="Big Map" GridPane.columnIndex="2">
+            <Button fx:id="map3Button" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#map3ButtonPress" text="Village" GridPane.columnIndex="2">
                <styleClass>
                   <String fx:value="mapButton" />
                   <String fx:value="manaspaceFontWhite" />
@@ -76,7 +76,7 @@
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="file:assets/img/map_thumbnail/meadow.png" />
+                        <Image url="file:assets/img/map_thumbnail/village.png" />
                      </image>
                   </ImageView>
                </graphic>

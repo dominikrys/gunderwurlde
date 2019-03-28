@@ -37,7 +37,7 @@ public enum EntityList {
     /**
      * Player standing
      */
-    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE),
+    PLAYER("file:assets/img/entity/player/player.png", Constants.TILE_SIZE - 5), // TODO: ideally remove the -5
     PLAYER_RED("file:assets/img/entity/player/player.png", Constants.RED_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
     PLAYER_BLUE("file:assets/img/entity/player/player.png", Constants.BLUE_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
     PLAYER_GREEN("file:assets/img/entity/player/player.png", Constants.GREEN_PLAYER_COLOR_ADJUST, Constants.TILE_SIZE),
