@@ -106,7 +106,7 @@ public class ClientSender extends Thread {
                 bos.close();
             }
         }catch(SocketException ex){
-            ex.printStackTrace();
+            System.out.println("client sender ending");
         }
         catch (IOException e) {
             //e.printStackTrace();
@@ -127,5 +127,8 @@ public class ClientSender extends Thread {
      */
     public void close(){
         running = false;
+        this.interrupt();
+        senderSocket.close();
     }
+
 }

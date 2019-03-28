@@ -19,6 +19,7 @@ import client.input.CommandList;
 import client.net.Addressing;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
+import client.net.NetworkInformation;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
 import server.engine.state.map.MapReader;
@@ -41,14 +42,6 @@ public class Client extends Thread {
      * The port the player will use to join the game
      */
     private static final int TCPPORT = 8081;
-    /**
-     * Integer to hold the next assignable IP address
-     */
-    private static int lowestAvailableAddress = 1;
-    /**
-     * Integer to hold the next assignable port
-     */
-    private static int lowestAvailablePort = 4444;
     /**
      * Socket to receive GameViews from the server
      */
@@ -166,6 +159,8 @@ public class Client extends Thread {
      */
     private ConnectionType connectionType;
 
+    public boolean shouldClose = false;
+
     /**
      * Constructor for single player or multiplayer host
      *
@@ -178,24 +173,20 @@ public class Client extends Thread {
     public Client(Stage stage, GameHandler handler, Settings settings, int playerID, ConnectionType connectionType) {
         try {
             // Assign the value for the ports and update the next available port
-            this.listenPort = lowestAvailablePort;
-            this.sendPort = lowestAvailablePort + 1;
-            updateLowestAvailablePort();
+            this.listenPort = NetworkInformation.getLowestAvailablePort();
+            this.sendPort = NetworkInformation.getLowestAvailablePort() + 1;
             // Assign the values for the addresses and update the next available address
-            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
-            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
-            updateLowestAvailableAddress();
+            this.listenAddress = InetAddress.getByName("230.0.0." + NetworkInformation.getLowestAvailableIPAddress());
+            this.senderAddress = InetAddress.getByName("230.0.1." + NetworkInformation.getLowestAvailableIPAddress());
             this.stage = stage;
             this.handler = handler;
             this.settings = settings;
             this.playerID = playerID;
             this.connectionType = connectionType;
             firstView = true;
-
-            System.out.println("Client listen: " + listenAddress.toString());
-            System.out.println("Client send: " + senderAddress.toString());
-            System.out.println("Client listenport: " + listenPort);
-            System.out.println("Client sendport: " + sendPort);
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -230,6 +221,9 @@ public class Client extends Thread {
             firstView = true;
             this.connectionType = connectionType;
             joinGame();
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -245,15 +239,13 @@ public class Client extends Thread {
             listenSocket.joinGroup(listenAddress);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
-            System.out.println("Client Listen Address: " + listenAddress);
-            System.out.println("Client Listen Port: " + listenPort);
-            System.out.println("Client Sender Address: " + senderAddress);
-            System.out.println("Client Sender Port: " + sendPort);
             sender = new ClientSender(senderAddress, sendSocket, sendPort, playerID);
             sender.setName("ClientSender");
             receiver = new ClientReceiver(listenSocket, this, settings);
             receiver.setName("ClientReceiver");
-            System.out.println("Closing client");
+            if(shouldClose){
+                this.close(false);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -270,11 +262,6 @@ public class Client extends Thread {
         this.view = view;
         // if this is the first GameView then create a renderer
         if (firstView) {
-            System.out.println("\n\n Threads alive when received first gameView");
-            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-            for (Thread t : threadSet) {
-                System.out.println(t.getName() + " is still alive");
-            }
             firstView = false;
             this.tileMap = MapReader.readMapView(view.getMapName());
             this.view.setTileMap(tileMap);
@@ -398,26 +385,43 @@ public class Client extends Thread {
     /**
      * Method to end this thread
      */
-    public void close() {
+    public void close(boolean passUp) {
         try {
-            if (renderer.isRunning()) {
+            shouldClose = true;
+            if(joinGameSocket != null){
+                joinGameSocket.close();
+            }
+            if(tcpSocket != null){
+                tcpSocket.close();
+            }
+            if (renderer != null && renderer.isRunning()) {
                 renderer.stop();
             }
-            // Close sender first
-            sender.close();
-            // When sender has joined close the socket
-            sender.join();
-            sendSocket.close();
-            // Close receiver
-            receiver.close();
-            // when receiver has joined tell handler to close server if exists
-            receiver.join();
-            // no need to close socket as its closed within receiver
-            handler.end();
+            if(sender != null) {
+                // Close sender first
+                sender.close();
+                // When sender has joined close the socket
+                sender.join();
+            }
+            if(receiver != null) {
+                // Close receiver
+                receiver.close();
+                // when receiver has joined tell handler to close server if exists
+                receiver.join();
+                // no need to close socket as its closed within receiver
+            }
+            // check if close needs to be passed up the trail
+            if(passUp) {
+                handler.end();
+            }
+
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Method to send requests that do no require parameters to the server
@@ -463,19 +467,5 @@ public class Client extends Thread {
             case "CONSUMABLE": // 6
                 sender.send(new Integer[]{6, parameter});
         }
-    }
-
-    /**
-     * method to update the next assignable address
-     */
-    private void updateLowestAvailableAddress() {
-        lowestAvailableAddress++;
-    }
-
-    /**
-     * method to update the next asssignable port
-     */
-    private void updateLowestAvailablePort() {
-        lowestAvailablePort += 2;
     }
 }

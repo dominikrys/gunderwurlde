@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import client.net.Addressing;
+import client.net.NetworkInformation;
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
 import server.net.JoinGameManager;
@@ -159,6 +160,8 @@ public class Server extends Thread implements HasEngine {
      */
     private boolean receiving;
 
+    private boolean shouldClose = false;
+
     /**
      * Constructor
      * @param mapName The map that the game will be played on
@@ -180,26 +183,22 @@ public class Server extends Thread implements HasEngine {
             this.clientRequests = null;
             this.receiving = false;
             // Set ports to be used
-            sendPort = lowestavailableport;
-            listenPort = lowestavailableport + 1;
+            sendPort = NetworkInformation.getLowestAvailablePort();
+            listenPort = NetworkInformation.getLowestAvailablePort() + 1;
             // update next assignable port
-            updatedLowestAvailablePort();
             // Set sockets and address to be used
             listenSocket = new MulticastSocket(listenPort);
             Addressing.setInterfaces(listenSocket);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
-            listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            listenAddress = InetAddress.getByName("230.0.1." + NetworkInformation.getLowestAvailableIPAddress());
             listenSocket.joinGroup(listenAddress);
-            senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            senderAddress = InetAddress.getByName("230.0.0." + NetworkInformation.getLowestAvailableIPAddress());
             Addressing.setInterfaces(sendSocket);
-            updatedLowestAvailableAddress();
-            System.out.println("Server constructor finished");
+            if(shouldClose){
+                this.close();
+            }
 
-            System.out.println("Server listen: " + listenAddress.toString());
-            System.out.println("Server send: " + senderAddress.toString());
-            System.out.println("Server listenport: " + listenPort);
-            System.out.println("Server sendport: " + sendPort);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -276,33 +275,21 @@ public class Server extends Thread implements HasEngine {
                 // create the engine and start it
                 this.engine = new ProcessGameState(this, mapName, playersToAdd);
                 engine.start();
-                    System.out.println("\n\n Threads alive when engine started \n\n");
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                for(Thread t : threadSet){
-                    System.out.println(t.getName() + " is still alive");
-                }
                 engine.setName("GameEngine");
                 System.out.println("Closing server");
-            } catch (UnknownHostException e) {
+            }catch(SocketException ex){
+            System.out.println("Ending server");
+        }
+            catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(shouldClose){
+            this.close();
+        }
     }
 
-    /**
-     * method to update to the next assignable port
-     */
-    private void updatedLowestAvailablePort() {
-        lowestavailableport += 2;
-    }
-
-    /**
-     * method to update to the next assignable address
-     */
-    private void updatedLowestAvailableAddress() {
-        lowestAvailableAddress++;
-    }
 
     /**
      * Methods to tell the ServerSender to send the next GameView
@@ -370,24 +357,32 @@ public class Server extends Thread implements HasEngine {
      * method to close the server and its threads
      */
     public void close() {
-        // close the engine down
-        System.out.println("CLOSING SERVER THREADS");
-        engine.handlerClosing();
-        sender.close();
-        try {
-            sender.join();
-            sendSocket.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        receiver.close();
-        try {
-            receiver.join();
+        try{
+            shouldClose = true;
+            if(joinGameSocket != null){
+                joinGameSocket.close();
+            }
+            if(tcpMananger != null){
+                tcpMananger.close();
+            }
+            // close the engine down
+            if(engine != null) {
+                engine.handlerClosing();
+            }
+            if(sender != null) {
+                sender.close();
+                sender.join();
+            }
+            if(receiver != null) {
+                receiver.close();
+                receiver.join();
+            }
             //ServerReceiver closes itself
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 
     public boolean isReceiving() {
         return receiving;
@@ -399,9 +394,5 @@ public class Server extends Thread implements HasEngine {
 
     public String getPort(){
         return Integer.toString(sendPort);
-    }
-
-    public boolean isThreadsRunning(){
-        return sender.isAlive() && receiver.isAlive();
     }
 }

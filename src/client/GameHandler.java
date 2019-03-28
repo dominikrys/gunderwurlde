@@ -1,6 +1,7 @@
 package client;
 
 import client.gui.menucontrollers.LoadScreenController;
+import client.net.NetworkInformation;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -87,6 +88,8 @@ public class GameHandler extends Thread {
      */
     private LoadScreenController loadScreenController;
 
+    private boolean shouldClose = false;
+
     /**
      * Constructor for single player and multiplayer host instances.
      *
@@ -141,6 +144,11 @@ public class GameHandler extends Thread {
         // Load loading screen and set it to stage
         loadLoadingScreen();
         stage.getScene().setRoot(loadScreen);
+        stage.setOnCloseRequest(we -> {
+            stage.close();
+            this.end();
+        });
+
 
         switch (connectionType) {
             case SINGLE_PLAYER:
@@ -149,42 +157,29 @@ public class GameHandler extends Thread {
                         // Create the server
                         server = new Server(map, playerName, team, 1, false);
                         server.setName("Server");
-                        System.out.println("\n\n Threads alive when server constructed \n\n");
-                        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                        for (Thread t : threadSet) {
-                            System.out.println(t.getName() + " is still alive");
-                        }
-
                         // create the client
                         client = new Client(stage, this, settings, 0, connectionType);
                         client.setName("Client");
-                        System.out.println("\n\n Threads alive when client constructed \n\n");
-                        threadSet = Thread.getAllStackTraces().keySet();
-                        for (Thread t : threadSet) {
-                            System.out.println(t.getName() + " is still alive");
-                        }
-
 
                         // start client threads ready to receive and send
                         client.start();
 
                         // wait for threads to be setup completely
                         client.join();
-                        System.out.println("\n\n Threads alive when client threads setup \n\n");
-                        threadSet = Thread.getAllStackTraces().keySet();
-                        for (Thread t : threadSet) {
-                            System.out.println(t.getName() + " is still alive");
+                        if(shouldClose){
+                            this.end();
                         }
+
                         // start server threads ready to send and receive
                         server.start();
                         serverStarted = true;
                         // wait for threads to be setup completely
                         server.join();
-                        System.out.println("\n\n Threads alive when server threads constructed \n\n");
-                        threadSet = Thread.getAllStackTraces().keySet();
-                        for (Thread t : threadSet) {
-                            System.out.println(t.getName() + " is still alive");
+                        if(shouldClose){
+                            this.end();
                         }
+                        NetworkInformation.incrementLowestAvailableIPAddress();
+                        NetworkInformation.incrementLowestAvailablePort();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -198,6 +193,9 @@ public class GameHandler extends Thread {
                         server.setName("Server");
                         // start the server as it needs to listen to requests
                         server.join();
+                        if(shouldClose){
+                            this.end();
+                        }
                         String[] splitIPAddress = server.getIPAddress().split("/");
                         loadScreenController.update(splitIPAddress[1], server.getPort());
                         server.start();
@@ -206,21 +204,24 @@ public class GameHandler extends Thread {
                         while (!server.isReceiving()) {
                             Thread.yield();
                         }
-                        System.out.println("Server setup and waiting");
                         // create the client
                         client = new Client(stage, this, settings, 0, connectionType);
                         client.setName("Client");
 
                         // setup clients threads
                         client.start();
-                        System.out.println("Client started");
                         //wait for all threads to finish setting up and client to join the game fully
                         client.join();
-                        System.out.println("Client joined");
+                        if(shouldClose){
+                            this.end();
+                        }
                         // wait for the server to receive all players before ending
                         server.join();
-                        System.out.println("Server joined");
-                        System.out.println("Client setup and waiting");
+                        if(shouldClose){
+                            this.end();
+                        }
+                        NetworkInformation.incrementLowestAvailableIPAddress();
+                        NetworkInformation.incrementLowestAvailablePort();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -235,14 +236,17 @@ public class GameHandler extends Thread {
                         client = new Client(stage, this, settings, address, port, playerName, team, connectionType);
                         client.setName("Client");
                         // Wait for the client to fully join the game
-                        System.out.println("client joined");
                         client.join();
+                        if(shouldClose){
+                            this.end();
+                        }
                         // setup the threads for that client
                         client.start();
-                        System.out.println("client started");
                         // wait for threads to completely setup
                         client.join();
-                        System.out.println("Client joined again");
+                        if(shouldClose){
+                            this.end();
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -253,15 +257,18 @@ public class GameHandler extends Thread {
     }
 
     public void end() {
+        shouldClose = true;
         // End server if running/exists
         System.out.println("Told to end server threads");
         if (server != null) {
-            if (server.isThreadsRunning()) {
-                server.close();
-            }
+            server.close();
+        }
+        if(client != null){
+            client.close(false);
         }
         // Client and threads end on their own when renderer calls
     }
+
 
     /**
      * Load the loading screen FXML and set its constructor
