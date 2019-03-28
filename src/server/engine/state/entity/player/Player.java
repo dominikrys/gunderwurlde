@@ -9,7 +9,6 @@ import server.engine.state.entity.ItemDrop;
 import server.engine.state.entity.LivingEntity;
 import server.engine.state.item.Item;
 import server.engine.state.item.consumable.Grenade;
-import server.engine.state.item.weapon.gun.LaserPistol;
 import server.engine.state.item.weapon.gun.Pistol;
 import server.engine.state.item.weapon.gun.ProjectileGun;
 import shared.lists.AmmoList;
@@ -52,8 +51,7 @@ public class Player extends LivingEntity {
         super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();
         items.add(new Pistol());
-        items.add(new LaserPistol()); // TODO remove testing only
-        items.add(new Grenade()); // TODO remove testing only
+        items.add(new Grenade());
         this.maxItems = DEFAULT_ITEM_CAP;
         this.currentItem = 0;
         this.team = team;
@@ -62,10 +60,6 @@ public class Player extends LivingEntity {
         this.maxAmmo = DEFAULT_MAX_AMMO;
         this.ammo = new EnumMap<>(AmmoList.class);
         this.ammo.put(AmmoList.BASIC_AMMO, 120);
-        this.ammo.put(AmmoList.SHOTGUN_ROUND, 20); // TODO remove testing only
-        this.ammo.put(AmmoList.MAGIC_ESSENCE, 16); // TODO remove testing only
-        this.ammo.put(AmmoList.HEAVY_AMMO, 40); // TODO remove testing only
-        this.ammo.put(AmmoList.ROCKET_AMMO, 4); // TODO remove testing only
         this.paused = false;
     }
 

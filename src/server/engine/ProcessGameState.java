@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,6 +67,8 @@ public class ProcessGameState extends Thread {
     private static final Logger LOGGER = Logger.getLogger(ProcessGameState.class.getName());
     private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
     private static final int TICKS_TILL_INFO = 3600; // ticks between performance info being logged
+
+    private static Random random = new Random();
 
     static {
         LOGGER.setLevel(Level.INFO);
@@ -234,7 +237,7 @@ public class ProcessGameState extends Thread {
             HashSet<Pose> playerPoses = new HashSet<>();
             for (Integer p : playerIDs) {
                 LivingEntity currentPlayer = livingEntities.get(p);
-                 if (currentPlayer.getStatus() != EntityStatus.DEAD) //TODO when fixed in AI
+                if (currentPlayer.getStatus() != EntityStatus.DEAD)
                     playerPoses.add(currentPlayer.getPose());
             }
 
@@ -490,6 +493,8 @@ public class ProcessGameState extends Thread {
     private void spawnDrops(Tile[][] tileMap, LinkedHashMap<Integer, ItemDrop> items, LinkedHashSet<ItemDropView> itemDropsView, LivingEntity entity) {
         LinkedList<ItemDrop> drops = entity.getDrops();
         for (ItemDrop newDrop : drops) {
+            newDrop.setVelocity(entity.getVelocity());
+            newDrop.addNewForce(new Force(random.nextInt(360), random.nextInt(8000) + 2000));
             items.put(newDrop.getID(), newDrop);
             // TODO spawned itemdrop status? is this needed?
             itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
@@ -565,10 +570,6 @@ public class ProcessGameState extends Thread {
         for (Integer e : enemyIDs) {
             Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
-            // reset values
-            currentEnemy.setMoving(false);
-            currentEnemy.setTakenDamage(false);
-
             if (currentEnemy.hasEffect())
                 currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
             else if (currentEnemy.getStatus() == EntityStatus.SPAWNING)
@@ -640,6 +641,10 @@ public class ProcessGameState extends Thread {
             enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
                     currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                     currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
+
+            // reset values
+            currentEnemy.setMoving(false);
+            currentEnemy.setTakenDamage(false);
         }
     }
 
@@ -965,8 +970,10 @@ public class ProcessGameState extends Thread {
             }
 
             // mark inactive zones for removal
-            if (!z.isActive())
+            if (!z.isActive()) {
                 zonesToRemove.add(z.getId());
+                LOGGER.info("Removing zone: " + z.getId());
+            }
         }
 
         zonesToRemove.stream().forEach((z) -> activeZones.remove(z));
@@ -1073,7 +1080,6 @@ public class ProcessGameState extends Thread {
             LivingEntity entityBeingChecked) {
         boolean removed;
         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
-        entityBeingChecked.setTakenDamage(true);
 
         if (currentProjectile instanceof HasEffect) {
             if (entityBeingChecked.hasEffect())
@@ -1170,7 +1176,6 @@ public class ProcessGameState extends Thread {
                 if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && aoeAttack.haveCollided(entitiyBeingChecked)) {
                     affectedEntities.add(entitiyID);
                     entitiyBeingChecked.damage(aoeAttack.getDamage());
-                    entitiyBeingChecked.setTakenDamage(true);
                     entitiyBeingChecked.addNewForce(aoeAttack.getForce(entitiyBeingChecked.getPose(), source));
                     livingEntities.put(entitiyID, entitiyBeingChecked);
                 }

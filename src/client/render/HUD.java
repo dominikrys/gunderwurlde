@@ -2,6 +2,8 @@ package client.render;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
@@ -35,6 +37,14 @@ public class HUD extends BorderPane {
      * Pane for storing minimap
      */
     StackPane miniMapPane;
+    /**
+     * Canvas for minimap. Canvas used instead of pane since it's more flexible, efficient and can be expanded.
+     */
+    Canvas minimapCanvas;
+    /**
+     * GraphicsContext for minimap
+     */
+    GraphicsContext minimapGC;
     /**
      * Label for player score
      */
@@ -152,9 +162,14 @@ public class HUD extends BorderPane {
             miniMapRectangle.setWidth(maxMinimapSize);
         }
 
+        // Initialise minimap canvas
+        minimapCanvas = new Canvas(miniMapRectangle.getWidth(), miniMapRectangle.getHeight());
+        minimapGC = minimapCanvas.getGraphicsContext2D();
+
         // Add minimap to top right of HUD
-        miniMapPane.getChildren().add(miniMapRectangle);
+        miniMapPane.getChildren().addAll(miniMapRectangle, minimapCanvas);
         this.setRight(miniMapPane);
+        miniMapPane.setAlignment(Pos.TOP_RIGHT);
 
         // Add playerinfo elements to top left of hud
         playerInfoBox.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
@@ -319,51 +334,45 @@ public class HUD extends BorderPane {
      * @return MiniMap as stackpane
      */
     private void updateMiniMap(GameView gameView, PlayerView currentPlayer) {
-        // Clear minimap pane and set background and alignment
-        miniMapPane.getChildren().clear();
-        miniMapPane.getChildren().add(miniMapRectangle);
-        miniMapPane.setAlignment(Pos.TOP_RIGHT);
+        // Clear minimap canvas
+        minimapGC.clearRect(0, 0, miniMapRectangle.getWidth(), miniMapRectangle.getHeight());
 
-        // Size for player indicators
+        // Specify size for minimap indicators
         int playerRectangleSize = 4;
 
         // Loop through all players, placing them on the minimap
         for (PlayerView playerView : gameView.getPlayers()) {
-            // Create new player indicator
-            Rectangle playerRectangle = new Rectangle(playerRectangleSize, playerRectangleSize);
-
             // If current player, set box to white
             if (playerView.getID() == currentPlayer.getID()) {
-                playerRectangle.setFill(Color.WHITE);
+                minimapGC.setFill(Color.WHITE);
             } else {
                 switch (playerView.getTeam()) {
                     case RED:
-                        playerRectangle.setFill(Constants.RED_TEAM_COLOR);
+                        minimapGC.setFill(Constants.RED_TEAM_COLOR);
                         break;
                     case BLUE:
-                        playerRectangle.setFill(Constants.BLUE_TEAM_COLOR);
+                        minimapGC.setFill(Constants.BLUE_TEAM_COLOR);
                         break;
                     case GREEN:
-                        playerRectangle.setFill(Constants.GREEN_TEAM_COLOR);
+                        minimapGC.setFill(Constants.GREEN_TEAM_COLOR);
                         break;
                     case YELLOW:
-                        playerRectangle.setFill(Constants.YELLOW_TEAM_COLOR);
+                        minimapGC.setFill(Constants.YELLOW_TEAM_COLOR);
                         break;
                     default:
-                        playerRectangle.setFill(Color.rgb(178, 177, 169));
+                        minimapGC.setFill(Color.GREY);
                         break;
                 }
             }
 
-            // Set correct position of player location on minimap
-            AnchorPane playerRectanglePane = new AnchorPane(playerRectangle);
-            AnchorPane.setLeftAnchor(playerRectangle, (currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
-                    (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
-            AnchorPane.setTopAnchor(playerRectangle, (currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
-                    (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2);
+            // Draw player indicator at the correct spot on the minimap
+            minimapGC.fillRect(((playerView.getPose().getX() + Constants.TILE_SIZE / 2) *
+                            (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
+                    ((playerView.getPose().getY() + Constants.TILE_SIZE / 2) *
+                            (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
+                    playerRectangleSize, playerRectangleSize);
 
-            // Add indicator to minimap pane
-            miniMapPane.getChildren().add(playerRectanglePane);
+            // TODO: add more elements to minimap
         }
     }
 

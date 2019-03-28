@@ -15,7 +15,7 @@ public class SniperRifle extends ProjectileGun {
     public static final int DEFAULT_AMMO_PER_SHOT = 1;
     public static final int DEFAULT_PROJECTILES_PER_SHOT = 1;
     public static final Projectile DEFAULT_PROJECTILE = new SmallBullet(Tile.TILE_SIZE * 22, 5, EntityList.BASIC_BULLET.getSize() / 2, 0);
-    public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.BASIC_AMMO;
+    public static final AmmoList DEFAULT_AMMO_TYPE = AmmoList.HEAVY_AMMO;
     public static final int DEFAULT_SPREAD = 0;
     public static final int DEFAULT_COOL_DOWN = 3000; //2bps
     public static final int DEFAULT_ACCURACY = 1;

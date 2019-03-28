@@ -152,7 +152,7 @@ public class MapSelectionController extends VBox implements MenuController {
      */
     @FXML
     void meadowButtonPress(ActionEvent event) {
-        startGame(MapList.MEADOWWITHWALLS);
+        startGame(MapList.MANSION);
     }
 
     /**
