@@ -127,13 +127,17 @@ public abstract class EnemyAI {
     }
 
     public static int getAngle(Pose enemy, Pose player) {
-        int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
+        try {
+            int angle = (int) Math.toDegrees(Math.atan2(player.getY() - enemy.getY(), player.getX() - enemy.getX()));
 
-        if (angle < 0) {
-            angle += 360;
+            if (angle < 0) {
+                angle += 360;
+            }
+
+            return angle;
+        }catch(Exception e){
+            return 0;
         }
-
-        return angle;
     }
 
     public Force getForceFromAttack(double maxMovementForce) {
