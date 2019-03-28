@@ -13,7 +13,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class Mage extends Zombie{
-    public static final int DEFAULT_HEALTH = 10;
+    public static final int DEFAULT_HEALTH = 5;
     public static final double DEFAULT_MOVEMENT_FORCE = 2;
     public static final int DEFAULT_SCORE_ON_KILL = 100;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
