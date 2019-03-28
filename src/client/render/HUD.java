@@ -38,6 +38,14 @@ public class HUD extends BorderPane {
      */
     StackPane miniMapPane;
     /**
+     * Canvas for minimap. Canvas used instead of pane since it's more flexible, efficient and can be expanded.
+     */
+    Canvas minimapCanvas;
+    /**
+     * GraphicsContext for minimap
+     */
+    GraphicsContext minimapGC;
+    /**
      * Label for player score
      */
     private Label playerScoreNumber;
@@ -154,9 +162,14 @@ public class HUD extends BorderPane {
             miniMapRectangle.setWidth(maxMinimapSize);
         }
 
+        // Initialise minimap canvas
+        minimapCanvas = new Canvas(miniMapRectangle.getWidth(), miniMapRectangle.getHeight());
+        minimapGC = minimapCanvas.getGraphicsContext2D();
+
         // Add minimap to top right of HUD
-        miniMapPane.getChildren().add(miniMapRectangle);
+        miniMapPane.getChildren().addAll(miniMapRectangle, minimapCanvas);
         this.setRight(miniMapPane);
+        miniMapPane.setAlignment(Pos.TOP_RIGHT);
 
         // Add playerinfo elements to top left of hud
         playerInfoBox.getChildren().addAll(playerLabel, heartPane, playerScoreLabel, playerScoreNumber, heldItems, ammoBox);
@@ -321,14 +334,8 @@ public class HUD extends BorderPane {
      * @return MiniMap as stackpane
      */
     private void updateMiniMap(GameView gameView, PlayerView currentPlayer) {
-        // Clear minimap pane and set background and alignment
-        miniMapPane.getChildren().clear();
-        miniMapPane.getChildren().add(miniMapRectangle);
-        miniMapPane.setAlignment(Pos.TOP_RIGHT);
-
-        // Size for player indicators
-        Canvas minimapCanvas = new Canvas(miniMapRectangle.getWidth(), miniMapRectangle.getHeight());
-        GraphicsContext minimapGC = minimapCanvas.getGraphicsContext2D();
+        // Clear minimap canvas
+        minimapGC.clearRect(0, 0, miniMapRectangle.getWidth(), miniMapRectangle.getHeight());
 
         // Specify size for minimap indicators
         int playerRectangleSize = 4;
@@ -359,14 +366,13 @@ public class HUD extends BorderPane {
             }
 
             // Draw player indicator at the correct spot on the minimap
-            minimapGC.fillRect(((currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
+            minimapGC.fillRect(((playerView.getPose().getX() + Constants.TILE_SIZE / 2) *
                             (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
-                    ((currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
+                    ((playerView.getPose().getY() + Constants.TILE_SIZE / 2) *
                             (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
                     playerRectangleSize, playerRectangleSize);
 
-            // Add canvas to minimappane
-            miniMapPane.getChildren().add(minimapCanvas);
+            // TODO: add more elements to minimap
         }
     }
 
