@@ -369,7 +369,7 @@ public class GameRenderer implements Runnable {
                 rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
 
         // Check if game has only just finished, in which case calculate the high score and save it
-        if (gameFinished == false) {
+        if (!gameFinished) {
             // Calculate the score for the team and get a list of team members
             int teamHighScore = 0;
             StringBuilder teamMembers = new StringBuilder();
