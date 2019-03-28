@@ -18,7 +18,7 @@ public class MachineGunner extends Zombie {
     public static final int DEFAULT_HEALTH = 15;
 
     public static final double DEFAULT_MOVEMENT_FORCE = 2;
-    public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize()/2;
+    public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize() / 2 - 5;
     public static final int DEFAULT_SCORE_ON_KILL = 100;
     public static final double DEFAULT_MASS = 10;
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
