@@ -118,6 +118,7 @@ public enum EntityList {
     ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
+    GRENADE_PROJECTILE("file:assets/img/entity/projectile/grenade_projectile.png", 16),
 
     /**
      * Tiles
