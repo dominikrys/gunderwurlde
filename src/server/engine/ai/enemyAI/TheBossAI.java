@@ -49,7 +49,7 @@ public class TheBossAI extends ZombieAI {
             }
             return AIAction.MOVE;
         }else{
-            return AIAction.UPDATE;
+            return AIAction.WAIT;
         }
     }
 

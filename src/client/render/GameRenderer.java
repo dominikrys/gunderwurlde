@@ -508,11 +508,6 @@ public class GameRenderer implements Runnable {
                             paused = false;
                             backToGameFromPauseMenu();
                         } else if (pauseMenuController.getQuitToMenuPressed()) {
-                            System.out.println("\n\n Threads alive when quit button in pause menu is pressed \n\n");
-                            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                            for (Thread t : threadSet) {
-                                System.out.println(t.getName() + " is still alive");
-                            }
 
                             // Set pause to false and stop rendering
                             this.stop();
@@ -535,7 +530,6 @@ public class GameRenderer implements Runnable {
                             ex.printStackTrace();
                         }
                     }
-                    System.out.println("GAME RENDERER PAUSE WATCHER ENDING");
                 });
                 pauseMenu.setName("PauseMenu");
                 pauseMenu.start();

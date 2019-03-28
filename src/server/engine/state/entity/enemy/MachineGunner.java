@@ -15,7 +15,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class MachineGunner extends Zombie {
-    public static final int DEFAULT_HEALTH = 15;
+    public static final int DEFAULT_HEALTH = 5;
 
     public static final double DEFAULT_MOVEMENT_FORCE = 2;
     public static final int DEFAULT_SIZE = EntityList.ZOMBIE.getSize()/2;

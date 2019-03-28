@@ -42,6 +42,7 @@ public class ServerReceiver extends Thread {
      * reference to server so we can add to the ClientRequests object
      */
     private Server handler;
+    private boolean aBoolean;
 
     /**
      * Constructor
@@ -117,7 +118,6 @@ public class ServerReceiver extends Thread {
                             break;
                         case 6 : // CONSUME
                             handler.getClientRequests().playerRequestShoot(playerID);
-                            handler.getClientRequests().playerRequestConsume(playerID, received[1]);
                             break;
                         case 7 : // PAUSE
                             handler.getClientRequests().playerRequestPause(playerID);
