@@ -161,7 +161,6 @@
             </Button>
          </children>
       </HBox>
-      <Separator maxWidth="900.0" prefWidth="900.0" />
       <Button fx:id="controlsButton" mnemonicParsing="false" onAction="#controlsButtonPress" text="Controls">
          <font>
             <Font name="Consolas" size="22.0" />
