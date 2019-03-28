@@ -35,11 +35,6 @@ import shared.view.TileView;
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 
-    // test read todo: remove this
-    public static void main(String[] args) {
-        readMap(MapList.MEADOW);
-    }
-
     public static GameMap readMap(MapList mapName) {
         LinkedList<String> file = readFile(mapName.toString());
 

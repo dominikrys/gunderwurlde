@@ -77,7 +77,11 @@ public class ClientSender extends Thread {
      */
     public void run() {
         while (running) {
-            Thread.yield();
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Closing clientSender");
     }

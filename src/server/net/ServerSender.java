@@ -87,7 +87,11 @@ public class ServerSender extends Thread {
      */
     public void run() {
         while (running) {
-            Thread.yield();
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("closing ServerSender");
     }

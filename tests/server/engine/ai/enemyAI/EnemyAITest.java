@@ -1,4 +1,4 @@
-package server.engine.ai.enemyAI;
+spackage server.engine.ai.enemyAI;
 
 import org.junit.BeforeClass;
 import server.engine.state.entity.enemy.Enemy;
