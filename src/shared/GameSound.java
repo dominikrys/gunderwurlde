@@ -26,22 +26,74 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * GameSound class. Contains the settings for generating an in-game sound.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class GameSound {
-	
+	/**
+     * loadedGameSounds - Loaded game sounds
+     */
 	private HashMap<SoundList, AudioClip> loadedGameSounds;
+	/**
+     * client - View on the client
+     */
 	private PlayerView client;
+	/**
+     * entity - View on the sound source
+     */
 	private EntityView entity;
+	/**
+     * explosion - View on the explosion source
+     */
 	private ExplosionView explosion;
+	/**
+     * action - Action of the sound source
+     */
 	private ActionList action;
+	/**
+     * audio - Audio to be played
+     */
 	private AudioClip audio;
+	/**
+     * volume - Volume of audio
+     */
 	private double volume;
+	/**
+     * timer - Timer for task scheduling
+     */
 	private Timer timer;
+	/**
+     * checkReplay - TimerTask for indicating that this audio is replayable
+     */
 	private TimerTask checkReplay;
+	/**
+     * play - TimerTask for playing the audio
+     */
 	private TimerTask play;
+	/**
+     * replayable - Boolean whether the audio is replayable
+     */
 	private boolean replayable;
+	/**
+     * startDelay - Delay before playing the audio
+     */
 	private long startDelay;
+	/**
+     * hearableDistance - Maximum distance where sounds from source can be heard
+     */
 	private double hearableDistance = 500;
 	
+	/**
+     * Constructor for sounds of entity
+     * 
+     * @param loadedGameSounds Loaded game sounds
+     * @param client View on the client
+     * @param entity View on the sound source
+     * @param action Action of the sound source
+     * @param volume Volume of audio
+     */
 	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, EntityView entity, ActionList action, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
 		this.client = client;
@@ -76,6 +128,14 @@ public class GameSound {
 		}
 	}
 	
+	/**
+     * Constructor for sounds of explosion
+     * 
+     * @param loadedGameSounds Loaded game sounds
+     * @param client View on the client
+     * @param explosion View on the explosion
+     * @param volume Volume of audio
+     */
 	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, ExplosionView explosion, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
 		this.client = client;
@@ -87,22 +147,47 @@ public class GameSound {
 		this.audio.play();
 	}
 	
+	/**
+     * Getter for entity
+     * 
+     * @return entity
+     */
 	public EntityView getEntityView() {
 		return this.entity;
 	}
 	
+	/**
+     * Setter for entity
+     * 
+     * @param entity View on the sound source
+     */
 	public void setEntityView(EntityView entity) {
 		this.entity = entity;
 	}
 	
+	/**
+     * Getter for action
+     * 
+     * @return action
+     */
 	public ActionList getActionList() {
 		return this.action;
 	}
 	
+	/**
+     * Getter for replayable
+     * 
+     * @return replayable
+     */
 	public boolean getReplayable() {
 		return this.replayable;
 	}
 	
+	/**
+     * Check whether this audio is still playing
+     * 
+     * @return true if yes, otherwise false
+     */
 	public boolean isPlaying() {
 		if(this.audio != null) {
 			return this.audio.isPlaying();
@@ -112,6 +197,9 @@ public class GameSound {
 		}
 	}
 	
+	/**
+     * Replay this audio
+     */
 	public void replay() {
 		if(this.audio != null) {
 			if(this.replayable) {
@@ -121,23 +209,28 @@ public class GameSound {
 		}
 	}
 	
-	// for debugging
-	public void setClient(PlayerView client) {
-		this.client = client;
-	}
-	
-	// for debugging
+	/**
+     * Calculate the volume and play this audio
+     */
 	public void play() {
 		this.calculateSound(audio);
 		this.audio.play();
 	}
 	
+	/**
+     * Stop this audio
+     */
 	public void stop() {
 		if(this.audio != null && !this.action.equals(ActionList.ATTACKING)) {
 			this.audio.stop();
 		}
 	}
 	
+	/**
+     * Play shells falling sound
+     * 
+     * @param startDelay Delay before playing
+     */
 	private void playShellsFall(long startDelay) {
 		Timer shellTimer = new Timer();
 		TimerTask task = new TimerTask() {
@@ -153,8 +246,14 @@ public class GameSound {
 		shellTimer.schedule(task, 700 + startDelay);
 	}
 	
-	public void playDamaged(PlayerView player, EntityView entity) {
-		this.client = player;
+	/**
+     * Play damage taken sound
+     * 
+     * @param client View of the client
+     * @param entity View of the sound source
+     */
+	public void playDamaged(PlayerView client, EntityView entity) {
+		this.client = client;
 		this.entity = entity;
 		AudioClip ouch;
 		if(entity instanceof PlayerView) {
@@ -168,6 +267,11 @@ public class GameSound {
 		ouch.play();
 	}
 	
+	/**
+     * Calculate the volume for the audio
+     * 
+     * @param audio Audio to be calculated
+     */
 	private void calculateSound(AudioClip audio) {
 		double distance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2) + Math.pow(this.entity.getPose().getY() - this.client.getPose().getY(), 2));
 		double balanceDistance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2));
@@ -179,6 +283,12 @@ public class GameSound {
 		}
 	}
 	
+	/**
+     * Calculate the volume for an explosion
+     * 
+     * @param audio Audio of explosion to be calculated
+     * @param explosion View of explosion
+     */
 	private void calculateSound(AudioClip audio, ExplosionView explosion) {
 		double distance = Math.sqrt(Math.pow(explosion.getLocation().getX() - this.client.getPose().getX(), 2) + Math.pow(explosion.getLocation().getY() - this.client.getPose().getY(), 2));
 		double balanceDistance = Math.sqrt(Math.pow(explosion.getLocation().getX() - this.client.getPose().getX(), 2));
@@ -190,6 +300,11 @@ public class GameSound {
 		}
 	}
 	
+	/**
+     * Get the right audio file and set up delays
+     * 
+     * @param action Action of the sound source
+     */
 	private AudioClip getAudio(ActionList action) {
 		audio = null;
 		switch(action) {
@@ -348,13 +463,10 @@ public class GameSound {
 							audio = loadedGameSounds.get(SoundList.MACHINE_GUN4);
 							this.timer.schedule(checkReplay, 1400);
 							this.startDelay = 850;
-							//this.playShellsFall(startDelay);
 							break;
 						case SNIPER:
 							audio = loadedGameSounds.get(SoundList.SNIPER);
 							this.timer.schedule(checkReplay, SniperRifle.DEFAULT_COOL_DOWN);
-							//this.startDelay = 200;
-							//this.playShellsFall(startDelay);
 							break;
 						case THEBOSS:
 							break;

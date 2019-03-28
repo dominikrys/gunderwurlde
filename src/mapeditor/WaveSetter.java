@@ -33,55 +33,202 @@ import javafx.stage.Stage;
 import shared.lists.EntityList;
 import shared.lists.TileState;
 
+/**
+ * WaveSetter class. Contains the gui for setting waves.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class WaveSetter {
-	
+	/**
+     * waveSetter - This object
+     */
 	private WaveSetter waveSetter = this;
+	/**
+     * mapEditor - mapEditor that opened this gui
+     */
 	private MapEditor mapEditor;
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * root - Root of the stage
+     */
 	private StackPane root;
+	/**
+     * scene - Scene of the stage
+     */
 	private Scene scene;
+	/**
+     * zoneInfoBg - Background for zone info
+     */
 	private Rectangle zoneInfoBg;
+	/**
+     * mainViewer - GridPane for zone info and wave scroll pane
+     */
 	private GridPane mainViewer;
+	/**
+     * zoneInfo - VBox for zone info
+     */
 	private VBox zoneInfo;
+	/**
+     * zoneLabelComboBoxHBox - HBox for zone label and combo box
+     */
 	private HBox zoneLabelComboBoxHBox;
+	/**
+     * zoneLabel - Label for zone
+     */
 	private Label zoneLabel;
+	/**
+     * zoneComboBox - ComboBox for zone selection
+     */
 	private ComboBox<String> zoneComboBox;
+	/**
+     * zoneAddDeleteHBox - HBox for zone add and delete button
+     */
 	private HBox zoneAddDeleteHBox;
+	/**
+     * zoneAdd - Button for zone adding
+     */
 	private Button zoneAdd;
+	/**
+     * zoneDelete - Button for zone deleting
+     */
 	private Button zoneDelete;
+	/**
+     * selectedXYLabel - Label for X Y coordinate of currently selected tile on the map editor
+     */
 	private Label selectedXYLabel;
+	/**
+     * enemySpawnLabelComboBoxHBox - HBox for enemy spawn label and combo box
+     */
 	private HBox enemySpawnLabelComboBoxHBox;
+	/**
+     * enemySpawnLabel - Label for enemy spawn
+     */
 	private Label enemySpawnLabel;
+	/**
+     * enemySpawnComboBox - ComboBox for enemy spawn selection
+     */
 	private ComboBox<String> enemySpawnComboBox;
+	/**
+     * enemySpawnAddSetDeleteHBox - HBox for enemy spawn, set and delete buttons
+     */
 	private HBox enemySpawnAddSetDeleteHBox;
+	/**
+     * enemySpawnAdd - Button for enemy spawn adding
+     */
 	private Button enemySpawnAdd;
+	/**
+     * enemySpawnSet - Button for enemy spawn setting
+     */
 	private Button enemySpawnSet;
+	/**
+     * enemySpawnDelete - Button for enemy spawn deleting
+     */
 	private Button enemySpawnDelete;
+	/**
+     * triggerLabelComboBoxHBox - HBox for trigger label and combo box
+     */
 	private HBox triggerLabelComboBoxHBox;
+	/**
+     * triggerLabel - Label for trigger
+     */
 	private Label triggerLabel;
+	/**
+     * triggerComboBox - ComboBox for trigger selection
+     */
 	private ComboBox<String> triggerComboBox;
+	/**
+     * triggerAddSetDeleteHBox - HBox for trigger add, set and delete buttons
+     */
 	private HBox triggerAddSetDeleteHBox;
+	/**
+     * triggerAdd - Button for trigger adding
+     */
 	private Button triggerAdd;
+	/**
+     * triggerSet - Button for trigger setting
+     */
 	private Button triggerSet;
+	/**
+     * triggerDelete - Button for trigger deleting
+     */
 	private Button triggerDelete;
+	/**
+     * roundLabelComboBoxHBox - HBox for round label and combo box
+     */
 	private HBox roundLabelComboBoxHBox;
+	/**
+     * roundLabel - Label for round
+     */
 	private Label roundLabel;
+	/**
+     * roundComboBox - ComboBox for round selection
+     */
 	private ComboBox<String> roundComboBox;
+	/**
+     * roundAddDeleteHBox - HBox for round add and delete buttons
+     */
 	private HBox roundAddDeleteHBox;
+	/**
+     * roundAdd - Button for round adding
+     */
 	private Button roundAdd;
+	/**
+     * roundDelete - Button for round deleting
+     */
 	private Button roundDelete;
+	/**
+     * waveScrollPane - ScrollPane for enemy info
+     */
 	private ScrollPane waveScrollPane;
+	/**
+     * waveGridPane - GridPane for all enemies
+     */
 	private GridPane waveGridPane;
+	/**
+     * enemyStartTimeLabels - HashMap containing start time labels for each type of enemy
+     */
 	private HashMap<EntityList, Label> enemyStartTimeLabels;
+	/**
+     * enemySpawnIntervalLabels - HashMap containing spawn interval labels for each type of enemy
+     */
 	private HashMap<EntityList, Label> enemySpawnIntervalLabels;
+	/**
+     * enemyAmountPerSpawnLabels - HashMap containing amount per spawn labels for each type of enemy
+     */
 	private HashMap<EntityList, Label> enemyAmountPerSpawnLabels;
+	/**
+     * enemyTotalLabels - HashMap containing total labels for each type of enemy
+     */
 	private HashMap<EntityList, Label> enemyTotalLabels;
+	/**
+     * enemyReadyLabels - HashMap containing ready labels for each type of enemy
+     */
 	private HashMap<EntityList, Label> enemyReadyLabels;
+	/**
+     * enemySetButtons - HashMap containing set buttons for each type of enemy
+     */
 	private HashMap<EntityList, Button> enemySetButtons;
+	/**
+     * zoneMap - HashMap contain zone names and their settings
+     */
 	private HashMap<String, ZoneSettings> zoneMap;
+	/**
+     * enemySprite - HashMap containing loaded sprites for each type of enemy
+     */
 	private HashMap<EntityList, ImageView> enemySprite;
+	/**
+     * selectedX - X Y coordinates of the currently selected tile on the map
+     */
 	private int[] selectedXY;
 	
+	/**
+     * Constructor without map save file
+     *
+     * @param mapEditor mapEditor that opened this gui
+     */
 	public WaveSetter(MapEditor mapEditor) {
 		this.mapEditor = mapEditor;
 		this.zoneMap = new HashMap<String, ZoneSettings>();
@@ -90,6 +237,12 @@ public class WaveSetter {
 		this.init();
 	}
 	
+	/**
+     * Constructor with map save file
+     *
+     * @param mapEditor mapEditor that opened this gui
+     * @param zoneMap HashMap contain zone names and their settings
+     */
 	public WaveSetter(MapEditor mapEditor, HashMap<String, ZoneSettings> zoneMap) {
 		this.mapEditor = mapEditor;
 		this.zoneMap = zoneMap;
@@ -98,43 +251,91 @@ public class WaveSetter {
 		this.init();
 	}
 	
+	/**
+     * Getter for zoneMap
+     * 
+     * @return zoneMap
+     */
+	public HashMap<String, ZoneSettings> getZoneMap() {
+		return this.zoneMap;
+	}
+	
+	/**
+     * Getter for zoneComboBox
+     * 
+     * @return zoneComboBox
+     */
+	public ComboBox<String> getZoneComboBox() {
+		return this.zoneComboBox;
+	}
+	
+	/**
+     * Getter for enemySpawnComboBox
+     * 
+     * @return enemySpawnComboBox
+     */
+	public ComboBox<String> getEnemySpawnComboBox() {
+		return this.enemySpawnComboBox;
+	}
+	
+	/**
+     * Getter for enemySpawnSet
+     * 
+     * @return enemySpawnSet
+     */
+	public Button getEnemySpawnSet() {
+		return this.enemySpawnSet;
+	}
+	
+	/**
+     * Getter for enemySpawnDelete
+     * 
+     * @return enemySpawnDelete
+     */
+	public Button getEnemySpawnDelete() {
+		return this.enemySpawnDelete;
+	}
+	
+	/**
+     * Getter for triggerComboBox
+     * 
+     * @return triggerComboBox
+     */
+	public ComboBox<String> getTriggerComboBox() {
+		return this.triggerComboBox;
+	}
+	
+	/**
+     * Getter for triggerSet
+     * 
+     * @return triggerSet
+     */
+	public Button getTriggerSet() {
+		return this.triggerSet;
+	}
+	
+	/**
+     * Getter for triggerDelete
+     * 
+     * @return triggerDelete
+     */
+	public Button getTriggerDelete() {
+		return this.triggerDelete;
+	}
+	
+	/**
+     * Set the selectedXY label
+     * 
+     * @param selectedXY X Y coordinates of the currently selected tile on the map
+     */
 	public void setSelectedXY(int[] selectedXY) {
 		this.selectedXY = selectedXY;
 		selectedXYLabel.setText("X: " + selectedXY[0] + " Y: " + selectedXY[1]);
 	}
 	
-	public HashMap<String, ZoneSettings> getZoneMap() {
-		return this.zoneMap;
-	}
-	
-	public ComboBox<String> getZoneComboBox() {
-		return this.zoneComboBox;
-	}
-	
-	public ComboBox<String> getEnemySpawnComboBox() {
-		return this.enemySpawnComboBox;
-	}
-	
-	public Button getEnemySpawnSet() {
-		return this.enemySpawnSet;
-	}
-	
-	public Button getEnemySpawnDelete() {
-		return this.enemySpawnDelete;
-	}
-	
-	public ComboBox<String> getTriggerComboBox() {
-		return this.triggerComboBox;
-	}
-	
-	public Button getTriggerSet() {
-		return this.triggerSet;
-	}
-	
-	public Button getTriggerDelete() {
-		return this.triggerDelete;
-	}
-	
+	/**
+     * Initialize the gui
+     */
 	private void init() {
 		stage = new Stage();
 		stage.setTitle("Wave Setter");
@@ -730,11 +931,16 @@ public class WaveSetter {
         });
 	}
 	
+	/**
+     * Show the gui
+     */
 	protected void show() {
 		stage.show();
 	}
 	
-	// Load entity sprites
+	/**
+     * Load entity sprites
+     */
 	private void loadEnemySprite() {
 		enemySprite = new HashMap<EntityList, ImageView>();
 		EnumSet.allOf(EntityList.class).forEach(entityList -> {
@@ -772,6 +978,13 @@ public class WaveSetter {
 		});
 	}
 	
+	/**
+     * Check if a coordinate already used
+     * 
+     * @param list List of enemy spawns or triggers
+     * @param selectedXY X Y coordinates of selected tile
+     * @return true if duplicate, false otherwise
+     */
 	private boolean checkDuplicate(ArrayList<int[]> list, int[] selectedXY) {
 		for(int i = 0 ; i < list.size() ; i++) {
 			if(Arrays.toString(list.get(i)).equals(Arrays.toString(selectedXY))) {
@@ -781,6 +994,16 @@ public class WaveSetter {
 		return true;
 	}
 	
+	/**
+     * Set enemy settings and display them
+     * 
+     * @param enemy Type of enemy
+     * @param startTime Start time of enemy
+     * @param spawnInterval Spawn interval of enemy
+     * @param amountPerSpawn Amount per spawn of enemy
+     * @param total Total amount to spawn of enemy
+     * @param ready Boolean whether this enemy is fully set
+     */
 	public void setEnemyInfo(EntityList enemy, int startTime, int spawnInterval, int amountPerSpawn, int total, boolean ready) {
 		enemyStartTimeLabels.get(enemy).setText("Start Time: " + startTime);
 		enemySpawnIntervalLabels.get(enemy).setText("Spawn Interval: " + spawnInterval);
@@ -796,6 +1019,11 @@ public class WaveSetter {
 		}
 	}
 	
+	/**
+	 * Invalid or duplicate tile alert
+	 * 
+	 * @param source Enemy spawn or trigger
+     */
 	private void selectionError(String source) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");

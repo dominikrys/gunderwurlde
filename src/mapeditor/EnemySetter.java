@@ -16,32 +16,108 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import shared.lists.EntityList;
 
+/**
+ * EnemySetter class. Contains the gui for an enemy's settings.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class EnemySetter {
-	
+	/**
+     * waveSetter - Wave setter that opened this enemy setter
+     */
 	private WaveSetter waveSetter;
+	/**
+     * enemy - The type of enemy currently setting
+     */
 	private EntityList enemy;
+	/**
+     * enemySettings - All settings of enemies for the current map
+     */
 	private WaveSettings enemySettings;
-	
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * root - Root of the stage
+     */
     private StackPane root;
+    /**
+     * scene - Scene of the stage
+     */
     private Scene scene;
+    /**
+     * vBox - Parent vBox for all children
+     */
     private VBox vBox;
+    /**
+     * startTimeLabelTextFieldHBox - HBox for start time label and text field
+     */
     private HBox startTimeLabelTextFieldHBox;
+    /**
+     * startTimeLabel - Label for start time
+     */
     private Label startTimeLabel;
+    /**
+     * startTimeTextField - Text field for entering this enemy's spawning time
+     */
     private TextField startTimeTextField;
+    /**
+     * spawnIntervalLabelTextFieldHBox - HBox for spawn interval label and text field
+     */
     private HBox spawnIntervalLabelTextFieldHBox;
+    /**
+     * spawnIntervalLabel - Label for spawn interval
+     */
     private Label spawnIntervalLabel;
+    /**
+     * spawnIntervalTextField - Text field for entering this enemy's spawning interval
+     */
     private TextField spawnIntervalTextField;
+    /**
+     * amountPerSpawnLabelTextFieldHBox - HBox for amount per spawn label and text field
+     */
     private HBox amountPerSpawnLabelTextFieldHBox;
+    /**
+     * amountPerSpawnLabel - Label for amount per spawn
+     */
     private Label amountPerSpawnLabel;
+    /**
+     * amountPerSpawnTextField - Text field for entering this's enemy's amount per spawn
+     */
     private TextField amountPerSpawnTextField;
+    /**
+     * totalLabelTextFieldHBox - HBox for total label and text field
+     */
     private HBox totalLabelTextFieldHBox;
+    /**
+     * totalLabel - Label for total
+     */
     private Label totalLabel;
+    /**
+     * totalTextField - Text field for entering this enemy's total amount to spawn
+     */
     private TextField totalTextField;
+    /**
+     * saveCancelHBox - HBox for save and cancel button
+     */
     private HBox saveCancelHBox;
+    /**
+     * saveButton - Button for saving this enemy's settings
+     */
     private Button saveButton;
+    /**
+     * cancelButton - Button for cancelling and closing the gui
+     */
     private Button cancelButton;
     
+    /**
+     * Constructor
+     *
+     * @param waveSetter Wave setter that opened this enemy setter
+     * @param enemy The type of enemy currently setting
+     * @param enemySettings All settings of enemies for the current map
+     */
     public EnemySetter(WaveSetter waveSetter, EntityList enemy, WaveSettings enemySettings) {
     	this.waveSetter = waveSetter;
     	this.enemy = enemy;
@@ -49,6 +125,9 @@ public class EnemySetter {
     	this.init();
     }
     
+    /**
+     * Initialize the gui and show it
+     */
     private void init() {
     	stage = new Stage();
 		stage.setTitle(enemy.toString() + " settings");

@@ -14,30 +14,62 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+/**
+ * StartMenu class. Contains the gui for the start menu of the map editor.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class StartMenu {
-	
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * startMenu - This object
+     */
 	private StartMenu startMenu = this;
+	/**
+     * resWidth - Width for the gui
+     */
 	private int resWidth = 800;
+	/**
+     * resHeight - Height for the gui
+     */
 	private int resHeight = 600;
 	
+	/**
+     * Constructor
+     */
 	public StartMenu() {
 		this.init(null);
 	}
 	
+	/**
+     * Constructor
+     *
+     * @param main Stage
+     */
 	public StartMenu(Stage main) {
 		this.init(main);
 	}
 	
+	/**
+     * Setter for resWidth
+     */
 	public void setResWidth(int resWidth) {
 		this.resWidth = resWidth;
 	}
 	
+	/**
+     * Setter for resHeight
+     */
 	public void setResHeight(int resHeight) {
 		this.resHeight = resHeight;
 	}
 	
-	// Initialize
+	/**
+     * Initialize the gui and show it
+     */
 	private void init(Stage main) {
 		if(stage == null) {
 			this.stage = new Stage();

@@ -1,8 +1,6 @@
 package mapeditor;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -40,7 +38,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import server.engine.state.map.tile.Door;
 import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.MapEditorAssetList;
@@ -48,90 +45,327 @@ import shared.lists.Team;
 import shared.lists.TileState;
 import shared.lists.TileList;
 
+/**
+ * MapEditor class. Contains the main gui for the map editor.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class MapEditor {
-	
+	/**
+     * saveFile - Save file for the current map
+     */
 	private File saveFile;
+	/**
+     * resWidth - Width for the gui
+     */
 	private int resWidth;
+	/**
+     * resHeight - Height for the gui
+     */
 	private int resHeight;
+	/**
+     * mapEditor - This object
+     */
 	private MapEditor mapEditor = this;
+	/**
+     * mapName - Name of this map
+     */
 	private String mapName;
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * root - Root of the stage
+     */
 	private StackPane root;
+	/**
+     * scene - Scene of the stage
+     */
 	private Scene scene;
+	/**
+     * background - Stack pane for backgrounds
+     */
 	private StackPane background;
+	/**
+     * mapViewerBackbground - Background for the map viewer
+     */
 	private Rectangle mapViewerBackground;
+	/**
+     * infoBackground - Background for the map's info
+     */
 	private Rectangle infoBackground;
+	/**
+     * mainViewer - GridPane for the map canvas and info viewer
+     */
 	private GridPane mainViewer;
+	/**
+     * mapCanvas - Canvas of the map
+     */
 	private Canvas mapCanvas;
+	/**
+     * mapSnapshot - Snapshot of the state of the map
+     */
 	private Image mapSnapshot;
+	/**
+     * infoViewer - StackPane for all info
+     */
 	private StackPane infoViewer;
+	/**
+     * info - Parent vBox for all info children 
+     */
 	private VBox info;
+	/**
+     * mapNameLabel - Label for map name
+     */
 	private Label mapNameLabel;
+	/**
+     * mapNameButton - Button for changing map name
+     */
 	private Button mapNameButton;
-	//private HBox tileIDInfo;
-	//private Label tileIDLabel1;
-	//private Label tileIDLabel2;
+	/**
+     * tileImageView - Image of selected tile
+     */
 	private ImageView tileImageView;
+	/**
+     * tileTypeInfo - HBox for tile info
+     */
 	private HBox tileTypeInfo;
+	/**
+     * tileTypeLabel1 - Label for tile type
+     */
 	private Label tileTypeLabel1;
+	/**
+     * tileTypeLabel2 - Label for tile type of selected tile
+     */
 	private Label tileTypeLabel2;
+	/**
+     * tileStateInfo - HBox for tile state
+     */
 	private HBox tileStateInfo;
+	/**
+     * tileStateLabel1 - Label for tile state
+     */
 	private Label tileStateLabel1;
+	/**
+     * tileStateLabel2 - Label for tile state of selected tile
+     */
 	private Label tileStateLabel2;
+	/**
+     * frictionInfo - HBox for friction info
+     */
 	private HBox frictionInfo;
+	/**
+     * frictionLabel1 - Label for friction
+     */
 	private Label frictionLabel1;
+	/**
+     * frictionLabel2 - Label for friction of selected tile
+     */
 	private Label frictionLabel2;
+	/**
+     * bounceInfo - HBox for bounce info
+     */
 	private HBox bounceInfo;
+	/**
+     * bounceLabel1 - Label for bounce
+     */
 	private Label bounceLabel1;
+	/**
+     * bounceLabel2 - Label for bounce of selected tile
+     */
 	private Label bounceLabel2;
+	/**
+     * mapSizeOption - Gui for map size option
+     */
 	private MapSizeOption mapSizeOption;
+	/**
+     * teamSpawnInfo - GridPane for team spawn info
+     */
 	private GridPane teamSpawnInfo;
+	/**
+     * redTeamSpawnLabel1 - Label for red team spawn
+     */
 	private Label redTeamSpawnLabel1;
+	/**
+     * redTeamSpawnLabel2 - Label for coordinates of red team spawn
+     */
 	private Label redTeamSpawnLabel2;
+	/**
+     * blueTeamSpawnLabel1 - Label for blue team spawn
+     */
 	private Label blueTeamSpawnLabel1;
+	/**
+     * blueTeamSpawnLabel2 - Label for coordinates of blue team spawn
+     */
 	private Label blueTeamSpawnLabel2;
+	/**
+     * greenTeamSpawnLabel1 - Label for green team spawn
+     */
 	private Label greenTeamSpawnLabel1;
+	/**
+     * greenTeamSpawnLabel2 - Label for coordinates of green team spawn
+     */
 	private Label greenTeamSpawnLabel2;
+	/**
+     * yellowTeamSpawnLabel1 - Label for yellow team spawn
+     */
 	private Label yellowTeamSpawnLabel1;
+	/**
+     * yellowTeamSpawnLabel2 - Label for coordinates of yellow team spawn
+     */
 	private Label yellowTeamSpawnLabel2;
+	/**
+     * setRedSpawn - Button for setting red spawn
+     */
 	private Button setRedSpawn;
+	/**
+     * setBlueSpawn - Button for setting blue spawn
+     */
 	private Button setBlueSpawn;
+	/**
+     * setGreenSpawn - Button for setting green spawn
+     */
 	private Button setGreenSpawn;
+	/**
+     * setYellowSpawn - Button for setting yellow spawn
+     */
 	private Button setYellowSpawn;
+	/**
+     * teamSpawns - HashMap containing all teams and their spawn coordinates
+     */
 	private HashMap<Team,int[]> teamSpawns;
+	/**
+     * paintVBox - VBox for all paint options
+     */
 	private VBox paintVBox;
+	/**
+     * paintCheckbox - CheckBox for turning on/off paint mode
+     */
 	private CheckBox paintCheckbox;
+	/**
+     * paintHBox - HBox for paint tile
+     */
 	private HBox paintHBox;
+	/**
+     * paintTileImageView - Image of selected tile to paint
+     */
 	private ImageView paintTileImageView;
+	/**
+     * paintChangeButton - Button for selecting tile to paint
+     */
 	private Button paintChangeButton;
+	/**
+     * squareDeleteHBox - HBox for square and delete mode
+     */
 	private HBox squareDeleteHBox;
+	/**
+     * squareCheckBox - CheckBox for turning on/off square mode
+     */
 	private CheckBox squareCheckBox;
+	/**
+     * squarePoints - Number of points clicked, used in square mode
+     */
 	private int squarePoints;
+	/**
+     * deleteCheckbox - CheckBox for turning on/off delete mode
+     */
 	private CheckBox deleteCheckbox;
+	/**
+     * waveDoorHBox - HBox for wave and door buttons
+     */
 	private HBox waveDoorHBox;
+	/**
+     * waveButton - Button for opening the wave setter gui
+     */
 	private Button waveButton;
+	/**
+     * doorButton - Button for opening the door setter gui
+     */
 	private Button doorButton;
+	/**
+     * doors - HashMap containing info on all door tiles currently on the map
+     */
 	private HashMap<String, TileList> doors;
+	/**
+     * saveCompleteHBox - HBox for save and complete buttons
+     */
 	private HBox saveCompleteHBox;
+	/**
+     * saveButton - Button for saving the map into a .gm file
+     */
 	private Button saveButton;
+	/**
+     * completeButton - Button for completing the map into a .GAMEMAP file
+     */
 	private Button completeButton;
+	/**
+     * mapWidth - Width of the map
+     */
 	private int mapWidth;
+	/**
+     * mapHeight - Height of the map
+     */
 	private int mapHeight;
+	/**
+     * mapGc - GraphicsContext for drawing the map
+     */
 	private GraphicsContext mapGc;
+	/**
+     * mapTiles - 2D matrix representation of the map
+     */
 	private Tile[][] mapTiles;
+	/**
+     * mapEditorAssets - Loaded image assets for the map editor
+     */
 	private HashMap<MapEditorAssetList, Image> mapEditorAssets;
+	/**
+     * tileSprite - Loaded tile sprites
+     */
 	private HashMap<TileList, Image> tileSprite;
+	/**
+     * keysActivated - Boolean whether the key controls for the map camera is active
+     */
 	private boolean keysActivated;
+	/**
+     * selectedX - X coordinate of the currently selected tile on the map
+     */
 	private int selectedX = 0;
+	/**
+     * selectedY - Y coordinate of the currently selected tile on the map
+     */
 	private int selectedY = 0;
+	/**
+     * squareXY1 - int array containing both X and Y coordinate of the first selected tile in square mode
+     */
 	private int[] squareXY1;
+	/**
+     * squareXY2 - int array containing both X and Y coordinate of the second selected tile in square mode
+     */
 	private int[] squareXY2;
+	/**
+     * numOfTiles - Number of tiles to draw, used in square mode
+     */
 	private int numOfTiles;
+	/**
+     * drawnTiles - Number of tiles drawn, used in square mode
+     */
 	private int drawnTiles;
+	/**
+     * paintTile - Tile used to paint in paint mode
+     */
 	private Tile paintTile;
+	/**
+     * waveSetter - Gui for the wave setter
+     */
 	private WaveSetter waveSetter;
 	
-	// New map
+	/**
+     * Constructor for new map
+     *
+     * @param resWidth Width for the gui
+     * @param resHeight Height for the gui
+     */
 	public MapEditor(int resWidth, int resHeight) {
 		this.resWidth = resWidth;
 		this.resHeight = resHeight;
@@ -139,7 +373,13 @@ public class MapEditor {
 		this.init();
 	}
 	
-	// Open map
+	/**
+     * Constructor for saved map
+     *
+     * @param saveFile Save file for the current map
+     * @param resWidth Width for the gui
+     * @param resHeight Height for the gui
+     */
 	public MapEditor(File saveFile, int resWidth, int resHeight) {
 		this.saveFile = saveFile;
 		this.resWidth = resWidth;
@@ -147,31 +387,63 @@ public class MapEditor {
 		this.init();
 	}
 	
+	/**
+     * Getter for mapName
+     * 
+     * @return mapName
+     */
 	public String getMapName() {
 		return this.mapName;
 	}
 	
+	/**
+     * Getter for mapTiles
+     * 
+     * @return mapTiles
+     */
 	public Tile[][] getMapTiles() {
 		return this.mapTiles;
 	}
 	
+	/**
+     * Getter for tileSprite
+     * 
+     * @return tileSprite
+     */
 	public HashMap<TileList, Image> getTileSprite() {
 		return this.tileSprite;
 	}
 	
+	/**
+     * Setter for mapWidth
+     * 
+     * @param mapWidth Width to set to
+     */
 	public void setMapWidth(int mapWidth) {
 		this.mapWidth = mapWidth;
 	}
 	
+	/**
+     * Setter for mapHeight
+     * 
+     * @param mapHeight Height to set to
+     */
 	public void setMapHeight(int mapHeight) {
 		this.mapHeight = mapHeight;
 	}
 	
+	/**
+     * Getter for SelectedXY
+     * 
+     * @return SelectedXY
+     */
 	public int[] getSelectedXY() {
 		return new int[]{selectedX, selectedY};
 	}
 	
-	// Initialize
+	/**
+     * Initialize the gui and show it
+     */
 	private void init() {
 		keysActivated = false;
 		loadAssets();
@@ -242,19 +514,7 @@ public class MapEditor {
 		infoViewer.getChildren().add(info);
 		info.setSpacing(10);
 		info.setAlignment(Pos.CENTER);
-		
-		/*
-		// > > Tile ID
-		tileIDInfo = new HBox();
-		info.getChildren().add(tileIDInfo);
-		tileIDInfo.setSpacing(10);
-		tileIDInfo.setAlignment(Pos.CENTER);
-		tileIDLabel1 = new Label("Tile ID:");
-		tileIDInfo.getChildren().add(tileIDLabel1);
-		tileIDLabel2 = new Label();
-		tileIDInfo.getChildren().add(tileIDLabel2);
-		*/
-		
+
 		// > > Map Name Label
 		mapNameLabel = new Label("Map Name: ");
 		info.getChildren().add(mapNameLabel);
@@ -322,7 +582,7 @@ public class MapEditor {
 		mapSizeOptionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				mapSizeOption = new MapSizeOption(mapEditor, mapEditorAssets, mapWidth, mapHeight);
+				mapSizeOption = new MapSizeOption(mapEditor, mapWidth, mapHeight);
 			}
 		});
 		
@@ -567,7 +827,9 @@ public class MapEditor {
         });
 	}
 	
-	// NOT DONE
+	/**
+     * Draw map grid, also draw the tiles if there is a save file
+     */
 	protected void drawMapTiles() {
 		mainViewer.getChildren().remove(mapCanvas);
 		mapCanvas = new Canvas(mapWidth*Constants.TILE_SIZE, mapHeight*Constants.TILE_SIZE);
@@ -647,7 +909,13 @@ public class MapEditor {
 		resetFocus();
 	}
 	
-	// Draw a tile
+	/**
+     * Draw a single tile on map and save it in mapTiles
+     * 
+     * @param tileX X coordinate of the tile
+     * @param tileY Y coordinate of the tile
+     * @param tile Tile object
+     */
 	protected void drawTile(int tileX, int tileY, Tile tile) {
 		if(checkTile(tileX, tileY) && 0 <= tileX && tileX < mapTiles.length && 0 <= tileY && tileY < mapTiles[0].length) {
 			if(drawnTiles == 0 || !squareCheckBox.isSelected()) {
@@ -670,7 +938,12 @@ public class MapEditor {
 		}
 	}
 	
-	// Tile remove
+	/**
+     * Remove a single tile on map and remove it in mapTiles
+     * 
+     * @param tileX X coordinate of the tile
+     * @param tileY Y coordinate of the tile
+     */
 	protected void removeTile(int tileX, int tileY) {
 		if(checkTile(tileX, tileY) && 0 <= tileX && tileX < mapTiles.length && 0 <= tileY && tileY < mapTiles[0].length) {
 			if(mapTiles[tileX][tileY] != null) {
@@ -689,6 +962,9 @@ public class MapEditor {
 		}
 	}
 	
+	/**
+     * Draw a square of tiles on map in square mode
+     */
 	private void drawSquare() {
 		switch(squarePoints) {
 			case 0:
@@ -713,11 +989,18 @@ public class MapEditor {
 		}
 	}
 	
+	/**
+	 * Check if the key controls for map camera is activated
+     * 
+     * @return keysActivated True if key controls for map camera is activated, false otherwise
+     */
 	private boolean keysActivated() {
 		return keysActivated;
 	}
 	
-	// Activate keyboard control
+	/**
+	 * Activate the key controls for map camera
+     */
 	private void activateKeys() {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -727,7 +1010,11 @@ public class MapEditor {
 		});
 	}
 	
-	// Move camera
+	/**
+	 * Move the map camera based on pressed key
+	 * 
+	 * @param key Pressed key
+     */
 	private void moveCamera(KeyCode key) {
 		switch(key) {
 			case S:
@@ -746,29 +1033,43 @@ public class MapEditor {
 		infoViewer.toFront();
 	}
 	
+	/**
+	 * Reset focus on mapCanvas
+     */
 	private void resetFocus() {
 		mapCanvas.requestFocus();
 	}
 	
-	// Load needed assets
+	/**
+	 * Load needed assets
+     */
 	private void loadAssets() {
 		loadMapEditorAssets();
 		loadTileSprite();
 	}
 	
-	// Load assets used specifically for the editor
+	/**
+	 * Load assets used specifically for the editor
+     */
 	private void loadMapEditorAssets() {
 		mapEditorAssets = new HashMap<MapEditorAssetList, Image>();
 		EnumSet.allOf(MapEditorAssetList.class).forEach(mapEditorAssetList -> mapEditorAssets.put(mapEditorAssetList, new Image(mapEditorAssetList.getPath())));
 	}
 	
-	// Load tile sprites
+	/**
+	 * Load tile sprites
+     */
 	private void loadTileSprite() {
 		tileSprite = new HashMap<TileList, Image>();
 		EnumSet.allOf(TileList.class).forEach(tileList -> tileSprite.put(tileList, new Image(tileList.getEntityListName().getPath())));
 	}
 	
-	// Tile selection
+	/**
+	 * Tile selection
+	 * 
+	 * @param tileX X coordinate of selected tile
+	 * @param tileY Y coordinate of selected tile
+     */
 	private void selectTile(int tileX, int tileY) {
 		if(tileX < 0) {
 			tileX = 0;
@@ -810,7 +1111,13 @@ public class MapEditor {
 		}
 	}
 	
-	// I made this before learning about strokeRect
+	/**
+	 * Draw edges on a tile
+	 * 
+	 * @param tileX X coordinate of tile to draw to
+	 * @param tileY Y coordinate of tile to draw to
+	 * @param color Color of edge
+     */
 	private void drawEdge(int tileX, int tileY, Color color) {
 		mapGc.setStroke(color);
 		mapGc.strokeLine(tileX*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE);
@@ -819,6 +1126,13 @@ public class MapEditor {
 		mapGc.strokeLine((tileX + 1)*Constants.TILE_SIZE, tileY*Constants.TILE_SIZE, (tileX + 1)*Constants.TILE_SIZE, (tileY + 1)*Constants.TILE_SIZE);
 	}
 	
+	/**
+	 * Draw team spawn letter on map
+	 * 
+	 * @param tileX X coordinate of tile to draw to
+	 * @param tileY Y coordinate of tile to draw to
+	 * @param team Team
+     */
 	private void drawSpawnLetter(int tileX, int tileY, Team team) {
 		mapGc.drawImage(mapSnapshot, 0, 0);
 		Paint p = Color.TRANSPARENT;
@@ -851,7 +1165,12 @@ public class MapEditor {
 		mapSnapshot = mapCanvas.snapshot(params, null);
 	}
 	
-	// Display tile info on the right
+	/**
+	 * Display tile info on the right
+	 * 
+	 * @param x X coordinate of tile to display
+	 * @param y Y coordinate of tile to display
+     */
 	private void displayTileInfo(int x, int y) {
 		Tile tile = mapTiles[x][y];
 		if(tile != null) {
@@ -866,7 +1185,13 @@ public class MapEditor {
 		}
 	}
 	
-	// Set team spawn tile
+	/**
+	 * Set team spawn tile
+	 * 
+	 * @param tileX X coordinate of tile to set
+	 * @param tileY Y coordinate of tile to set
+	 * @param team Team
+     */
 	private void setTeamSpawn(int tileX, int tileY, Team team) {
 		if(mapTiles[tileX][tileY] != null && !mapTiles[tileX][tileY].getState().equals(TileState.SOLID)) {
 			// Check here so no invalid spawn popup
@@ -892,7 +1217,13 @@ public class MapEditor {
 		}
 	}
 	
-	// Set team spawn info
+	/**
+	 * Set team spawn info
+	 * 
+	 * @param tileX X coordinate of tile to set
+	 * @param tileY Y coordinate of tile to set
+	 * @param team Team
+     */
 	private void setTeamSpawnInfo(String tileX, String tileY, Team team) {
 		String s = "(" + tileX + ", " + tileY + ")";
 		switch(team) {
@@ -911,7 +1242,13 @@ public class MapEditor {
 		}
 	}
 	
-	// Check if tile is a spawn etc.
+	/**
+	 * Check if tile is a spawn etc.
+	 * 
+	 * @param tileX X coordinate of tile to check
+	 * @param tileY Y coordinate of tile to check
+	 * @return true if tile is free to overwritten, false otherwise
+     */
 	public boolean checkTile(int tileX, int tileY) {
 		for(Map.Entry<Team, int[]> entry : teamSpawns.entrySet()) {
 			if(entry.getValue()[0] == tileX && entry.getValue()[1] == tileY) {
@@ -973,7 +1310,11 @@ public class MapEditor {
 		return true;
 	}
 	
-	// Display tile info
+	/**
+	 * Display tile info
+	 * 
+	 * @param tile Tile to display
+     */
 	private void setDisplayTileInfo(Tile tile) {
 		//tileIDLabel2.setText(Character.toString(tileID));
 		tileImageView.setImage(tileSprite.get(tile.getType()));
@@ -983,7 +1324,9 @@ public class MapEditor {
 		bounceLabel2.setText(Double.toString(tile.getBounceCoefficient()));
 	}
 	
-	// Error when selected spawn location is invalid
+	/**
+	 * Error when selected spawn location is invalid
+     */
 	private void invalidSpawnLocationErrorPopUp() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -991,7 +1334,11 @@ public class MapEditor {
 		alert.show();
 	}
 	
-	// Overwrite alert
+	/**
+	 * Overwrite alert
+	 * 
+	 * @return true if the user decides to overwrite a tile, false otherwise
+     */
 	private boolean tileOverWritePopUp(String s) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Alert");
@@ -1003,12 +1350,19 @@ public class MapEditor {
 		return false;
 	}
 	
-	// Set paint tile
+	/**
+	 * Set paint tile
+	 * 
+	 * @param tile Tile to set to
+     */
 	protected void setPaintTile(Tile tile) {
 		paintTileImageView.setImage(tileSprite.get(tile.getType()));
 		paintTile = tile;
 	}
 	
+	/**
+	 * Name setter for the map
+     */
 	private void nameSetter() {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("Name the map");

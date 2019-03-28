@@ -19,63 +19,154 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import server.engine.state.map.tile.Tile;
-import shared.lists.TileState;
 import shared.lists.TileList;
 
+/**
+ * TileSelector class. Contains the gui for selecting tile.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class TileSelector {
-	
+	/**
+     * mapEditor - mapEditor that opened this gui
+     */
 	private MapEditor mapEditor;
+	/**
+     * doorSetter - doorSetter that opened this gui
+     */
 	private DoorSetter doorSetter;
+	/**
+     * tileX - X coordinate of selected tile
+     */
 	private int tileX;
+	/**
+     * tileY - Y coordinate of selected tile
+     */
 	private int tileY;
+	/**
+     * tileSprite - Loaded tile sprites
+     */
 	private HashMap<TileList, Image> tileSprite;
+	/**
+     * tileSettings - HashMap containing the tile settings of each type of tile
+     */
 	private HashMap<TileList, Tile> tileSettings;
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * root - Root of the stage
+     */
 	private StackPane root;
+	/**
+     * scene - Scene of the stage
+     */
 	private Scene scene;
+	/**
+     * hBox - HBox for tile image and info
+     */
 	private HBox hBox;
+	/**
+     * tileImageView - Image of tile
+     */
 	private ImageView tileImageView;
+	/**
+     * vBox - VBox for tile info
+     */
 	private VBox vBox;
+	/**
+     * tileMenu - ComboBox for tile selection
+     */
 	private ComboBox<String> tileMenu;
+	/**
+     * tileTypeInfo - HBox for tile type info
+     */
 	private HBox tileTypeInfo;
+	/**
+     * tileTypeLabel1 - Label for tile type info
+     */
 	private Label tileTypeLabel1;
+	/**
+     * tileTypeLabel2 - Label for tile type info of selected tile
+     */
 	private Label tileTypeLabel2;
+	/**
+     * tileStateInfo - HBox for tile state info
+     */
 	private HBox tileStateInfo;
+	/**
+     * tileStateLabel1 - Label for tile state info
+     */
 	private Label tileStateLabel1;
+	/**
+     * tileStateLabel2 - Label for tile state info of selected tile
+     */
 	private Label tileStateLabel2;
-	//private ComboBox<String> tileStateComboBox;
+	/**
+     * frictionInfo - HBox for friction info
+     */
 	private HBox frictionInfo;
+	/**
+     * frictionLabel1 - Label for friction info
+     */
 	private Label frictionLabel1;
+	/**
+     * frictionLabel2 - Label for friction info of selected tile
+     */
 	private Label frictionLabel2;
+	/**
+     * bounceInfo - HBox for bounce info
+     */
 	private HBox bounceInfo;
+	/**
+     * bounceLabel1 - Label for bounce info
+     */
 	private Label bounceLabel1;
+	/**
+     * bounceLabel2 - Label for bounce info of selected tile
+     */
 	private Label bounceLabel2;
+	/**
+     * saveDeleteCancel - HBox for save and cancel buttons
+     */
 	private HBox saveDeleteCancel;
+	/**
+     * saveButton - Button for saving the selected tile
+     */
 	private Button saveButton;
+	/**
+     * deleteButton - Button for deleting the selected tile
+     */
 	private Button deleteButton;
+	/**
+     * cancelButton - Button for canceling and closing the gui
+     */
 	private Button cancelButton;
+	/**
+     * selectCancel - HBox for select and cancel buttons
+     */
 	private HBox selectCancel;
+	/**
+     * paintSelectButton - Button for saving the selected tile for paint mode
+     */
 	private Button paintSelectButton;
-	// TODO:
-	private VBox doorSettingsVBox;
+	/**
+     * paintMode - Boolean whether paint mode is active
+     */
 	private boolean paintMode;
+	/**
+     * doorMode - Boolean whether door setter is active
+     */
 	private boolean doorMode;
 	
-	public TileSelector(DoorSetter doorSetter, HashMap<TileList, Image> tileSprite) {
-		this.doorSetter = doorSetter;
-		this.tileSprite = tileSprite;
-		this.doorMode = true;
-		this.paintMode = true;
-		this.init();
-	}
-	
-	public TileSelector(MapEditor mapEditor) {
-		this.mapEditor = mapEditor;
-		this.tileSprite = mapEditor.getTileSprite();
-		this.paintMode = true;
-		this.init();
-	}
-	
+	/**
+     * Constructor when paint mode is inactive
+     *
+     * @param mapEditor mapEditor that opened this gui
+     * @param tileX X coordinate of selected tile
+     * @param tileY Y coordinate of selected tile
+     */
 	public TileSelector(MapEditor mapEditor, int tileX, int tileY) {
 		this.mapEditor = mapEditor;
 		this.tileX = tileX;
@@ -85,6 +176,35 @@ public class TileSelector {
 		this.init();
 	}
 	
+	/**
+     * Constructor when paint mode is active
+     *
+     * @param mapEditor mapEditor that opened this gui
+     */
+	public TileSelector(MapEditor mapEditor) {
+		this.mapEditor = mapEditor;
+		this.tileSprite = mapEditor.getTileSprite();
+		this.paintMode = true;
+		this.init();
+	}
+	
+	/**
+     * Constructor when door setter is active
+     *
+     * @param doorSetter doorSetter that opened this gui
+     * @param tileSprite Loaded tile sprites
+     */
+	public TileSelector(DoorSetter doorSetter, HashMap<TileList, Image> tileSprite) {
+		this.doorSetter = doorSetter;
+		this.tileSprite = tileSprite;
+		this.doorMode = true;
+		this.paintMode = true;
+		this.init();
+	}
+	
+	/**
+     * Initialize the gui and show it
+     */
 	public void init() {
 		stage = new Stage();
 		stage.setTitle("Tile Selector");
@@ -147,24 +267,6 @@ public class TileSelector {
 		tileStateInfo.getChildren().add(tileStateLabel1);
 		tileStateLabel2 = new Label();
 		tileStateInfo.getChildren().add(tileStateLabel2);
-		/*
-		tileStateComboBox = new ComboBox<String>();
-		tileStateInfo.getChildren().add(tileStateComboBox);
-		EnumSet.allOf(TileState.class).forEach(tileState -> tileStateComboBox.getItems().add(tileState.toString()));
-		tileStateComboBox.getSelectionModel().select(TileState.PASSABLE.toString());
-		tileStateComboBox.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				EnumSet.allOf(TileTypes.class).forEach(tileType -> {
-					if(tileType.toString().equals(tileMenu.getValue())) {
-						Tile tile = tileSettings.get(tileType);
-						tile.setTileState(tileStateComboBox.getValue());
-						saveTileSettings(tileType, tile);
-					}
-				});
-			}
-		});
-		*/
 		
 		// > > > Fraction Coefficient
 		frictionInfo = new HBox();
@@ -185,8 +287,6 @@ public class TileSelector {
 		bounceInfo.getChildren().add(bounceLabel1);
 		bounceLabel2 = new Label();
 		bounceInfo.getChildren().add(bounceLabel2);
-		
-		// TODO: special settings (e.g. DOOR)
 		
 		if(!paintMode) {
 			// > > > Save Delete and Cancel
@@ -268,7 +368,9 @@ public class TileSelector {
         });
 	}
 	
-	// Display info of selected tile
+	/**
+     * Display info of selected tile on the map editor
+     */
 	private void changeTileSelection() {
 		for(Map.Entry<TileList, Tile> entry : tileSettings.entrySet()) {
 			if(entry.getKey().toString().equals(tileMenu.getValue())) {
@@ -281,7 +383,9 @@ public class TileSelector {
 		}
 	}
 	
-	// Get default settings for tiles
+	/**
+     * Get default settings for tiles
+     */
 	private void getTileSettings() {
 		tileSettings = new HashMap<TileList, Tile>();
 		EnumSet.allOf(TileList.class).forEach(tileList -> {
