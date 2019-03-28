@@ -116,8 +116,6 @@ public class SoundView {
 		}
 		
 		for(EnemyView e : gameView.getEnemies()) {
-			System.out.println(e.getEntityListName().toString());
-			System.out.println(e.getStatus());
 			if(!e.getCurrentAction().equals(ActionList.NONE) && !e.getCurrentAction().equals(ActionList.DEAD)) {
 				if(ePlaying.containsKey(e.getID())) {
 					ePlaying.get(e.getID()).setEntityView(e);
