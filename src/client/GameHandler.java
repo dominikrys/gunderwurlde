@@ -88,6 +88,9 @@ public class GameHandler extends Thread {
      */
     private LoadScreenController loadScreenController;
 
+    /**
+     * boolean for if the game should close
+     */
     private boolean shouldClose = false;
 
     /**
@@ -144,6 +147,7 @@ public class GameHandler extends Thread {
         // Load loading screen and set it to stage
         loadLoadingScreen();
         stage.getScene().setRoot(loadScreen);
+        // Set the close Request to also close all threads the GameHandler may of started
         stage.setOnCloseRequest(we -> {
             stage.close();
             this.end();
@@ -181,6 +185,7 @@ public class GameHandler extends Thread {
                         NetworkInformation.incrementLowestAvailableIPAddress();
                         NetworkInformation.incrementLowestAvailablePort();
                     } catch (InterruptedException e) {
+                        // Error interrupt received when joining a thread
                         e.printStackTrace();
                     }
                 }
@@ -223,6 +228,7 @@ public class GameHandler extends Thread {
                         NetworkInformation.incrementLowestAvailableIPAddress();
                         NetworkInformation.incrementLowestAvailablePort();
                     } catch (InterruptedException e) {
+                        // Error interrupt received when joining a thread
                         e.printStackTrace();
                     }
                 }
@@ -248,6 +254,7 @@ public class GameHandler extends Thread {
                             this.end();
                         }
                     } catch (InterruptedException e) {
+                        // Error interrupt received when joining a thread
                         e.printStackTrace();
                     }
                 }
@@ -257,9 +264,9 @@ public class GameHandler extends Thread {
     }
 
     public void end() {
+        // Set should close to true in case some threads havent finished setting up
         shouldClose = true;
         // End server if running/exists
-        System.out.println("Told to end server threads");
         if (server != null) {
             server.close();
         }
