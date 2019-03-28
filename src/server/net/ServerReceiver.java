@@ -42,7 +42,6 @@ public class ServerReceiver extends Thread {
      * reference to server so we can add to the ClientRequests object
      */
     private Server handler;
-    private boolean aBoolean;
 
     /**
      * Constructor
@@ -55,14 +54,6 @@ public class ServerReceiver extends Thread {
         buffer = new byte[255];
         running = true;
         this.start();
-    }
-
-    /**
-     * method to get if the thread is still running
-     * @return
-     */
-    public boolean getRunning() {
-        return running;
     }
 
     /**
@@ -128,6 +119,8 @@ public class ServerReceiver extends Thread {
                             break;
                     }
                 } catch (ClassNotFoundException e) {
+                    //Error when failed to create integer array from received packet
+                    // shouldnt really happen
                     e.printStackTrace();
                 } finally {
                     ins.close();
@@ -136,9 +129,11 @@ public class ServerReceiver extends Thread {
             }
 
         }catch(SocketException ex){
+            // Happens when the server receiver is told to quit
             System.out.println("closing ServerReceiver");
         }
         catch (IOException e1) {
+            // Any other error
             e1.printStackTrace();
         }
     }
