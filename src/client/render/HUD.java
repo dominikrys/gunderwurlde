@@ -368,9 +368,9 @@ public class HUD extends BorderPane {
             }
 
             // Draw player indicator at the correct spot on the minimap
-            minimapGC.fillRect(((currentPlayer.getPose().getX() + Constants.TILE_SIZE / 2) *
+            minimapGC.fillRect(((playerView.getPose().getX() + Constants.TILE_SIZE / 2) *
                             (miniMapRectangle.getWidth() / (gameView.getXDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
-                    ((currentPlayer.getPose().getY() + Constants.TILE_SIZE / 2) *
+                    ((playerView.getPose().getY() + Constants.TILE_SIZE / 2) *
                             (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
                     playerRectangleSize, playerRectangleSize);
         }
