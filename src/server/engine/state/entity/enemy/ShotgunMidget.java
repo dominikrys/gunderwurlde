@@ -19,8 +19,12 @@ public class ShotgunMidget extends Zombie {
     private final int DISTANCE_TO_PLAYER_TO_ATTACK;
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 2, 1));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.5, 5, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.3, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.6, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.05, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.03, 2));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.1, 1));
     }
 

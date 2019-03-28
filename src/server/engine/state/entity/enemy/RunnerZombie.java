@@ -17,8 +17,13 @@ public class RunnerZombie extends Zombie {
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.1, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.01, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.2, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.2, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.03, 1));
     }
 

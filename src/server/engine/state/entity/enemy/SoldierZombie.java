@@ -25,9 +25,9 @@ public class SoldierZombie extends Zombie {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.3, 3, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.2, 2, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.1, 12, 4));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.1, 12, 4));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.01, 2));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.06, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.2, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.06, 2));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
     }
 
     public SoldierZombie(int range_to_shoot, int rate_of_fire, int distanceToMove) {

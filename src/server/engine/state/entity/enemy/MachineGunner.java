@@ -20,10 +20,16 @@ public class MachineGunner extends Zombie {
 
     //TODO think about this
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.6, 3, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.05, 2));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.6, 6, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.3, 3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.6, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.4, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.1, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.2, 1));
     }
 
     private final int ATTACK_WIDTH;

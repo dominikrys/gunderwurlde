@@ -17,10 +17,14 @@ public class Sniper extends Zombie {
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.8, 3, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.03, 2));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.6, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.3, 3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.2, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.1, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.06, 2));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
     }
 
     private final int RANGE_TO_RUN_WAY;

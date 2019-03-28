@@ -16,9 +16,12 @@ public class Mage extends Zombie{
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.4, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.05, 2, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.01, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.5, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.5, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.2, 1));
     }
 
     private final long TIME_BETWEEN_TELEPORTS;

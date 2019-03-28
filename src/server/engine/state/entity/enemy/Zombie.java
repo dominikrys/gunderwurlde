@@ -21,7 +21,7 @@ public class Zombie extends Enemy {
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.5, 4, 2));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.1, 2, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.05, 1, 1));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.1, 16, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.05, 16, 4));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.05, 1, 1));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.01, 1));
