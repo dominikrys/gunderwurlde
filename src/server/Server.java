@@ -282,9 +282,9 @@ public class Server extends Thread implements HasEngine {
         } catch (IOException e) {
             // Any other error
             e.printStackTrace();
+            this.close();
         }
         if(shouldClose){
-            this.close();
         }
     }
 
