@@ -118,6 +118,7 @@ public class ServerReceiver extends Thread {
                             break;
                         case 6 : // CONSUME
                             handler.getClientRequests().playerRequestShoot(playerID);
+                            handler.getClientRequests().playerRequestConsume(playerID, received[1]);
                             break;
                         case 7 : // PAUSE
                             handler.getClientRequests().playerRequestPause(playerID);
