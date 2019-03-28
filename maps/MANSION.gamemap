@@ -1,0 +1,95 @@
+# MANSION
+#Dimensions X,Y:
+80 60
+#Tiles
+#TileID(Any unique char),TYPE, STATE, (value of bounce if soild, otherwise friction.)
+A GRASS
+B WOOD
+C DOOR
+D RUINS_FLOOR
+E RUINS_ORNATE_BLOCK
+F RUINS_SOLID_BLOCK_DARK
+G RUINS_SOLID_BLOCK_LIGHT
+H RUINS_WALL_DARK
+I RUINS_WALL_MID
+J RUINS_WALL_LIGHT
+K SAND
+L RED_GROUND
+M MARBLE_FLOOR
+N DIRT
+O WATER
+P VOID
+Q CARPET
+R WOOD_DARK
+S FOOTPATH
+
+#Tile Map
+P P P P P P P P P P P P J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J
+P O O O O O O O O O O O N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A A N N N N A A A A A A A A A A J
+P O O O O O O O O O O O N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A A N N N N A A A A A A A A A A J
+P O O O O O O O O O O O N N A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A J
+P O O O O O O O R R R R R R S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S A A A J
+P O O O O O O O R R R R R R S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S A A A J
+P O O O O O O O O O O O N N A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A J
+J N N N N N N N N N N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A A N N N N A A A A A S S A A A J
+J N N N N N N N N N N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A N N N N A A A N N N N A A A A A S S A A A J
+J N N N N N N B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B J J J J S S J J J J
+J N N N N N N B G G G G G G O M M M M G G M M M M M M M R R G G R R R B B B R R B Q Q Q Q G G Q Q Q B F F F F B Q Q Q Q B G O O O G M M F B A A A A S S A A A J
+J N N N N N N B M M M M M M M M M M M M M M M M M M M M R R R R R R R F R R R R B Q Q Q Q Q Q Q Q Q Q F F F F Q Q Q Q Q B G O O O G M M M B A A A A S S A A A J
+J N N N N N N B M M G G G G G G G M M M M M M M M M M M R R R R R R R R R R R B B F Q Q Q Q Q Q Q Q Q F F F F Q Q Q Q Q B G G G G G M M M B A A A A S S A A A J
+J N N N N N N B M M G G G G G G G M M M M M M M M M M M R R R R R R R R R R F B B F Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R M M M M M M M M B A A A A S S A A A J
+J N N N N N N B M M M M M M M M M M M M M M M M M M M M R R R R R R R R R R R B B Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R M M M M M M M M B A A A A S S A A A J
+J N N N N N N B M M M M M M M M M M M G G M M M M M M M R R R R R R R R R R R R B Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q B M M M M M M M M B A A A A S S A A A J
+J N N N N N N B B B R R R R B B B B B B B B B B B B B B R R R R R R R R R R R R B Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q B M M M M M M M O B A A A A S S A A A J
+J N N N N N N B R R R R R R R R R R R R R R R R G G G B F R R R R R R R F F R R B Q Q Q Q Q Q Q Q Q Q G G G G Q Q F F Q B M G G M M M M G B A A A A S S A A A J
+J N B B B B B B R R R R R R R R R R R R R R R R R R G B B B B R R R B B B B B B B B B Q Q Q B B B B B B B B B B B B B B B B B B B B B B B B A A A A S S A A A J
+J N B R R R R B R R R R F R F R F R F R F R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
+J N B R R R R B R R R R B B B B B B B B B R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
+J N B R R R R R R R R R B B B B B B B B B R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R E R R R E R R B A A A A A A A A A A A A A S S A A A J
+J N B R B B B B R R R R F R F R F R F R F R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
+J N N S N N N B R R R R R R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R S S S S S S S S S S S S S S S A A A J
+J N N S N N N B R R R R R R R R R R R R R R R R R R R B R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R S S S S S S S S S S S S S S S A A A J
+J N N S N N N B G G G R R R R R R R R R R R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R E R R R E R R B A A A A A A A A A A A A A S S A A A J
+J J J S J J J B B B B B B B B B B B B B R R R R R B B B B B B R R R B B B B B B B B B Q Q Q B B B B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
+J A A S A A J M M M M M M M M M M M M M M M M M M M M B R R R R R R R F F R R F F R R Q Q Q R R R B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
+J A A S A A J M M M M M M M M M M M M M M M M M M M M B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
+J A A S A A J M M O O O O O O M M M M M M M M M M M M B F R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R F B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
+J A A S A A J M O O O O O O O O O M M O O M M M M M M B F R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R F B B B B B B B B B B B B B B B B B B B B B A A A A S S A A A J
+J A A S A A J M O O O O O O O O O O O O O O M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R R R R R R R R R R R R R R R R R B A A A A S S A A A J
+J A A S A A J M M M O O O O O O O O O O O O M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R E R R E R R E R R E R R R R R R R E B A A A A S S A A A J
+J A A S A A J M M M O O O O O O O O O O O M M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R R R R R R R R R R R R R R R R R B A A A A S S A A A J
+J A A S A A J M M M M M M M M O O O O M M M M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R F F R R R R E B A A A A S S A A A J
+J A A S A A A M M M M M M M M M M M M M M M M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R F F R R R R R B A A A A S S A A A J
+J A A S A A A M M M M M M M M M M M M M M M M M M M M B R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R R R R R R R E B A A A A S S A A A J
+J A A S A A A J J J J J J J J J J J J J J J J J J J J B R R R R R R R R R R R R R R R R R R R R R B R R R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
+J A A S A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R G G G G G G G G R R R R R R R B R R R R R R R Q Q R R R F F R R R R E B A A A A S S A A A J
+J A A S A A A A A A A A A A A A A A A A A A A A A A A B B B B B B B B B B B B B B B B B B B B B B B R R R R R R R Q Q R R R F F R R R R R B A A A A S S A A A J
+P S S S S S S S S S S S S S S S S S S S S S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R E R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
+P S S S S S S S S S S S S S S S S S S S S S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
+J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
+J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R E R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
+J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R R Q Q R R E R R R R E R R B A A A A S S A A A J
+J A B B B B B B B B B B B B B B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B B B B B B B B R R B B B B B B B B B B B A A A A S S A A A J
+J A B R B B R R B B D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
+J A B R R R R R R R D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
+J A B B R R R R R R D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
+J A B B R R R R R R D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
+J A B B R R R R R R D D D D D D S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S A A A J
+J A B D D D D D D D D D D D D D S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S S A A A J
+J A B D D D D D D D D D D D D B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A B D D B A A J
+J A B D D D D B B D D D D D D B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A B D D B A A J
+J A B D D D D B B D D B B D D B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A B D D B A A J
+J A B D B D D B B D D B B D D B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A B B B B A A J
+J A B D B D D B B D D D D D D B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A J
+J A B B B B B B B B B B B B B B A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A J
+J A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A J
+J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J J
+
+#Team Spawns
+RED 5 16
+BLUE 76 3
+GREEN 77 57
+YELLOW 4 53
+
+#Zones
+

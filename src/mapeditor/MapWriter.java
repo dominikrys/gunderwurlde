@@ -96,15 +96,15 @@ public class MapWriter {
 			asciiCode = 65;
 			
 			bw.write("\n#Tile Map\n");
-			for(int i = 0 ; i < mapSave.getMapTiles().length ; i++) {
-				for(int j = 0 ; j < mapSave.getMapTiles()[0].length ; j++) {
+			for(int i = 0 ; i < mapSave.getMapTiles()[0].length ; i++) {
+				for(int j = 0 ; j < mapSave.getMapTiles().length ; j++) {
 					if(mapSave.getMapTiles()[j][i] != null) {
 						bw.write(tileLetter.get(mapSave.getMapTiles()[j][i].getType()));
 					}
 					else {
 						bw.write(tileLetter.get(TileList.VOID));
 					}
-					if(j + 1 != mapSave.getMapTiles()[0].length) {
+					if(j + 1 != mapSave.getMapTiles().length) {
 						bw.write(" ");
 					}
 				}

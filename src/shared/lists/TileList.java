@@ -19,10 +19,13 @@ public enum TileList implements Serializable{
     RUINS_WALL_LIGHT(EntityList.RUINS_WALL_LIGHT, TileState.SOLID, 0.5),
     SAND(EntityList.SAND, TileState.PASSABLE, 0.51, 200),
     RED_GROUND(EntityList.RED_GROUND, TileState.PASSABLE, 0.5, 200),
-    MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.49, 200),
+    MARBLE_FLOOR(EntityList.MARBLE_FLOOR, TileState.PASSABLE, 0.485, 200),
     DIRT(EntityList.DIRT, TileState.PASSABLE, 0.5, 200),
-    WATER(EntityList.WATER, TileState.PASSABLE, 0.49, 4000),
-	VOID(EntityList.VOID, TileState.SOLID, 0);
+    WATER(EntityList.WATER, TileState.PASSABLE, 0.49, 6000),
+    VOID(EntityList.VOID, TileState.SOLID, 0),
+    CARPET(EntityList.CARPET, TileState.PASSABLE, 0.5, 200),
+    WOOD_DARK(EntityList.WOOD_DARK, TileState.PASSABLE, 0.5, 200),
+    FOOTPATH(EntityList.FOOTPATH, TileState.PASSABLE, 0.49, 200);
 	
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +59,6 @@ public enum TileList implements Serializable{
      *
      * @param entityListName    EntityList equivalent
      * @param tilestate         State of the tileList
-     * @param friction          Friction coefficient of tileList
      * @param bounceCoefficient Bounce coefficient of tileList
      */
     TileList(EntityList entityListName, TileState tilestate, double bounceCoefficient) {
@@ -73,6 +75,7 @@ public enum TileList implements Serializable{
      * @param entityListName EntityList equivalent
      * @param tilestate      State of the tileList
      * @param friction       Friction coefficient of tileList
+     * @param density        Density of the tileList
      */
     TileList(EntityList entityListName, TileState tilestate, double friction, double density) {
         this.entityListName = entityListName;
