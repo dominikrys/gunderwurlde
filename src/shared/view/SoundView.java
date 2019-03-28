@@ -105,8 +105,13 @@ public class SoundView {
 					pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, p.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
-			else if(p.getCurrentAction().equals(ActionList.DEAD)) {
-				//pPlaying.get(p.getID()).stop();
+			else if(p.hasTakenDamage()) {
+				if(pPlaying.containsKey(p.getID())) {
+					pPlaying.get(p.getID()).playDamaged();
+				}
+				else {
+					pPlaying.put(p.getID(), new GameSound(loadedGameSounds, this.client, p, ActionList.NONE, this.settings.getSoundVolume()));
+				}
 			}
 		}
 		
@@ -115,8 +120,8 @@ public class SoundView {
 				if(ePlaying.containsKey(e.getID())) {
 					ePlaying.get(e.getID()).setEntityView(e);
 					if(!ePlaying.get(e.getID()).getActionList().equals(e.getCurrentAction())) {
-						pPlaying.get(e.getID()).stop();
-						pPlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
+						ePlaying.get(e.getID()).stop();
+						ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
 					}
 					else if(e.getCurrentAction().equals(ActionList.ATTACKING) || e.getCurrentAction().equals(ActionList.RELOADING)) {
 						if(ePlaying.get(e.getID()).getReplayable()) {
@@ -128,9 +133,18 @@ public class SoundView {
 					ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, e.getCurrentAction(), this.settings.getSoundVolume()));
 				}
 			}
-			else if(e.getCurrentAction().equals(ActionList.DEAD)) {
-				//ePlaying.get(e.getID()).stop();
+			else if(e.hasTakenDamage()) {
+				if(ePlaying.containsKey(e.getID())) {
+					ePlaying.get(e.getID()).playDamaged();
+				}
+				else {
+					ePlaying.put(e.getID(), new GameSound(loadedGameSounds, this.client, e, ActionList.NONE, this.settings.getSoundVolume()));
+				}
 			}
+		}
+		
+		for(ExplosionView ex : gameView.getExplosions()) {
+			GameSound explosion = new GameSound(loadedGameSounds, this.client, ex, this.settings.getSoundVolume());
 		}
 	}
 	

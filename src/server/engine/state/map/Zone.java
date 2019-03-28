@@ -91,7 +91,7 @@ public class Zone {
                     newWaves.add(currentWave);
                 }
             }
-        } else if (entityCount == 0) {
+        } else if (!currentRound.hasWavesLeft() && entityCount == 0) {
             if (roundIterator.hasNext()) {
                 currentRound = roundIterator.next();
                 currentRound.start();
