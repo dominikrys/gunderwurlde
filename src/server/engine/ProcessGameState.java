@@ -494,8 +494,7 @@ public class ProcessGameState extends Thread {
         LinkedList<ItemDrop> drops = entity.getDrops();
         for (ItemDrop newDrop : drops) {
             newDrop.setVelocity(entity.getVelocity());
-            newDrop.addNewForce(entity.getResultantForce());
-            newDrop.addNewForce(new Force(random.nextInt(360), random.nextInt(800) + 200));
+            newDrop.addNewForce(new Force(random.nextInt(360), random.nextInt(8000) + 2000));
             items.put(newDrop.getID(), newDrop);
             // TODO spawned itemdrop status? is this needed?
             itemDropsView.add(new ItemDropView(newDrop.getPose(), newDrop.getSize(), newDrop.getEntityListName(), newDrop.isCloaked(),
