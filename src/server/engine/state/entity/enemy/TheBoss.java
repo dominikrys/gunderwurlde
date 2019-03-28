@@ -26,7 +26,7 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
 public class TheBoss extends Zombie{
-    public static final int DEFAULT_HEALTH = 1;
+    public static final int DEFAULT_HEALTH = 20;
     public static final double DEFAULT_MOVEMENT_FORCE = 0.9;
     public static final int DEFAULT_SIZE = EntityList.THEBOSS.getSize() / 2;
     public static final int DEFAULT_SCORE_ON_KILL = 500;

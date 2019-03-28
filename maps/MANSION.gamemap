@@ -46,11 +46,11 @@ J N B B B B B B R R R R R R R R R R R R R R R R R R G B B B B R R R B B B B B B 
 J N B R R R R B R R R R F R F R F R F R F R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
 J N B R R R R B R R R R B B B B B B B B B R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
 J N B R R R R R R R R R B B B B B B B B B R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R E R R R E R R B A A A A A A A A A A A A A S S A A A J
-J N B R B B B B R R R R F R F R F R F R F R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
-J N N S N N N B R R R R R R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R S S S S S S S S S S S S S S S A A A J
-J N N S N N N B R R R R R R R R R R R R R R R R R R R B R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R S S S S S S S S S S S S S S S A A A J
+J N B C B B B B R R R R F R F R F R F R F R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R R B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
+J N N S N N N B R R R R R R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q C S S S S S S S S S S S S S S S A A A J
+J N N S N N N B R R R R R R R R R R R R R R R R R R R B R R R R R R R R R R R R R R R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q C S S S S S S S S S S S S S S S A A A J
 J N N S N N N B G G G R R R R R R R R R R R R R R R R B R R R R R R R R R R R R R R R Q Q Q R R R B R R R E R R R E R R B A A A A A A A A A A A A A S S A A A J
-J J J S J J J B B B B B B B B B B B B B R R R R R B B B B B B R R R B B B B B B B B B Q Q Q B B B B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
+J J J S J J J B B B B B B B B B B B B B C C C C C B B B B B B R R R B B B B B B B B B Q Q Q B B B B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
 J A A S A A J M M M M M M M M M M M M M M M M M M M M B R R R R R R R F F R R F F R R Q Q Q R R R B R R R R R R R R R R B A A A A A A A A A A A A A S S A A A J
 J A A S A A J M M M M M M M M M M M M M M M M M M M M B R R R R R R R R R R R R R R R Q Q Q R R R B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
 J A A S A A J M M O O O O O O M M M M M M M M M M M M B F R Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q R R F B R R R R R R R R R R B N N N N N N N N N A A A A S S A A A J
@@ -69,7 +69,7 @@ P S S S S S S S S S S S S S S S S S S S S S S A A A A A A A A A A A A A A A A A 
 J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
 J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R E R R R R R Q Q R R R R R R R R R R B A A A A S S A A A J
 J A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B R R R R R R R Q Q R R E R R R R E R R B A A A A S S A A A J
-J A B B B B B B B B B B B B B B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B B B B B B B B R R B B B B B B B B B B B A A A A S S A A A J
+J A B B B B B B B B B B B B B B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A B B B B B B B B C C B B B B B B B B B B B A A A A S S A A A J
 J A B R B B R R B B D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
 J A B R R R R R R R D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
 J A B B R R R R R R D D D D D B A A A A A S S A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A S S A A A A A A A A A A A A A A A S S A A A J
@@ -92,4 +92,63 @@ GREEN 77 57
 YELLOW 4 53
 
 #Zones
+#1
+#EnemySpawns
+74 54
+
+#Triggers
+77 57
+
+#Optional Doors (Tile to return) (Location params) (Kills Required)
+R 58 45 20
+R 57 45 20
+
+#Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
+#1
+ZOMBIE
+0 1000 1 20
+
+#2
+BOOMER
+4500 0 1 1
+
+RUNNER
+0 1000 2 6
+
+MIDGET
+6000 1000 1 4
+
+
+#2
+#EnemySpawns
+1 40
+1 41
+
+#Triggers
+15 51
+15 50
+
+#Optional Doors (Tile to return) (Location params) (Kills Required)
+R 20 26 20
+R 24 26 20
+R 23 26 20
+R 22 26 20
+R 21 26 20
+
+#Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
+#1
+ZOMBIE
+0 2000 2 20
+
+#2
+BOOMER
+4500 0 1 1
+
+RUNNER
+0 2000 2 6
+
+MIDGET
+6000 1000 2 4
+
+
 
