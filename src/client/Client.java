@@ -19,7 +19,6 @@ import client.input.CommandList;
 import client.net.Addressing;
 import client.net.ClientReceiver;
 import client.net.ClientSender;
-import client.net.NetworkInformation;
 import client.render.GameRenderer;
 import javafx.stage.Stage;
 import server.engine.state.map.MapReader;
@@ -180,12 +179,13 @@ public class Client extends Thread {
     public Client(Stage stage, GameHandler handler, Settings settings, int playerID, ConnectionType connectionType) {
         try {
             // Assign the value for the ports and update the next available port
-            this.listenPort = NetworkInformation.getLowestAvailablePort();
-            this.sendPort = NetworkInformation.getLowestAvailablePort() + 1;
+            this.listenPort = lowestAvailablePort;
+            this.sendPort = lowestAvailablePort + 1;
             updateLowestAvailablePort();
             // Assign the values for the addresses and update the next available address
-            this.listenAddress = InetAddress.getByName("230.0.0." + NetworkInformation.getLowestAvailableIPAddress());
-            this.senderAddress = InetAddress.getByName("230.0.1." + NetworkInformation.getLowestAvailableIPAddress());
+            this.listenAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            this.senderAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            updateLowestAvailableAddress();
             this.stage = stage;
             this.handler = handler;
             this.settings = settings;

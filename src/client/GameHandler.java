@@ -1,7 +1,6 @@
 package client;
 
 import client.gui.menucontrollers.LoadScreenController;
-import client.net.NetworkInformation;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -174,8 +173,6 @@ public class GameHandler extends Thread {
                         serverStarted = true;
                         // wait for threads to be setup completely
                         server.join();
-                        NetworkInformation.incrementLowestAvailableIPAddress();
-                        NetworkInformation.incrementLowestAvailablePort();
                         if(shouldClose){
                             this.end();
                         }
@@ -203,6 +200,7 @@ public class GameHandler extends Thread {
                         while (!server.isReceiving()) {
                             Thread.yield();
                         }
+                        System.out.println("Server setup and waiting");
                         // create the client
                         client = new Client(stage, this, settings, 0, connectionType);
                         client.setName("Client");
@@ -210,19 +208,21 @@ public class GameHandler extends Thread {
                         // setup clients threads
 
                         client.start();
+                        System.out.println("Client started");
                         //wait for all threads to finish setting up and client to join the game fully
                         client.join();
                         if(shouldClose){
                             this.end();
                         }
+                        System.out.println("Client joined");
 
                         // wait for the server to receive all players before ending
                         server.join();
                         if(shouldClose){
                             this.end();
                         }
-                        NetworkInformation.incrementLowestAvailableIPAddress();
-                        NetworkInformation.incrementLowestAvailablePort();
+                        System.out.println("Server joined");
+                        System.out.println("Client setup and waiting");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
