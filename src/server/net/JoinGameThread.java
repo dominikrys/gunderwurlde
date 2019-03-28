@@ -87,6 +87,7 @@ public class JoinGameThread extends Thread {
             outstream.close();
             insteam.close();
         } catch (IOException e) {
+            // Error with streams, reading and writing to the socket or talking to the server
             e.printStackTrace();
         }
     }
