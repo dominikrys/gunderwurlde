@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import client.net.Addressing;
+import client.net.NetworkInformation;
 import server.engine.HasEngine;
 import server.engine.ProcessGameState;
 import server.net.JoinGameManager;
@@ -181,8 +182,8 @@ public class Server extends Thread implements HasEngine {
             this.clientRequests = null;
             this.receiving = false;
             // Set ports to be used
-            sendPort = lowestavailableport;
-            listenPort = lowestavailableport + 1;
+            sendPort = NetworkInformation.getLowestAvailablePort();
+            listenPort = NetworkInformation.getLowestAvailablePort() + 1;
             // update next assignable port
             updatedLowestAvailablePort();
             // Set sockets and address to be used
@@ -190,9 +191,9 @@ public class Server extends Thread implements HasEngine {
             Addressing.setInterfaces(listenSocket);
             sendSocket = new MulticastSocket();
             Addressing.setInterfaces(sendSocket);
-            listenAddress = InetAddress.getByName("230.0.1." + lowestAvailableAddress);
+            listenAddress = InetAddress.getByName("230.0.1." + NetworkInformation.getLowestAvailableIPAddress());
             listenSocket.joinGroup(listenAddress);
-            senderAddress = InetAddress.getByName("230.0.0." + lowestAvailableAddress);
+            senderAddress = InetAddress.getByName("230.0.0." + NetworkInformation.getLowestAvailableIPAddress());
             Addressing.setInterfaces(sendSocket);
             updatedLowestAvailableAddress();
             if(shouldClose){
