@@ -38,6 +38,14 @@ public class HUD extends BorderPane {
      */
     StackPane miniMapPane;
     /**
+     * Canvas for minimap. Canvas used instead of pane since it's more flexible, efficient and can be expanded.
+     */
+    Canvas minimapCanvas;
+    /**
+     * GraphicsContext for minimap
+     */
+    GraphicsContext minimapGC;
+    /**
      * Label for player score
      */
     private Label playerScoreNumber;
@@ -53,16 +61,6 @@ public class HUD extends BorderPane {
      * VBox for ammo
      */
     private VBox ammoBox;
-
-    /**
-     * Canvas for minimap
-     */
-    Canvas minimapCanvas;
-
-    /**
-     * GraphicsContext for minimap
-     */
-    GraphicsContext minimapGC;
 
     /**
      * Constructor
@@ -373,6 +371,8 @@ public class HUD extends BorderPane {
                     ((playerView.getPose().getY() + Constants.TILE_SIZE / 2) *
                             (miniMapRectangle.getHeight() / (gameView.getYDim() * Constants.TILE_SIZE)) - playerRectangleSize / 2),
                     playerRectangleSize, playerRectangleSize);
+
+            // TODO: add more elements to minimap
         }
     }
 
