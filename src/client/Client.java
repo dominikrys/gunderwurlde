@@ -33,55 +33,66 @@ import shared.view.TileView;
  */
 public class Client extends Thread {
 
-
     /**
      * The port players will request the TCP address of the server machine on
      */
     private static final int JOINPORT = 8080;
+
     /**
      * The port the player will use to join the game
      */
     private static final int TCPPORT = 8081;
+
     /**
      * Socket to receive GameViews from the server
      */
     private MulticastSocket listenSocket;
+
     /**
      * Socket to send client requests to the server
      */
     private MulticastSocket sendSocket;
+
     /**
      * Socket to return the TCP address needed to join the game
      */
     private MulticastSocket joinGameSocket;
+
     /**
      * Socket that handles a player joining a game
      */
     private Socket tcpSocket;
+
     /**
      * Address the client will receive gameViews on
      */
     private InetAddress listenAddress;
+
     /**
      * Address the client will send requests on
      */
     private InetAddress senderAddress;
+
     /**
      * The UDP address to request to join a game
      */
     private InetAddress joinGameAddress;
+
     /**
      * The server machines IP address
      */
     private InetAddress tcpAddress;
+
     /**
      * The port the client will receive gameView across
      */
     private int listenPort;
+
     /**
      * The port the client will send requests across
      */
     private int sendPort;
+
     /**
      * byte array to hold information being received and sent when joining a game
      */
@@ -111,13 +122,16 @@ public class Client extends Thread {
      * The object that will hold the constantly updating view of the game
      */
     private GameView view;
+
+    /**
+     * TileView array to hold the map to be generated
+     */
     private TileView[][] tileMap;
 
     /**
      * The object that will render the graphics to the screen
      */
     private GameRenderer renderer;
-
 
     /**
      * Thread that handles sending requests to the server
@@ -159,7 +173,10 @@ public class Client extends Thread {
      */
     private ConnectionType connectionType;
 
-    public boolean shouldClose = false;
+    /**
+     * boolean to tell if the client should begin the close sequence
+     */
+    private boolean shouldClose = false;
 
     /**
      * Constructor for single player or multiplayer host
@@ -184,11 +201,13 @@ public class Client extends Thread {
             this.playerID = playerID;
             this.connectionType = connectionType;
             firstView = true;
+            // Check that the game isn't supposed to close
             if(shouldClose){
                 this.close(false);
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            // Error case where the adress specified in not a real address
+            this.close(false);
         }
     }
 
@@ -225,7 +244,7 @@ public class Client extends Thread {
                 this.close(false);
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            this.close(false);
         }
     }
 
@@ -247,7 +266,7 @@ public class Client extends Thread {
                 this.close(false);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            this.close(false);
         }
     }
 
@@ -278,7 +297,7 @@ public class Client extends Thread {
         }
     }
     
-    /*
+    /**
      * Method for updating the tileMap with the changes from the GameView
      */
     private void updateTileMap() {
@@ -299,6 +318,7 @@ public class Client extends Thread {
             Addressing.setInterfaces(joinGameSocket);
             joinGameAddress = InetAddress.getByName("230.0.0.0");
             joinGameSocket.joinGroup(joinGameAddress);
+            // If socket loses connection within 5 seconds it closes the socket
             joinGameSocket.setSoTimeout(5000);
 
             // Prepare the gameIPAddress to transmission
@@ -338,6 +358,7 @@ public class Client extends Thread {
                 }
                 // We have received the servers IP address so can begin TCP communication
                 tcpSocket = new Socket(tcpAddress, TCPPORT);
+                // If the tcp socket loses connection for 5 seconds it closes
                 tcpSocket.setSoTimeout(5000);
                 InputStream is = tcpSocket.getInputStream();
                 OutputStream os = tcpSocket.getOutputStream();
@@ -369,16 +390,25 @@ public class Client extends Thread {
             // Close sockets and streams
             joinGameSocket.close();
             tcpSocket.close();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+        } catch(NullPointerException ex){
+            // Error case when Addressing class fails to set ports;
+            this.close(false);
+        }
+        catch (UnknownHostException e) {
+            // Error occurs when attempting to create multiplayer without a switch
+            // InetAddress starts using IPV6 instead of IPV4 for some reason
+            // No idea why
             // TODO if time find out how to fix
             System.out.println("Multiplayer not supported locally");
+            this.close(false);
         } catch (SocketTimeoutException ex) {
             System.out.println("Failed to reach server, Is the IP and port correct");
+            this.close(false);
         } catch (SocketException e) {
-            e.printStackTrace();
+            this.close(false);
         } catch (IOException e) {
-            e.printStackTrace();
+            // Any other error
+            this.close(false);
         }
     }
 
@@ -411,13 +441,17 @@ public class Client extends Thread {
                 // no need to close socket as its closed within receiver
             }
             // check if close needs to be passed up the trail
+            // if close requests sent from renderer then pass up
+            // else dont pass up
             if(passUp) {
                 handler.end();
             }
 
         } catch (InterruptedException e) {
+            // Threads failed to join?
             e.printStackTrace();
         } catch (IOException e) {
+            // Any other error
             e.printStackTrace();
         }
     }
