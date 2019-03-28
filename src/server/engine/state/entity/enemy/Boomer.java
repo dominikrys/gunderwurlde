@@ -4,8 +4,10 @@ import java.util.LinkedHashSet;
 
 import server.engine.ai.enemyAI.BoomerAI;
 import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.state.item.consumable.Grenade;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.HeavyLaserCannon;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -18,11 +20,19 @@ public class Boomer extends  Zombie{
     public static final LinkedHashSet<Drop> DEFAULT_DROPS = new LinkedHashSet<>();
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.6, 3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.6, 4, 2));
         DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.2, 2, 1));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.05, 2, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.5, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.02, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.2, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.05, 16, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.MAGIC_ESSENCE), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.05, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.4, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.1, 1));
+        DEFAULT_DROPS.add(new Drop(new HeavyLaserCannon(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.5, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.5, 1, 1));
+
     }
 
     private final int DEFAULT_DAMAGE;

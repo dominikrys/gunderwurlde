@@ -4,8 +4,13 @@ import java.util.LinkedHashSet;
 
 import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.MachineGunnerAI;
+import server.engine.state.item.consumable.Grenade;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.AssaultRifle;
+import server.engine.state.item.weapon.gun.HeavyPistol;
+import server.engine.state.item.weapon.gun.MachineGun;
+import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -20,10 +25,21 @@ public class MachineGunner extends Zombie {
 
     //TODO think about this
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 4, 2));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.6, 3, 1));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.05, 2));
-        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.6, 6, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.3, 3, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.6, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.4, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.1, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.6, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.2, 1));
+        DEFAULT_DROPS.add(new Drop(new Smg(), 0.3, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new MachineGun(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new HeavyPistol(), 0.1, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new AssaultRifle(), 0.05, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new Grenade(), 0.3, 1, 1));
     }
 
     private final int ATTACK_WIDTH;

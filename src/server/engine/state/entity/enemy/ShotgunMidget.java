@@ -6,6 +6,8 @@ import server.engine.ai.enemyAI.EnemyAI;
 import server.engine.ai.enemyAI.ShotgunMidgetAI;
 import server.engine.state.item.pickup.Ammo;
 import server.engine.state.item.pickup.Health;
+import server.engine.state.item.weapon.gun.BuckshotShotgun;
+import server.engine.state.item.weapon.gun.Shotgun;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
@@ -19,9 +21,15 @@ public class ShotgunMidget extends Zombie {
     private final int DISTANCE_TO_PLAYER_TO_ATTACK;
 
     static {
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.2, 2, 1));
-        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.5, 5, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.BASIC_AMMO), 0.3, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.SHOTGUN_ROUND), 0.6, 4, 2));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.HEAVY_AMMO), 0.05, 2, 1));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ENERGY), 0.05, 12, 4));
+        DEFAULT_DROPS.add(new Drop(new Ammo(AmmoList.ROCKET_AMMO), 0.01, 1, 1));
+        DEFAULT_DROPS.add(new Drop(Health.makeHealth(2), 0.03, 2));
         DEFAULT_DROPS.add(new Drop(Health.makeHealth(1), 0.1, 1));
+        DEFAULT_DROPS.add(new Drop(new Shotgun(), 0.3, 1, 1));
+        DEFAULT_DROPS.add(new Drop(new BuckshotShotgun(), 0.1, 1, 1));
     }
 
     // 2 1500 4
