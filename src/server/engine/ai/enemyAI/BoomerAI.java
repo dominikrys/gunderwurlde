@@ -2,7 +2,6 @@ package server.engine.ai.enemyAI;
 
 import server.engine.state.entity.attack.AoeAttack;
 import server.engine.state.entity.attack.Attack;
-import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.Team;
 
@@ -18,6 +17,6 @@ public class BoomerAI extends ZombieAI {
 
     @Override
     protected Attack getAttackObj() {
-        return new AoeAttack(pose, Tile.TILE_SIZE * 2, DAMAGE, Team.NONE, true);
+        return new AoeAttack(pose, 50, DAMAGE, Team.NONE, true);
     }
 }

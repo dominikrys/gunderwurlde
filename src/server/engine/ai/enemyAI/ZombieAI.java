@@ -33,22 +33,18 @@ public class ZombieAI extends EnemyAI {
 
     @Override
     public AIAction getAction() {
-        if(closestPlayer != null) {
-            if (attacking) {
-                return AIAction.ATTACK;
-            } else if (getDistToPlayer(closestPlayer) >= DISTANCE_TO_PLAYER_FOR_ATTACK) {
-                return AIAction.MOVE;
-            } else if (getDistToPlayer(closestPlayer) < DISTANCE_TO_PLAYER_FOR_ATTACK) {
-                this.actionState = ActionList.ATTACKING;
-                attacking = true;
-                beginAttackTime = System.currentTimeMillis();
-                attackLocation = closestPlayer; // Prevents teleporting attacks onto the player
-                return AIAction.ATTACK;
-            }
-            return AIAction.WAIT;
-        }else{
-            return AIAction.UPDATE;
+        if (attacking) {
+            return AIAction.ATTACK;
+        } else if (getDistToPlayer(closestPlayer) >= DISTANCE_TO_PLAYER_FOR_ATTACK) {
+            return AIAction.MOVE;
+        } else if (getDistToPlayer(closestPlayer) < DISTANCE_TO_PLAYER_FOR_ATTACK) {
+            this.actionState = ActionList.ATTACKING;
+            attacking = true;
+            beginAttackTime = System.currentTimeMillis();
+            attackLocation = closestPlayer; // Prevents teleporting attacks onto the player
+            return AIAction.ATTACK;
         }
+        return AIAction.WAIT;
     }
 
     protected Force generateMovementForce(){

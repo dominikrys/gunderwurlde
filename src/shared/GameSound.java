@@ -17,7 +17,6 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.SoundList;
 import shared.view.entity.EnemyView;
-import shared.view.ExplosionView;
 import shared.view.GunView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
@@ -31,7 +30,6 @@ public class GameSound {
 	private HashMap<SoundList, AudioClip> loadedGameSounds;
 	private PlayerView client;
 	private EntityView entity;
-	private ExplosionView explosion;
 	private ActionList action;
 	private AudioClip audio;
 	private double volume;
@@ -40,7 +38,7 @@ public class GameSound {
 	private TimerTask play;
 	private boolean replayable;
 	private long startDelay;
-	private double hearableDistance = 500;
+	final double hearableDistance = 500	;
 	
 	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, EntityView entity, ActionList action, double volume) {
 		this.loadedGameSounds = loadedGameSounds;
@@ -70,21 +68,6 @@ public class GameSound {
 			this.calculateSound(this.audio);
 			this.timer.schedule(play, startDelay);
 		}
-		else {
-			this.timer.cancel();
-			this.timer.purge();
-		}
-	}
-	
-	public GameSound(HashMap<SoundList, AudioClip> loadedGameSounds, PlayerView client, ExplosionView explosion, double volume) {
-		this.loadedGameSounds = loadedGameSounds;
-		this.client = client;
-		this.explosion = explosion;
-		this.volume = volume;
-		this.audio = loadedGameSounds.get(SoundList.SHOTGUN);
-		this.hearableDistance = 1000;
-		this.calculateSound(audio, explosion);
-		this.audio.play();
 	}
 	
 	public EntityView getEntityView() {
@@ -153,11 +136,6 @@ public class GameSound {
 		shellTimer.schedule(task, 700 + startDelay);
 	}
 	
-	public void playDamaged() {
-		AudioClip ouch = new AudioClip(SoundList.OUCH.getPath());
-		ouch.play();
-	}
-	
 	private void calculateSound(AudioClip audio) {
 		double distance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2) + Math.pow(this.entity.getPose().getY() - this.client.getPose().getY(), 2));
 		double balanceDistance = Math.sqrt(Math.pow(this.entity.getPose().getX() - this.client.getPose().getX(), 2));
@@ -165,17 +143,6 @@ public class GameSound {
 		audio.setVolume(Math.max(0, 1 - Math.abs(distance/hearableDistance))*(Math.pow(this.volume/100, 2)));
 		audio.setBalance((balanceDistance + 1) / hearableDistance);
 		if(entity.getPose().getX() < client.getPose().getX()) {
-			audio.setBalance(this.audio.getBalance()*-1);
-		}
-	}
-	
-	private void calculateSound(AudioClip audio, ExplosionView explosion) {
-		double distance = Math.sqrt(Math.pow(explosion.getLocation().getX() - this.client.getPose().getX(), 2) + Math.pow(explosion.getLocation().getY() - this.client.getPose().getY(), 2));
-		double balanceDistance = Math.sqrt(Math.pow(explosion.getLocation().getX() - this.client.getPose().getX(), 2));
-		
-		audio.setVolume(Math.max(0, 1 - Math.abs(distance/hearableDistance))*(Math.pow(this.volume/100, 2)));
-		audio.setBalance((balanceDistance + 1) / hearableDistance);
-		if(explosion.getLocation().getX() < client.getPose().getX()) {
 			audio.setBalance(this.audio.getBalance()*-1);
 		}
 	}
@@ -356,8 +323,6 @@ public class GameSound {
 			case SPECIAL_ATTACK_1:
 				break;
 			case SPECIAL_ATTACK_2:
-				break;
-			case NONE:
 				break;
 		}
 		return audio;

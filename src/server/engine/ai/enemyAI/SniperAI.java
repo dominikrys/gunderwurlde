@@ -22,18 +22,14 @@ public class SniperAI extends AStarUsingEnemy {
 
     @Override
     public AIAction getAction() {
-        if(closestPlayer != null) {
-            if (attacking) {
-                return AIAction.ATTACK;
-            } else if (stillInPositionToAttack() && movementFinished) {
-                attacking = true;
-                beginAttackTime = System.currentTimeMillis();
-                return AIAction.ATTACK;
-            } else {
-                return AIAction.MOVE;
-            }
-        }else{
-            return AIAction.UPDATE;
+        if (attacking) {
+            return AIAction.ATTACK;
+        } else if (stillInPositionToAttack() && movementFinished) {
+            attacking = true;
+            beginAttackTime = System.currentTimeMillis();
+            return AIAction.ATTACK;
+        } else {
+            return AIAction.MOVE;
         }
     }
 

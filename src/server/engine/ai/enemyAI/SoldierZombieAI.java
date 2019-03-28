@@ -1,5 +1,7 @@
 package server.engine.ai.enemyAI;
 
+import java.util.Random;
+
 import server.engine.ai.AIAction;
 import server.engine.ai.newPoseGenerators.RandomPoseGen;
 import server.engine.state.entity.attack.Attack;
@@ -9,8 +11,6 @@ import server.engine.state.item.weapon.gun.RocketLauncher;
 import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
-
-import java.util.Random;
 
 public class SoldierZombieAI extends AStarUsingEnemy {
 
@@ -29,17 +29,10 @@ public class SoldierZombieAI extends AStarUsingEnemy {
 
     @Override
     public AIAction getAction() {
-        int distToPlayer;
-        if (closestPlayer != null) {
-            distToPlayer = getDistToPlayer(closestPlayer);
-        } else {
-            distToPlayer = RANGE_TO_SHOOT + 1;
-        }
-
         if (attacking) {                                //If attacking, continue to attack
             return AIAction.ATTACK;
-        } else if (distToPlayer < RANGE_TO_SHOOT
-                && pathUnobstructed(pose, closestPlayer, tileMap)) {
+        } else if (getDistToPlayer(closestPlayer) < RANGE_TO_SHOOT
+        && pathUnobstructed(pose, closestPlayer, tileMap)) {
             int decision = rand.nextInt(100);
             //Will decide whether to attack based on the RATE_OF_FIRE
             if (decision <= RATE_OF_FIRE && decision >= 2) {
@@ -54,7 +47,7 @@ public class SoldierZombieAI extends AStarUsingEnemy {
         } else if (!movementFinished) {                    //If moving, continue to move
             return AIAction.MOVE;
 
-        } else if (distToPlayer >= RANGE_TO_SHOOT) {
+        } else if (getDistToPlayer(closestPlayer) >= RANGE_TO_SHOOT) {
             //1 in 50 change it will decide to move
             if (rand.nextInt(50) == 0) {
                 return AIAction.MOVE;
@@ -62,7 +55,6 @@ public class SoldierZombieAI extends AStarUsingEnemy {
                 return AIAction.WAIT;
             }
         }
-
         return AIAction.WAIT;
     }
 

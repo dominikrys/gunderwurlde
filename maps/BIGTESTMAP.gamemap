@@ -93,18 +93,18 @@ L 5 21 10
 
 #Rounds 1st line: (entity type), (int params) 2nd line: (start time), (spawn interval), (amount per spawn), (total to spawn)
 #Round1
-BOOMER
-0 1000 2 4
-
 ZOMBIE
 0 1000 2 10
 
+MAGE
+0 1000 1 2
+
 #Round2
-BOOMER
+MACHINE_GUNNER
 0 1000 3 6
 
-ZOMBIE
-0 1000 3 6
+THEBOSS
+0 1000 1 1
 
 
 

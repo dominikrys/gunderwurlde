@@ -26,8 +26,7 @@ public enum SoundList {
     SHOTGUN_SINGLE_RELOAD2("file:assets/sound/gun/shotgun_single_reload2.wav"),
     SHOTGUN2("file:assets/sound/gun/shotgun2.wav"),
     SMG("file:assets/sound/gun/smg.wav"),
-    SNIPER("file:assets/sound/gun/sniper.wav"),
-	OUCH("file:assets/sound/ouch.wav");
+    SNIPER("file:assets/sound/gun/sniper.wav");
 
     /**
      * Path to sound file

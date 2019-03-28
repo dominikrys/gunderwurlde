@@ -234,7 +234,7 @@ public class ProcessGameState extends Thread {
             HashSet<Pose> playerPoses = new HashSet<>();
             for (Integer p : playerIDs) {
                 LivingEntity currentPlayer = livingEntities.get(p);
-                if (currentPlayer.getStatus() != EntityStatus.DEAD)
+                // if (currentPlayer.getStatus() != EntityStatus.DEAD) //TODO when fixed in AI
                     playerPoses.add(currentPlayer.getPose());
             }
 
@@ -565,6 +565,10 @@ public class ProcessGameState extends Thread {
         for (Integer e : enemyIDs) {
             Enemy currentEnemy = (Enemy) livingEntities.get(e);
 
+            // reset values
+            currentEnemy.setMoving(false);
+            currentEnemy.setTakenDamage(false);
+
             if (currentEnemy.hasEffect())
                 currentEnemy = (Enemy) currentEnemy.getEffect().applyEffect(currentEnemy);
             else if (currentEnemy.getStatus() == EntityStatus.SPAWNING)
@@ -636,10 +640,6 @@ public class ProcessGameState extends Thread {
             enemiesView.add(new EnemyView(currentEnemy.getPose(), currentEnemy.getSize(), currentEnemy.getEntityListName(), currentEnemy.isCloaked(),
                     currentEnemy.getStatus(), currentEnemy.getCurrentAction(), currentEnemy.hasTakenDamage(), currentEnemy.isMoving(),
                     currentEnemy.getHealth(), currentEnemy.getMaxHealth(), currentEnemy.getID()));
-
-            // reset values
-            currentEnemy.setMoving(false);
-            currentEnemy.setTakenDamage(false);
         }
     }
 
@@ -965,10 +965,8 @@ public class ProcessGameState extends Thread {
             }
 
             // mark inactive zones for removal
-            if (!z.isActive()) {
+            if (!z.isActive())
                 zonesToRemove.add(z.getId());
-                LOGGER.info("Removing zone: " + z.getId());
-            }
         }
 
         zonesToRemove.stream().forEach((z) -> activeZones.remove(z));
@@ -1075,6 +1073,7 @@ public class ProcessGameState extends Thread {
             LivingEntity entityBeingChecked) {
         boolean removed;
         entityBeingChecked.addNewForce(currentProjectile.getImpactForce());
+        entityBeingChecked.setTakenDamage(true);
 
         if (currentProjectile instanceof HasEffect) {
             if (entityBeingChecked.hasEffect())
@@ -1171,6 +1170,7 @@ public class ProcessGameState extends Thread {
                 if (aoeAttack.getTeam() != entitiyBeingChecked.getTeam() && aoeAttack.haveCollided(entitiyBeingChecked)) {
                     affectedEntities.add(entitiyID);
                     entitiyBeingChecked.damage(aoeAttack.getDamage());
+                    entitiyBeingChecked.setTakenDamage(true);
                     entitiyBeingChecked.addNewForce(aoeAttack.getForce(entitiyBeingChecked.getPose(), source));
                     livingEntities.put(entitiyID, entitiyBeingChecked);
                 }

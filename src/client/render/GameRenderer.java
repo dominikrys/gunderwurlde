@@ -122,10 +122,6 @@ public class GameRenderer implements Runnable {
      * ConnectionType for whether single player or not
      */
     private ConnectionType connectionType;
-    /**
-     * Boolean for whether the game has been finished or not
-     */
-    private boolean gameFinished;
 
     /**
      * Constructor
@@ -167,9 +163,6 @@ public class GameRenderer implements Runnable {
 
         // Set spectator mode to false
         spectator = false;
-
-        // Set game finished to false
-        gameFinished = false;
 
         // Set mouse sensitivity for camera
         cameraMouseSensitivity = 0.25;
@@ -351,8 +344,6 @@ public class GameRenderer implements Runnable {
         if (gameView.getWinningTeam() != Team.NONE) {
             // Call gameWon to handle end of game screen and score saving
             gameWon();
-        } else {
-            gameFinished = false;
         }
 
         // Update HUD
@@ -368,33 +359,27 @@ public class GameRenderer implements Runnable {
         hud.displayWinMessage(rendererResourceLoader.getFontManaspace50(),
                 rendererResourceLoader.getFontManaspace28(), gameView.getWinningTeam());
 
-        // Check if game has only just finished, in which case calculate the high score and save it
-        if (gameFinished == false) {
-            // Calculate the score for the team and get a list of team members
-            int teamHighScore = 0;
-            StringBuilder teamMembers = new StringBuilder();
+        // Calculate the score for the team and get a list of team members
+        int teamHighScore = 0;
+        StringBuilder teamMembers = new StringBuilder();
 
-            for (PlayerView player : gameView.getPlayers()) {
-                if (player.getTeam() == gameView.getWinningTeam()) {
-                    // If first team member, start off the string with their name
-                    if (teamHighScore == 0) {
-                        teamMembers = new StringBuilder(player.getName());
-                    } else {
-                        teamMembers.append(", ").append(player.getTeam());
-                    }
-
-                    // Add score to total
-                    teamHighScore += player.getScore();
+        for (PlayerView player : gameView.getPlayers()) {
+            if (player.getTeam() == gameView.getWinningTeam()) {
+                // If first team member, start off the string with their name
+                if (teamHighScore == 0) {
+                    teamMembers = new StringBuilder(gameView.getWinningTeam().toString() + ": " + player.getName());
+                } else {
+                    teamMembers.append(", ").append(player.getTeam());
                 }
+
+                // Add score to total
+                teamHighScore += player.getScore();
             }
-
-            // Add score to high scores
-            settings.addMultiPlayerHighScore(teamMembers.toString(), teamHighScore);
-            settings.saveToDisk();
-
-            // Set gameFinished to true so score doesn't get saved again
-            gameFinished = true;
         }
+
+        // Add score to high scores
+        settings.addMultiPlayerHighScore(teamMembers.toString(), teamHighScore);
+        settings.saveToDisk();
     }
 
     /**

@@ -118,7 +118,6 @@ public enum EntityList {
     ROCKET("file:assets/img/entity/projectile/rocket.png", 6),
     PHANTOM_BULLET("file:assets/img/entity/projectile/phantom_bullet.png", 6),
     STICKY_BULLET("file:assets/img/entity/projectile/sticky_bullet.png", 6),
-    GRENADE_PROJECTILE("file:assets/img/entity/projectile/grenade_projectile.png", 16),
 
     /**
      * Tiles
@@ -140,9 +139,6 @@ public enum EntityList {
     MARBLE_FLOOR("file:assets/img/tiles/marble_floor.png", Constants.TILE_SIZE),
     DIRT("file:assets/img/tiles/dirt.png", Constants.TILE_SIZE),
     VOID("file:assets/img/tiles/void.png", Constants.TILE_SIZE),
-    CARPET("file:assets/img/tiles/carpet.png", Constants.TILE_SIZE),
-    WOOD_DARK("file:assets/img/tiles/wood_dark.png", Constants.TILE_SIZE),
-    FOOTPATH("file:assets/img/tiles/footpath.png", Constants.TILE_SIZE),
 
     /**
      * Other renderable entities - some are items

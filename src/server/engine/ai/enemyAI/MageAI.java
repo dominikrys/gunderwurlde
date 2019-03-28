@@ -40,49 +40,41 @@ public class MageAI extends PoseGeneratorUsingEnemy {
 
     @Override
     public AIAction getAction() {
-        if(closestPlayer != null) {
-            now = System.currentTimeMillis();
-            if (attacking) {
-                return AIAction.ATTACK;
-            } else if (teleportAway && now - lastTeleport >= TIME_BETWEEN_TELEPORTS) {
-                if (poseToGo != null) {
-                    teleportAway = false;
-                    return AIAction.UPDATE;
+        now = System.currentTimeMillis();
+        if (attacking) {
+            return AIAction.ATTACK;
+        } else if (teleportAway && now - lastTeleport >= TIME_BETWEEN_TELEPORTS) {
+            if (poseToGo != null) {
+                teleportAway = false;
+                return AIAction.UPDATE;
 
-                } else if (!isProcessing()) {
-                    (new PoseAroundPlayerGen(
-                            this, DISTANCE_TO_PLAYER, false, closestPlayer, pose)).start();
-                }
-
-            } else if (now - lastTeleport >= TIME_BETWEEN_TELEPORTS) {
-                if (poseToGo != null) {
-                    this.actionState = ActionList.ATTACKING;
-                    attacking = true;
-                    beginAttackTime = System.currentTimeMillis();
-                    return AIAction.UPDATE;
-
-                } else if (!isProcessing()) {
-                    (new PoseAroundPlayerGen(
-                            this, DISTANCE_TO_PLAYER, true, closestPlayer, pose)).start();
-                }
+            } else if (!isProcessing()) {
+                (new PoseAroundPlayerGen(
+                        this, DISTANCE_TO_PLAYER, false, closestPlayer, pose)).start();
             }
-            return AIAction.MOVE;
-        }else {
-            return AIAction.UPDATE;
+
+        } else if (now - lastTeleport >= TIME_BETWEEN_TELEPORTS) {
+            if (poseToGo != null) {
+                this.actionState = ActionList.ATTACKING;
+                attacking = true;
+                beginAttackTime = System.currentTimeMillis();
+                return AIAction.UPDATE;
+
+            } else if (!isProcessing()) {
+                (new PoseAroundPlayerGen(
+                        this, DISTANCE_TO_PLAYER, true, closestPlayer, pose)).start();
+            }
         }
+        return AIAction.MOVE;
     }
 
     @Override
     public Enemy getUpdatedEnemy() {
-        if(closestPlayer != null) {
-            lastTeleport = System.currentTimeMillis();
-            int attackAngle = getAngle(pose, closestPlayer);
-            enemy.setPose(new Pose(poseToGo, attackAngle));
-            poseToGo = null;
-            return enemy;
-        }else{
-            return super.getUpdatedEnemy();
-        }
+        lastTeleport = System.currentTimeMillis();
+        int attackAngle = getAngle(pose, closestPlayer);
+        enemy.setPose(new Pose(poseToGo, attackAngle));
+        poseToGo = null;
+        return enemy;
     }
 
     @Override

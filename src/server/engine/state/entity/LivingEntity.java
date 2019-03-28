@@ -110,7 +110,6 @@ public abstract class LivingEntity extends Entity implements HasPhysics, HasHeal
 
     @Override
     public boolean damage(int amount) {
-        this.takenDamage = true;
         if (amount < health) {
             health -= amount;
             return false;

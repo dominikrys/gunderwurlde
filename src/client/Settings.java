@@ -370,28 +370,28 @@ public class Settings implements Serializable {
         multiPlayerHighScores = new HashMap<>();
 
         // Single player scores
-        singlePlayerHighScores.put("GabeNewell", 9001);
-        singlePlayerHighScores.put("R Stallman", 900);
-        singlePlayerHighScores.put("Edmund M", 800);
-        singlePlayerHighScores.put("Ian Kenny", 700);
-        singlePlayerHighScores.put("Tom G", 600);
-        singlePlayerHighScores.put("Tomas", 500);
-        singlePlayerHighScores.put("Timothy", 400);
-        singlePlayerHighScores.put("Dom", 300);
-        singlePlayerHighScores.put("George", 200);
-        singlePlayerHighScores.put("Richard", 100);
+        singlePlayerHighScores.put("Gaben", 9001);
+        singlePlayerHighScores.put("Ian Kenny", 1000);
+        singlePlayerHighScores.put("Tom G", 2000);
+        singlePlayerHighScores.put("Zombie", 130);
+        singlePlayerHighScores.put("Notch", 64);
+        singlePlayerHighScores.put("Dom", 500);
+        singlePlayerHighScores.put("Tomas", 750);
+        singlePlayerHighScores.put("Timothy", 250);
+        singlePlayerHighScores.put("George", 545);
+        singlePlayerHighScores.put("Richard", 345);
 
         // Multiplayer scores
-        multiPlayerHighScores.put("Lucas, Ness", 1000);
-        multiPlayerHighScores.put("DiddyKong, DonkeyKong", 900);
-        multiPlayerHighScores.put("Luigi, Mario, Toad", 800);
-        multiPlayerHighScores.put("Pac-Man, Ms Pac-Man", 700);
-        multiPlayerHighScores.put("Link, Zelda", 600);
-        multiPlayerHighScores.put("Booker, Elizabeth", 500);
-        multiPlayerHighScores.put("Ratchet, Clank", 400);
-        multiPlayerHighScores.put("Banjo, Kazooie", 300);
-        multiPlayerHighScores.put("Sonic, Tails", 200);
-        multiPlayerHighScores.put("Ellie, Joel", 100);
+        multiPlayerHighScores.put("BLUE: Steve, Herobrine", 13450);
+        multiPlayerHighScores.put("RED: DiddyKong, DonkeyKong", 400);
+        multiPlayerHighScores.put("GREEN: Luigi, Mario, Toad", 200);
+        multiPlayerHighScores.put("RED: Pac-Man, Ms Pac-Man", 150);
+        multiPlayerHighScores.put("GREEN: Link, Zelda", 100);
+        multiPlayerHighScores.put("YELLOW: Booker, Elizabeth", 50);
+        multiPlayerHighScores.put("BLUE: Chief, Cortana", 800);
+        multiPlayerHighScores.put("YELLOW: Banjo, Kazooie", 675);
+        multiPlayerHighScores.put("GREEN: Sonic, Tails", 2350);
+        multiPlayerHighScores.put("RED: Ellie, Joel", 600);
     }
 
     /**
