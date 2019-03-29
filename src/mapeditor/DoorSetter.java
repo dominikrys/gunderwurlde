@@ -26,38 +26,136 @@ import server.engine.state.map.tile.Tile;
 import shared.lists.MapEditorAssetList;
 import shared.lists.TileList;
 
+/**
+ * DoorSetter class. Contains the gui for door settings.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class DoorSetter {
-	
+	/**
+     * DoorSetter - This object
+     */
 	private DoorSetter doorSetter = this;
+	/**
+     * tileSprite - Loaded tile sprites
+     */
 	HashMap<TileList, Image> tileSprite;
+	/**
+     * doors - Coordinates and info on all doors currently on the canvas
+     */
 	private HashMap<String, TileList> doors;
+	/**
+     * zoneMap - Zone settings of the current map
+     */
 	private HashMap<String, ZoneSettings> zoneMap;
+	/**
+     * stage - Stage to display the gui
+     */
 	private Stage stage;
+	/**
+     * root - Root of stage
+     */
 	private StackPane root;
+	/**
+     * scene - Scene of stage
+     */
 	private Scene scene;
+	/**
+     * vBox - Parent vBox for all children
+     */
 	private VBox vBox;
+	/**
+     * imageAndLabelHBox - HBox for tile images and labels
+     */
 	private HBox imageAndLabelHBox;
+	/**
+     * doorVBox - VBox for door
+     */
 	private VBox doorVBox;
+	/**
+     * doorImageView - Image of selected door
+     */
 	private ImageView doorImageView;
+	/**
+     * doorLabel - Label of selected door's name
+     */
 	private Label doorLabel;
+	/**
+     * tileVBox - VBox for tile
+     */
 	private VBox tileVBox;
+	/**
+     * tileImageView - Image of selected tile
+     */
 	private ImageView tileImageView;
+	/**
+     * tileLabel - Label of selected tile's name
+     */
 	private Label tileLabel;
+	/**
+     * tileSet - Button for selecting tile
+     */
 	private Button tileSet;
+	/**
+     * locationLabelComboBoxHBox - HBox for location label and combo box
+     */
 	private HBox locationLabelComboBoxHBox;
+	/**
+     * locationLabel - Label for location
+     */
 	private Label locationLabel;
+	/**
+     * locationComboBox - ComboBox for location selecting
+     */
 	private ComboBox<String> locationComboBox;
+	/**
+     * zoneLabelComboBoxHBox - HBox for zone label and combo box
+     */
 	private HBox zoneLabelComboBoxHBox;
+	/**
+     * zoneLabel - Label for zone
+     */
 	private Label zoneLabel;
+	/**
+     * zoneComboBox - ComboBox for zone selecting
+     */
 	private ComboBox<String> zoneComboBox;
+	/**
+     * killsRequiredLabelTextFieldHBox - HBox for kills required label and text field
+     */
 	private HBox killsRequiredLabelTextFieldHBox;
+	/**
+     * killsRequiredLabel - Label for kills required
+     */
 	private Label killsRequiredLabel;
+	/**
+     * TextField - Text field for entering no. of kills required to selected door to open
+     */
 	private TextField killsRequiredTextField;
+	/**
+     * saveCloseHBox - HBox for save and close button
+     */
 	private HBox saveCloseHBox;
+	/**
+     * saveButton - Button for saving the door settings
+     */
 	private Button saveButton;
+	/**
+     * closeButton - Button for closing the gui
+     */
 	private Button closeButton;
+	/**
+     * tileToReturn - Tile object for substituting the opened door 
+     */
 	private Tile tileToReturn;
 	
+	/**
+     * Constructor
+     *
+     * @param tileSprite Loaded tile sprites
+     * @param doors Coordinates and info on all doors currently on the canvas
+     * @param zoneMap Zone settings of the current map
+     */
 	public DoorSetter(HashMap<TileList, Image> tileSprite, HashMap<String, TileList> doors, HashMap<String, ZoneSettings> zoneMap) {
 		this.tileSprite = tileSprite;
 		this.doors = doors;
@@ -65,6 +163,9 @@ public class DoorSetter {
 		this.init();
 	}
 	
+	/**
+     * Initialize the gui and show it
+     */
 	private void init() {
 		stage = new Stage();
 		stage.setTitle("Door Setter");
@@ -237,6 +338,9 @@ public class DoorSetter {
         });
 	}
 	
+	/**
+     * Display relevant info on all combo boxes and text field if they exist
+     */
 	private void displayInfo() {
 		if(!locationComboBox.getItems().isEmpty()) {
 			doorImageView.setImage(tileSprite.get(doors.get(locationComboBox.getValue())));
@@ -259,6 +363,9 @@ public class DoorSetter {
 		}
 	}
 	
+	/**
+     * Clear info for tile image, label, zone combo box, kills required text field
+     */
 	private void clearInfo() {
 		tileImageView.setImage(null);
 		tileLabel.setText("");
@@ -266,6 +373,11 @@ public class DoorSetter {
 		killsRequiredTextField.clear();
 	}
 	
+	/**
+	 * Set the tile object to substitute, also display the correct image and name
+	 * 
+     * @param tile Tile to set as the substitute tile
+     */
 	public void displayTile(Tile tile) {
 		tileImageView.setImage(tileSprite.get(tile.getType()));
 		tileLabel.setText(tile.getType().toString());

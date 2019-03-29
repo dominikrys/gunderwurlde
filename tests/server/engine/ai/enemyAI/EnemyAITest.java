@@ -1,6 +1,8 @@
-spackage server.engine.ai.enemyAI;
+package server.engine.ai.enemyAI;
 
 import org.junit.BeforeClass;
+import server.engine.ai.enemyAI.EnemyAI;
+import server.engine.ai.enemyAI.ZombieAI;
 import server.engine.state.entity.enemy.Enemy;
 import server.engine.state.entity.enemy.Zombie;
 import server.engine.state.map.tile.Tile;
@@ -57,23 +59,6 @@ public class EnemyAITest {
     }
 
     @org.junit.Test
-    public void getTileMap() {
-
-    }
-
-    @org.junit.Test
-    public void getActionState() {
-    }
-
-    @org.junit.Test
-    public void getMovementForce() {
-    }
-
-    @org.junit.Test
-    public void getDistToPlayer() {
-    }
-
-    @org.junit.Test
     public void tileNotSolid() {
         Tile t1 = new Tile(TileList.WOOD, TileState.SOLID,
                 1,1,1);
@@ -83,12 +68,6 @@ public class EnemyAITest {
         Tile [][] tileMap = {
                 {t1,t1,t1},
                 {t2,t2,t2}
-        };
-
-        Tile [][] tileMapTransposed = {
-                {t1,t2},
-                {t1,t2},
-                {t1,t2}
         };
 
         EnemyAI.setTileMap(tileMap);
@@ -136,15 +115,15 @@ public class EnemyAITest {
 
     @org.junit.Test
     public void getAngle() {
-        Pose p1 = new Pose(0,0);
-        Pose p2 = new Pose(1,0);
-        Pose p3 = new Pose(1,1);
-        Pose p4 = new Pose(0,1);
-        Pose p5 = new Pose(-1,1);
-        Pose p6 = new Pose(-1,0);
-        Pose p7 = new Pose(-1,-1);
-        Pose p8 = new Pose(0,-1);
-        Pose p9 = new Pose(1,-1);
+        Pose p1 = new Pose(10,10);
+        Pose p2 = new Pose(11,10);
+        Pose p3 = new Pose(11,11);
+        Pose p4 = new Pose(10,11);
+        Pose p5 = new Pose(9,11);
+        Pose p6 = new Pose(9,10);
+        Pose p7 = new Pose(9,9);
+        Pose p8 = new Pose(10,9);
+        Pose p9 = new Pose(11,9);
 
         assertTrue(EnemyAI.getAngle(p1, p2) == 0);
         assertTrue(EnemyAI.getAngle(p1, p3) == 45);
@@ -152,34 +131,9 @@ public class EnemyAITest {
         assertTrue(EnemyAI.getAngle(p1, p5) == 135);
         assertTrue(EnemyAI.getAngle(p1, p6) == 180);
         assertTrue(EnemyAI.getAngle(p1, p7) == 225);
-        assertTrue(EnemyAI.getAngle(p1, p8) == 260);
+        assertTrue(EnemyAI.getAngle(p1, p8) == 270);
         assertTrue(EnemyAI.getAngle(p1, p9) == 315);
 
     }
-
-    @org.junit.Test
-    public void getForceFromAttack() {
-    }
-
-    @org.junit.Test
-    public void pathUnobstructed() {
-    }
-
-    @org.junit.Test
-    public void poseInDistance() {
-    }
-
-    @org.junit.Test
-    public void getUpdatedEnemy() {
-    }
-
-    @org.junit.Test
-    public void isProcessing() {
-    }
-
-    @org.junit.Test
-    public void setProcessing() {
-    }
-
 
 }

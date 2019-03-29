@@ -14,29 +14,35 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.scene.image.Image;
 import server.engine.state.map.tile.Door;
 import shared.lists.EntityList;
 import shared.lists.Team;
 import shared.lists.TileList;
-import shared.lists.TileState;
 
+/**
+ * MapWriter class. Contains file reader and writer for map files.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class MapWriter {
-	
+	/**
+     * asciiCode - 'A', used in mapping each tile type to a char
+     */
 	private static int asciiCode = 65;
 	
+	/**
+     * Read a .gm file and convert it to MapSave object
+     * 
+     * @param saveFile .gm file containing the saved map
+     */
 	public static MapSave readSave(File saveFile) {
 		MapSave mapSave = null;
-		
 		try {
 			FileInputStream fileIn = new FileInputStream(saveFile);
 			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-			
 			mapSave = (MapSave) objectIn.readObject();
-			
 			objectIn.close();
 			fileIn.close();
-			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -45,26 +51,32 @@ public class MapWriter {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
 		return mapSave;
 	}
 	
+	/**
+     * Save a MapSave object and convert it to a .gm file
+     * 
+     * @param mapSave MapSave object containing the saved map
+     */
 	public static void saveMap(MapSave mapSave) {
-		 
         try {
-        	
         	String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
         	File file = new File(currentPath + "/maps/saves", mapSave.getMapName() + ".gm");
             FileOutputStream fileOut = new FileOutputStream(file);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(mapSave);
             objectOut.close();
- 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 	
+	/**
+     * Complete a MapSave object and convert it to a .GAMEMAP file
+     * 
+     * @param mapSave MapSave object containing the saved map
+     */
 	public static void completeMap(MapSave mapSave) {
 		
 		try {

@@ -14,16 +14,30 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import shared.Constants;
 
+/**
+ * OptionMenu class. Contains the gui for settings of the map editor.
+ *
+ * @author Mak Hong Lun Timothy
+ */
 public class OptionMenu {
-	
+	/**
+     * startMenu - StartMenu that opened this gui
+     */
 	private StartMenu startMenu;
 	
+	/**
+     * Constructor
+     *
+     * @param startMenu StartMenu that opened this gui
+     */
 	public OptionMenu(StartMenu startMenu) {
 		this.startMenu = startMenu;
 		this.init();
 	}
 	
-	// Initialize
+	/**
+     * Initialize the gui and show it
+     */
 	private void init() {
 		Stage stage = new Stage();
 		stage.setTitle("Option");
