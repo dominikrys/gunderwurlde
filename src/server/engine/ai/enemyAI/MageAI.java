@@ -16,6 +16,9 @@ import shared.lists.Team;
 
 import java.util.Random;
 
+/**
+ * Ai class for the Mage enemy
+ */
 public class MageAI extends PoseGeneratorUsingEnemy {
 
     private final long TIME_BETWEEN_TELEPORTS;
@@ -38,6 +41,12 @@ public class MageAI extends PoseGeneratorUsingEnemy {
         }
     }
 
+    /**
+     * Decides whether the teleport or not and if it's ready to attack.
+     * Teleport in and out of an area around the player, shoots the player
+     * when teleports closer to him or her
+     * @return
+     */
     @Override
     public AIAction getAction() {
         if(closestPlayer != null) {

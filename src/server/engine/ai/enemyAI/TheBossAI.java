@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * The AI for Shotgun midget enemy
+ */
 public class TheBossAI extends ZombieAI {
 
     private final long TIME_BETWEEN_ATTACKS;

@@ -8,6 +8,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static server.engine.ai.enemyAI.EnemyAI.*;
 
+
+/**
+ * A pose generator that generates poses around a specific pose in a area around it
+ */
 public class PoseAroundPlayerGen extends Thread {
 
     private PoseGeneratorUsingEnemy ai;
@@ -24,6 +28,9 @@ public class PoseAroundPlayerGen extends Thread {
         this.enemy = enemy;
     }
 
+    /**
+     * Can either check if the path to the pose is unobstructed or not
+     */
     @Override
     public void run() {
         ai.setProcessing(true);

@@ -10,6 +10,9 @@ import java.util.Random;
 
 import static server.engine.ai.enemyAI.EnemyAI.poseInDistance;
 
+/**
+ * Generates a random pose in a specified distance for the starting pose
+ */
 public class RandomPoseGen extends Thread {
     private final PoseGeneratorUsingEnemy AI;
     private final Pose STARTING_POSE;
@@ -22,6 +25,9 @@ public class RandomPoseGen extends Thread {
         this.DISTANCE = distance;
     }
 
+    /**
+     * Takes a random tile in the distance and if it's not solid, returns it tu the ai
+     */
     @Override
     public void run() {
         Pose pose;

@@ -6,6 +6,9 @@ import server.engine.state.map.tile.Tile;
 import shared.Constants;
 import shared.lists.Team;
 
+/**
+ * A Class for the Boomer enemy
+ */
 public class BoomerAI extends ZombieAI {
 
     private final int DAMAGE;

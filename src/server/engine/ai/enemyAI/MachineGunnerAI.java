@@ -12,10 +12,11 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
 
+/**
+ * The AI for the Machine Gunner enemy
+ */
 public class MachineGunnerAI extends ZombieAI {
 
-    //Probably needs a better name
-    //The angle the enemy shoots
     private final int TURN_RATE;
     private final int ATTACK_WIDTH;
     private final int BULLETS_PER_ATTACK;
@@ -37,6 +38,11 @@ public class MachineGunnerAI extends ZombieAI {
         randomizePath = false;
     }
 
+    /**
+     * Is slow but powerful, turns slowly to the player and shoots a lot of bullets
+     * while turning within a specified range.
+     * @return
+     */
     @Override
     public LinkedList<Attack> getAttacks() {
         LinkedList<Attack> attacks = new LinkedList<>();
@@ -79,6 +85,11 @@ public class MachineGunnerAI extends ZombieAI {
         return attacks;
     }
 
+    /**
+     * If the player is not in front of the enemy, turns the enemy, otherwise doesn't return any change
+     * @param maxMovementForce
+     * @return
+     */
     @Override
     public Force getForceFromAttack(double maxMovementForce) {
         if (delayPast && isInAttackPosition) {

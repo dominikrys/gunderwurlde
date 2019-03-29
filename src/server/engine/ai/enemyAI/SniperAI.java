@@ -10,6 +10,9 @@ import server.engine.state.physics.Force;
 import shared.Pose;
 import shared.lists.Team;
 
+/**
+ * The AI for Shotgun midget enemy
+ */
 public class SniperAI extends AStarUsingEnemy {
 
     private final int RANGE_TO_RUN_AWAY;
@@ -20,6 +23,11 @@ public class SniperAI extends AStarUsingEnemy {
         this.RANGE_TO_RUN_AWAY = rangeToRunAway;
     }
 
+    /**
+     * Tries to stay away from the player and only shoot him or her if
+     * it's in a specified distance
+     * @return
+     */
     @Override
     public AIAction getAction() {
         if(closestPlayer != null) {

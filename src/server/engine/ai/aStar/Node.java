@@ -5,10 +5,25 @@ import javafx.util.Pair;
 import shared.Pose;
 
 
+/**
+ * A class used to store data by AStar
+ */
 public class Node implements Comparable<Node> {
+    /**
+     * The pose of the node
+     */
     private Pose pose;
+    /**
+     * Cost to go to get to this note from the initial node
+     */
     private double costToGo = 0;
+    /**
+     * Cost left to go to the final node
+     */
     private double costLeft = 0;
+    /**
+     * costToGo + costLeft. Used in AStar calculations
+     */
     private double sum = 0;
 
     public Node(Pair<Integer, Integer> tile){
@@ -99,56 +114,3 @@ public class Node implements Comparable<Node> {
         return 0;
     }
 }
-
-//class Main {
-//
-//    public static void main(String[] args) {
-//
-//        //new AStar(this, 1, getTileMap(), getEnemPose(), getPlayerPoses().iterator().next()).start();
-////        Node c1 = new Node(new Pose(3,4), 1,1);
-////        Node c2 = new Node(new Pose(3,4), 1,1);
-////
-////        if (c1.equals(c2)) {
-////            System.out.println("Equal c");
-////        } else {
-////            System.out.println("Not Equal c");
-////        }
-////
-////
-////        PriorityQueue<Node> test = new PriorityQueue<>(8);
-////
-////        Node testNode = new Node(new Pose(3,4), 1,1);
-////        System.out.println(test.offer(testNode));
-////        testNode = new Node(new Pose(3,4), 1,4);
-////        System.out.println(test.offer(testNode));
-////        testNode = new Node(new Pose(3,4), 1,7);
-////        System.out.println(test.offer(testNode));
-////
-////        if(test.contains(new Node(new Pose(3,4), 1,4))){
-////            System.out.println("veikia PQ<Node>");
-////        }
-//
-//        LinkedHashSet<Pose> testP = new LinkedHashSet<>(8);
-//
-//        Pose testPose = new Pose(3,4, 45);
-//        System.out.println(testP.add(testPose));
-//        testPose = new Pose(3,5);
-//        System.out.println(testP.add(testPose));
-//        testPose = new Pose(8,4);
-//        System.out.println(testP.add(testPose));
-//
-//        if(testP.contains(new Pose(3,5))){
-//            System.out.println("veikia LHS<Pose>" + testP.size());
-//        }
-//
-////        Pose testPose1 = new Pose(3,4, 45);
-////        Pose testPose2 = new Pose(3,4, 45);
-////        if(testPose2.equals(testPose2)){
-////            System.out.println("equals");
-////        }
-////
-////        for (Pose pose : testP) {
-////            System.out.println(pose.getX() + " " + pose.getY());
-////        }
-//    }
-//}

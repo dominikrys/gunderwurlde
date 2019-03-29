@@ -10,6 +10,9 @@ import shared.Pose;
 import shared.lists.ActionList;
 import shared.lists.Team;
 
+/**
+ * The AI for Shotgun midget enemy
+ */
 public class ShotgunMidgetAI extends ZombieAI{
 
     private final int KNOCKBACK_AMOUNT;
@@ -23,6 +26,11 @@ public class ShotgunMidgetAI extends ZombieAI{
         this.KNOCKBACK_AMOUNT = knockbackAmount;
     }
 
+    /**
+     * Run towards the player and shoots him or her with a shotgun,
+     * Then knocks back and start running to the player again
+     * @return
+     */
     @Override
     public AIAction getAction() {
         if(closestPlayer != null) {

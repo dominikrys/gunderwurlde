@@ -12,9 +12,12 @@ import shared.lists.Team;
 
 import java.util.Random;
 
+/**
+ * The AI for Shotgun midget enemy
+ */
 public class SoldierZombieAI extends AStarUsingEnemy {
 
-    private final int RANGE_TO_SHOOT; //In Location metric
+    private final int RANGE_TO_SHOOT;
     private final int RATE_OF_FIRE;
     private final int DISTANCE_TO_MOVE;
     private Random rand = new Random();
@@ -27,6 +30,10 @@ public class SoldierZombieAI extends AStarUsingEnemy {
         this.DISTANCE_TO_MOVE = distanceToMove;
     }
 
+    /**
+     * Randomly decides to move in any direction and if the player is in range, shoots him
+     * @return
+     */
     @Override
     public AIAction getAction() {
         int distToPlayer;

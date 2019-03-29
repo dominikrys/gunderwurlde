@@ -9,6 +9,10 @@ import shared.Constants;
 import shared.Location;
 import shared.lists.ActionList;
 import shared.lists.Team;
+
+/**
+ * The AI for Shotgun midget enemy
+ */
 public class ZombieAI extends EnemyAI {
 
     private boolean turnLeft;
@@ -31,6 +35,10 @@ public class ZombieAI extends EnemyAI {
         this.attacking = false;
     }
 
+    /**
+     * Tries to move towards the player and if in range to attack, attacks
+     * @return
+     */
     @Override
     public AIAction getAction() {
         if(closestPlayer != null) {
@@ -60,6 +68,12 @@ public class ZombieAI extends EnemyAI {
         }
     }
 
+    /**
+     * Has a chance to turn away from the straight path
+     *
+     * @param angle
+     * @return
+     */
     private double randomizePath(double angle) {
         Random rand = new Random();
         //change of moving from direct path
