@@ -15,7 +15,14 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * Player class.
+ * 
+ * @author Richard
+ *
+ */
 public class Player extends LivingEntity {
+    // Default player values.
     public static final int DEFAULT_HEALTH = 20;
     public static final double DEFAULT_MOVEMENT_FORCE = 18;
     public static final int DEFAULT_SCORE = 0;
