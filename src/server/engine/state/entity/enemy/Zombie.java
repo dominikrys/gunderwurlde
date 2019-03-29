@@ -12,6 +12,12 @@ import server.engine.state.item.weapon.gun.Pistol;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * Basic Zombie class.
+ * 
+ * @author Richard
+ *
+ */
 public class Zombie extends Enemy {
     public static final int DEFAULT_HEALTH = 2;
     public static final double DEFAULT_MOVEMENT_FORCE = 2;

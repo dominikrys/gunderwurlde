@@ -9,6 +9,11 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class FireBullet extends Projectile implements HasEffect {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 18;
     public static final int DEFAULT_DAMAGE = 1;

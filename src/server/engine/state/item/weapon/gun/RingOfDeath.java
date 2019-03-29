@@ -5,6 +5,11 @@ import server.engine.state.entity.projectile.SmallBullet;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class RingOfDeath extends ProjectileGun {
     public static final ItemList NAME = ItemList.RING_OF_DEATH;
     public static final int DEFAULT_CLIP_SIZE = 666;

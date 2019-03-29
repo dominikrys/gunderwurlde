@@ -7,6 +7,11 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.ItemList;
 
+/**
+ * 
+ * @author Tomas
+ *
+ */
 public class SniperRifle extends ProjectileGun {
 
     public static final ItemList NAME = ItemList.SNIPER_RIFLE;

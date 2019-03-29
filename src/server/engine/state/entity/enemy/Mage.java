@@ -12,6 +12,11 @@ import server.engine.state.item.weapon.gun.IceGun;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class Mage extends Zombie{
     public static final int DEFAULT_HEALTH = 5;
     public static final double DEFAULT_MOVEMENT_FORCE = 2;

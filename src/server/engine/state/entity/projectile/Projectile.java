@@ -9,7 +9,16 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * Class used for projectiles.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class Projectile extends Entity {
+    /**
+     * Amount of force to apply per scaled damage.
+     */
     private static final int FORCE_PER_DMG = 300;
 
     protected int speed;
@@ -19,6 +28,17 @@ public abstract class Projectile extends Entity {
     protected int dist_travelled;
     protected Team team;
 
+    /**
+     * Super Constructor for projectiles.
+     * 
+     * @param speed
+     * @param damage
+     * @param entityListName
+     * @param size
+     * @param max_range
+     * @param pose
+     * @param team
+     */
     Projectile(int speed, int damage, EntityList entityListName, int size, int max_range, Pose pose, Team team) {
         super(pose, size, entityListName);
         this.speed = speed;
@@ -28,6 +48,15 @@ public abstract class Projectile extends Entity {
         this.team = team;
     }
 
+    /**
+     * Super Constructor for template projectiles.
+     * 
+     * @param speed
+     * @param damage
+     * @param entityListName
+     * @param size
+     * @param max_range
+     */
     Projectile(int speed, int damage, EntityList entityListName, int size, int max_range) {
         super(size, entityListName);
         this.speed = speed;

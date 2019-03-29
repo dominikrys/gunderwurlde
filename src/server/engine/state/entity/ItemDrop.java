@@ -11,6 +11,12 @@ import shared.lists.EntityList;
 import shared.lists.ItemList;
 import shared.lists.ItemType;
 
+/**
+ * Class used for ItemDrops (Items on the map).
+ * 
+ * @author Richard
+ *
+ */
 public class ItemDrop extends Entity implements HasID, HasPhysics {
     public static final long DECAY_LENGTH = 10000; //10 seconds
     public static final int DROP_FREEZE = 300; // drop freeze of 0.3 seconds

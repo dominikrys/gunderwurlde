@@ -2,6 +2,12 @@ package server.engine.state.map;
 
 import server.engine.state.entity.Entity;
 
+/**
+ * Class that represents a Wave for specific Enemy Type.
+ * 
+ * @author Richard
+ *
+ */
 public class Wave implements Comparable<Wave> {
     protected long startTime;
     protected int spawnInterval; // interval between spawns won't be able to be quicker than game engine speed

@@ -5,6 +5,11 @@ import server.engine.state.entity.projectile.SmallBullet;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class Smg extends ProjectileGun {
     public static final ItemList NAME = ItemList.SMG;
     public static final int DEFAULT_CLIP_SIZE = 40;

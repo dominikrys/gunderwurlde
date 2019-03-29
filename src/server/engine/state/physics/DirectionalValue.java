@@ -4,6 +4,12 @@ public abstract class DirectionalValue {
     protected int direction;
     protected double value;
 
+    /**
+     * Class for any Value with a Direction.
+     * 
+     * @param direction
+     * @param value
+     */
     public DirectionalValue(int direction, double value) {
         this.direction = direction;
         this.value = value;

@@ -11,6 +11,11 @@ import server.engine.state.item.weapon.gun.HeavyLaserCannon;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class Boomer extends  Zombie{
 
     public static final double DEFAULT_MOVEMENT_FORCE = 1;

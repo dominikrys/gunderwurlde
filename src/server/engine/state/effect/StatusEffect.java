@@ -3,6 +3,13 @@ package server.engine.state.effect;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityStatus;
 
+/**
+ * Status effect class sued to process status effects for the applied
+ * LivingEntity
+ * 
+ * @author Richard
+ *
+ */
 public abstract class StatusEffect {
     protected long duration;
     protected long startTime;

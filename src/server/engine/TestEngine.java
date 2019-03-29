@@ -3,7 +3,7 @@ package server.engine;
 import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import client.Settings;
+
 import client.render.GameRenderer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,6 +14,12 @@ import shared.lists.Team;
 import shared.request.ClientRequests;
 import shared.view.GameView;
 
+/**
+ * Basic Engine test used during initial prototyping.
+ * 
+ * @author Richard
+ *
+ */
 public class TestEngine extends Application implements HasEngine {
     private static final int LOOPS = 1000;
     private ProcessGameState engine;

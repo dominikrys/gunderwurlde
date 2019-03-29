@@ -1,9 +1,15 @@
 package server.engine.state.entity.attack;
 
-import server.engine.state.entity.projectile.Projectile;
-
 import java.util.LinkedList;
 
+import server.engine.state.entity.projectile.Projectile;
+
+/**
+ * Projectile Attack class.
+ * 
+ * @author Richard
+ *
+ */
 public class ProjectileAttack implements Attack {
     protected LinkedList<Projectile> projectiles;
 

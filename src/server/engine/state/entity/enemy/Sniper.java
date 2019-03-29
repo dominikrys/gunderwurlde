@@ -11,6 +11,11 @@ import server.engine.state.item.weapon.gun.SniperRifle;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class Sniper extends Zombie {
 
     public static final int DEFAULT_HEALTH = 1;

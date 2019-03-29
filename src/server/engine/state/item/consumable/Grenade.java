@@ -10,6 +10,11 @@ import shared.lists.ItemList;
 import shared.lists.ItemType;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class Grenade extends Consumable implements CreatesProjectiles {
     public static final ItemList NAME = ItemList.GRENADE;
     public static final int DEFAULT_MAX_QUANTITY = 3;

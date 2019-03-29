@@ -5,6 +5,12 @@ import server.engine.state.item.Limited;
 import shared.lists.ItemList;
 import shared.lists.ItemType;
 
+/**
+ * Class for consumables.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class Consumable extends Item implements Limited {
 
     protected int quantity;

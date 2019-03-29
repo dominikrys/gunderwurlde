@@ -9,6 +9,12 @@ import shared.Pose;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
+/**
+ * Class for Guns.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class Gun extends Weapon implements Limited {
     private static Random random = new Random();
 

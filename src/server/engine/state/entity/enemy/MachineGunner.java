@@ -14,6 +14,11 @@ import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class MachineGunner extends Zombie {
     public static final int DEFAULT_HEALTH = 5;
 

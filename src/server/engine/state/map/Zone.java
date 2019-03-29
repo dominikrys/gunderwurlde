@@ -12,6 +12,12 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.Pose;
 
+/**
+ * A Zone of the map with Doors, Triggers and Rounds.
+ * 
+ * @author Richard
+ *
+ */
 public class Zone {
     private static int nextZoneID = 0;
 

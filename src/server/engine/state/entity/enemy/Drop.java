@@ -4,6 +4,12 @@ import java.util.Random;
 
 import server.engine.state.item.Item;
 
+/**
+ * Class used for Random Drops.
+ * 
+ * @author Richard
+ *
+ */
 public class Drop {
     
     private static Random rand = new Random();

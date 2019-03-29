@@ -11,6 +11,11 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class BouncyBullet extends Projectile implements HasPhysics { // TODO find a cleaner way
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 22;
     public static final int DEFAULT_DAMAGE = 1;
