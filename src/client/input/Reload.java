@@ -53,7 +53,6 @@ public class Reload extends Action {
     public void gunReload(GunView itemView, AmmoList ammo) {
         if (itemView.getAmmoInClip() < itemView.getClipSize() && playerView.getAmmo().getOrDefault(ammo, 0) > 0) {
             handler.send(CommandList.RELOAD);
-            System.out.println("Sending reload request");
         } else {
             // TODO: reload fail stuff here (sound...)
         }
