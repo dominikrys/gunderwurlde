@@ -47,7 +47,6 @@ public class ClientReceiver extends Thread {
      */
     private Settings settings;
 
-    int test = 0;
     /**
      * Constructor
      * @param socket Socket to receive GameViews from the server
@@ -62,14 +61,6 @@ public class ClientReceiver extends Thread {
         running = true;
         this.start();
     }
-
-    /**
-     * method to get the value of running
-     * @return the value of running
-     */
-    public boolean getRunning() {
-        return running;
-    };
 
     /**
      * run method for this thread, to receive packets from the server
@@ -116,10 +107,14 @@ public class ClientReceiver extends Thread {
                         ex.printStackTrace();
                     }
                     catch (ClassNotFoundException ex) {
+                        // Error thrown when trying to create an object for a class that doesnt exist
+                        // Should never be thrown
                         ex.printStackTrace();
                     } catch (EOFException ex) {
-                        ex.printStackTrace();
+                        // Error when packet size is less than expected to create a gameView
+                        // Can occur but should be fixed by dynamic packet allocation
                     } catch (IOException e1) {
+                        // Any other error
                         e1.printStackTrace();
                     }
                     // finally close the streams down
@@ -129,11 +124,12 @@ public class ClientReceiver extends Thread {
                     }
                 }
             }
-            System.out.println("ClientReceiver ending");
         }catch(SocketException ex){
+            // Called when the game has been signalled to end
             System.out.println("Closing clientReceiver");
         }
         catch (IOException e1) {
+            // Any other error
             e1.printStackTrace();
         }
 

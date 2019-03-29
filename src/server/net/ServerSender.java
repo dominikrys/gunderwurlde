@@ -66,14 +66,6 @@ public class ServerSender extends Thread {
     }
 
     /**
-     * Method to get if the thread is still running
-     * @return if the thread is still running
-     */
-    public boolean getRunning() {
-        return running;
-    }
-
-    /**
      * Ends the thread by setting running to false
      */
     public void close() {
@@ -90,7 +82,7 @@ public class ServerSender extends Thread {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // thrown if the socket is closed meaning the serverSender should end
             }
         }
         System.out.println("closing ServerSender");
@@ -128,14 +120,17 @@ public class ServerSender extends Thread {
                     bos.close();
                     out.close();
                 } catch (IOException ex) {
+                    // Any error involving, writing to outputstream, creating packets, sending packets
                     ex.printStackTrace();
                 }
             }
             // TODO Will be set on a loop to send every ______ seconds
 
         } catch (SocketException e) {
+            // Occurs when the sender is told to quit
             System.out.println("Serversender ending");
         } catch (IOException e) {
+            // Any other exception
             e.printStackTrace();
         }
     }
