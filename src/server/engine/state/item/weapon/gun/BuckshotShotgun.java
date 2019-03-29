@@ -9,6 +9,11 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class BuckshotShotgun extends Shotgun {
     public static final ItemList NAME = ItemList.BUCKSHOT_SHOTGUN;
     public static final int DEFAULT_CLIP_SIZE = 2;

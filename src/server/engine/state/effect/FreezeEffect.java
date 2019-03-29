@@ -3,6 +3,11 @@ package server.engine.state.effect;
 import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityStatus;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class FreezeEffect extends StatusEffect {
     public static long DEFAULT_DURATION = 3000;
 

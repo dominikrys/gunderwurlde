@@ -5,6 +5,11 @@ import server.engine.state.entity.projectile.Projectile;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class HeavyPistol extends ProjectileGun {
     public static final ItemList NAME = ItemList.HEAVY_PISTOL;
     public static final int DEFAULT_CLIP_SIZE = 12;

@@ -10,6 +10,11 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public abstract class LaserGun extends Gun implements CreatesLasers {
     protected Laser laser;
 

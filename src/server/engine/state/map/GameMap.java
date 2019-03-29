@@ -1,13 +1,19 @@
 package server.engine.state.map;
 
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+
 import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.MapList;
 import shared.lists.Team;
 
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-
+/**
+ * Class for the Game Map with the Tiles and Zones.
+ * 
+ * @author Richard
+ *
+ */
 public class GameMap {
     protected final int DEFAULT_X_DIM;
     protected final int DEFAULT_Y_DIM;
@@ -16,6 +22,16 @@ public class GameMap {
     protected MapList mapName;
     protected LinkedHashMap<Integer, Zone> zones;
 
+    /**
+     * Construct a Game map with the given parameters.
+     * 
+     * @param xDim
+     * @param yDim
+     * @param tileMap
+     * @param teamSpawns
+     * @param zones
+     * @param mapName
+     */
     GameMap(int xDim, int yDim, Tile[][] tileMap, EnumMap<Team, Location> teamSpawns, LinkedHashMap<Integer, Zone> zones, MapList mapName) {
         this.DEFAULT_X_DIM = xDim;
         this.DEFAULT_Y_DIM = yDim;

@@ -11,6 +11,12 @@ import shared.Pose;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * Class used for live grenades.
+ * 
+ * @author Richard
+ *
+ */
 public class LiveGrenade extends Projectile implements ContainsAttack {
     public static final int DEFAULT_SPEED = Tile.TILE_SIZE * 16;
     public static final int DEFAULT_DAMAGE = 0;

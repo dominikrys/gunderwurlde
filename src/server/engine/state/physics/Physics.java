@@ -4,13 +4,34 @@ import server.engine.state.map.tile.Tile;
 import shared.Location;
 import shared.lists.TileState;
 
+/**
+ * Physics class for all the Physics in the game.
+ * 
+ * @author Richard
+ *
+ */
 public class Physics {
+    /**
+     * Value used for friction calculations.
+     */
     public static int GRAVITY = 100;
 
+    /**
+     * Convertion between the time units used to seconds.
+     */
     private static int TIME_PER_SECOND = 1000;
+    /**
+     * Bounce coefficient for entities (non-tiles).
+     */
     private static double OBJECT_BOUNCE = 0.9;
 
-
+    /**
+     * Process a collision between two physics objects.
+     * 
+     * @param e1
+     * @param e2
+     * @param tileMap
+     */
     public static void objectCollision(HasPhysics e1, HasPhysics e2, Tile[][] tileMap) {
         double e1Mass = e1.getMass();
         double e2Mass = e1.getMass();
@@ -55,10 +76,27 @@ public class Physics {
         }
     }
 
+    /**
+     * Gets a new velocity from a momentum conserved collision.
+     * 
+     * @param e1Velocity
+     * @param e2Velocity
+     * @param e1Mass
+     * @param e2Mass
+     * @return
+     */
     private static double getNewVelocity(double e1Velocity, double e2Velocity, double e1Mass, double e2Mass) { // for e1
         return ((e1Mass * e1Velocity) + (e2Mass * e2Velocity) + (e2Mass * OBJECT_BOUNCE * (e2Velocity - e1Velocity))) / (e1Mass + e2Mass);
     }
 
+    /**
+     * Process a collision between a physics object and a Tile.
+     * 
+     * @param e
+     *            the Entity colliding.
+     * @param tileLoc
+     * @param tileBounce
+     */
     public static void tileCollision(HasPhysics e, Location tileLoc, double tileBounce) {
         int gapSize = e.getSize() + (Tile.TILE_SIZE / 2) + 1;
         Location loc = e.getLocation();
@@ -93,6 +131,14 @@ public class Physics {
         e.setVelocity(currentVelocity);
     }
 
+    /**
+     * Calculates the fictional force with direction for the given parameters.
+     * 
+     * @param frictionCoefficient
+     * @param mass
+     * @param directionOfVelocity
+     * @return Force due to friction opposing velocity.
+     */
     public static Force getFrictionalForce(double frictionCoefficient, double mass, int directionOfVelocity) {
         double force = getFrictionalForce(frictionCoefficient, mass);
         int direction = directionOfVelocity - 180;
@@ -101,10 +147,25 @@ public class Physics {
         return new Force(direction, force);
     }
 
+    /**
+     * Basic friction calculation.
+     * 
+     * @param frictionCoefficient
+     * @param mass
+     * @return Force due to friction.
+     */
     private static double getFrictionalForce(double frictionCoefficient, double mass) {
         return frictionCoefficient * mass * GRAVITY;
     }
 
+    /**
+     * Calculates the drag force with direction.
+     * 
+     * @param fluidDensity
+     * @param velocity
+     * @param size
+     * @return Force due to drag and direction opposing velocity.
+     */
     public static Force getDragForce(double fluidDensity, Velocity velocity, int size) {
         double force = getDragForce(fluidDensity, normalise(velocity.getSpeed()), normaliseSize(size));
         int direction = velocity.getDirection() - 180;
@@ -113,10 +174,28 @@ public class Physics {
         return new Force(direction, force);
     }
 
+    /**
+     * Basic drag calculation.
+     * 
+     * @param fluidDensity
+     * @param speed
+     * @param surfaceArea
+     * @return Force due to drag.
+     */
     private static double getDragForce(double fluidDensity, double speed, double surfaceArea) {
         return 0.5 * Math.pow(speed, 2) * surfaceArea * fluidDensity;
     }
 
+    /**
+     * Calculates the new velocity from the original given the provided acceleration
+     * and time.
+     * 
+     * @param acceleration
+     * @param velocity
+     * @param direction
+     * @param time
+     * @return
+     */
     public static Velocity getNewVelocity(double acceleration, Velocity velocity, int direction, long time) {
         double changeInSpeed = acceleration * normaliseTime(time);
         double[] changeInSpeedComponents = getComponents(direction, changeInSpeed);
@@ -127,16 +206,26 @@ public class Physics {
         return new Velocity((int) result[0], result[1]);
     }
 
-    public static Impulse getImpulse(int direction, double force, long time) {
-        return new Impulse(direction, force * normaliseTime(time));
-    }
-
+    /**
+     * Gets the X and Y comonents from a direction and value.
+     * 
+     * @param direction
+     * @param value
+     * @return X & Y components
+     */
     static double[] getComponents(int direction, double value) { // TODO use Line instead?
         double directionInRadians = Math.toRadians(direction);
         double[] components = { (double) value * Math.cos(directionInRadians), (double) value * Math.sin(directionInRadians) };
         return components;
     }
 
+    /**
+     * Gets the direction and value from X and Y components.
+     * 
+     * @param xComp
+     * @param yComp
+     * @return Direction and Value.
+     */
     public static double[] fromComponents(double xComp, double yComp) { // TODO use Line instead?
         double value = Math.sqrt(Math.pow(xComp, 2) + Math.pow(yComp, 2));
         int direction = (int) Math.round(Math.toDegrees(Math.atan(yComp / xComp)));
@@ -150,27 +239,69 @@ public class Physics {
         return result;
     }
 
+    /**
+     * Gets a force from F=ma with a given direction.
+     * 
+     * @param acceleration
+     * @param direction
+     * @param mass
+     * @return Force
+     */
     public static Force getForce(double acceleration, int direction, double mass) {
         return new Force(direction, acceleration * mass);
     }
 
+    /**
+     * Gets the accelerate from a force.
+     * 
+     * @param f
+     *            Given force.
+     * @param mass
+     * @return Acceleration
+     */
     public static double getAcceleration(Force f, double mass) {
         return f.getForce() / mass;
     }
 
+    /**
+     * Combines two X & Y components together.
+     * 
+     * @param c1
+     * @param c2
+     * @return Combined result.
+     */
     static double[] combineComponents(double[] c1, double[] c2) {
         double[] result = { c1[0] + c2[0], c1[1] + c2[1] };
         return result;
     }
 
+    /**
+     * Normalises time using the TIME_PER_SECOND
+     * 
+     * @param time
+     * @return normalised time
+     */
     public static double normaliseTime(long time) {
         return time / (double) TIME_PER_SECOND;
     }
 
+    /**
+     * Normalises size to use diameter instead of radius.
+     * 
+     * @param size
+     *            as radius
+     * @return size as diameter
+     */
     private static double normaliseSize(int size) {
         return normalise(size * 2);
     }
 
+    /**
+     * Normalise distances based off the Tile Size.
+     * 
+     * @param val
+     * @return normalised distance.
+     */
     private static double normalise(double val) {
         return val / Tile.TILE_SIZE;
     }

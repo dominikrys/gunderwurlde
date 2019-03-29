@@ -6,6 +6,11 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class LaserPistol extends LaserGun {
     public static final ItemList NAME = ItemList.LASER_PISTOL;
     public static final int DEFAULT_CLIP_SIZE = 80;

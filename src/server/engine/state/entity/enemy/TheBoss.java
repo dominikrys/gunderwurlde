@@ -25,6 +25,11 @@ import server.engine.state.item.weapon.gun.SniperRifle;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class TheBoss extends Zombie{
     public static final int DEFAULT_HEALTH = 20;
     public static final double DEFAULT_MOVEMENT_FORCE = 0.9;

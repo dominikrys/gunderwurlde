@@ -9,6 +9,12 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
+/**
+ * Class for any Guns that create Projectiles.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class ProjectileGun extends Gun implements CreatesProjectiles {
 
     protected Projectile projectile;

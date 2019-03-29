@@ -9,6 +9,7 @@ import shared.view.entity.EnemyView;
 import shared.view.entity.EntityView;
 import shared.view.entity.PlayerView;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,7 +101,12 @@ public class SoundView {
      */
 	public void loadGameSounds() {
 		this.loadedGameSounds = new HashMap<SoundList, AudioClip>();
-		EnumSet.allOf(SoundList.class).forEach(SoundList -> loadedGameSounds.put(SoundList, new AudioClip(SoundList.getPath())));
+		EnumSet.allOf(SoundList.class).forEach(SoundList -> {
+			File audio = new File(SoundList.getPath());
+			if(audio.exists()) {
+				loadedGameSounds.put(SoundList, new AudioClip(SoundList.getPath()));
+			}
+		});
 	}
 	
 	/**

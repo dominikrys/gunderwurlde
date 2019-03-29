@@ -8,6 +8,12 @@ import shared.lists.EntityList;
 import shared.lists.Team;
 
 //AOE - Area of Effect
+/**
+ * AOE attack class.
+ * 
+ * @author Richard
+ *
+ */
 public class AoeAttack extends Entity implements Attack {
     private static final int FORCE_SCALING = 400;
     private static final double FALL_OFF = 0.75;

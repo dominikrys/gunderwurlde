@@ -5,6 +5,11 @@ import server.engine.state.entity.projectile.Rocket;
 import shared.lists.AmmoList;
 import shared.lists.ItemList;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class RocketLauncher extends ProjectileGun {
     public static final ItemList NAME = ItemList.ROCKET_LAUNCHER;
     public static final int DEFAULT_CLIP_SIZE = 1;

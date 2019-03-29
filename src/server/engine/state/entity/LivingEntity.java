@@ -14,6 +14,13 @@ import shared.lists.EntityList;
 import shared.lists.EntityStatus;
 import shared.lists.Team;
 
+/**
+ * Class used for all "Living" entities that move and interact with most of the
+ * game.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class LivingEntity extends Entity implements HasPhysics, HasHealth, IsMovable, HasID {
     private static int nextID = 0;
     private static Random random = new Random();

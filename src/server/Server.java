@@ -81,11 +81,6 @@ public class Server extends Thread implements HasEngine {
     private InetAddress tcpAddress;
 
     /**
-     * The next assignable IP address
-     */
-    private static int lowestAvailableAddress = 1;
-
-    /**
      * The port the server will send GameViews across
      */
     private static int sendPort;
@@ -99,11 +94,6 @@ public class Server extends Thread implements HasEngine {
      * The port players will request the TCP address of the server machine on
      */
     private static int JOINPORT = 8080;
-
-    /**
-     * Integer to hold the next assignable port
-     */
-    private static int lowestavailableport = 4444;
 
     /**
      * manager to create threads for every player joining the game
@@ -160,6 +150,9 @@ public class Server extends Thread implements HasEngine {
      */
     private boolean receiving;
 
+    /**
+     * boolean to say if the server thread should close
+     */
     private boolean shouldClose = false;
 
     /**
@@ -195,19 +188,20 @@ public class Server extends Thread implements HasEngine {
             listenSocket.joinGroup(listenAddress);
             senderAddress = InetAddress.getByName("230.0.0." + NetworkInformation.getLowestAvailableIPAddress());
             Addressing.setInterfaces(sendSocket);
-            if(shouldClose){
+            if(shouldClose) {
                 this.close();
             }
-
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            // unkonwn address assigned to a socket
+            // should never be thrown
         } catch (IOException e) {
+            // Every other error
             e.printStackTrace();
         }
     }
 
     /**
-     * Check if the game is multiplayer and then create the sender and receiver for the server
+     * Check if the game is multi player and then create the sender and receiver for the server
      */
     public void run(){
         try {
@@ -277,16 +271,20 @@ public class Server extends Thread implements HasEngine {
                 engine.start();
                 engine.setName("GameEngine");
                 System.out.println("Closing server");
-            }catch(SocketException ex){
+        } catch(SocketException ex){
+            // The server has been told to close early
             System.out.println("Ending server");
         }
-            catch (UnknownHostException e) {
+        catch (UnknownHostException e) {
+            // InetAddress given incorrect IP address
+            // should never be thrown
             e.printStackTrace();
         } catch (IOException e) {
+            // Any other error
             e.printStackTrace();
+            this.close();
         }
         if(shouldClose){
-            this.close();
         }
     }
 
@@ -383,15 +381,26 @@ public class Server extends Thread implements HasEngine {
         }
     }
 
-
+    /**
+     * Method to get if the server is waiting for players to join
+     * @return if the server is waiting for players to join
+     */
     public boolean isReceiving() {
         return receiving;
     }
 
+    /**
+     * Method to get the IP address that players need to join with
+     * @return the value of senderAddress
+     */
     public String getIPAddress(){
         return senderAddress.toString();
     }
 
+    /**
+     * Method to get the port that players need to join with
+     * @return the value of sendPort
+     */
     public String getPort(){
         return Integer.toString(sendPort);
     }

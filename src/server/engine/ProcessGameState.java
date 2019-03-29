@@ -63,25 +63,56 @@ import shared.view.entity.ItemDropView;
 import shared.view.entity.PlayerView;
 import shared.view.entity.ProjectileView;
 
+/**
+ * ProcessGameState class, acts as the game engine for the handler.
+ * 
+ * @author Richard
+ *
+ */
 public class ProcessGameState extends Thread {
     private static final Logger LOGGER = Logger.getLogger(ProcessGameState.class.getName());
-    private static final int MIN_TIME_DIFFERENCE = 17; // number of milliseconds between each process (approx 60th of a second).
-    private static final int TICKS_TILL_INFO = 3600; // ticks between performance info being logged
-
+    /**
+     * Number of milliseconds between each process (approx 60th of a second).
+     */
+    private static final int MIN_TIME_DIFFERENCE = 17;
+    /**
+     * ticks between performance info being logged
+     */
+    private static final int TICKS_TILL_INFO = 3600;
+    /**
+     * Random setup for any pseudorandom generation needed.
+     */
     private static Random random = new Random();
 
+    /**
+     * static method to set logger level
+     */
     static {
         LOGGER.setLevel(Level.INFO);
     }
 
     private final HasEngine handler;
-
     private GameState gameState;
     private GameView view;
     private ClientRequests clientRequests;
+    /**
+     * boolean set by the handlerClosing method, used as the determinate for the
+     * engine.
+     */
     private boolean handlerClosing;
 
 
+    /**
+     * Constructor that sets up the initial GameState and GameView.
+     * 
+     * @param handler
+     *            The handler to request Player Requests and to send the view to.
+     * @param mapName
+     *            The name of the map to be played. Could be easily replaced with a
+     *            string.
+     * @param playersToAdd
+     *            The players to add with their desired Team.
+     */
     public ProcessGameState(HasEngine handler, MapList mapName, LinkedHashMap<String, Team> playersToAdd) {
         this.handler = handler;
 
@@ -123,16 +154,30 @@ public class ProcessGameState extends Thread {
         LOGGER.info("Engine set up.");
     }
 
+    /**
+     * Sets new client requests, desirably after they've been requested by the
+     * engine.
+     * 
+     * @param clientRequests
+     */
     public void setClientRequests(ClientRequests clientRequests) {
         this.clientRequests = clientRequests;
     }
 
+    /**
+     * Notifies the engine that the handler is closing to trigger the start of the
+     * closing process for the engine.
+     */
     public void handlerClosing() {
         LOGGER.info("Stopping engine.");
         this.handlerClosing = true;
         this.interrupt();
     }
 
+    /**
+     * Main run method once the engine is started. Provides the initial view then
+     * begins processing the gamestate and providing new views for the handler.
+     */
     @Override
     public void run() {
         LOGGER.info("Starting engine.");
@@ -300,6 +345,15 @@ public class ProcessGameState extends Thread {
         printPerformanceInfo(totalTimeProcessing, numOfProcesses, longestTimeProcessing);
     }
 
+    /**
+     * Checks if the win condition has been met for multiplayer where only one
+     * player Team remains.
+     * 
+     * @param livingEntities
+     * @param playerIDs
+     * @return NONE if no team wins or the game is singleplayer, else the winning
+     *         Team.
+     */
     private Team checkWinCondition(LinkedHashMap<Integer, LivingEntity> livingEntities, LinkedHashSet<Integer> playerIDs) {
         Team remainingTeam = Team.NONE;
         boolean gameOver = true;
@@ -323,6 +377,26 @@ public class ProcessGameState extends Thread {
         return remainingTeam;
     }
 
+    /**
+     * Takes the player requests and processes any that match with the players in
+     * the state. Also handles active reloads and resetting Player states. Primarily
+     * best as the initial Player processing.
+     * 
+     * @param lastProcessTime
+     * @param numPaused
+     * @param tileMap
+     * @param newProjectiles
+     * @param newLasers
+     * @param items
+     * @param livingEntities
+     * @param projectilesView
+     * @param lasersView
+     * @param explosionsView
+     * @param itemDropsView
+     * @param playerRequests
+     * @param playerIDs
+     * @return the number of players paused.
+     */
     private int processPlayerRequests(long lastProcessTime, int numPaused, Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles,
             LinkedHashSet<Laser> newLasers, LinkedHashMap<Integer, ItemDrop> items, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<LaserView> lasersView, LinkedHashSet<ExplosionView> explosionsView,
@@ -490,6 +564,19 @@ public class ProcessGameState extends Thread {
         return numPaused;
     }
 
+    /**
+     * Spawns drops for a given living entity and adds to the items parameter. The
+     * given tileMap & view are updated accordingly.
+     * 
+     * @param tileMap
+     *            Map of all the relevant TileData.
+     * @param items
+     *            Collection to add the new ItemDrops to.
+     * @param itemDropsView
+     *            Collection to add the views to.
+     * @param entity
+     *            The source LivingEntity for the drops.
+     */
     private void spawnDrops(Tile[][] tileMap, LinkedHashMap<Integer, ItemDrop> items, LinkedHashSet<ItemDropView> itemDropsView, LivingEntity entity) {
         LinkedList<ItemDrop> drops = entity.getDrops();
         for (ItemDrop newDrop : drops) {
@@ -507,6 +594,22 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process the action of shooting a Gun from a given entity.
+     * 
+     * @param tileMap
+     *            Map of all the relevant TileData.
+     * @param newProjectiles
+     *            Collection to add the new Projectiles to.
+     * @param newLasers
+     *            Collection to add the new Lasers to.
+     * @param projectilesView
+     * @param lasersView
+     * @param shootingEntity
+     *            Source entity for the shooting.
+     * @param gunShot
+     *            The gun used to shoot.
+     */
     private void shootGun(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashSet<Laser> newLasers,
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<LaserView> lasersView, LivingEntity shootingEntity, Gun gunShot) {
         Pose gunPose = shootingEntity.getPose();
@@ -525,12 +628,20 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process an entity dropping a sinlge item in the direction they're facing.
+     * 
+     * @param tileMap
+     * @param items
+     * @param entityWhoDropped
+     * @param itemToDrop
+     */
     private void dropItem(Tile[][] tileMap, LinkedHashMap<Integer, ItemDrop> items, LivingEntity entityWhoDropped, Item itemToDrop) {
         Pose dropPose = entityWhoDropped.getPose();
         Velocity dropVelocity = new Velocity(dropPose.getDirection(), 30);
         dropVelocity.add(entityWhoDropped.getVelocity());
         ItemDrop itemDropped = new ItemDrop(itemToDrop, dropPose, dropVelocity);
-        // TODO turn into projectile if melee weapon
+        // TODO turn into projectile if melee weapon?
         items.put(itemDropped.getID(), itemDropped);
 
         LinkedHashSet<int[]> tilesOn = itemDropped.getTilesOn();
@@ -563,6 +674,19 @@ public class ProcessGameState extends Thread {
         itemsToRemove.stream().forEach((i) -> items.remove(i));
     }
 
+    /**
+     * Process enemies and their AI actions.
+     * 
+     * @param tileMap
+     * @param newProjectiles
+     * @param livingEntities
+     * @param projectilesView
+     * @param explosionsView
+     * @param enemiesView
+     * @param enemyIDs
+     * @param enemiesToRemove
+     * @param playerPoses
+     */
     private void processEnemies(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, LinkedHashSet<EnemyView> enemiesView,
             LinkedHashSet<Integer> enemyIDs,
@@ -648,6 +772,16 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Handles a direct change to an enemy, most likely due to the AI, by updating
+     * the tileMap if necessary.
+     * 
+     * @param tileMap
+     * @param currentEnemy
+     * @param enemyID
+     * @param oldLoc
+     * @param oldSize
+     */
     private void handleEnemyChange(Tile[][] tileMap, Enemy currentEnemy, int enemyID, Location oldLoc, int oldSize) {
         Location newLoc = currentEnemy.getLocation();
         int newSize = currentEnemy.getSize();
@@ -670,6 +804,17 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process removing dead enemies from the given livingEntities collection.
+     * 
+     * @param activeZones
+     * @param tileMap
+     * @param items
+     * @param livingEntities
+     * @param itemDropsView
+     * @param enemyIDs
+     * @param enemiesToRemove
+     */
     private void removeDeadEnemies(LinkedHashMap<Integer, Zone> activeZones, Tile[][] tileMap, LinkedHashMap<Integer, ItemDrop> items,
             LinkedHashMap<Integer, LivingEntity> livingEntities, LinkedHashSet<ItemDropView> itemDropsView, LinkedHashSet<Integer> enemyIDs,
             LinkedList<Integer> enemiesToRemove) {
@@ -688,6 +833,15 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process full physics for the given living entities and update their locations
+     * and physics variables accordingly.
+     * 
+     * @param timeDiff
+     *            The time that has passed since last physics process.
+     * @param tileMap
+     * @param livingEntities
+     */
     private void processPhysics(long timeDiff, Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities) {
         for (LivingEntity e : livingEntities.values()) {
             LivingEntity currentEntity = e;
@@ -713,6 +867,16 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Gets the closest living entity for the given specific living entity that
+     * isn't itself.
+     * 
+     * @param tileMap
+     * @param entity
+     * @param entityID
+     * @param livingEntities
+     * @return
+     */
     private Integer getClosestEntity(Tile[][] tileMap, LivingEntity entity, int entityID, LinkedHashMap<Integer, LivingEntity> livingEntities) {
         LinkedHashSet<Integer> entitiesOnTile = new LinkedHashSet<>();
 
@@ -737,6 +901,13 @@ public class ProcessGameState extends Thread {
         return closestID;
     }
 
+    /**
+     * Remove the given entity from the Tiles it's on.
+     * 
+     * @param tileMap
+     * @param entity
+     * @param entityID
+     */
     private void removeToTiles(Tile[][] tileMap, LivingEntity entity, int entityID) {
         LinkedHashSet<int[]> tilesOn;
         tilesOn = entity.getTilesOn();
@@ -751,6 +922,13 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Add the given entity to the Tiles it's on.
+     * 
+     * @param tileMap
+     * @param entity
+     * @param entityID
+     */
     private void addToTiles(Tile[][] tileMap, LivingEntity entity, int entityID) {
         LinkedHashSet<int[]> tilesOn;
         tilesOn = entity.getTilesOn();
@@ -765,6 +943,14 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Apply movement Physics to the given Physics object.
+     * 
+     * @param e
+     *            The given physics object.
+     * @param tileMap
+     * @param timeDiff
+     */
     private static void doMovementPhysics(HasPhysics e, Tile[][] tileMap, long timeDiff) {
         Force resultantForce = e.getResultantForce();
         Velocity currentVelocity = e.getVelocity();
@@ -826,6 +1012,15 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process the laser damaging and decay for the given lasers.
+     * 
+     * @param tileMap
+     * @param newLasers
+     * @param livingEntities
+     * @param lasersView
+     * @param lasers
+     */
     private void processLasers(Tile[][] tileMap, LinkedHashSet<Laser> newLasers, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<LaserView> lasersView, LinkedHashSet<Laser> lasers) {
         for (Laser l : lasers) {
@@ -850,6 +1045,19 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process the given Player's interaction with the map such as Triggers and
+     * ItemDrops.
+     * 
+     * @param lastProcessTime
+     * @param inactiveZones
+     * @param activeZones
+     * @param tileMap
+     * @param items
+     * @param livingEntities
+     * @param p
+     *            The Player's ID
+     */
     private void processPlayerInteraction(long lastProcessTime, LinkedHashMap<Integer, Zone> inactiveZones, LinkedHashMap<Integer, Zone> activeZones,
             Tile[][] tileMap, LinkedHashMap<Integer, ItemDrop> items, LinkedHashMap<Integer, LivingEntity> livingEntities, Integer p) {
         Player currentPlayer = (Player) livingEntities.get(p);
@@ -946,6 +1154,17 @@ public class ProcessGameState extends Thread {
         livingEntities.put(playerID, currentPlayer);
     }
 
+    /**
+     * Process Zones such as Doors, Entity spawning and removal.
+     * 
+     * @param activeZones
+     * @param tileMap
+     * @param livingEntities
+     * @param tileViewChanges
+     * @param enemyIDs
+     * @param tileMapChanged
+     * @return boolean true if the TileMap had a significant change.
+     */
     private boolean processZones(LinkedHashMap<Integer, Zone> activeZones, Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashMap<int[], TileView> tileViewChanges, LinkedHashSet<Integer> enemyIDs, boolean tileMapChanged) {
         LinkedList<Integer> zonesToRemove = new LinkedList<>();
@@ -980,6 +1199,19 @@ public class ProcessGameState extends Thread {
         return tileMapChanged;
     }
 
+    /**
+     * Process projectile movement and it's interaction with Tiles and
+     * LivingEntities.
+     * 
+     * @param currentTimeDifference
+     * @param tileMap
+     * @param newProjectiles
+     * @param livingEntities
+     * @param tileViewChanges
+     * @param projectilesView
+     * @param explosionsView
+     * @param projectiles
+     */
     private void processProjectiles(long currentTimeDifference, Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles,
             LinkedHashMap<Integer, LivingEntity> livingEntities, LinkedHashMap<int[], TileView> tileViewChanges, LinkedHashSet<ProjectileView> projectilesView,
             LinkedHashSet<ExplosionView> explosionsView, LinkedHashSet<Projectile> projectiles) {
@@ -1049,6 +1281,16 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Process a projectile's removal and apply any attacks it may have.
+     * 
+     * @param tileMap
+     * @param newProjectiles
+     * @param livingEntities
+     * @param projectilesView
+     * @param explosionsView
+     * @param currentProjectile
+     */
     private void processProjectileRemoval(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, Projectile currentProjectile) {
         if (currentProjectile instanceof ContainsAttack) {
@@ -1057,6 +1299,17 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Apply an attack to the Map.
+     * 
+     * @param tileMap
+     * @param newProjectiles
+     * @param livingEntities
+     * @param projectilesView
+     * @param explosionsView
+     * @param attack
+     * @param sourceLocation
+     */
     private void applyAttack(Tile[][] tileMap, LinkedHashSet<Projectile> newProjectiles, LinkedHashMap<Integer, LivingEntity> livingEntities,
             LinkedHashSet<ProjectileView> projectilesView, LinkedHashSet<ExplosionView> explosionsView, Attack attack, Location sourceLocation) {
         switch (attack.getAttackType()) {
@@ -1076,6 +1329,16 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Apply a projectile hit from the currentProjectile to the given
+     * entityBeingChecked.
+     * 
+     * @param livingEntities
+     * @param currentProjectile
+     * @param entityID
+     * @param entityBeingChecked
+     * @return true if the projectile was removed.
+     */
     private boolean applyProjectileHit(LinkedHashMap<Integer, LivingEntity> livingEntities, Projectile currentProjectile, Integer entityID,
             LivingEntity entityBeingChecked) {
         boolean removed;
@@ -1095,6 +1358,13 @@ public class ProcessGameState extends Thread {
         return removed;
     }
 
+    /**
+     * Prints current performance info about the engine.
+     * 
+     * @param totalTimeProcessing
+     * @param numOfProcesses
+     * @param longestTimeProcessing
+     */
     private void printPerformanceInfo(long totalTimeProcessing, long numOfProcesses, long longestTimeProcessing) {
         double avgTimeProcessing = (double) totalTimeProcessing / numOfProcesses;
         LOGGER.info("LongestTimeProcessing: " + longestTimeProcessing + "\n" + "TimeProcessing: " + totalTimeProcessing + "\n" + "NumOfProcesses: "
@@ -1102,6 +1372,14 @@ public class ProcessGameState extends Thread {
                 + "EnemyCount: " + gameState.getEnemyIDs().size());
     }
 
+    /**
+     * Get's the closest tile for the given location from the given tilesOn.
+     * 
+     * @param l
+     * @param tilesOn
+     * @param tileMap
+     * @return
+     */
     private static int[] getMostSignificatTile(Location l, LinkedHashSet<int[]> tilesOn, Tile[][] tileMap) {
         int[] mostSigTileCords = { -1, -1 };
         double mostSigDist = Double.MAX_VALUE;
@@ -1122,6 +1400,13 @@ public class ProcessGameState extends Thread {
         return mostSigTileCords;
     }
 
+    /**
+     * Calculates distance moved from the given timeDiffence and speed.
+     * 
+     * @param timeDiff
+     * @param speed
+     * @return double the distance moved.
+     */
     private static double getDistanceMoved(long timeDiff, double speed) {
         double distMoved = Physics.normaliseTime(timeDiff) * speed; // time in millis
         if (distMoved >= Tile.TILE_SIZE) {
@@ -1131,6 +1416,13 @@ public class ProcessGameState extends Thread {
         return distMoved;
     }
 
+    /**
+     * Converts a Player Object to a PlayerView.
+     * 
+     * @param p
+     *            The Player object.
+     * @return The resulting PlayerView.
+     */
     private static PlayerView toPlayerView(Player p) {
         ArrayList<ItemView> playerItems = new ArrayList<>();
         for (Item i : p.getItems()) {
@@ -1148,6 +1440,15 @@ public class ProcessGameState extends Thread {
                 p.getAmmoList(), p.getID(), p.getTeam(), p.isCloaked(), p.getStatus(), p.getCurrentAction(), p.hasTakenDamage(), p.isMoving(), p.isPaused());
     }
 
+    /**
+     * Applys an AOE attack to the Map.
+     * 
+     * @param tileMap
+     * @param livingEntities
+     * @param source
+     * @param aoeAttack
+     * @param explosionsView
+     */
     private static void applyAoeAttack(Tile[][] tileMap, LinkedHashMap<Integer, LivingEntity> livingEntities, Location source,
             AoeAttack aoeAttack, LinkedHashSet<ExplosionView> explosionsView) {
 
@@ -1183,6 +1484,13 @@ public class ProcessGameState extends Thread {
         }
     }
 
+    /**
+     * Gets the distance squared between two locations.
+     * 
+     * @param e1Loc
+     * @param e2Loc
+     * @return
+     */
     private static double getDistSqrd(Location e1Loc, Location e2Loc) {
         double xDiff = e1Loc.getX() - e2Loc.getX();
         double yDiff = e1Loc.getY() - e2Loc.getY();

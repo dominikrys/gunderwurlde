@@ -6,6 +6,11 @@ import shared.lists.AmmoList;
 import shared.lists.ItemList;
 import shared.lists.Team;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class HeavyLaserCannon extends LaserGun {
     public static final ItemList NAME = ItemList.LASER_CANNON;
     public static final int DEFAULT_CLIP_SIZE = 120;

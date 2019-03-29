@@ -13,7 +13,7 @@ public class Addressing {
 
     /**
      * Method that sets the interfaces for the socket so it communicates across the ethernet port
-     * @param socket
+     * @param socket The socket that needs to be assigned an interface to communicate on
      */
     public static void setInterfaces(MulticastSocket socket) {
         try {
@@ -37,7 +37,8 @@ public class Addressing {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            // Error case where socket was closed unexpectedly
+            System.out.println("Error: The ethernet port could not be connected to");
         }
     }
 
@@ -67,8 +68,10 @@ public class Addressing {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            // Error case where socket was closed unexpectedly
+            return null;
         }
+        // Error case where no Realtek PCI slots are available
         return null;
     }
 }

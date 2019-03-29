@@ -57,8 +57,10 @@ public class JoinGameManager extends Thread {
                 instance.start();
             }
         } catch (SocketException e) {
+            // Occurs when the TCPManager is told to end
             System.out.println("TCPManager ended");
         } catch (IOException e) {
+            // Any other error
             e.printStackTrace();
         }
     }
@@ -72,13 +74,13 @@ public class JoinGameManager extends Thread {
 
     /**
      * Method to close the thread when all players have joined
-     * @throws IOException
      */
     public void close(){
         try {
             running = false;
             joinSocket.close();
         } catch (IOException e) {
+            // Error could occur when closing the socket
             e.printStackTrace();
         }
     }

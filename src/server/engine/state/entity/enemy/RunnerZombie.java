@@ -10,6 +10,11 @@ import server.engine.state.item.weapon.gun.PlasmaPistol;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class RunnerZombie extends Zombie {
 
     public static final int DEFAULT_HEALTH = 1;

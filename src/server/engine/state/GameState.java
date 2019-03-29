@@ -15,6 +15,12 @@ import shared.Location;
 import shared.Pose;
 import shared.lists.Team;
 
+/**
+ * Main GameState class.
+ * 
+ * @author Richard
+ *
+ */
 public class GameState {
     protected GameMap currentMap;
     protected LinkedHashMap<Integer, LivingEntity> livingEntities;
@@ -25,6 +31,12 @@ public class GameState {
     protected LinkedHashSet<Laser> lasers;
     protected EnumMap<Team, Location> teamSpawns;
 
+    /**
+     * Constructs a GameState with the given parameters and sets up the map.
+     * 
+     * @param currentMap
+     * @param players
+     */
     public GameState(GameMap currentMap, LinkedHashMap<Integer, LivingEntity> players) {
         this.livingEntities = players;
         this.playerIDs = new LinkedHashSet<>(players.keySet());
@@ -36,6 +48,12 @@ public class GameState {
         return currentMap;
     }
 
+    /**
+     * Sets the Map to the new one provided and spawns the players in their
+     * respective Team spawn locations.
+     * 
+     * @param currentMap
+     */
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
         this.enemyIDs = new LinkedHashSet<>();

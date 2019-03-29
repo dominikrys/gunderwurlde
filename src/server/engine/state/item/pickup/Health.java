@@ -4,6 +4,12 @@ import server.engine.state.item.Item;
 import shared.lists.ItemList;
 import shared.lists.ItemType;
 
+/**
+ * Class for health pickups.
+ * 
+ * @author Richard
+ *
+ */
 public class Health extends Item {
 
     private Health(ItemList type) {

@@ -32,6 +32,12 @@ import shared.lists.TileList;
 import shared.lists.TileState;
 import shared.view.TileView;
 
+/**
+ * Map Reader to read valid gamemap files for the client & engine.
+ * 
+ * @author Richard
+ *
+ */
 public class MapReader {
     private static String MAP_LOCATION = "maps";
 

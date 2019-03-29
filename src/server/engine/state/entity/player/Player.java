@@ -15,7 +15,14 @@ import shared.lists.AmmoList;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * Player class.
+ * 
+ * @author Richard
+ *
+ */
 public class Player extends LivingEntity {
+    // Default player values.
     public static final int DEFAULT_HEALTH = 20;
     public static final double DEFAULT_MOVEMENT_FORCE = 18;
     public static final int DEFAULT_SCORE = 0;
@@ -24,8 +31,14 @@ public class Player extends LivingEntity {
     public static final double DEFAULT_MASS = 2;
     public static final double CONSUMABLE_COOLDOWN = 200;
 
+    /**
+     * the Default max ammo for each ammo type. Assumed unlimited if not added.
+     */
     private static final EnumMap<AmmoList, Integer> DEFAULT_MAX_AMMO = new EnumMap<>(AmmoList.class);
 
+    /**
+     * Static method to add to DEFAULTS.
+     */
     static {
         DEFAULT_MAX_AMMO.put(AmmoList.BASIC_AMMO, 300);
         DEFAULT_MAX_AMMO.put(AmmoList.SHOTGUN_ROUND, 180);
@@ -34,6 +47,9 @@ public class Player extends LivingEntity {
         DEFAULT_MAX_AMMO.put(AmmoList.ROCKET_AMMO, 20);
     }
 
+    /**
+     * Colelction to keep track of the Scores for each Player Team.
+     */
     protected static EnumMap<Team, Integer> teamScore = new EnumMap<>(Team.class);
     protected final Team team;
     protected final String name;
@@ -47,6 +63,14 @@ public class Player extends LivingEntity {
 
     private boolean paused;
 
+    /**
+     * Constructor to create a player.
+     * 
+     * @param team
+     *            The Team that the player is in.
+     * @param name
+     *            The IGN the player is using.
+     */
     public Player(Team team, String name) {
         super(DEFAULT_HEALTH, DEFAULT_MOVEMENT_FORCE, EntityList.PLAYER, DEFAULT_SIZE, DEFAULT_MASS);
         this.items = new ArrayList<Item>();

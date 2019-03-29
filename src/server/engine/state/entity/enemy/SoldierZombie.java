@@ -15,6 +15,11 @@ import server.engine.state.item.weapon.gun.Smg;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class SoldierZombie extends Zombie {
 
     public static final int DEFAULT_SCORE_ON_KILL = 30;

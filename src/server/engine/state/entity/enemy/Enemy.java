@@ -10,6 +10,12 @@ import server.engine.state.entity.LivingEntity;
 import shared.lists.EntityList;
 import shared.lists.Team;
 
+/**
+ * Class for Enemies.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class Enemy extends LivingEntity {
     protected final LinkedHashSet<Drop> drops;
     protected EnemyAI ai;

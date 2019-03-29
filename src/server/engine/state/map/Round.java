@@ -2,7 +2,16 @@ package server.engine.state.map;
 
 import java.util.TreeSet;
 
+/**
+ * Class to represent rounds.
+ * 
+ * @author Richard
+ *
+ */
 public class Round {
+    /**
+     * The waves that are part of the round.
+     */
     protected TreeSet<Wave> waves;
     protected boolean isBoss;
     protected long startTime;

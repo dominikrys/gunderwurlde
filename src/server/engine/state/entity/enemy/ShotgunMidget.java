@@ -11,6 +11,11 @@ import server.engine.state.item.weapon.gun.Shotgun;
 import shared.lists.AmmoList;
 import shared.lists.EntityList;
 
+/**
+ * 
+ * @author Richard & Tomas
+ *
+ */
 public class ShotgunMidget extends Zombie {
     public static final int DEFAULT_HEALTH = 1;
     public static final int DEFAULT_SCORE_ON_KILL = 15;
