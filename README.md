@@ -1,6 +1,6 @@
 
 # Gunderwurlde
-####*A game by Team Underwurlde*
+#### *A game by Team Underwurlde*
 
 ## Game Summary
 A 2D top-down shooter featuring competitive play over a network, artificial intelligence elements, a user interface and audio. The game is essentially a wave-based survival game where the goal is to survive as long as possible. In multiplayer the goal is to be the last team standing.
