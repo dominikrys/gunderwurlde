@@ -15,3 +15,8 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 * **Timothy Mak** - Audio, Input and Map Editor
 * **George Curnock** - Networking
 * **Tomas Vycas** - Enemy AI
+
+## Quick Launch Instructions
+You have to have Java 10 or higher installed on you machine.
+1. Navigate to the root folder for the game in your terminal
+2. Type `java -jar gunderwurlde.jar`
