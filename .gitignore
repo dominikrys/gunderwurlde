@@ -8,7 +8,6 @@
 *.log
 
 #package files
-*.jar
 *.zip
 *.tar.gz
 *.rar
