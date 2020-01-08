@@ -17,10 +17,10 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 
 ## Screenshots
 <p>
-	<img align="left" src="/docs/img/screenshot1" title="Menu" hspace="20"/>
-	<img align="right" src="/docs/img/screenshot2" title="Game" hspace="20"/>
+	<img align="left" src="./docs/img/screenshot1" title="Menu" hspace="20"/>
+	<img align="right" src="./docs/img/screenshot2" title="Game" hspace="20"/>
 <p/>
 <p>
-	<img align="left" src="/docs/img/screenshot3" Title="Boss" hspace="20"/>
-	<img align="right" src="/docs/img/screenshot4" Title="Pause Menu" hspace="20"/>
+	<img align="left" src="./docs/img/screenshot3" Title="Boss" hspace="20"/>
+	<img align="right" src="./docs/img/screenshot4" Title="Pause Menu" hspace="20"/>
 <p.>
