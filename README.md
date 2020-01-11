@@ -4,8 +4,7 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 
 ## Built With
 
-* Java
-* JavaFX
+* Java and JavaFX
 
 ## Authors
 
@@ -20,12 +19,3 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 ![Menu](/docs/img/screenshot1.png)  |  ![Game](/docs/img/screenshot2.png)
 :----------------------------------:|:----------------------------------------:
 ![Boss](/docs/img/screenshot4.png)  |  ![Pause Menu](/docs/img/screenshot4.png)
-
-<p>
-	<img align="left" src= title= width="430"/>
-	<img align="right" src="/docs/img/screenshot2.png" title="Game" width="430"/>
-<p/>
-<p>
-	<img align="left" src="/docs/img/screenshot3.png" Title="Boss" width="430"/>
-	<img align="right" src="/docs/img/screenshot4.png" Title="Pause Menu" width="430"/>
-<p.> 
