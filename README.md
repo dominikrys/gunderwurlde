@@ -1,7 +1,5 @@
 # Gunderwurlde
-#### *A game by Team Underwurlde*
 
-## Game Summary
 A 2D top-down shooter featuring competitive play over a network, artificial intelligence elements, a user interface and audio. The game is essentially a wave-based survival game where the goal is to survive as long as possible. In multiplayer the goal is to be the last team standing.
 
 ## Built With
@@ -17,10 +15,10 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 
 ## Screenshots
 <p>
-	<img align="left" src="/docs/img/screenshot1.png" title="Menu" hspace="20"/>
-	<img align="right" src="/docs/img/screenshot2.png" title="Game" hspace="20"/>
+	<src="/docs/img/screenshot1.png" img align="left" title="Menu" width="400"/>
+	<src="/docs/img/screenshot2.png" img align="right" title="Game" width="400"/>
 <p/>
 <p>
-	<img align="left" src="/docs/img/screenshot3.png" Title="Boss" hspace="20"/>
-	<img align="right" src="/docs/img/screenshot4.png" Title="Pause Menu" hspace="20"/>
+	<src="/docs/img/screenshot3.png" img align="left" Title="Boss" width="400"/>
+	<src="/docs/img/screenshot4.png" img align="right" Title="Pause Menu" width="400"/>
 <p.>
