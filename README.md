@@ -18,4 +18,4 @@ A 2D top-down shooter featuring competitive play over a network, artificial inte
 
 ![Menu](/docs/img/screenshot1.png)  |  ![Game](/docs/img/screenshot2.png)
 :----------------------------------:|:----------------------------------------:
-![Boss](/docs/img/screenshot4.png)  |  ![Pause Menu](/docs/img/screenshot4.png)
+![Boss](/docs/img/screenshot3.png)  |  ![Pause Menu](/docs/img/screenshot4.png)
