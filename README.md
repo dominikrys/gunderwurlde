@@ -1,5 +1,7 @@
 # Gunderwurlde
 
+#### 2nd year University Team Project
+
 A 2D top-down shooter game featuring competitive play over a network, artificial intelligence elements, a user interface, graphics and audio. The aim of the game is to survive as long as possible while clearing waves of enemies. In multiplayer the goal is to be the last team standing.
 
 ## Screenshots
