@@ -8,9 +8,9 @@ Written in Java using JavaFX.
 
 ## Screenshots
 
-![Menu](/docs/img/screenshot1.png)  |  ![Game](/docs/img/screenshot2.png)
+![Menu](docs/img/screenshot1.png)  |  ![Game](docs/img/screenshot2.png)
 :----------------------------------:|:----------------------------------------:
-![Boss](/docs/img/screenshot3.png)  |  ![Pause Menu](/docs/img/screenshot4.png)
+![Boss](docs/img/screenshot3.png)  |  ![Pause Menu](docs/img/screenshot4.png)
 
 ## Authors
 
